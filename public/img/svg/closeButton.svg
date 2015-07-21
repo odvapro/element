@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3 (11970) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Desktop-HD" sketch:type="MSArtboardGroup" transform="translate(-824.000000, -93.000000)" fill="#FFFFFF">
+            <g id="content" sketch:type="MSLayerGroup" transform="translate(252.000000, -11.000000)">
+                <g id="top" transform="translate(11.000000, 0.000000)" sketch:type="MSShapeGroup">
+                    <g id="alert" transform="translate(306.000000, 91.000000)">
+                        <path d="M255,14.6666667 L258.333333,18 L255,21.3333333 L256.666667,23 L260,19.6666667 L263.333333,23 L265,21.3333333 L261.666667,18 L265,14.6666667 L263.333333,13 L260,16.3333333 L256.666667,13 L255,14.6666667 Z" id="Shape-Copy"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

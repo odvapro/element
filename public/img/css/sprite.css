@@ -1,0 +1,101 @@
+.icon {
+    font-size: 10px;
+}
+
+.icon:before {
+    content:' ';
+    vertical-align:middle;
+    display: inline-block;
+    background-image: url("../svg/sprite.svg");
+    background-repeat: no-repeat;
+    background-size: 9.9em 42.6em;
+}
+
+.no-svg .icon:before {
+    background-image: url("../svg/sprite.png");
+}
+
+.icon.addBtn:before {
+    background-position: 0em 0em;
+    width: 2.3em;
+    height: 2.3em;
+}
+
+.icon.buttonDotts:before {
+    background-position: 0em -2.3em;
+    width: 2em;
+    height: 0.4em;
+}
+
+.icon.calendarIcon:before {
+    background-position: 0em -2.7em;
+    width: 1.3em;
+    height: 1.4em;
+}
+
+.icon.closeBtn10:before {
+    background-position: 0em -4.1em;
+    width: 1em;
+    height: 1em;
+}
+
+.icon.closeButton:before {
+    background-position: 0em -5.1em;
+    width: 1em;
+    height: 1em;
+}
+
+.icon.deleteBtn:before {
+    background-position: 0em -6.1em;
+    width: 1.7em;
+    height: 1.7em;
+}
+
+.icon.editButton:before {
+    background-position: 0em -7.8em;
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.icon.logoTop:before {
+    background-position: 0em -9em;
+    width: 9.9em;
+    height: 2.1em;
+}
+
+.icon.sidebarSettings:before {
+    background-position: 0em -11.1em;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.icon.sidebarTable:before {
+    background-position: 0em -12.6em;
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.icon.sprite:before {
+    background-position: 0em -13.7em;
+    width: 9.9em;
+    height: 27.4em;
+}
+
+.icon.topBreadcrumbArrow:before {
+    background-position: 0em -41.1em;
+    width: 0.4em;
+    height: 0.6em;
+}
+
+.icon.topUserCircDelim:before {
+    background-position: 0em -41.7em;
+    width: 0.4em;
+    height: 0.4em;
+}
+
+.icon.topUserLogOutArr:before {
+    background-position: 0em -42.1em;
+    width: 1.1em;
+    height: 0.5em;
+}
+

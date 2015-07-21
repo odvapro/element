@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<title>Element</title>
+		<!--[if lt IE 9]>
+			<script src="js/html5shiv.js"></script>
+		<![endif]-->
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<aside id="sidebar">
+			<div id="logo">
+				<span class="icon logoTop"></span>
+			</div>
+			<nav>
+				<ul>
+					<li class="act"><a href="#"><span class="icon sidebarTable"></span> НОВОСТИ</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> СТАТЬИ</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> SOME_TABLE_NAME</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> ANOTHER_VERY_BIG_TABLE_N…</a></li>
+					<li class="settings"><a href="#"><span class="icon sidebarSettings"></span>НАСТРОЙКИ</a></li>
+				</ul>
+			</nav>
+		</aside>
+		<section id="contentBlock">
+			<div id="contFixed">
+				<div id="topNavLine">
+					<nav class="navigation">
+						<ul>
+							<li><a href="#">Главная</a></li>
+							<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
+							<li class="last"><a href="#">Новости</a></li>
+						</ul>
+					</nav>
+					<nav class="userbar">
+						<ul>
+							<li><a href="#">Михаил</a></li>
+							<li class="cirdel"><span class="icon topUserCircDelim"></span></li>
+							<li class="logout"><a href="#">Выйти <span class="icon topUserLogOutArr"></span></a></li>
+						</ul>
+					</nav>
+				</div>
+				<div id="titleButtons">
+					<div class="titleBlock">
+						<div class="ttl">
+							<h2>Настройки</h2>
+						</div>
+						<button class="elbutton grey">Отменить изменения</button>
+					</div>
+					<div class="rightButtons">
+						<button class="elbutton blue">Сохранить</button>
+					</div>
+				</div>
+				<div id="topTabs">
+					<ul>
+						<li class="act" onclick="el.tabs.show(this)">Таблицы</li>
+						<li onclick="el.tabs.show(this)">Пользователи</li>
+						<li onclick="el.tabs.show(this)">Обновление</li>
+					</ul>
+				</div>
+			</div>
+			<div id="content" class="withTabs">
+				<div class="contWrap" style="width:900px;">
+					<div class="tabCont cont_1 act">
+						<table class="settings" cellspacing='0'>
+							<tr>
+								<th class="tableName" colspan="2">Новости <span class="icon editButton"></span></th>
+								<th class="righted" colspan="3">NEWS</th>
+							</tr>
+							<tr class="black">
+								<td>Настройки</td>
+								<td>Наименование</td>
+								<td>Тип поля</td>
+								<td>Обязательное</td>
+								<td>Множественное</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>ID</td>
+								<td>
+									<select>
+										<option>Число</option>
+										<option>Стока</option>
+										<option>Файл</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>STRING_COL</td>
+								<td>
+									<select>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Файл</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>FILE_COL</td>
+								<td>
+									<select>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>DATE_COL</td>
+								<td>
+									<select>
+										<option>Привязка к элементу</option>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>TEXT_COL</td>
+								<td>
+									<select>
+										<option>Текст</option>
+										<option>Дата и время</option>
+										<option>Привязка к элементу</option>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+						</table>
+						<div class="addFieldLine">
+							<button class="addField">Добавить поле</button>
+						</div>
+						<div class="clear"></div>
+						<table class="settings" cellspacing='0'>
+							<tr>
+								<th class="tableName" colspan="2">Новости <span class="icon editButton"></span></th>
+								<th class="righted" colspan="3">NEWS</th>
+							</tr>
+							<tr class="black">
+								<td>Настройки</td>
+								<td>Наименование</td>
+								<td>Тип поля</td>
+								<td>Обязательное</td>
+								<td>Множественное</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>ID</td>
+								<td>
+									<select>
+										<option>Число</option>
+										<option>Стока</option>
+										<option>Файл</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>STRING_COL</td>
+								<td>
+									<select>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Файл</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>FILE_COL</td>
+								<td>
+									<select>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Привязка к элементу</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>DATE_COL</td>
+								<td>
+									<select>
+										<option>Привязка к элементу</option>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+										<option>Дата и время</option>
+										<option>Текст</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="#">Редактировать</a>
+										<a href="#">Копировать</a>
+										<a href="#">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>TEXT_COL</td>
+								<td>
+									<select>
+										<option>Текст</option>
+										<option>Дата и время</option>
+										<option>Привязка к элементу</option>
+										<option>Файл</option>
+										<option>Строка</option>
+										<option>Число</option>
+									</select>
+								</td>
+								<td class="centered">
+									<input type="checkbox" checked />
+								</td>
+								<td class="centered">
+									<input type="checkbox" />
+								</td>
+							</tr>
+						</table>
+						<div class="addFieldLine">
+							<button class="addField">Добавить поле</button>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="tabCont cont_2">2</div>
+					<div class="tabCont cont_3">3</div>
+				</div>
+			</div>
+		</section>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/init.js"></script>
+	</body>
+</html>

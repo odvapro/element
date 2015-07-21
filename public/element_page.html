@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<title>Element</title>
+		<!--[if lt IE 9]>
+			<script src="js/html5shiv.js"></script>
+		<![endif]-->
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
+	</head>
+	<body>
+		<aside id="sidebar">
+			<div id="logo">
+				<span class="icon logoTop"></span>
+			</div>
+			<nav>
+				<ul>
+					<li class="act"><a href="#"><span class="icon sidebarTable"></span> НОВОСТИ</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> СТАТЬИ</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> SOME_TABLE_NAME</a></li>
+					<li><a href="#"><span class="icon sidebarTable"></span> ANOTHER_VERY_BIG_TABLE_N…</a></li>
+					<li class="settings"><a href="#"><span class="icon sidebarSettings"></span>НАСТРОЙКИ</a></li>
+				</ul>
+			</nav>
+		</aside>
+		<section id="contentBlock">
+			<div id="contFixed">
+				<div id="topNavLine">
+					<nav class="navigation">
+						<ul>
+							<li><a href="#">Главная</a></li>
+							<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
+							<li class="last"><a href="#">Новости</a></li>
+						</ul>
+					</nav>
+					<nav class="userbar">
+						<ul>
+							<li><a href="#">Михаил</a></li>
+							<li class="cirdel"><span class="icon topUserCircDelim"></span></li>
+							<li class="logout"><a href="#">Выйти <span class="icon topUserLogOutArr"></span></a></li>
+						</ul>
+					</nav>
+				</div>
+				<div id="titleButtons">
+					<div class="titleBlock">
+						<div class="ttl">
+							<h2>Новости</h2>
+							<span>news</span>
+						</div>
+						<button class="elbutton grey">Отменить изменения</button>
+					</div>
+					<div class="rightButtons">
+						<button class="elbutton blue">Сохранить</button>
+						<button class="elbutton gray">Удалить</button>
+					</div>
+				</div>
+				<div class="alert error"><span class="msg">Элемент сохранен</span> <span onclick="el.message.close();" class="icon closeButton"></span></div>
+			</div>
+			<div id="content">
+				<div class="elementDetail">
+					<div class="line">
+						<div class="name">NAME</div>
+						<div class="filedEdit">
+							<input type="text" placeholder="Тестовая новость" />
+						</div>
+					</div>
+					<div class="line">
+						<div class="name">ANONS</div>
+						<div class="filedEdit">
+							<textarea  placeholder="Анонс тестовой новости"></textarea>
+						</div>
+					</div>
+					<div class="line">
+						<div class="name">ATTACHMENTS</div>
+						<div class="filedEdit">
+							<div class="attaches">
+								<div class="attach">
+									<span class="delete icon deleteBtn"></span>
+									<div class="atIcon"><img src="images/SELA2.png" alt=""></div>
+								</div>
+								<div class="attach">
+									<span class="delete icon deleteBtn"></span>
+									<div class="atIcon"><img src="images/SELA2.png" alt=""></div>
+								</div>
+								<div class="attach">
+									<span class="delete icon deleteBtn"></span>
+									<div class="atIcon"><img src="images/SELA2.png" alt=""></div>
+								</div>
+								<button class="attachAdd"><span class="icon addBtn"></span></button>
+							</div>
+						</div>
+					</div>
+					<div class="line">
+						<div class="name">DATE</div>
+						<div class="filedEdit">
+							<input class="datepicker" type="text" value="12.12.2015 12:30:00" /><span class="datepickerIcon icon calendarIcon"></span>
+						</div>
+					</div>
+					<div class="line">
+						<div class="name">ELEMENT_NODE</div>
+						<div class="filedEdit">
+							<div class="nodes">
+								<div class="node">
+									<span class="delete icon deleteBtn"></span>
+									<div class="noIcon">132</div>
+								</div>
+								<div class="node">
+									<span class="delete icon deleteBtn"></span>
+									<div class="noIcon">128</div>
+								</div>
+								<div class="node">
+									<span class="delete icon deleteBtn"></span>
+									<div class="noIcon">321</div>
+								</div>
+								<div class="node">
+									<span class="delete icon deleteBtn"></span>
+									<div class="noIcon">32</div>
+								</div>
+								<button class="attachAdd"><span class="icon addBtn"></span></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/init.js"></script>
+		
+		<!-- ONLY THIS PAGE -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="js/wysiwyg/src/wysiwyg-editor.css" />
+		<script type="text/javascript" src="js/wysiwyg/src/wysiwyg.js"></script>
+		<script type="text/javascript" src="js/wysiwyg/src/wysiwyg-editor.js"></script>
+		<script type="text/javascript" src="js/wysiwyg/init.js"></script>
+
+		<div id="popupWrap">
+			<!-- <div class="popupCont">
+				<div class="popupTopLine">
+					<span class="name">Настройки поля - NAME</span>
+					<span class="icon closeBtn10" onclick="el.popup.hide();"></span>
+				</div>
+				<div class="popupContLine">
+					<div class="editLine">
+						<div class="name">Обязательное</div>
+						<div class="inp"><input type="checkbox" /></div>
+					</div>
+					<div class="editLine">
+						<div class="name">Множественное</div>
+						<div class="inp"><input type="checkbox" /></div>
+					</div>
+					<div class="editLine">
+						<div class="name">Множественное</div>
+						<div class="inp"><input type="text" /></div>
+					</div>
+					<div class="editLine">
+						<div class="name">Таблица привязки</div>
+						<div class="inp">
+							<select>
+								<option value="">Выберите таблицу</option>
+							</select>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name">Поле привязки</div>
+						<div class="inp">
+							<select>
+								<option value="">Выберите поле</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="popupBottomLine">
+					<button class="elbutton blue">Сохранить</button>
+					<button class="elbutton gray">Сохранить</button>
+				</div>
+			</div> -->
+			<div class="popupCont show">
+				<div class="popupTopLine">
+					<span class="name">Добавление файла - NAME</span>
+					<span class="icon closeBtn10" onclick="el.popup.hide();"></span>
+				</div>
+				<div class="popupContLine">
+					<div class="editLine">
+						<div class="name">Файл (jpg, png)</div>
+						<div class="inp">
+							<input type="file" name="" />
+						</div>
+					</div>
+				</div>
+				<div class="popupBottomLine">
+					<button class="elbutton blue">Сохранить</button>
+					<button class="elbutton gray">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
