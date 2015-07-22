@@ -127,6 +127,50 @@ var el =
 				});
 			}
 			$('select[name="set[nodeField]"]').html(resOptions);
+		},
+
+		/*Отправляет запрос на проверку обновлений*/
+		checkUpdates : function()
+		{
+			$.ajax({
+				url: el.config.baseUri+"settings/checkUpdates",
+				type:'POST',
+				dataType:'json'
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined')
+				{
+					if(e.result == 'success')
+					{
+						$('#refreshUpdates').html(e.msg);
+						if(e.hasUpdates === true)
+						{
+							// имеются обновления 
+							$('.updatingbutton').show();
+						}
+					}
+					else
+						el.message.error(e.msg);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		},
+
+		/*Обновление системы до последней версии
+		  в первую очередь скрываются кнопки обновления 
+		  и показывается строка о том что проводится обновление*/
+		updateSystem : function()
+		{
+			$('.updateBox').hide().after('<p class="centered">Обновление...</p>');
+			$.ajax({
+				url: el.config.baseUri+"settings/updateSystem",
+				type:'POST',
+				dataType:'json'
+			}).done(function(e)
+			{
+				console.log(e);
+			});
 		}
 	},
 

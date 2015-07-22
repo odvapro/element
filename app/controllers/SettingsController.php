@@ -42,6 +42,11 @@ class SettingsController extends ControllerBase
 			}
 			$this->view->setVar('detailTables',$detailTables);
 		}
+
+		// достаем тещую версию системы
+		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
+		$sysFileArr = json_decode(file_get_contents($sysFile),true);
+		$this->view->setVar('currentSystemVersion',$sysFileArr['version']);
 	}
 
 	/**
@@ -215,12 +220,23 @@ class SettingsController extends ControllerBase
 		{
 			// отправляем на сервер обновлений информацию о версии
 			// чтобы получить информацию о имеющихся обновлениях
-
-			// 
+				$jsonRes = file_get_contents('http://element.woorkup.ru/chekUpdates.php?version='.$sysFileArr['version']);
+				if(!empty($jsonRes))
+					$this->jsonResult(json_decode($jsonRes));
+				else
+					$this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
 		}
 		else
 			$this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
-		
 	}
+
+	/**
+	 * Производит обновление системы до последней версии
+	 */
+	public function updateSystemAction()
+	{
+		$this->jsonResult(['result'=>'error','msg'=>'updating']);
+	}
+
 }
 

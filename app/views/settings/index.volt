@@ -96,8 +96,14 @@
 			</div>
 			<div class="tabCont cont_2">
 				<br/>
-				<p class="centered">Текущая версия системы 0.1.0</p> <br/>
-				<p class="centered"><button class="elbutton blue">Проверить обновления</button></p>
+				<div class="updateBox">
+					<p class="centered">Текущая версия системы - {{currentSystemVersion}}</p> <br/>
+					<p class="centered" id="refreshUpdates"></p><br/>
+					<p class="centered">
+						<button class="elbutton blue" onclick="el.settings.checkUpdates();">Проверить обновления</button>
+						<button class="elbutton blue updatingbutton" style="display:none" onclick="el.settings.updateSystem();">Обновить</button>
+					</p>
+				</div>
 			</div>
 		</form>
 	</div>

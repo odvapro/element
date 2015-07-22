@@ -27,6 +27,4 @@ Temporary Items
 public/upload/
 node_modules/
 app/cache/
-**/.sass-cache
-**/.sass-cache/*
 .phalcon/
