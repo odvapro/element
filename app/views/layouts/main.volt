@@ -33,7 +33,7 @@
 					</nav>
 					<nav class="userbar">
 						<ul>
-							<li><a href="javascript:void(0);">Михаил</a></li>
+							<li><a href="javascript:void(0);">{{auth['name']}}</a></li>
 							<li class="cirdel"><span class="icon topUserCircDelim"></span></li>
 							<li class="logout"><a href="{{baseUri}}auth/logout/">Выйти <span class="icon topUserLogOutArr"></span></a></li>
 						</ul>

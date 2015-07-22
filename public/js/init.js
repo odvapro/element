@@ -171,6 +171,33 @@ var el =
 			{
 				console.log(e);
 			});
+		},
+
+		/*Сохранение пользователя*/
+		saveUser : function()
+		{
+			var userFormData = $('#userForm').serialize();
+			var userId = $('input[name="userId"]').val();
+			$.ajax({
+				url: el.config.baseUri+"settings/saveUser/"+userId,
+				type:'POST',
+				dataType:'json',
+				data:userFormData
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined')
+				{
+					if(e.result == 'success')
+					{
+						el.message.success(e.msg);
+						$('input[type="password"]').val('');
+					}
+					else
+						el.message.error(e.msg);
+				}
+				else
+					el.message.error('Что то пошло не так');
+			});
 		}
 	},
 

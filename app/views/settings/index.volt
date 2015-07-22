@@ -18,7 +18,8 @@
 {% block tabsLine %}
 	<div id="topTabs">
 		<ul>
-			<li class="act" onclick="el.tabs.show(this)">Таблицы</li>
+			<li onclick="el.tabs.show(this)">Таблицы</li>
+			<li class="act" onclick="el.tabs.show(this)">Пользователи</li>
 			<li onclick="el.tabs.show(this)">Обновление</li>
 		</ul>
 	</div>
@@ -27,7 +28,7 @@
 {% block content %}
 	<div class="contWrap" style="width:900px;">
 		<form id="settingsForm" onsubmit="return false;" method="post">
-			<div class="tabCont cont_1 act">
+			<div class="tabCont cont_1">
 				{% for relaTableName,tableDetail in detailTables %}
 					<table data-tablename="{{relaTableName}}" class="settings" cellspacing='0'>
 						<tr>
@@ -94,7 +95,43 @@
 					<div class="clear"></div>
 				{% endfor  %}
 			</div>
-			<div class="tabCont cont_2">
+			<div class="tabCont cont_2 act">
+				<table class="elements" cellspacing='0'>
+					<tr>
+						<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>
+						<th>id</th>
+						<th>Имя</th>
+						<th>Логин</th>
+						<th>Email</th>
+					</tr>
+					{% if users %}
+						{% for user in users %}
+							<tr>
+								<td class="centered">
+									<div class="editLine">
+										<a href="{{baseUri}}settings/user/{{user.id}}">Редактировать</a>
+										<a href="javascript:alert('не реализовано'); void(0);">Копировать</a>
+										<a href="javascript:alert('не реализовано'); void(0);">Удалить</a>
+									</div>
+									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
+								</td>
+								<td>{{user.id}}</td>
+								<td style="line-height:20px;">
+									<img class="rounded avatar" src="{{user_avatars[user.email]}}" alt=""/>
+									{{user.name}}
+								</td>
+								<td>{{user.login}}</td>
+								<td>{{user.email}}</td>
+							</tr>
+						{% endfor %}
+					{% else %}
+							<tr>
+								<td class="centered">no data</td>
+							</tr>
+					{% endif %}
+				</table>
+			</div>
+			<div class="tabCont cont_3">
 				<br/>
 				<div class="updateBox">
 					<p class="centered">Текущая версия системы - {{currentSystemVersion}}</p> <br/>

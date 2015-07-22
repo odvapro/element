@@ -18,6 +18,9 @@ class ControllerBase extends Controller
 		$this->view->setVar('baseUri',$config->application->baseUri);
 		$this->view->setVar('controllerName',$this->router->getControllerName());
 
+		$auth = $this->session->get('auth');
+		$this->view->setVar('auth',$auth);
+		
 	}
 
 	/**

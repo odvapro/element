@@ -47,6 +47,16 @@ class SettingsController extends ControllerBase
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
 		$this->view->setVar('currentSystemVersion',$sysFileArr['version']);
+
+		// список пользователей
+		$users = EmUsers::find();
+		$user_avatars = [];
+		foreach ($users as $key => $user)
+		{
+			$user_avatars[$user->email] = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $user->email ) ) ) . "?d=" . urlencode( 'mm' ) . "&s=50";
+		}
+		$this->view->setVar('users',$users);
+		$this->view->setVar('user_avatars',$user_avatars);
 	}
 
 	/**
@@ -236,6 +246,79 @@ class SettingsController extends ControllerBase
 	public function updateSystemAction()
 	{
 		$this->jsonResult(['result'=>'error','msg'=>'updating']);
+	}
+
+	/**
+	 * Форма редактирования пользователя
+	 */
+	public function userAction($userId = false)
+	{
+		if(!empty($userId))
+		{
+			$user = EmUsers::findFirst($userId);
+			if($user)
+			{
+				$this->view->setVar('user',$user);
+			}
+			else
+				$this->pageNotFound();
+		}
+		else
+			$this->pageNotFound();
+	}
+
+	/**
+	 * Сохранение пользователя
+	 * @return json
+	 */
+	public function saveUserAction($userId = false)
+	{
+		if($this->request->isAjax())
+		{
+			$name     = $this->request->getPost('name');
+			$login    = $this->request->getPost('login');
+			$email    = $this->request->getPost('email');
+			$password = $this->request->getPost('password');
+			if(!empty($name) && !empty($login) && !empty($email) && !empty($password) && !empty($userId))
+			{
+				$user = EmUsers::findFirst($userId);
+				if($user)
+				{
+					if($user->password == md5($password))
+					{
+						$user->name  = $name;
+						$user->login = $login;
+						$user->email = $email;
+
+						$newPassword = $this->request->getPost('newpassword');
+						$repassword  = $this->request->getPost('repassword');
+						if(!empty($newPassword) && !empty($repassword))
+						{
+							if($newPassword == $repassword)
+							{
+								$user->password = md5($newPassword);
+							}
+							else
+							{
+								$this->jsonResult(['result'=>'error', 'msg'=>'Пароли не совпадают']);
+								return false;
+							}
+						}
+						
+						if($user->save())
+							$this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
+					}
+					else
+						$this->jsonResult(['result'=>'error', 'msg'=>'Пароль не совпадает']);
+				}
+				else
+					$this->jsonResult(['result'=>'error', 'msg'=>'пользователь не найден']);
+			}
+			else
+				$this->jsonResult(['result'=>'error', 'msg'=>'не все поля заполнены']);
+		}
+		else
+			$this->jsonResult(['result'=>'error', 'msg'=>'only ajax']);
 	}
 
 }
