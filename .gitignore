@@ -26,5 +26,5 @@ Temporary Items
 
 public/upload/
 node_modules/
-app/cache/
+app/cache/*
 .phalcon/

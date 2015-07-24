@@ -149,6 +149,10 @@ class TableController extends ControllerBase
 			{
 				$element[$field['field']] = explode(',', $element[$field['field']]);
 			}
+			else
+			{
+				$element[$field['field']] = htmlspecialchars($element[$field['field']]);
+			}
 		$this->view->setVar('element',$element);
 	}
 

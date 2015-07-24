@@ -2,7 +2,7 @@
 {% block input %}
 	<div class="filedEdit" data-fieldName="{{fieldArr['field']}}" data-multiple="{{fieldArr['multiple']}}">
 		<div class="attaches">
-			{% if element[fieldArr['field']] is defined %}
+			{% if element[fieldArr['field']] is defined and element[fieldArr['field']] != '' %}
 				{% for aFile in element[fieldArr['field']] %}
 					<div class="attach" title="{{aFile['upName']}}">
 						<span onclick="el.edit.removeFileAttach(this);" class="delete icon deleteBtn"></span>
