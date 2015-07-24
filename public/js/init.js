@@ -162,14 +162,19 @@ var el =
 		  и показывается строка о том что проводится обновление*/
 		updateSystem : function()
 		{
-			$('.updateBox').hide().after('<p class="centered">Обновление...</p>');
+			$('.updateBox').hide().after('<p class="centered updatingline">Обновление...</p>');
 			$.ajax({
 				url: el.config.baseUri+"settings/updateSystem",
 				type:'POST',
 				dataType:'json'
 			}).done(function(e)
 			{
-				console.log(e);
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					$('.updatingline').hide().after('<p class="centered" style="color:green; font-weight:bold;">'+e.msg+'</p>');
+				}
+				else
+					el.message.error('Что-то пошло не так.');
 			});
 		},
 

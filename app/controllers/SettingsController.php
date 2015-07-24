@@ -249,7 +249,7 @@ class SettingsController extends ControllerBase
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
 		
-		$preambula = $_SERVER['DOCUMENT_ROOT'].ltrim($this->get('config')->application->baseUri,'/');
+		$preambula = $_SERVER['DOCUMENT_ROOT'].ltrim($this->di->get('config')->application->baseUri,'/');
 
 		if(!empty($sysFileArr['version']))
 		{
@@ -261,6 +261,7 @@ class SettingsController extends ControllerBase
 					$needUpdateFiles = json_decode($jsonNeedUpdateFiles,true);
 					if(!empty($needUpdateFiles['result']) && $needUpdateFiles['result'] == 'success')
 					{
+						$newVersion = '';
 						foreach($needUpdateFiles['files'] as $filePath => $fileArr)
 						{
 							if($fileArr['type'] == 'update')
@@ -279,10 +280,18 @@ class SettingsController extends ControllerBase
 							{
 								if(is_file($preambula.$filePath))
 								{
-									@unset($preambula.$filePath);
+									@unlink($preambula.$filePath);
 								}
 							}
+							elseif($fileArr['type'] == 'version')
+							{
+								// обновление версии системы
+								$sysFileArr['version'] = $fileArr['value'];
+								$newVersion = $fileArr['value'];
+								@file_put_contents($sysFile, json_encode($sysFileArr,JSON_PRETTY_PRINT));
+							}
 						}
+						$this->jsonResult(['result'=>'success','msg'=>'Система обновлена до версии - '.$newVersion]);
 					}
 					else
 						$this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
