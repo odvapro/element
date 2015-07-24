@@ -245,7 +245,53 @@ class SettingsController extends ControllerBase
 	 */
 	public function updateSystemAction()
 	{
-		$this->jsonResult(['result'=>'error','msg'=>'updating']);
+		// достаем тещую версию системы
+		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
+		$sysFileArr = json_decode(file_get_contents($sysFile),true);
+		
+		$preambula = $_SERVER['DOCUMENT_ROOT'].ltrim($this->get('config')->application->baseUri,'/');
+
+		if(!empty($sysFileArr['version']))
+		{
+			// отправляем на сервер обновлений информацию о версии
+			// чтобы получить информацию о имеющихся обновлениях
+				$jsonNeedUpdateFiles = file_get_contents('http://element.woorkup.ru/update.php?version='.$sysFileArr['version']);
+				if(!empty($jsonNeedUpdateFiles))
+				{
+					$needUpdateFiles = json_decode($jsonNeedUpdateFiles,true);
+					if(!empty($needUpdateFiles['result']) && $needUpdateFiles['result'] == 'success')
+					{
+						foreach($needUpdateFiles['files'] as $filePath => $fileArr)
+						{
+							if($fileArr['type'] == 'update')
+							{
+								$newCont = @file_get_contents($fileArr['path']);
+								if(!empty($newCont))
+									@file_put_contents($preambula.$filePath, $newCont);
+							}
+							elseif($fileArr['type'] == 'add')
+							{
+								$newCont = @file_get_contents($fileArr['path']);
+								if(!empty($newCont))
+									@file_put_contents($preambula.$filePath, $newCont);
+							}
+							elseif($fileArr['type'] == 'delete')
+							{
+								if(is_file($preambula.$filePath))
+								{
+									@unset($preambula.$filePath);
+								}
+							}
+						}
+					}
+					else
+						$this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
+				}
+				else
+					$this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
+		}
+		else
+			$this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
 	}
 
 	/**
