@@ -35,5 +35,4 @@ gulp.task('watch', function()
 {
 	gulp.watch(['public/scss/*.scss'],['css:build']);
 });
-
 gulp.task('default', ['css:build','svg:build', 'watch']);
