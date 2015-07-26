@@ -1,5 +1,7 @@
 <?php
 
+define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/').'/');
+
 return new \Phalcon\Config(array(
 	'database' => array(
 		'adapter'     => 'Mysql',

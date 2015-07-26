@@ -7,7 +7,7 @@ $(document).ready(function()
         $(element).wysiwyg({
             classes: 'some-more-classes',
             // 'selection'|'top'|'top-selection'|'bottom'|'bottom-selection'
-            toolbar: index == 0 ? 'top-selection' : (index == 1 ? 'bottom' : 'selection'),
+            toolbar: 'top-selection',
             buttons: {
                 insertimage: {
                     title: 'Insert image',

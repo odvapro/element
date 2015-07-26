@@ -173,10 +173,10 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					{
 						if($file['type'] == 'image')
 						{
-							@unlink($_SERVER['DOCUMENT_ROOT'].$file['sizes']['small']);
-							@unlink($_SERVER['DOCUMENT_ROOT'].$file['sizes']['medium']);
+							@unlink(ROOT.$file['sizes']['small']);
+							@unlink(ROOT.$file['sizes']['medium']);
 						}
-						@unlink($_SERVER['DOCUMENT_ROOT'].$file['path']);
+						@unlink(ROOT.$file['path']);
 					}
 				}
 			}
@@ -382,21 +382,21 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			{
 				$image->resize(0,50);
 				$image->crop(0,0, 50,50);
-				$image->save($_SERVER['DOCUMENT_ROOT'].$tmpPath.'s_'.$newName.'.jpg');
+				$image->save(ROOT.$tmpPath.'s_'.$newName.'.jpg');
 
 				$image->resize(0,600);
 				$image->crop(0,0, 600,600);
-				$image->save($_SERVER['DOCUMENT_ROOT'].$tmpPath.'m_'.$newName.'.jpg');
+				$image->save(ROOT.$tmpPath.'m_'.$newName.'.jpg');
 			}
 			else
 			{
 				$image->resize(50,0);
 				$image->crop(0,0, 50,50);
-				$image->save($_SERVER['DOCUMENT_ROOT'].$tmpPath.'s_'.$newName.'.jpg');
+				$image->save(ROOT.$tmpPath.'s_'.$newName.'.jpg');
 
 				$image->resize(600,0);
 				$image->crop(0,0, 600,600);
-				$image->save($_SERVER['DOCUMENT_ROOT'].$tmpPath.'m_'.$newName.'.jpg');
+				$image->save(ROOT.$tmpPath.'m_'.$newName.'.jpg');
 			}
 			$fileArr['sizes'] = 
 			[
@@ -406,7 +406,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		}
 		else
 			$fileArr['type'] = 'file';
-		$file->moveTo($_SERVER['DOCUMENT_ROOT'].$tmpPath.'o_'.$newName.'.'.$ext);
+		$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
 		$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
 
 		return $fileArr;
@@ -430,13 +430,13 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 				$fileArr         = json_decode($file['jsonFileObj'],true);
 				$savePath        = $this->getSavePath($settings);
 
-				$fullFilePath    = $_SERVER['DOCUMENT_ROOT'].$fileArr['path'];
+				$fullFilePath    = ROOT.$fileArr['path'];
 				$newName = false;
 				if(is_file($fullFilePath))
 				{
 					$path_parts = pathinfo($fullFilePath);
 					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, $_SERVER['DOCUMENT_ROOT'].$newName);
+					rename($fullFilePath, ROOT.$newName);
 				}
 				$fileArr['path'] = $newName;
 
@@ -446,17 +446,17 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$sizes = [];
 					
 					// small
-					$fullFilePath = $_SERVER['DOCUMENT_ROOT'].$fileArr['sizes']['small'];
+					$fullFilePath = ROOT.$fileArr['sizes']['small'];
 					$path_parts = pathinfo($fullFilePath);
 					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, $_SERVER['DOCUMENT_ROOT'].$newName);
+					rename($fullFilePath, ROOT.$newName);
 					$sizes['small'] = $newName;
 
 					// medium
-					$fullFilePath = $_SERVER['DOCUMENT_ROOT'].$fileArr['sizes']['medium'];
+					$fullFilePath = ROOT.$fileArr['sizes']['medium'];
 					$path_parts = pathinfo($fullFilePath);
 					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, $_SERVER['DOCUMENT_ROOT'].$newName);
+					rename($fullFilePath, ROOT.$newName);
 					$sizes['medium'] = $newName;
 
 					$fileArr['sizes'] = $sizes;
@@ -484,7 +484,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getSavePath($settigs, $tmp = false)
 	{
 		$settigs['savePath'] = ltrim($settigs['savePath'],'/');
-		if(!empty($settigs['savePath']) && is_dir($_SERVER['DOCUMENT_ROOT'].$settigs['savePath']))
+		if(!empty($settigs['savePath']) && is_dir(ROOT.$settigs['savePath']))
 			$savePath = $settigs['savePath'];
 		else
 			$savePath = $this->getDefaultFilesSavePath();
@@ -493,15 +493,15 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		{
 			// в пути для сохранения создаем папку для временных файлов
 			$savePath = $savePath.'tmp/';
-			if(!is_dir($_SERVER['DOCUMENT_ROOT'].$savePath))
-				@mkdir($_SERVER['DOCUMENT_ROOT'].$savePath,0755,true);
+			if(!is_dir(ROOT.$savePath))
+				@mkdir(ROOT.$savePath,0755,true);
 		}
 		else
 		{
 			// добавляем код дня, чтобы все не скалыдивалось в одну папку
 			$savePath = $savePath.date('Ymd').'/';
-			if(!is_dir($_SERVER['DOCUMENT_ROOT'].$savePath))
-				@mkdir($_SERVER['DOCUMENT_ROOT'].$savePath,0755,true);
+			if(!is_dir(ROOT.$savePath))
+				@mkdir(ROOT.$savePath,0755,true);
 		}
 		return $savePath;
 	}
