@@ -11,7 +11,7 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 /**
  * CONSTATNTS
  */
-define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/').'/');
+define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/'));
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework

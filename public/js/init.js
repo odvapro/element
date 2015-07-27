@@ -346,7 +346,7 @@ var el =
 								/*подготовка пиктограммы*/
 								var icon = '';
 								if(fileObj.type == 'image')
-									icon = '/'+fileObj.sizes.small;
+									icon = fileObj.sizes.small;
 								else
 									icon = el.config.baseUri+'img/fileIcon.png';
 

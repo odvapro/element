@@ -7,7 +7,7 @@
 					<div class="attach" title="{{aFile['upName']}}">
 						<span onclick="el.edit.removeFileAttach(this);" class="delete icon deleteBtn"></span>
 						{% if aFile['type'] == "image" %}
-							<div class="atIcon"><img src="/{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"></div>
+							<div class="atIcon"><img src="{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"></div>
 						{% else %}
 							<div class="atIcon"><img src="{{baseUri}}img/fileIcon.png" alt="{{aFile['upName']}}"></div>
 						{% endif %}

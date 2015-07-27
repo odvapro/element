@@ -483,7 +483,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getSavePath($settigs, $tmp = false)
 	{
-		$settigs['savePath'] = ltrim($settigs['savePath'],'/');
+		$settigs['savePath'] = '/'.ltrim($settigs['savePath'],'/');
 		if(!empty($settigs['savePath']) && is_dir(ROOT.$settigs['savePath']))
 			$savePath = $settigs['savePath'];
 		else
@@ -512,7 +512,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getDefaultFilesSavePath()
 	{
 		$config = $this->di->get('config');
-		return ltrim($config->application->baseUri.$config->application->defaultFilesUploadPath,'/');
+		return '/'.ltrim($config->application->baseUri.$config->application->defaultFilesUploadPath,'/');
 	}
 
 }

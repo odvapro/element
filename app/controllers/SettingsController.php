@@ -249,7 +249,7 @@ class SettingsController extends ControllerBase
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
 		
-		$preambula = ROOT.ltrim($this->di->get('config')->application->baseUri,'/');
+		$preambula = ROOT.'/'.ltrim($this->di->get('config')->application->baseUri,'/');
 
 		if(!empty($sysFileArr['version']))
 		{

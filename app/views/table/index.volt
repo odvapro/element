@@ -42,9 +42,9 @@
 									<td>
 										{% for aFile in resLine[fieldArr['field']] %}
 											{% if aFile['type'] == 'image' %}
-												<a href="/{{aFile['path']}}" target="_blunk"><img src="/{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"/></a>
+												<a href="{{aFile['path']}}" target="_blunk"><img src="{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"/></a>
 											{% else %}
-												<a href="/{{aFile['path']}}" target="_blunk"><img src="{{baseUri}}img/fileIcon.png" alt="{{aFile['upName']}}"/></a>
+												<a href="{{aFile['path']}}" target="_blunk"><img src="{{baseUri}}img/fileIcon.png" alt="{{aFile['upName']}}"/></a>
 											{% endif %}
 										{% endfor %}
 									</td>
