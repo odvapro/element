@@ -18,8 +18,8 @@
 {% block tabsLine %}
 	<div id="topTabs">
 		<ul>
-			<li onclick="el.tabs.show(this)">Таблицы</li>
-			<li class="act" onclick="el.tabs.show(this)">Пользователи</li>
+			<li class="act" onclick="el.tabs.show(this)">Таблицы</li>
+			<li onclick="el.tabs.show(this)">Пользователи</li>
 			<li onclick="el.tabs.show(this)">Обновление</li>
 		</ul>
 	</div>
@@ -28,7 +28,7 @@
 {% block content %}
 	<div class="contWrap" style="width:900px;">
 		<form id="settingsForm" onsubmit="return false;" method="post">
-			<div class="tabCont cont_1">
+			<div class="tabCont cont_1 act">
 				{% for relaTableName,tableDetail in detailTables %}
 					<table data-tablename="{{relaTableName}}" class="settings" cellspacing='0'>
 						<tr>
@@ -95,7 +95,7 @@
 					<div class="clear"></div>
 				{% endfor  %}
 			</div>
-			<div class="tabCont cont_2 act">
+			<div class="tabCont cont_2">
 				<table class="elements" cellspacing='0'>
 					<tr>
 						<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>

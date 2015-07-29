@@ -732,6 +732,51 @@ section#contentBlock
 						border-radius:2px;
 						width: 240px;
 					}
+					.checkLab
+					{
+						font-size: 12px;
+						color: $greyColor;
+						font-weight: bold;
+						cursor: pointer;
+						input
+						{
+							position:relative;
+							top:-1px;
+						}
+					}
+					/* поля для дополнительных копий картинок */
+					&.imageSize
+					{
+						width:auto;
+						input
+						{
+						    text-align:center;
+						    &.imsName
+						    {
+							    width:100px;
+							    margin-right:70px;
+							    float:left;
+							}
+							&.imsFix
+							{
+							    float:left;
+							    margin-right:70px;
+							    position:relative;
+							    top:5px;
+							}
+							&.imsWidth, &.imsHeight{
+							    margin-right:20px;
+							    width:80px;
+							    float:left;
+							}
+						}
+						span.icon
+						{
+							position:relative;
+							top:2px;
+							cursor: pointer;
+						}
+					}
 				}
 			}
 		}

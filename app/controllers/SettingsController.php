@@ -158,8 +158,10 @@ class SettingsController extends ControllerBase
 					$this->view->setVar('tablesJSON',json_encode($resTables));
 				}
 				
+				$this->view->setVar('settings',$settings);
 				$this->view->setVar('settingFields',$settingFields);
 				$this->view->setVar('fieldsPulicNames',$this->fieldsPulicNames);
+				$this->view->setVar('fieldFormType',$emType->type);
 
 				$this->jsonResult([
                 	'result' => 'success',

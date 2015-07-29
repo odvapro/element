@@ -497,11 +497,13 @@ var el =
 		{
 			$('#popupWrap .popupCont').html(cont);
 			$('#popupWrap .popupCont').addClass('show');
+			$('body').css('overflow','hidden');
 		},
 
 		hide : function()
 		{
 			$('#popupWrap .popupCont').removeClass('show');
+			$('body').css('overflow','auto');
 		}
 	},
 

@@ -183,9 +183,63 @@
 				</div>
 				<div class="popupContLine">
 					<div class="editLine">
-						<div class="name">Файл (jpg, png)</div>
+						<div class="name"> Обязательное </div>
 						<div class="inp">
-							<input type="file" name="" />
+							<input type="hidden" name="set[required]" value="0">
+							<input type="checkbox" name="set[required]" value="1">
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name"> Множественное </div>
+						<div class="inp">
+							<input type="hidden" name="set[multiple]" value="0">
+							<input type="checkbox" name="set[multiple]" value="1" checked="">
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name"> Где хранить файлы </div>
+						<div class="inp">
+							<input type="text" name="set[savePath]" value="/element/public/upload/">
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name"> Типы файлов </div>
+						<div class="inp">
+							<select name="set[fileTypes][]" multiple="">
+								<option value="jpeg">jpeg</option>
+								<option value="png">png</option>
+								<option value="gif">gif</option>
+								<option value="bmp">bmp</option>
+								<option value="pdf">pdf</option>
+								<option value="doc">doc</option>
+							</select>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name"><u>Копии изображений</u>&nbsp;&nbsp;&nbsp;<span class="icon addBtn"></span></div>
+						<div class="inp">
+							<label class="checkLab">
+								<input type="checkbox" name="set" value="1" checked="" />
+								Не сохронять оригинал
+							</label>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="inp imageSize">
+							<input class="imsName" type="text" placeholder="name" value="small" />
+							<input class="imsFix" type="checkbox" checked="true" />
+							<input class="imsWidth" type="text" placeholder="ширина" value="100" />
+							<input class="imsHeight" type="text" placeholder="высота" value="100" />
+							<span class="icon addBtn"></span>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="inp imageSize">
+							<input class="imsName" type="text" placeholder="name" value="medium" />
+							<input class="imsFix" type="checkbox" checked="true" />
+							<input class="imsWidth" type="text" placeholder="ширина" value="600" />
+							<input class="imsHeight" type="text" placeholder="высота" value="*" />
+							<span class="icon addBtn"></span>
 						</div>
 					</div>
 				</div>
