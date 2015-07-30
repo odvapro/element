@@ -249,6 +249,16 @@ class TableController extends ControllerBase
 		{
 			if(!empty($tableName) || !empty($primaryKey) ||  !empty($elementId) )
 			{
+				// -----------------------------------
+				$columns     = $this->tableEditor->getTableColumns($tableName);
+				$overColumns = $this->tableEditor->getOverTableColumns($tableName);
+				$curTable    = [];
+				$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+
+				$elementArr = $this->tableEditor->getElement($tableName,['field'=>$primaryKey, 'value'=>intval($elementId)]);
+				$this->tableEditor->deleteOldFiles($elementArr,[],$curTable['fields']);
+				// -----------------------------------
+				
 				$sqlErrors = [];
 				if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
 					$this->jsonResult(['result'=>'success']);
