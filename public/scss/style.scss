@@ -57,6 +57,11 @@ $bordersColor : #D3D3DB;
 {
 	border-radius:100%;
 }
+.pointer
+{
+	cursor:pointer;
+}
+
 
 body,html
 { 
@@ -773,7 +778,7 @@ section#contentBlock
 						span.icon
 						{
 							position:relative;
-							top:2px;
+							top:4px;
 							cursor: pointer;
 						}
 					}

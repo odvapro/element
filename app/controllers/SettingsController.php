@@ -60,7 +60,7 @@ class SettingsController extends ControllerBase
 	}
 
 	/**
-	 * Сохраняет
+	 * Сохраняет настройки
 	 * - настройки типов таблиц
 	 * - настройки пользователей
 	 */

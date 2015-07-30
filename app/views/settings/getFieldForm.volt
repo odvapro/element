@@ -15,3 +15,4 @@
 		<button class="elbutton gray" onclick="el.popup.hide();">Отмена</button>
 	</div>
 </form>
+{{ partial("settingsForms/tpls") }}

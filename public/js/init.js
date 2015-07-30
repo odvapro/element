@@ -203,6 +203,39 @@ var el =
 				else
 					el.message.error('Что то пошло не так');
 			});
+		},
+
+		/*обработка формы редактирования поля типа файл*/
+		file : 
+		{
+			/*добавляет дополнительное поле для еще одного размера изображения*/
+			addImageSizeLine : function(instance)
+			{
+				var imageSizeLineTPL = $('#TPLS .imageSizeTPL').html();
+				// определить индекс нового поля
+				var sizeIndex = $('.editLine .inp.imageSize').size()*1-1;
+				imageSizeLineTPL = imageSizeLineTPL.replace(/#key#/g,sizeIndex);
+				$('.newImageSizesDelimetr').before(imageSizeLineTPL);
+				$('.popupContLine').scrollTop($('.popupContLine').height());
+			},
+			/* удяляет дополнительное поле для размера изображения
+				также производится перерасчет ключей инпутов*/
+			removeImageSizeLine : function(instance)
+			{
+				$(instance).parents('.editLine').fadeOut(200,function()
+				{
+					$(this).remove();
+				});
+				// перерасчет индексов полей ввода
+				$('.popupContLine .editLine .inp.imageSize').each(function()
+				{
+					var index = $(this).index()*1;
+					$(this).find('input').each(function()
+					{
+						$(this).attr('name',$(this).attr('name').replace(/\d/, index+1 ));
+					});
+				})
+			}
 		}
 	},
 

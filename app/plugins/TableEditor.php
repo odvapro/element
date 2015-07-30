@@ -369,45 +369,94 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$ext         = end($fileNameArr);
 
 		// если файл картина то обрабатывается по другому
-		$fileArr = [];
+		$fileArr           = [];
 		$fileArr['upName'] = $fileName;
+		$fileArr['type']   = 'file';
 		if(@getimagesize($file->getTempName()))
 		{
 			$fileArr['type'] = 'image';
 			// это картинка
-			$image = new Image();
-			$image->createFromFile($file->getTempName());
-			$img_inf = $image->getInfos();
-			if($img_inf['width'] > $img_inf['height'])
+			// обрботка по настойкам копий картинок
+			$fileArr['sizes'] = [];
+			if(!empty($settigs['imageSizes']))
 			{
-				$image->resize(0,50);
-				$image->crop(0,0, 50,50);
-				$image->save(ROOT.$tmpPath.'s_'.$newName.'.jpg');
+				foreach($settigs['imageSizes'] as $imageSize)
+				{
+					$image = new Image();
+					$image->createFromFile($file->getTempName());
+					$img_inf = $image->getInfos();
+					if(!empty($imageSize['fixed']) && $imageSize['fixed'] == 1)
+					{
+						// фиксированный размр изображения
+						// ресайз по большей стороне
+						if($img_inf['width'] > $img_inf['height'])
+							$image->resize(0,$imageSize['height']);
+						else
+							$image->resize($imageSize['width'],0);
+						$image->crop(0,0, $imageSize['width'],$imageSize['height']);
+					}
+					else
+					{
+						/*РАСЧЕТ СТОРОН*/
+						// и ширина и высота больше заданных
+							// уменьшаем по большей стороне на столько чтобы меньшая тоже вошла в рамки
+						// только ширина больше
+							// уменьшаем только ширину
+						// только высота больше
+							// уменьшаем только высоту
+						$needWidth = $img_inf['width'];
+						$needHeight = $img_inf['height'];
+						$imageSize['width'] = ($imageSize['width'] == '*')?0:$imageSize['width'];
+						$imageSize['height'] = ($imageSize['height'] == '*')?0:$imageSize['height'];
+						if($img_inf['width'] > $imageSize['width'] && $img_inf['height'] > $imageSize['height'])
+						{
+							if($img_inf['width'] > $img_inf['height'])
+							{
+								$needHeight = $img_inf['height']*$needWidth/$img_inf['width'];
+								if($needHeight > $img_inf['height'])
+								{
+									$needHeight = $img_inf['height'];
+									$needWidth = 0;
+								}
+								else
+									$needHeight = 0;
+							}
+							else
+							{
+								$needWidth = $img_inf['width']*$needHeight/$img_inf['height'];
+								if($needWidth > $img_inf['width'])
+								{
+									$needWidth = $img_inf['width'];
+									$needHeight = 0;
+								}
+								else
+									$needWidth = 0;
+							}
+						}
+						elseif($img_inf['width'] > $imageSize['width'])
+							$needHeight = 0;
+						elseif($img_inf['height'] > $imageSize['height'])
+							$needWidth = 0;
 
-				$image->resize(0,600);
-				$image->crop(0,0, 600,600);
-				$image->save(ROOT.$tmpPath.'m_'.$newName.'.jpg');
-			}
-			else
-			{
-				$image->resize(50,0);
-				$image->crop(0,0, 50,50);
-				$image->save(ROOT.$tmpPath.'s_'.$newName.'.jpg');
+						$image->resize($needWidth,$needHeight);
+					}
 
-				$image->resize(600,0);
-				$image->crop(0,0, 600,600);
-				$image->save(ROOT.$tmpPath.'m_'.$newName.'.jpg');
+					$publicPath = $tmpPath.$imageSize['name'].'_'.$newName.'.jpg';
+					$image->save(ROOT.$publicPath);
+					$fileArr['sizes'][$imageSize['name']] = $publicPath;
+
+				}
 			}
-			$fileArr['sizes'] = 
-			[
-				'small' => $tmpPath.'s_'.$newName.'.jpg',
-				'medium' => $tmpPath.'m_'.$newName.'.jpg'
-			];
 		}
 		else
 			$fileArr['type'] = 'file';
-		$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
-		$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
+		if( ($fileArr['type'] == 'image' &&  $settigs['saveOriginalImage'] == 1) || $fileArr['type'] != 'image' )
+		{
+			$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
+			$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
+		}
+		else
+			$fileArr['path'] = false;
 
 		return $fileArr;
 	}
@@ -445,20 +494,18 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 				{
 					$sizes = [];
 					
-					// small
-					$fullFilePath = ROOT.$fileArr['sizes']['small'];
-					$path_parts = pathinfo($fullFilePath);
-					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, ROOT.$newName);
-					$sizes['small'] = $newName;
-
-					// medium
-					$fullFilePath = ROOT.$fileArr['sizes']['medium'];
-					$path_parts = pathinfo($fullFilePath);
-					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, ROOT.$newName);
-					$sizes['medium'] = $newName;
-
+					if(!empty($settings['imageSizes']))
+					{
+						foreach ($settings['imageSizes'] as $imageSize)
+						{
+							if(empty($fileArr['sizes'][$imageSize['name']])) continue;
+							$fullFilePath = ROOT.$fileArr['sizes'][$imageSize['name']];
+							$path_parts = pathinfo($fullFilePath);
+							$newName = $savePath.$path_parts['basename'];
+							rename($fullFilePath, ROOT.$newName);
+							$sizes[$imageSize['name']] = $newName;							
+						}
+					}
 					$fileArr['sizes'] = $sizes;
 				}
 				$resFiles[] = $fileArr;
