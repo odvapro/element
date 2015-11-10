@@ -40,8 +40,8 @@ class SettingsController extends ControllerBase
 				$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
 				$detailTables[$realTableName] = $curTable;
 			}
-			$this->view->setVar('detailTables',$detailTables);
 		}
+		$this->view->setVar('detailTables',$detailTables);
 
 		// достаем тещую версию системы
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
