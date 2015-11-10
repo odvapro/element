@@ -35,4 +35,10 @@ class EmNames extends ModelBase
      */
     public $name;
 
+    /**
+     * показывать в меню
+     * @var string
+     */
+    public $show;
+
 }

@@ -54,7 +54,7 @@
 				<div class="editLine">
 					<div class="inp imageSize">
 						<input class="imsName" name="set[imageSizes][{{isKey}}][name]" type="text" placeholder="name" value="{{imageSize['name']}}" />
-						<input class="imsFix" name="set[imageSizes][[{{isKey}}][fixed]" type="hidden" value="0" />
+						<input class="imsFix" name="set[imageSizes][{{isKey}}][fixed]" type="hidden" value="0" />
 						<input title="Фиксированное изображение" class="imsFix pointer" name="set[imageSizes][{{isKey}}][fixed]" value="1" type="checkbox" {% if imageSize['fixed'] is defined and imageSize['fixed'] == 1 %}checked="true"{% endif %} />
 						<input class="imsWidth" name="set[imageSizes][{{isKey}}][width]" type="text" placeholder="ширина" value="{{imageSize['width']}}" />
 						<input class="imsHeight" name="set[imageSizes][{{isKey}}][height]" type="text" placeholder="высота" value="{{imageSize['height']}}" />

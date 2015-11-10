@@ -11,8 +11,10 @@ class ControllerBase extends Controller
 		$config = $this->di->get('config');
 
 		// определение всех таблиц системы для вывода
-		$this->tables = $this->_getTables();
+		$shownTables = [];
+		$this->tables = $this->_getTables($shownTables);
 		$this->view->setVar('tables',$this->tables);
+		$this->view->setVar('sidebarTables',$shownTables);
 
 		// некоторые важнве переменные
 		$this->view->setVar('baseUri',$config->application->baseUri);
@@ -26,7 +28,7 @@ class ControllerBase extends Controller
 	/**
 	 * Возврощает все таблицы с измененными имениями
 	 */
-	private function _getTables()
+	private function _getTables(&$shownTables)
 	{
 		$db     = $this->di->get('db');
 		$config = $this->di->get('config');
@@ -62,6 +64,8 @@ class ControllerBase extends Controller
 			{
 				$tables[$table->table]['table_name'] = $table->name;
 			}
+			if($table->show == 1)
+				$shownTables[$table->table] = $tables[$table->table];
 		}
 		return $tables;
 	}

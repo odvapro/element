@@ -30,7 +30,7 @@
 					<tr data-id="{{resLine[primaryKey]}}">
 						<td class="centered">
 							<div class="editLine">
-								<a href="{{baseUri}}table/{{curTable['real_name']}}/edit/{{resLine['id']}}">Редактировать</a>
+								<a href="{{baseUri}}table/{{curTable['real_name']}}/edit/{{resLine[primaryKey]}}">Редактировать</a>
 								<a href="javascript:alert('не реализовано'); void(0);">Копировать</a>
 								<a href="javascript:void(0);" onclick="el.edit.delete(this)">Удалить</a>
 							</div>

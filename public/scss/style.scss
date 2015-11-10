@@ -74,20 +74,28 @@ body,html
 aside#sidebar
 {
 	position: fixed;
-	top:0px;
-	left:0px;
-	float: left;
-	width:266px;
-	background:#531F5D;
-	height:100%;
+    top: 0;
+    left: 0;
+    float: left;
+    width: 266px;
+    background: #531F5D;
+    height: 100%;
+    overflow: auto;
 	#logo
 	{
-		border-bottom:1px solid #451A4D;
-		text-align: center;
-		padding:10px 0;
+	    border-bottom: 1px solid #451A4D;
+	    text-align: center;
+	    padding: 10px 0;
+	    position: fixed;
+	    width: 266px;
+	    top: 0px;
+	    left: 0px;
+	    background: #531F5D;
+	    z-index: 100;
 	}
 	nav
 	{
+	    padding-top: 42px;
 		ul
 		{
 			margin-top:10px;

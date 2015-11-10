@@ -15,7 +15,7 @@
 			</div>
 			<nav>
 				<ul>
-					{% for relaTableName,table in tables %}
+					{% for relaTableName,table in sidebarTables %}
 						<li{% if table['classes'] is defined %} class="{{table['classes']}}" {% endif  %}><a href="{{baseUri}}table/{{relaTableName}}/"><span class="icon sidebarTable"></span>{{table['table_name']}}</a></li>
 					{% endfor  %}
 					<li class="settings{% if controllerName == "settings" %} act{% endif  %}"><a href="{{baseUri}}settings/"><span class="icon sidebarSettings"></span>НАСТРОЙКИ</a></li>
