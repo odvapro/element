@@ -5,16 +5,17 @@ use Phalcon\Mvc\Controller;
 class ControllerBase extends Controller
 {
 	public $tables;
+	public $sidebarTables;
 
 	public function initialize()
 	{
 		$config = $this->di->get('config');
 
 		// определение всех таблиц системы для вывода
-		$shownTables = [];
-		$this->tables = $this->_getTables($shownTables);
+		$this->sidebarTables = [];
+		$this->tables = $this->_getTables($this->sidebarTables);
 		$this->view->setVar('tables',$this->tables);
-		$this->view->setVar('sidebarTables',$shownTables);
+		$this->view->setVar('sidebarTables',$this->sidebarTables);
 
 		// некоторые важнве переменные
 		$this->view->setVar('baseUri',$config->application->baseUri);

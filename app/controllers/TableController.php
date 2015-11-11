@@ -426,11 +426,11 @@ class TableController extends ControllerBase
 	private function _setActiveTable($tableName = false)
 	{
 		// активируем нужную таблицу и переопределяем все таблицы в шаблоне
-		if(!empty($tableName) && array_key_exists($tableName, $this->tables))
+		if(!empty($tableName) && array_key_exists($tableName, $this->sidebarTables))
 		{
-			$this->tables[$tableName]['classes'] = 'act';
-			$this->view->setVar('tables',$this->tables);
-			$activeTable = array_merge($this->tables[$tableName],array('real_name'=>$tableName));
+			$this->sidebarTables[$tableName]['classes'] = 'act';
+			$this->view->setVar('sidebarTables',$this->sidebarTables);
+			$activeTable = array_merge($this->sidebarTables[$tableName],array('real_name'=>$tableName));
 			$this->view->setVar('curTable',$activeTable);
 			return $activeTable;
 		}
