@@ -1,0 +1,11 @@
+{
+	"name":"rokosExtension",
+	"type":"extension",
+	"version":"0.1",
+	"sidebarlinks":[
+		{
+			"name":"Функциональные блоки",
+			"link":"/maps/"
+		}
+	]
+}

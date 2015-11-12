@@ -16,6 +16,7 @@ return new \Phalcon\Config(array(
 		'libraryDir'             => __DIR__ . '/../../app/library/',
 		'cacheDir'               => __DIR__ . '/../../app/cache/',
 		'configDir'              => __DIR__ . '/../../app/config/',
+		'extDir'				 => __DIR__ . '/../../app/extensions/',
 		'baseUri'                => '/element/',
 		
 		// указывается относительно baseUri, так как вставляется после него

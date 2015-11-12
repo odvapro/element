@@ -66,5 +66,13 @@ $router->add(
 		"fieldName"  => 2
 	)
 );
+$router->add(
+	"/ext/:params",
+	array(
+		"controller" => "ext",
+		"action"     => 'index',
+		"params"     => 1
+	)
+);
 $router->handle();
 return $router;

@@ -38,6 +38,7 @@ class Security extends Phalcon\Mvc\User\Plugin
 				'index' => array('*'),
 				'table' => array('*'),
 				'settings' => array('*'),
+				'ext' => array('*'),
 				'notfound' => array('*')
 			);
 
