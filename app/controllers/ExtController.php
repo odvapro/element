@@ -1,19 +1,6 @@
 <?php
 class ExtController extends ControllerBase
-{
-	public function initialize()
-	{
-		parent::initialize();
-
-		// установка названия модуля 
-		// название контроллера
-		// в блок навигации
-		// $extName = 'test';
-		// $this->view->setVar('extName',$extName);
-
-
-	}
-	
+{	
 	/**
 	 * Роутинг расширений
 	 * /ext/<имя папки расширения>/<имя контроллера>/<имя действия>/<параметры/.../>
@@ -29,11 +16,13 @@ class ExtController extends ControllerBase
 			return false;
 		}
 		
+		//############################################################
+		// CONTROLLERS
 		// существование файлов
-		$extController     = ucfirst($extController).'EController';
-		$extPath           = $config->application->extDir.$extName;
-		$extControllerPath = $extPath.'/controllers/'.$extController.'.php';
-		$extPath           = $config->application->extDir.$extName;
+		$extControllerName     = ucfirst($extController).'EController';
+		$extPath           = $config->application->extDir.$extName.'/';
+		$extControllerPath = $extPath.'controllers/'.$extControllerName.'.php';
+
 		if(!is_dir($extPath) || !file_exists($extControllerPath))
 		{
 			$this->pageNotFound();
@@ -45,11 +34,45 @@ class ExtController extends ControllerBase
 
 		require_once($extControllerPath);
 
-		$contr = new $extController();
+
+		//############################################################
+		// VIEWS
+		// определяем view по умолчанию
+		// <адрес расширения>/views/<имя контроллера>/<имя действия>.volt
+		$extController = strtolower($extController);
+		$extViewsPath  = $extPath.'views/'.$extController.'/';
+		$extTplPath    = $extViewsPath.$extAction;
+		if(!is_dir($extViewsPath) || !file_exists($extTplPath.'.volt'))
+			$extTplPath = '';
+		$extTplPathPublic = str_replace($config->application->appDir, '', $extTplPath);
+		$this->view->setVar('extTplPath',$extTplPathPublic);
+
+
+		// установка активных ссылко в левом меню
+		$this->_setActiveExtansionLinks($extName,strtolower($extController),$extAction);
+
+		$contr = new $extControllerName();
 		call_user_func_array([$contr,$extAction.'Action'],$actionArgs);
-		
+
 	}
 
+	/*HELPERS*/
+	/**
+	 * Активирует нужные ссылки расширения
+	 * @return bool
+	 */
+	private function _setActiveExtansionLinks($extName,$extControllerName,$extActionName = 'index')
+	{
+		// активируем нужную таблицу и переопределяем все таблицы в шаблоне
+		$extActionName = ($extActionName == 'index')?'':$extActionName.'/';
+		$link = 'ext/'.$extName.'/'.$extControllerName.'/'.$extActionName;
+		foreach ($this->extenLinks as &$exLink)
+		{
+			if($exLink['link'] == $link)
+				$exLink['classes'] = 'act';
+		}
+		$this->view->setVar('extenLinks',$this->extenLinks);
+	}
 
 }
 

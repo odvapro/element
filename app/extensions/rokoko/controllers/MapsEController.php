@@ -2,9 +2,13 @@
 class MapsEController extends ControllerBase
 {
 
+	/**
+	 * Просто вывод 3х карт с элементам 
+	 * с интерфейсом добалвения
+	 */
 	public function indexAction()
 	{
-		$this->view->setVar('testv','adasd');
+		// 
 	}
 
 	public function testAction()

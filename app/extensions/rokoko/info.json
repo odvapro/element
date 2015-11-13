@@ -1,11 +1,12 @@
 {
 	"name":"rokosExtension",
 	"type":"extension",
+	"status":"installed",
 	"version":"0.1",
 	"sidebarlinks":[
 		{
 			"name":"Функциональные блоки",
-			"link":"/maps/"
+			"link":"ext/rokoko/maps/"
 		}
 	]
 }

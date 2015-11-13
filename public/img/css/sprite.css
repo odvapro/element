@@ -8,7 +8,7 @@
     display: inline-block;
     background-image: url("../svg/sprite.svg");
     background-repeat: no-repeat;
-    background-size: 9.9em 57.8em;
+    background-size: 9.9em 49.9em;
 }
 
 .no-svg .icon:before {
@@ -63,38 +63,44 @@
     height: 2.1em;
 }
 
-.icon.sidebarSettings:before {
+.icon.sidebarExtansion:before {
     background-position: 0em -11.1em;
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.icon.sidebarSettings:before {
+    background-position: 0em -12.2em;
     width: 1.5em;
     height: 1.5em;
 }
 
 .icon.sidebarTable:before {
-    background-position: 0em -12.6em;
+    background-position: 0em -13.7em;
     width: 1.1em;
     height: 1.1em;
 }
 
 .icon.sprite:before {
-    background-position: 0em -13.7em;
+    background-position: 0em -14.8em;
     width: 9.9em;
-    height: 42.6em;
+    height: 33.6em;
 }
 
 .icon.topBreadcrumbArrow:before {
-    background-position: 0em -56.3em;
+    background-position: 0em -48.4em;
     width: 0.4em;
     height: 0.6em;
 }
 
 .icon.topUserCircDelim:before {
-    background-position: 0em -56.9em;
+    background-position: 0em -49em;
     width: 0.4em;
     height: 0.4em;
 }
 
 .icon.topUserLogOutArr:before {
-    background-position: 0em -57.3em;
+    background-position: 0em -49.4em;
     width: 1.1em;
     height: 0.5em;
 }

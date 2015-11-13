@@ -15,6 +15,9 @@
 			</div>
 			<nav>
 				<ul>
+					{% for link in extenLinks %}
+						<li{% if link['classes'] is defined %} class="{{link['classes']}}" {% endif  %}><a href="{{baseUri}}{{link['link']}}"><span class="icon sidebarExtansion"></span>{{link['name']}}</a></li>
+					{% endfor  %}
 					{% for relaTableName,table in sidebarTables %}
 						<li{% if table['classes'] is defined %} class="{{table['classes']}}" {% endif  %}><a href="{{baseUri}}table/{{relaTableName}}/"><span class="icon sidebarTable"></span>{{table['table_name']}}</a></li>
 					{% endfor  %}

@@ -1,0 +1,45 @@
+{% extends "layouts/main.volt" %}
+{% block topBredcrumbs %}
+	<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
+	<li class="last"><a href="#">Функциональные блоки Рокос</a></li>
+{% endblock %}
+{% block titleLine %}
+	<div id="titleButtons">
+		<div class="titleBlock">
+			<div class="ttl">
+				<h2>Функциональные блоки Рокос</h2>
+			</div>
+		</div>
+		<div class="rightButtons">
+			<button class="elbutton blue" >Добавить</button>
+		</div>
+	</div>
+{% endblock %}
+{% block tabsLine %}
+	<div id="topTabs">
+		<ul>
+			<li class="act" onclick="el.tabs.show(this)">План 1го этажа</li>
+			<li onclick="el.tabs.show(this)">План 2го этажа</li>
+			<li onclick="el.tabs.show(this)">План 3го этажа</li>
+			<li onclick="el.tabs.show(this)">Общий план</li>
+		</ul>
+	</div>
+{% endblock %}
+{% block contentBoxAttributes %}class="withTabs"{% endblock %}
+{% block content %}
+	<div class="contWrap" style="width:900px;">
+		<div class="tabCont cont_1 act">
+			карта 1
+		</div>
+		<div class="tabCont cont_2">
+			карта 2
+		</div>
+		<div class="tabCont cont_3">
+			карта 3
+		</div>
+		<div class="tabCont cont_4">
+			Обищий план
+		</div>
+	</div>
+{% endblock %}
+{% block pageScripts %}{% endblock %}

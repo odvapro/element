@@ -6,6 +6,8 @@ class ControllerBase extends Controller
 {
 	public $tables;
 	public $sidebarTables;
+	public $extansions;
+	public $extenLinks;
 
 	public function initialize()
 	{
@@ -24,6 +26,24 @@ class ControllerBase extends Controller
 		$auth = $this->session->get('auth');
 		$this->view->setVar('auth',$auth);
 		
+		// достаем все установленные расширения
+		$extensions = $this->_getExtensions();
+		// собираем ссылки левого сайдбара для расширений
+		$this->extenLinks = [];
+		if(count($extensions))
+		{
+			foreach($extensions as $ext)
+			{
+				if(!empty($ext['sidebarlinks']))
+				{
+					foreach ($ext['sidebarlinks'] as $link)
+					{
+						$this->extenLinks[] = $link;
+					}
+				}
+			}
+		}
+		$this->view->setVar('extenLinks',$this->extenLinks);
 	}
 
 	/**
@@ -69,6 +89,30 @@ class ControllerBase extends Controller
 				$shownTables[$table->table] = $tables[$table->table];
 		}
 		return $tables;
+	}
+
+
+	/**
+	 * Возврощает список установленных расширений
+	 */
+	private function _getExtensions()
+	{
+		global $config;
+		$extensions = [];
+		$files = scandir($config->application->extDir,1);
+		foreach ($files as $ext)
+		{
+			$infoFile = $config->application->extDir.$ext.'/info.json';
+			if(is_dir($config->application->extDir.$ext) && file_exists($infoFile))
+			{
+				$infoJSON = file_get_contents($infoFile);
+				$infoJSON = json_decode($infoJSON,true);
+				if(!empty($infoJSON['status']) && $infoJSON['status'] == 'installed')
+					$extensions[$ext] = $infoJSON;
+			}
+		}
+
+		return $extensions;
 	}
 
 	public function pageNotFound()
