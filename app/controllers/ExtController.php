@@ -34,6 +34,15 @@ class ExtController extends ControllerBase
 
 		require_once($extControllerPath);
 
+		//############################################################
+		// MODELS
+		// регистрируем папку с моделями если она есть
+		$extModelsDir  = $extPath.'models/';
+		if(is_dir($extModelsDir))
+		{
+			global $loader;
+			$loader->registerDirs([$extModelsDir])->register();
+		}
 
 		//############################################################
 		// VIEWS

@@ -29,7 +29,7 @@
 {% block content %}
 	<div class="contWrap" style="width:900px;">
 		<div class="tabCont cont_1 act">
-			карта 1
+			<div id="demo"></div>
 		</div>
 		<div class="tabCont cont_2">
 			карта 2
@@ -42,4 +42,9 @@
 		</div>
 	</div>
 {% endblock %}
-{% block pageScripts %}{% endblock %}
+{% block pageScripts %}
+<script src="{{baseUri}}extensions/rokoko/src/js/d3/d3.min.js" charset="utf-8"></script>
+<script src="{{baseUri}}extensions/rokoko/src/js/floorplan/d3.floorplan.min.js" charset="utf-8"></script>
+<script src="{{baseUri}}extensions/rokoko/src/js/init.js" charset="utf-8"></script>
+<link rel="stylesheet" href="{{baseUri}}extensions/rokoko/src/js/floorplan/d3.floorplan.css"/>
+{% endblock %}
