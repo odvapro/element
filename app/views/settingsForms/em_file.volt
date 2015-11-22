@@ -35,7 +35,7 @@
 		<div class="inp">
 			<label class="checkLab">
 				<input type="hidden" name="set[saveOriginalImage]" value="0"/>
-				<input type="checkbox" name="set[saveOriginalImage]" value="1" {% if settings['saveOriginalImage'] is defined and settings['saveOriginalImage'] == 1 %}checked="true"{% endif %}/> Не сохронять оригинал
+				<input type="checkbox" name="set[saveOriginalImage]" value="1" {% if settings['saveOriginalImage'] is defined and settings['saveOriginalImage'] == 1 %}checked="true"{% endif %}/> Cохронять оригинал
 			</label>
 		</div>
 	</div>
