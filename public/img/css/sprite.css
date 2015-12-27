@@ -8,7 +8,7 @@
     display: inline-block;
     background-image: url("../svg/sprite.svg");
     background-repeat: no-repeat;
-    background-size: 9.9em 49.9em;
+    background-size: 9.9em 66.2em;
 }
 
 .no-svg .icon:before {
@@ -84,23 +84,23 @@
 .icon.sprite:before {
     background-position: 0em -14.8em;
     width: 9.9em;
-    height: 33.6em;
+    height: 49.9em;
 }
 
 .icon.topBreadcrumbArrow:before {
-    background-position: 0em -48.4em;
+    background-position: 0em -64.7em;
     width: 0.4em;
     height: 0.6em;
 }
 
 .icon.topUserCircDelim:before {
-    background-position: 0em -49em;
+    background-position: 0em -65.3em;
     width: 0.4em;
     height: 0.4em;
 }
 
 .icon.topUserLogOutArr:before {
-    background-position: 0em -49.4em;
+    background-position: 0em -65.7em;
     width: 1.1em;
     height: 0.5em;
 }

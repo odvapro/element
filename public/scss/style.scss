@@ -716,6 +716,38 @@ section#contentBlock
 		{
 			overflow: auto;
 			max-height: 400px;
+			.tabsLine
+			{
+				padding:17px 0;
+				overflow: hidden;
+			    background:#F7F8FA;
+			    position:absolute;
+			    width:100%;
+				.tab
+				{
+				    float:left;
+				    font-size:12px;
+				    padding:5px 22px;
+				    background:#F1F2F4;
+				    border-radius:2px;
+				    margin-left:20px;
+				    font-weight:bold;
+				    line-height:15px;
+				    color:#B1B1B5;
+				    cursor:pointer;
+					&:hover, &.active
+					{
+					    background:#E6E8EE;
+					    color:#8D8D96;
+					}
+				}
+			}
+			.tabsCont .tabCont
+			{
+				display:none;
+				margin-top:59px;
+				&.active{ display: block; }
+			}
 			.editLine
 			{
 				&:nth-child(2n)

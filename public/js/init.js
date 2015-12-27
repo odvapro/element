@@ -349,21 +349,35 @@ var el =
 		
 		/*событие по срабатывющее при изменении поля типа файл
 		  и сразу происодит отправка файла на сервер*/
-		uplaodFile : function(event, fieldName, tableName)
+		uplaodFile : function(event, fieldName, tableName,uploadType)
 		{
-			var data = new FormData();
-			$.each(event.target.files, function(key, value)
+			uploadType = (typeof uploadType == 'undefined')?'fileInput':uploadType;
+			var processData = true;
+			var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+			switch(uploadType)
 			{
-				data.append(key, value);
-			});
+				case 'byUrl':
+					var data = {type:'byUrl'};
+					data.url = $('.popupContLine #fileUploadURL').val();
+				break;
+				case 'fileInput':
+					var data = new FormData();
+					$.each(event.target.files, function(key, value)
+					{
+						data.append(key, value);
+					});
+					processData = false;
+					contentType = false;
+				break;
+			}
 			$.ajax({
 				url: el.config.baseUri+"table/uploadFiles/"+tableName+"/"+fieldName,
 				type: 'POST',
 				data: data,
 				cache: false,
 				dataType: 'json',
-				processData: false,
-				contentType: false,
+				processData: processData,
+				contentType: contentType,
 				success: function(data, textStatus, jqXHR)
 				{
 					if(typeof data.result != "undefined" && data.result == "success")
@@ -537,6 +551,15 @@ var el =
 		{
 			$('#popupWrap .popupCont').removeClass('show');
 			$('body').css('overflow','auto');
+		},
+
+		showTab:function(instance)
+		{
+			var needTabNum = $(instance).data('tab');
+			$('#popupWrap .popupCont .tabsLine .tab').removeClass('active');
+			$(instance).addClass('active');
+			$('#popupWrap .popupCont .tabsCont .tabCont').removeClass('active');
+			$('#popupWrap .popupCont .tabsCont .tabCont[data-tab="'+needTabNum+'"]').addClass('active');
 		}
 	},
 

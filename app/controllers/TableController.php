@@ -374,41 +374,12 @@ class TableController extends ControllerBase
 			$fieldDesc = $fieldDesc[0];
 			if($fieldDesc->type == "em_file")
 			{
-				if($this->request->hasFiles() == true)
-				{
-					$settings = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
-					$fileTypes = [];
-					if(!empty($settings['fileTypes']))
-						$fileTypes = $settings['fileTypes'];
-	            	
-	            	// подготовка массива файлов/файла для записи в БД
-	            	$globValid = true;
-	            	$fileForDb = [];
-	            	foreach ($this->request->getUploadedFiles() as $file)
-					{
-					    // проверка поля на соответсвие типам
-					    $valid = $this->tableEditor->checkFileTypes($file,$fileTypes);
-					    if($valid)
-						    $fileForDb[] = $this->tableEditor->uploadFileToTemp($file,$settings);
-					    else
-					    	$globValid = false;
+				// загрузка по URL
+				// файл просто добавлется в массив $_FILES для обычной обработки
+				if($this->request->getPost('type') == 'byUrl' && !empty($this->request->getPost('url')))
+					$this->_addToFiles('file',$this->request->getPost('url'));
 
-						// если поле не множественное , то разрешается загрузить только один файл
-					    if($fieldDesc->multiple == 0) break;
-					}
-
-					if($globValid)
-					{
-						// результат массив загруженных файлов 
-						// во временную папку 
-						if(!empty($fileForDb))
-							$this->jsonResult(['result'=>'success','files'=>$fileForDb]);
-					}
-					else
-						$this->jsonResult(['result'=>'error','msg'=>'такого типа файлы запрещены']);
-				}
-				else
-					$this->jsonResult(['result'=>'error','msg'=>'нет файлов']);
+				$this->_uploadFiles($fieldDesc);
 			}
 			else
 				$this->jsonResult(['result'=>'error','msg'=>'поле не является файловым']);
@@ -440,5 +411,70 @@ class TableController extends ControllerBase
 			return false;
 		}
 	}
+	
+	/**
+	 * Загружает файлы которые были посланы обычным способом через поле типа файл
+	 * @var  fieldDesc описание типа поля в которое записывается файл
+	 */
+	private function _uploadFiles($fieldDesc)
+	{
+		if($this->request->hasFiles() == true)
+		{
+			$settings = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
+			$fileTypes = [];
+			if(!empty($settings['fileTypes']))
+				$fileTypes = $settings['fileTypes'];
+        	
+        	// подготовка массива файлов/файла для записи в БД
+        	$globValid = true;
+        	$fileForDb = [];
+        	foreach ($this->request->getUploadedFiles() as $file)
+			{
+			    // проверка поля на соответсвие типам
+			    $valid = $this->tableEditor->checkFileTypes($file,$fileTypes);
+			    if($valid)
+				    $fileForDb[] = $this->tableEditor->uploadFileToTemp($file,$settings);
+			    else
+			    	$globValid = false;
+
+				// если поле не множественное , то разрешается загрузить только один файл
+			    if($fieldDesc->multiple == 0) break;
+			}
+
+			if($globValid)
+			{
+				// результат массив загруженных файлов 
+				// во временную папку 
+				if(!empty($fileForDb))
+					$this->jsonResult(['result'=>'success','files'=>$fileForDb]);
+			}
+			else
+				$this->jsonResult(['result'=>'error','msg'=>'такого типа файлы запрещены']);
+		}
+		else
+			$this->jsonResult(['result'=>'error','msg'=>'нет файлов']);
+	}
+
+	/**
+	 * Добавлает файл по URL в массив $_FILES
+	 * @var $key  ключ по которому записывается файл  
+	 * @var $url  url из которого берется файл
+	 */
+	function _addToFiles($key, $url)
+	{
+	    $tempName = tempnam('/tmp', 'php');
+	    $originalName = basename(parse_url($url, PHP_URL_PATH));
+
+	    $imgRawData = file_get_contents($url);
+	    file_put_contents($tempName, $imgRawData);
+	    $_FILES[$key] = array(
+	        'name' => $originalName,
+	        'type' => mime_content_type($tempName),
+	        'tmp_name' => $tempName,
+	        'error' => 0,
+	        'size' => strlen($imgRawData),
+	    );
+	}
+
 }
 

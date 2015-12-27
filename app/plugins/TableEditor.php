@@ -444,15 +444,20 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$publicPath = $tmpPath.$imageSize['name'].'_'.$newName.'.jpg';
 					$image->save(ROOT.$publicPath);
 					$fileArr['sizes'][$imageSize['name']] = $publicPath;
-
 				}
 			}
 		}
 		else
 			$fileArr['type'] = 'file';
+		
 		if( ($fileArr['type'] == 'image' &&  $settigs['saveOriginalImage'] == 1) || $fileArr['type'] != 'image' )
 		{
-			$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
+			if(is_uploaded_file($file->getTempName()))
+				$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
+			else
+			{
+				rename($file->getTempName(), ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
+			}
 			$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
 		}
 		else
