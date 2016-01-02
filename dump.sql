@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Версия 4096
+# Версия 4499
 #
 # http://www.sequelpro.com/
-# http://code.google.com/p/sequel-pro/
+# https://github.com/sequelpro/sequelpro
 #
 # Адрес: 127.0.0.1 (MySQL 5.6.19)
 # Схема: element_cms
-# Время создания: 2015-07-21 18:42:24 +0000
+# Время создания: 2016-01-02 12:02:25 +0000
 # ************************************************************
 
 
@@ -31,20 +31,9 @@ CREATE TABLE `em_names` (
   `field` varchar(200) DEFAULT '',
   `type` int(5) NOT NULL,
   `name` varchar(200) NOT NULL DEFAULT '',
+  `show` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `em_names` WRITE;
-/*!40000 ALTER TABLE `em_names` DISABLE KEYS */;
-
-INSERT INTO `em_names` (`id`, `table`, `field`, `type`, `name`)
-VALUES
-	(1,'test_table','',0,'ТЕСТОВАЯ ТАБЛИЦА'),
-	(2,'something','',0,'Еще одна  таблица');
-
-/*!40000 ALTER TABLE `em_names` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 # Дамп таблицы em_types
 # ------------------------------------------------------------
@@ -61,23 +50,6 @@ CREATE TABLE `em_types` (
   `settings` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `em_types` WRITE;
-/*!40000 ALTER TABLE `em_types` DISABLE KEYS */;
-
-INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `multiple`, `settings`)
-VALUES
-	(3,'test_table','date','em_date',0,1,NULL),
-	(4,'test_table','datetime','em_datetime',0,0,NULL),
-	(5,'test_table','file','em_file',0,1,'{\"savePath\":\"element\\/public\\/upload\\/\"}'),
-	(6,'test_table','name','em_string',0,1,NULL),
-	(7,'test_table','text','em_text',0,0,'{\"visualEditor\":\"1\"}'),
-	(8,'test_table','element','em_node',0,0,'{\"nodeTable\":\"test_table\",\"nodeField\":\"text\"}'),
-	(10,'test_table','checkbox','em_bool',0,0,NULL);
-
-/*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 # Дамп таблицы em_users
 # ------------------------------------------------------------
@@ -98,7 +70,16 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
-	(1,'admin','Михаил','21232f297a57a5a743894a0e4a801fc3','axel0726@gmail.com');
+	(1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
