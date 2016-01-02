@@ -28,4 +28,5 @@ public/upload/
 node_modules/
 app/cache/*
 app/config/config.php
+app/extensions/*
 .phalcon/
