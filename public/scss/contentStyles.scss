@@ -504,5 +504,40 @@ section#contentBlock
 				}
 			}
 		}
+
+		/* вкладки второго уровня */
+		.tabsLine
+		{
+		    padding: 8px 0px;
+		    overflow: hidden;
+		    width:100%;
+		    top:0px;
+		    left:0px;
+		    overflow:hidden;
+		    border-bottom:1px solid #D3D3DB;
+		    margin-top: -19px;
+		    margin-left: -19px;
+			.tab{
+			    float:left;
+			    font-size:12px;
+			    padding:5px 22px;
+			    background:#F1F2F4;
+			    border-radius:2px;
+			    margin-left:20px;
+			    font-weight:bold;
+			    line-height:15px;
+			    color:#B1B1B5;
+			    cursor:pointer;
+				&:hover,&.act
+				{
+				    background:#E6E8EE;
+				    color:#8D8D96;
+				}
+			}
+		}
+		.subTabsCont .subTabCont{
+			display:none;
+			&.act{ display: block; }
+		}
 	}
 }
