@@ -49,8 +49,6 @@ class ControllerBase extends Controller
 		$sFolded = 0;
 		if(isset($_COOKIE['sFolded']))
             $sFolded = $_COOKIE['sFolded'];
-        // var_dump($sFolded);
-        // exit();
         $this->view->setVar('sFolded',$sFolded);
 
 	}
