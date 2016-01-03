@@ -44,6 +44,15 @@ class ControllerBase extends Controller
 			}
 		}
 		$this->view->setVar('extenLinks',$this->extenLinks);
+
+		// свернутость сайдбара
+		$sFolded = 0;
+		if(isset($_COOKIE['sFolded']))
+            $sFolded = $_COOKIE['sFolded'];
+        // var_dump($sFolded);
+        // exit();
+        $this->view->setVar('sFolded',$sFolded);
+
 	}
 
 	/**

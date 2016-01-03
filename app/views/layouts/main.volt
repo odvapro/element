@@ -8,20 +8,24 @@
 		<![endif]-->
 		<link rel="stylesheet" href="{{baseUri}}css/style.css" />
 	</head>
-	<body>
+	<body {% if sFolded is defined and sFolded == 1 %}class="folded"{% endif %}>
 		<aside id="sidebar">
 			<div id="logo">
-				<a href="{{baseUri}}"><span class="icon logoTop"></span></a>
+				<a href="{{baseUri}}">
+					<span class="icon logoTop"></span>
+					<span class="icon foldLogo"></span>
+				</a>
 			</div>
 			<nav>
 				<ul>
 					{% for link in extenLinks %}
-						<li{% if link['classes'] is defined %} class="{{link['classes']}}" {% endif  %}><a href="{{baseUri}}{{link['link']}}"><span class="icon sidebarExtansion"></span>{{link['name']}}</a></li>
+						<li{% if link['classes'] is defined %} class="{{link['classes']}}" {% endif  %}><a href="{{baseUri}}{{link['link']}}"><span class="icon sidebarExtansion"></span><span class="text">{{link['name']}}</span></a></li>
 					{% endfor  %}
 					{% for relaTableName,table in sidebarTables %}
-						<li{% if table['classes'] is defined %} class="{{table['classes']}}" {% endif  %}><a href="{{baseUri}}table/{{relaTableName}}/"><span class="icon sidebarTable"></span>{{table['table_name']}}</a></li>
+						<li{% if table['classes'] is defined %} class="{{table['classes']}}" {% endif  %}><a href="{{baseUri}}table/{{relaTableName}}/"><span class="icon sidebarTable"></span><span class="text">{{table['table_name']}}</span></a></li>
 					{% endfor  %}
-					<li class="settings{% if controllerName == "settings" %} act{% endif  %}"><a href="{{baseUri}}settings/"><span class="icon sidebarSettings"></span>НАСТРОЙКИ</a></li>
+					<li class="settings{% if controllerName == "settings" %} act{% endif  %}"><a href="{{baseUri}}settings/"><span class="icon sidebarSettings"></span><span class="text">НАСТРОЙКИ</span></a></li>
+					<li class="folding"><a href="javascript:void(0)" onclick="el.sidebar.fold()"><span class="icon fold"></span><span class="icon unfold"></span><span class="text">Свренуть</span></a></li>
 				</ul>
 			</nav>
 		</aside>

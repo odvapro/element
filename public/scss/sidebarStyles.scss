@@ -19,10 +19,12 @@ aside#sidebar
 	    left: 0px;
 	    background: #531F5D;
 	    z-index: 100;
+	    .foldLogo{display:none;}
 	}
 	nav
 	{
 	    padding-top: 42px;
+	    min-width: 266px;
 		ul
 		{
 			margin-top:10px;
@@ -46,8 +48,10 @@ aside#sidebar
 						position:relative;
 						top:-2px;
 						margin-right:14px;
+						&.text{white-space:nowrap;}
 					}
 				}
+				&.folding .unfold {display:none; }
 			}
 		}
 	}
