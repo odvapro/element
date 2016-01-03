@@ -193,7 +193,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	{
 		$noErrors = true;
 		// смена названия таблицы
-		if(!empty($tableChanges['name']))
+		if(!empty($tableChanges['name']) || isset($tableChanges['show']))
 		{
 			// поиск смененного названия таблицы (type = 0 - названия таблиц)
 			$emName = EmNames::find([
@@ -205,10 +205,20 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 				$emName = new EmNames();
 				$emName->table = $tableRealName;
 				$emName->type = 0;
+				$emName->show = 0;
 			}
 			else
 				$emName = $emName[0];
-			$emName->name = $tableChanges['name'];
+			
+			if(!empty($tableChanges['name']))
+				$emName->name = $tableChanges['name'];
+			else
+				$emName->name = $tableRealName;
+			if(isset($tableChanges['show']))
+				$emName->show = $tableChanges['show'];
+			else
+				$emName->show = 0;
+
 			if(!$emName->save())
 				$noErrors = false;
 		}
@@ -252,11 +262,12 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$changes = [];
 		if($tableName != $tableInfo['name'])
 			$changes['name'] = $tableInfo['name'];
+		if(isset($tableInfo['show']))
+			$changes['show'] = intval($tableInfo['show']);
 	
 		foreach ($tableInfo['fields'] as $fieldName => $field)
 			if($field['type'] != 'notsys')
 				$changes['fields'][$fieldName] = $field;
-
 		if(!empty($changes))
 			return $changes;
 		else

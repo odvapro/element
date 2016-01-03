@@ -29,4 +29,5 @@ node_modules/
 app/cache/*
 app/config/config.php
 app/extensions/*
+.sass-cache/*
 .phalcon/

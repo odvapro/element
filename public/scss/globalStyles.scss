@@ -1,0 +1,47 @@
+.elbutton
+{
+	font-size:12px;
+	border:1px solid $greyColor;
+	color:$greyColor;
+	font-size:12px;
+	padding:9px 14px;
+	background:none;
+	font-weight:bold;
+	border-radius:40px;
+	cursor:pointer;
+	&.blue
+	{
+		border:1px solid $blueColor;
+		color:$blueColor;
+	}
+	// совершенно другие кнопки
+	&.dotts
+	{
+		padding:0px;
+		border:0px;
+		&:hover span
+		{
+		}
+	}
+}
+.centered
+{
+	text-align:center !important;
+}
+.righted
+{
+	text-align:right !important;
+}
+.clear
+{
+	width:100%;
+	clear:both;
+}
+.rounded
+{
+	border-radius:100%;
+}
+.pointer
+{
+	cursor:pointer;
+}

@@ -1,0 +1,508 @@
+body,html
+{ 
+	background:$backgroundColor;
+	position: relative;
+	height: 100%;
+	font-family:Arial;
+	width:100%;
+}
+
+section#contentBlock
+{
+	margin-left:266px;
+	overflow:auto; 
+	#contFixed
+	{
+		position: fixed;
+		top:0px;
+		left:266px;
+		width:calc(100% - 266px);
+		z-index: 10;
+	}
+	#topNavLine
+	{
+		overflow: hidden;
+		height: 39px;
+		border-bottom:1px solid #EAECF1;
+		line-height: 39px;
+		background:#fff;
+		padding:0 20px; 
+		.navigation
+		{
+			float:left;
+			ul
+			{
+				list-style: none;
+				li
+				{
+					display: inline-block;
+					font-size: 12px;
+					a
+					{
+						color:$blueColor;
+						text-decoration: none;
+						font-weight: bold;
+						&:hover{ text-decoration:underline; }
+					}
+					&.last a
+					{
+						color:$greyColor;
+					}
+					&.arr
+					{
+						padding:0 5px;
+					}
+				}
+			}
+		}
+		.userbar
+		{
+			@extend .navigation;
+			float: right;
+			li.cirdel
+			{
+				padding:0 5px;
+			}
+			li.logout span
+			{
+				position: relative;
+				top: -1px;
+				margin-left: 2px;
+			}
+		}
+	}
+	#titleButtons
+	{
+		overflow: hidden;
+		height: 60px;
+		background:#fff;
+		border-bottom:1px solid $bordersColor;
+		padding:0 20px;
+		.elbutton
+		{
+			margin-top:13px;
+		}
+		.titleBlock
+		{
+			float: left;
+			.ttl
+			{
+				margin-top:15px;
+				overflow:hidden;
+				float: left;
+				margin-right:20px;
+				h2
+				{
+					color: $blackColor;
+					font-size: 16px;
+					line-height: 16px;
+					margin:0px;
+					margin-bottom: 2px;
+				}
+				span
+				{
+					font-size: 10px;
+					display: block;
+					color: $greyColor;
+				}
+			}
+		}
+		.rightButtons
+		{
+			float: right;
+		}
+	}
+	/* влкадки на странице настроек */
+	#topTabs
+	{
+		height: 34px;
+		background:#fff;
+		border-bottom:1px solid $bordersColor;
+		padding:0 20px;		
+		position:relative;
+		top:-1px;
+		ul
+		{
+			list-style: none;
+			li
+			{
+				display: block;
+				margin-right: 15px;
+				background: #fff;
+				border:1px solid $bordersColor;
+				border-radius:3px 3px 0 0;
+				float: left;
+				height: 32px;
+				padding: 0 58px;
+				line-height: 34px;
+				font-size:13px;
+				color: $blackColor;
+				font-weight: bold;
+				position:relative;
+				bottom:-1px;
+				cursor: pointer;
+				&.act
+				{
+					border-bottom:1px solid $backgroundColor;
+					background:$backgroundColor;
+				}
+			}
+		}
+	}
+	#content
+	{
+		margin-top:100px;
+		position:relative;
+		/* с вклабками верзнаяя часть увеличивается на 34px */
+		&.withTabs
+		{
+			margin-top:134px;
+		}
+		.contWrap
+		{
+			padding:20px; 
+		}
+		table
+		{
+			background:#fff;
+			border-collapse: separate;
+			border:1px solid $bordersColor;
+			border-radius:3px;
+			width:100%;
+			margin-bottom:20px;
+			&.settings
+			{
+				margin-bottom: 0px;
+			}
+			th
+			{
+				background:#F0F2F5;
+				padding:11px 20px;
+				border-bottom:1px solid $bordersColor;
+				font-size: 12px;
+				font-weight: bold;
+				color: $greyColor;
+				line-height:14px;
+				text-align: left;
+				&.tableName
+				{
+					color: $blackColor;
+					position:relative;
+					span.icon
+					{
+						position: relative;
+						margin-left: 9px;
+						top: -1px;
+						cursor: pointer;
+					}
+					input
+					{
+						position:absolute;
+						border: 1px solid #D3D3DB;
+						font-size: 12px;
+						color: #8D8D96;
+						padding: 6px 11px;
+						border-radius: 2px;
+						top:4px;
+						left:10px;
+						z-index:2;
+						width:400px;
+						display: none;
+						&.show
+						{
+							display: block;
+						}
+					}
+				}
+				&.righted label
+				{
+					font-size: 11px;
+				    font-weight: normal;
+				    cursor: pointer;
+				}
+			}
+			td
+			{
+				padding:11px 20px;
+				border-right:1px solid $bordersColor;
+				border-bottom:1px solid $bordersColor;
+				vertical-align: middle;
+				font-size:12px;
+				color: $greyColor;
+				font-weight: bold;
+				max-width: 300px;
+				position:relative;
+				&:last-child
+				{
+					border-right:0px;
+				}
+				img
+				{
+					height:20px;
+					max-width:50px;
+					line-height:0px;
+					float: left;
+					margin-right:3px;
+					:last-child
+					{
+						margin-right: 0px;
+					}
+				}
+				&:hover .editLine
+				{
+					display: block;
+				}
+				.editLine
+				{
+					height: 100%;
+					background: #fff;
+					position:absolute;
+					top:0px;
+					left:0px;
+					width:200px;
+					font-size: 8px;
+					font-weight: bold;
+					line-height: 100%;
+					z-index:1;
+					display: none;
+					a
+					{
+						color:$blueColor;
+						margin-right:10px;
+						position:relative;
+						top:calc(50% - 6px);
+						&:hover
+						{
+							text-decoration: none;
+						}
+					}
+				}
+				input[type="checkbox"]
+				{
+					cursor: pointer;
+				}
+			}
+			tr:last-child
+			{
+				td
+				{
+					border-bottom:0px;
+					&:first-child
+					{
+						border-bottom-left-radius:3px;
+					}
+				}
+			}
+			tr:last-child td:last-child
+			{
+				border-bottom-right-radius:3px;
+			}
+			tr:first-child th:first-child
+			{
+				border-top-left-radius:3px;
+			}
+			tr:first-child th:last-child
+			{
+				border-top-right-radius:3px;
+			}
+			tr.black td
+			{
+				color: $blackColor;
+			}
+		}
+		/* строка которая идет после таблицы натсроек, для добавления нового своства */
+		.addFieldLine
+		{
+			text-align: center;
+			margin-bottom: 20px;
+			button.addField
+			{
+				background:#F0F2F5;
+				padding:9px 123px;
+				color: $greyColor;
+				font-size: 12px;
+				font-weight: bold;
+				border-radius:0 0 3px 3px;
+				border:0px;
+				cursor: pointer;
+			}
+		}
+		nav.pagination
+		{
+			background:#fff;
+			padding:11px 10px;
+			border:1px solid $bordersColor;
+			border-radius:3px;
+			float: left;
+			margin-bottom: 20px;
+			ul
+			{
+				list-style:none;
+				li
+				{
+					display: inline-block;
+					padding:0 10px;
+					a
+					{
+						font-size:12px;
+						text-decoration: none;
+						color: $greyColor;
+						font-weight: bold;
+						&:hover
+						{
+							color: $blackColor;
+						}
+					}
+					&.act a{ color: $blackColor; }
+				}
+			}
+		} 
+
+		.tabCont
+		{
+			display: none;
+			&.act
+			{
+				display: block;
+			}
+		}
+
+		/* детальная странца элемента */
+		.elementDetail
+		{
+			.line
+			{
+				padding:15px 20px;
+				min-width: 900px;
+				border-bottom: 1px solid $bordersColor;
+				overflow: hidden;
+				&:nth-child(2n)
+				{
+					background:#fff;
+				}
+				.name
+				{
+					float: left;
+					width:190px;
+					color: $greyColor;
+					font-size: 12px;
+					font-weight: bold;
+					line-height: 14px;
+				}
+				.filedEdit
+				{
+					float: left;
+					width:650px;
+					input,textarea
+					{
+						border:1px solid $bordersColor;
+						font-size: 12px;
+						color: $blackColor;
+						padding:6px 11px;
+						border-radius:2px;
+						width: 400px;
+						background:#fff;
+						&.datepicker, &.datetimepicker
+						{
+							width:225px;
+						}
+					}
+					.datepickerIcon
+					{
+						position:relative;
+						left: -22px;
+						top: -2px;
+						cursor: pointer;
+					}
+					textarea
+					{
+						width:600px;
+						max-width:600px;
+						height: 190px;
+						max-height: 200px;
+					}
+					.attaches
+					{
+						.attach
+						{
+							float: left;
+							margin-right: 13px;
+							position: relative;
+							.atIcon
+							{
+								border:1px solid $bordersColor;
+								line-height: 0px;
+								cursor: pointer;
+								img
+								{
+									max-height: 34px;
+								}
+							}
+							.delete
+							{
+								position:absolute;
+								top:-7px;
+								left:-7px;
+								cursor: pointer;
+								display: none;
+							}
+							&:hover .delete
+							{
+								display: block;
+							}
+						}
+						.attachAdd
+						{
+							background: none;
+							border:0px;
+							cursor: pointer;
+							padding:0px;
+							margin-top:5px;
+						}
+					}
+					.nodes
+					{
+						.node
+						{
+							float: left;
+							margin-right:13px;
+							position: relative;
+							&:hover .delete
+							{
+								display: block;
+							}
+							.delete
+							{
+								position:absolute;
+								top:-7px;
+								left:-7px;
+								cursor: pointer;
+								display: none;
+							}
+							.noIcon
+							{
+								background:#fff;
+								color: $greenColor;
+								font-size: 12px;
+								font-weight: bold;
+								padding:8px 11px;
+								display: blockk;
+								border:1px solid $bordersColor;
+								border-radius:2px;
+								cursor: pointer;
+							}
+						}
+						.attachAdd
+						{
+							background: none;
+							border:0px;
+							cursor: pointer;
+							padding:0px;
+							margin-top:5px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

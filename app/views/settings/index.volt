@@ -36,7 +36,11 @@
 								<input type="text" onkeyup="el.settings.refreshTableName(this);" onblur="el.settings.hideEditTable(this);" name="tables[{{relaTableName}}][name]" value="{{tableDetail['table_name']}}"/>
 								<span class="tableNamePlace">{{tableDetail['table_name']}}</span> <span onclick="el.settings.showEditTable(this);" class="icon editButton"></span>
 							</th>
-							<th class="righted" colspan="3">{{relaTableName}}</th>
+							<th class="righted" colspan="3">
+								{{relaTableName}}
+								<input type="hidden" name="tables[{{relaTableName}}][show]" value="0"/>
+								<label>(показывать <input type="checkbox" {%if tableDetail['show'] is defined and tableDetail['show'] == 1 %}checked{% endif %} name="tables[{{relaTableName}}][show]" value="1"/>)</label>
+							</th>
 						</tr>
 						<tr class="black">
 							<td>Настройки</td>
