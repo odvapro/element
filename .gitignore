@@ -24,10 +24,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-public/upload/
-node_modules/
-app/cache/*
-app/config/config.php
-app/extensions/*
+/public/upload/
+/node_modules/
+/app/cache/*
+/app/extensions/*
 .sass-cache/*
 .phalcon/
+/app/config/config.php
