@@ -24,7 +24,7 @@
 					{% for relaTableName,table in sidebarTables %}
 						<li{% if table['classes'] is defined %} class="{{table['classes']}}" {% endif  %}><a href="{{baseUri}}table/{{relaTableName}}/"><span class="icon sidebarTable"></span><span class="text">{{table['table_name']}}</span></a></li>
 					{% endfor  %}
-					<li class="settings{% if controllerName == "settings" %} act{% endif  %}"><a href="{{baseUri}}settings/"><span class="icon sidebarSettings"></span><span class="text">НАСТРОЙКИ</span></a></li>
+					<li class="settings{% if controllerName == "settings" %} act{% endif  %}"><a href="{{baseUri}}settings/"><span class="icon sidebarSettings"></span><span class="text">Настройки</span></a></li>
 					<li class="folding"><a href="javascript:void(0)" onclick="el.sidebar.fold()"><span class="icon fold"></span><span class="icon unfold"></span><span class="text">Свренуть</span></a></li>
 				</ul>
 			</nav>
