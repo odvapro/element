@@ -27,7 +27,7 @@ Temporary Items
 /public/upload/
 /node_modules/
 /app/cache/*
-#!/app/cache/README.md
+!/app/cache/README.md
 /app/extensions/*
 .sass-cache/*
 .phalcon/
