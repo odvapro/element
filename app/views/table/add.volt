@@ -38,11 +38,8 @@
 	{{ partial("editFields/tpls") }}
 {% endblock %}
 {% block pageScripts %}
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="{{baseUri}}js/wysiwyg/src/wysiwyg-editor.css" />
-	<script type="text/javascript" src="{{baseUri}}js/wysiwyg/src/wysiwyg.js"></script>
-	<script type="text/javascript" src="{{baseUri}}js/wysiwyg/src/wysiwyg-editor.js"></script>
-	<script type="text/javascript" src="{{baseUri}}js/wysiwyg/init.js"></script>
+	<script type="text/javascript" src="{{baseUri}}js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{{baseUri}}js/ckeditor/init.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="{{baseUri}}js/datetimepicker/jquery.datetimepicker.css"/ >
 	<script src="{{baseUri}}js/datetimepicker/jquery.datetimepicker.js"></script>
