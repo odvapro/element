@@ -29,6 +29,7 @@ Temporary Items
 /app/cache/*
 !/app/cache/README.md
 /app/extensions/*
+!/app/extensions/README.md
 .sass-cache/*
 .phalcon/
 /app/config/config.php
