@@ -96,9 +96,14 @@ var el =
 			$(instance).parent('.tableName').find('span.tableNamePlace').html(curVal);
 		},
 
-		/*открывает настройки данного поля
-		  отправляет запрос на сервер, для формы редактирования
-		  запрос отправляется сюда settings/getFieldForm*/
+		/**
+		 * Открывает настройки данного поля 
+		 * отправляет запрос на сервер, для формы редактирования
+		 * запрос отправляется сюда settings/getFieldForm
+		 * @param  instance -  dom элемент ссылка по коотрой открывается форма
+		 * @param  fieldName - название поля для которого открываются настройки
+		 * @return void
+		 */
 		showFieldSetiings : function(instance,fieldName)
 		{
 			var tableName = $(instance).parents('table').data('tablename');
@@ -142,8 +147,12 @@ var el =
 			return false;
 		},
 
-		/*изменение таблицы в форме настроек типа поля - связка
-		  при смене таблицы подменяются поля в поле настройки поля связки*/
+		/**
+		 * Изменение таблицы в форме настроек типа поля - связка
+		 * при смене таблицы подменяются поля в поле настройки поля связки
+		 * @param  instance  - dom эелеент  селект который изменяется
+		 * @return void
+		 */
 		fieldSettingsTableChange : function(instance)
 		{
 			var curVal = $(instance).val();
@@ -156,6 +165,7 @@ var el =
 				});
 			}
 			$('select[name="set[nodeField]"]').html(resOptions);
+			$('select[name="set[nodeSearch]"]').html(resOptions);
 		},
 
 		/*Отправляет запрос на проверку обновлений*/

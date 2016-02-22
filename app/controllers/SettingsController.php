@@ -19,6 +19,7 @@ class SettingsController extends ControllerBase
 		'fileTypes'    =>'Типы файлов',
 		'nodeTable'    =>'Таблица привязки',
 		'nodeField'    =>'Поле привязки',
+		'nodeSearch'   =>'Поле поиска',
 		'visualEditor' =>'Визуальный редактор'
 	];
 
@@ -140,8 +141,12 @@ class SettingsController extends ControllerBase
 				}
 				elseif($emType->type == 'em_node')
 				{
+					// таблица к которой идет привязка
 					$settingFields['nodeTable'] = (!empty($settings['nodeTable']))?$settings['nodeTable']:false;
+					// поле по которому привязываются элементы (желательно - id)
 					$settingFields['nodeField'] = (!empty($settings['nodeField']))?$settings['nodeField']:false;
+					// поле по которуму ищутся элементы (например - имя)
+					$settingFields['nodeSearch'] = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
 					
 					// определяем доп переменные для таблиц
 					// весь список таблиц и их полей
@@ -211,7 +216,13 @@ class SettingsController extends ControllerBase
 				if($emType->save())
 					$this->jsonResult(['result'=>'success']);
 				else
-					$this->jsonResult(['result'=>'error']);
+				{
+					foreach ($emType->getMessages() as $message) {
+				        echo $message, "\n";
+				    }
+				    exit();
+					// $this->jsonResult(['result'=>'error']);
+				}
 			}
 			else
 				$this->jsonResult(['result'=>'error']);

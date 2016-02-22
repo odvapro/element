@@ -23,8 +23,8 @@
 				{% elseif fieldName == "nodeTable" %}
 					<select name="set[{{fieldName}}]" onchange="el.settings.fieldSettingsTableChange(this);">
 						<option value="0">Выберите таблицу</option>
-						{% for tableName,tableArr in tables %}
-							<option value="{{tableName}}" {% if fieldVal == tableName %}selected{% endif %}>{{tableArr['table_name']}}({{tableName}})</option>
+						{% for fieldTableName,tableArr in tables %}
+							<option value="{{fieldTableName}}" {% if fieldVal == fieldTableName %}selected{% endif %}>{{tableArr['table_name']}}({{fieldTableName}})</option>
 						{% endfor %}
 					</select>
 					<script type="text/javascript">el.config.tables = {{tablesJSON}};</script>
@@ -33,7 +33,15 @@
 						{% if fieldVal != "" %}
 							<option value="{{fieldVal}}">{{fieldVal}}</option>
 						{% else %}
-							<option value="0">Выберите поле (прежде выберите таблицу)</option>
+							<option value="0">...</option>
+						{% endif %}
+					</select>
+				{% elseif fieldName == "nodeSearch" %}
+					<select name="set[{{fieldName}}]">
+						{% if fieldVal != "" %}
+							<option value="{{fieldVal}}">{{fieldVal}}</option>
+						{% else %}
+							<option value="0">...</option>
 						{% endif %}
 					</select>
 				{% endif %}
