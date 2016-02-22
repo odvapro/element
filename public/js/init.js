@@ -122,17 +122,21 @@ var el =
 			});
 		},
 
-		/*сохранение настроек конкретного своства
-		  форма берется тут settings/getFieldForm
-		  на сохранение отправляется settings/saveFieldForm*/
+		/**
+		 * Cохранение настроек конкретного своства 
+		 * форма берется тут settings/getFieldForm 
+		 * на сохранение отправляется settings/saveFieldForm
+		 * @param  instance - dom кнопка в форме
+		 * @return false
+		 */
 		fieldSettingsSubmit : function(instance)
 		{
 			var formData = $(instance).parents('form').serialize();
 			$.ajax({
-				url: el.config.baseUri+"settings/saveFieldForm",
-				type:'POST',
-				dataType:'json',
-				data: formData,
+				url      : el.config.baseUri+"settings/saveFieldForm",
+				type     :'POST',
+				dataType :'json',
+				data     : formData,
 			}).done(function(e)
 			{
 				if(typeof e.result != 'undefined' && e.result == 'success')
@@ -168,13 +172,16 @@ var el =
 			$('select[name="set[nodeSearch]"]').html(resOptions);
 		},
 
-		/*Отправляет запрос на проверку обновлений*/
+		/**
+		 * Отправляет запрос на проверку обновлений
+		 * @return void
+		 */
 		checkUpdates : function()
 		{
 			$.ajax({
-				url: el.config.baseUri+"settings/checkUpdates",
-				type:'POST',
-				dataType:'json'
+				url      : el.config.baseUri+"settings/checkUpdates",
+				type     :'POST',
+				dataType :'json'
 			}).done(function(e)
 			{
 				if(typeof e.result != 'undefined')
