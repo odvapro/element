@@ -6,8 +6,8 @@
 				{% for node in element[fieldArr['field']] %}
 					<div class="node">
 						<span class="delete icon deleteBtn" onclick="el.edit.removeNode(this);"></span>
-						<div class="noIcon">{{node}}</div>
-						<input type="hidden" name="field[{{fieldArr['field']}}][]" value="{{node}}" />
+						<div class="noIcon">{{node['name']}}</div>
+						<input type="hidden" name="field[{{fieldArr['field']}}][]" value="{{node['id']}}" />
 					</div>
 				{% endfor %}
 			{% endif %}

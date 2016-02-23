@@ -7,7 +7,8 @@
 	<div class="editLine">
 		<div class="name">Связь с таблицей - {{tableName}}</div>
 		<div class="inp">
-			<input type="text" name="node" value="" placeholder="Введите идентификатор"/>
+			<input autocomplete="off" data-autocompleteid="node" onkeyup="el.edit.autoComlete(this,'{{nodeTable}}','{{nodeField}}','{{nodeSearch}}')" type="text" name="nodetext" placeholder="Введите идентификатор"/>
+			<input type="hidden" name="node">
 		</div>
 	</div>
 </div>

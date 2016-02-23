@@ -6,11 +6,14 @@ var el =
 	{
 		baseUri : false
 	},
+	
 	/* все что нуждается в инициализации */
 	init : function()
 	{
 		this.popup.init();
 	},
+
+	/*работа в сайбаре*/
 	sidebar:
 	{
 		fold:function()
@@ -28,6 +31,8 @@ var el =
 			el.hlp.cookies.set('sFolded', sFolded, 10);
 		}
 	},
+
+	/*работа вкладок*/
 	tabs : 
 	{
 		show : function(instance)
@@ -480,6 +485,7 @@ var el =
 				$(this).remove();
 			});
 			// переиндексация
+			// чтобы не возникало пустот типа  0 1 _ 3
 			$attachesWrap.find('.attach').each(function()
 			{
 				var index = $(this).index();
@@ -518,11 +524,13 @@ var el =
 		/*Добавлят свзяь в поле*/
 		addNode : function(instance, fieldName, tableName)
 		{
-			var nodeVal = parseInt($('#nodeAddForm input[name="node"]').val());
+			var nodeVal     = parseInt($('#nodeAddForm input[name="node"]').val());
+			var nodeTextVal = $('#nodeAddForm input[name="nodetext"]').val();
 			if(nodeVal > 0)
 			{
 				var nodeTPL = $('#TPLS .nodeTPL').html();
 					nodeTPL = nodeTPL.replace(/#value#/g,nodeVal)
+						.replace(/#searchValue#/g,nodeTextVal)
 						.replace(/#fieldName#/g,fieldName);
 				$('.filedEdit[data-fieldName="'+fieldName+'"] .nodes .attachAdd').before(nodeTPL);
 				el.popup.hide();
@@ -531,13 +539,87 @@ var el =
 				el.message.error('Введите число');
 		},
 
-		/*Удаляет связь с другим элементом*/
+		/**
+		 * Удаляет связь с другим элементом
+		 * @param  instance - dom элемент крестик
+		 * @return void
+		 */
 		removeNode : function(instance)
 		{
 			$(instance).parents('.node').fadeOut(200,function()
 			{
 				$(this).remove();
 			});
+		},
+
+		/**
+		 * Срабатывает на keyup, подгружает нужные данные по ajax выводит под полем
+		 * на вверх,вниз,enter происходит выбор подгруженного
+		 * @param  {[type]}
+		 * @return void
+		 */
+		autoComlete : function(instance,nodeTable,nodeField,nodeSearch)
+		{
+			event.preventDefault();
+			if(event.keyCode == 37 || event.keyCode == 39) return false;
+			switch(event.keyCode)
+			{
+				// вниз
+				case 40:
+					var selectedEl    = $(instance).siblings('.autocomleatebox').find('.autocomplLine.selected');
+					var selectedIndex = (typeof selectedEl != 'undefined')?selectedEl.index():-1;
+					selectedIndex++;
+					$(instance).siblings('.autocomleatebox').find('.autocomplLine')
+						.removeClass('selected')
+						.eq(selectedIndex).addClass('selected');
+				break;
+				// ввер
+				case 38:
+					var selectedEl    = $(instance).siblings('.autocomleatebox').find('.autocomplLine.selected');
+					var selectedIndex = (typeof selectedEl != 'undefined')?selectedEl.index():-1;
+					selectedIndex--;
+					$(instance).siblings('.autocomleatebox').find('.autocomplLine')
+						.removeClass('selected')
+						.eq(selectedIndex).addClass('selected');
+				break;
+				// ентер
+				case 13:
+					var selectedEl = $(instance).siblings('.autocomleatebox').find('.autocomplLine.selected');
+					if(typeof selectedEl != 'undefined')
+					{
+						var elId = selectedEl.find('i').html();
+						var autocompleteIdInput = $(instance).data('autocompleteid');
+						autocompleteIdInput = $(instance).siblings('input[name="'+autocompleteIdInput+'"]');
+						$(instance).val(selectedEl.find('.text').html());
+						autocompleteIdInput.val(elId);
+						$(instance).siblings('.autocomleatebox').remove();
+					}
+				break;
+				// любой другой символ
+				// производим поиск, обдновляем список
+				default:
+					$.ajax({
+						url      : el.config.baseUri+"table/autoComplete",
+						type     : 'POST',
+						dataType : 'json',
+						data     : {nodeTable:nodeTable,nodeField:nodeField,nodeSearch:nodeSearch,q:$(instance).val()}
+					}).done(function(e)
+					{
+						if(typeof e.result != 'undefined' && e.result == 'success')
+						{
+							// обновляем список автокомплита
+							var elementsList = '';
+							$.each(e.elements, function(index,el)
+							{
+								elementsList += '<div class="autocomplLine"><span class="elid">[<i>'+el.id+'</i>]</span><span class="text">'+el.name+'</span></div>';
+							});
+							$(instance).siblings('.autocomleatebox').remove();
+							if(elementsList != '')
+								$(instance).after('<div class="autocomleatebox">'+elementsList+'</div>');
+						}
+					});
+				break;
+			}
 		}
 	},
 

@@ -10,7 +10,7 @@
 	<div class="nodeTPL">
 		<div class="node">
 			<span class="delete icon deleteBtn" onclick="el.edit.removeNode(this);"></span>
-			<div class="noIcon">#value#</div>
+			<div class="noIcon">#searchValue#</div>
 			<input type="hidden" name="field[#fieldName#][]" value="#value#" />
 		</div>
 	</div>

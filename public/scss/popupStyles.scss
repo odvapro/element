@@ -127,6 +127,34 @@
 							top:-1px;
 						}
 					}
+					.autocomleatebox
+					{
+					    position:absolute;
+					    width:262px;
+					    background:#fff;
+					    border:1px solid #D3D3DB;
+					    border-radius:0px 0px 2px 2px;
+					    margin-top:-1px;
+						.autocomplLine
+						{
+						    padding:5px 12px;
+						    font-size:10px;
+						    color:#8D8D96;
+						    &.selected{background:#F7F8FA;}
+							.elid
+							{
+							    color:#36A17A;
+							    font-size:12px;
+							    line-height:10px;
+							    margin-right:5px;
+								i
+								{
+								    font-size:10px;
+								    font-style:normal;
+								}
+							}
+						}
+					}
 					/* поля для дополнительных копий картинок */
 					&.imageSize
 					{

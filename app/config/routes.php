@@ -58,6 +58,13 @@ $router->add(
 	)
 );
 $router->add(
+	"/table/autoComplete",
+	array(
+		"controller" => "table",
+		"action"     => "autoComplete"
+	)
+);
+$router->add(
 	"/table/uploadFiles/:action/:action",
 	array(
 		"controller" => "table",

@@ -16,9 +16,9 @@ class TableController extends ControllerBase
 		}
 
 		// достаем информацию о таблице
-		$columns = $this->tableEditor->getTableColumns($activeTable['real_name']);
-		$overColumns = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
-		$curTable = array_merge($activeTable,['fields'=>[]]);
+		$columns            = $this->tableEditor->getTableColumns($activeTable['real_name']);
+		$overColumns        = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
+		$curTable           = array_merge($activeTable,['fields'=>[]]);
 		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('tableName',$tableName);
@@ -28,9 +28,9 @@ class TableController extends ControllerBase
 		$this->view->setVar('tableWidth',$tableWidth);
 
 		//достаем все что есть в этой таблице
-		$db = $this->di->get('db');
-		$limit = 20;
-		$from = $limit*(intval($page)-1);
+		$db       = $this->di->get('db');
+		$limit    = 20;
+		$from     = $limit*(intval($page)-1);
 		$sqlWhere = $activeTable['real_name'];
 		$tableResult = $db->fetchAll(
 			"SELECT * FROM ".$sqlWhere." LIMIT $from,$limit",
@@ -147,7 +147,28 @@ class TableController extends ControllerBase
 			}
 			elseif($field['type'] == 'em_node' && !empty($element[$field['field']]))
 			{
-				$element[$field['field']] = explode(',', $element[$field['field']]);
+				// для поля привязки необходимо определить таблицу привязки
+				// поле по которому привязываются элеменыт
+				// поле по которому ведется поис элементов 
+				$nodeElements = [];
+				// ===================================================================
+					$db       = $this->di->get('db');
+					$whereSql = $field['settings']['nodeField'] ." IN (".$element[$field['field']].")";
+					$tableResult = $db->fetchAll(
+						"SELECT * FROM ".$field['settings']['nodeTable']." WHERE  $whereSql ",
+						Phalcon\Db::FETCH_ASSOC
+					);
+					foreach ($tableResult as $key => $tRes)
+					{
+						$nodeElement         = [];
+						$nodeElement['id']   = $tRes[$field['settings']['nodeField']];
+						$nodeElement['name'] = $tRes[$field['settings']['nodeSearch']];
+						$nodeElements[]      = $nodeElement;
+					}
+				// ===================================================================
+
+				$element[$field['field']] = $nodeElements;
+				// $element[$field['field']] = explode(',', $element[$field['field']]);
 			}
 			else
 			{
@@ -340,7 +361,17 @@ class TableController extends ControllerBase
 				$fieldDesc = $fieldDesc[0];
 				if($fieldDesc->type == "em_node")
 				{
-					$settings = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
+					$settings   = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
+					// поле по которому привязвается другой элемент - id например
+					$nodeField  = (!empty($settings['nodeField']))?$settings['nodeField']:false;
+					$this->view->setVar('nodeField',$nodeField);
+					// таблица из которой берутся эелементы
+					$nodeTable  = (!empty($settings['nodeTable']))?$settings['nodeTable']:false;
+					$this->view->setVar('nodeTable',$nodeTable);
+					// поле которому ведется поиск - name например
+					$nodeSearch = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
+					$this->view->setVar('nodeSearch',$nodeSearch);
+
 					$this->view->setVar('settings',$settings);
 					$this->view->setVar('fieldName',$fieldName);
 					$this->view->setVar('tableName',$tableName);
@@ -388,6 +419,48 @@ class TableController extends ControllerBase
 			$this->jsonResult(['result'=>'error','msg'=>'поле не имеет настроек']);
 	}
 
+	/**
+	 * Поиск полей для ватокомплита, работает только при ajax запросах
+	 * @var $_POST['nodeTable'] string таблица привязки
+ 	 * @var $_POST['nodeField'] string поле привязки - например id
+ 	 * @var $_POST['nodeSearch'] string поле по которому ищется привязываемый элемент - например name
+	 * @return JSON
+	 */
+	public function autoCompleteAction()
+	{
+		if($this->request->isAjax())
+		{
+			$nodeField  = $this->request->getPost('nodeField');
+			$nodeTable  = $this->request->getPost('nodeTable');
+			$nodeSearch = $this->request->getPost('nodeSearch');
+			$q          = $this->request->getPost('q');
+			if(!empty($nodeField) && !empty($nodeTable) && !empty($q))
+			{
+				$db       = $this->di->get('db');
+				$limit    = 7;
+				$from     = 0;
+				$sqlWhere = $nodeTable;
+				$nodeSearchSQL = (!empty($nodeSearch))?$nodeSearch." LIKE '%".$q."%'":'';
+				$tableResult = $db->fetchAll(
+					"SELECT * FROM ".$sqlWhere." WHERE ".$nodeSearchSQL." LIMIT $from,$limit",
+					Phalcon\Db::FETCH_ASSOC
+				);
+				$result = [];
+				foreach ($tableResult as $key => $tRes)
+				{
+					$resEl         = [];
+					$resEl['id']   = $tRes[$nodeField];
+					$resEl['name'] = $tRes[$nodeSearch];
+					$result[]      = $resEl;
+				}
+				$this->jsonResult(['result'=>'success','elements'=>$result]);
+			}
+			else
+				$this->jsonResult(['result'=>'error','msg'=>'некорректные настройки']);
+		}
+		else
+			$this->jsonResult(['result'=>'error','msg'=>'только ajax']);
+	}
 	
 	/*HELPERS*/
 	/**
