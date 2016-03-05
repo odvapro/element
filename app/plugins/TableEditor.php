@@ -398,9 +398,11 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$img_inf = $image->getInfos();
 					if(!empty($imageSize['fixed']) && $imageSize['fixed'] == 1)
 					{
-						// фиксированный размр изображения
-						// ресайз по большей стороне
-						if($img_inf['width'] > $img_inf['height'])
+						$k = min($imageSize['width']/$img_inf['width'], $imageSize['height']/$img_inf['height']);
+						$new_height = $img_inf['height'] * $k;
+
+						// считаем высоту с измененной шириной
+						if($new_height <= $imageSize['height'])
 							$image->resize(0,$imageSize['height']);
 						else
 							$image->resize($imageSize['width'],0);
