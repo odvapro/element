@@ -520,8 +520,11 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 							$fullFilePath = ROOT.$fileArr['sizes'][$imageSize['name']];
 							$path_parts = pathinfo($fullFilePath);
 							$newName = $savePath.$path_parts['basename'];
-							rename($fullFilePath, ROOT.$newName);
-							$sizes[$imageSize['name']] = $newName;							
+							if(file_exists($fullFilePath))
+							{
+								rename($fullFilePath, ROOT.$newName);
+								$sizes[$imageSize['name']] = $newName;							
+							}
 						}
 					}
 					$fileArr['sizes'] = $sizes;

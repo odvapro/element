@@ -1,4 +1,4 @@
-{% extends "editFields/em_string.volt" %}
+{% extends "table/stringEditField.volt" %}
 {% block input %}
 	<div class="filedEdit" data-fieldName="{{fieldArr['field']}}" data-multiple="{{fieldArr['multiple']}}">
 		<div class="nodes">

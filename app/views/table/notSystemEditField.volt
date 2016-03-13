@@ -1,4 +1,4 @@
-{% extends "editFields/em_string.volt" %}
+{% extends "table/stringEditField.volt" %}
 {% block input %}
 	<div class="filedEdit">
 	{% if fieldArr['key'] == "PRI" and fieldArr['extra'] == "auto_increment"  %}

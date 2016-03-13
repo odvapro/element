@@ -37,7 +37,6 @@ class TableController extends ControllerBase
 			Phalcon\Db::FETCH_ASSOC
 		);
 
-
 		// подгон результатов по типам, для вывода 
 		$fieldTypes = [];
 		$primaryKey = false;
@@ -48,19 +47,9 @@ class TableController extends ControllerBase
 				$primaryKey = $field['field'];
 		}
 		foreach($tableResult as &$tRes)
-		{
 			foreach($tRes as $fieldName => &$fieldVal)
-			{
-				if($fieldTypes[$fieldName] == 'em_file' && !empty($fieldVal))
-					$fieldVal = json_decode($fieldVal,true);
-				else
-				{
-					$fieldVal = strip_tags($fieldVal);
-					if(strlen($fieldVal) > 200)
-						$fieldVal = substr($fieldVal, 0,200).'...';
-				}
-			}
-		}
+				if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
+					$fieldVal = $this->fields->{$fieldTypes[$fieldName]}->getValue($fieldVal,[],true);
 
 		$this->view->setVar('primaryKey',$primaryKey);
 		$this->view->setVar('tableResult',$tableResult);
@@ -92,6 +81,15 @@ class TableController extends ControllerBase
 		$overColumns = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
 		$curTable = array_merge($activeTable,['fields'=>[]]);
 		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+		
+		// определяем адреса форм редактирования полей
+		foreach ($curTable['fields'] as &$field)
+		{
+			if(!is_null($this->fields->{$field['type']}))
+				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
+		}
+
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('sysTypes',$this->tableEditor->systemEmTypes);
 	}
@@ -115,66 +113,35 @@ class TableController extends ControllerBase
 		$overColumns        = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
 		$curTable           = array_merge($activeTable,['fields'=>[]]);
 		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
-		$this->view->setVar('tableInfo',$curTable);
-		$this->view->setVar('sysTypes',$this->tableEditor->systemEmTypes);
-
-		// определение primary key
+		$curTableFields     = $curTable['fields'];
+		
+		// определяем адреса форм редактирования полей
 		$primaryKey = false;
-		foreach ($curTable['fields'] as $field)
+		foreach ($curTable['fields'] as  &$field)
 		{
+			if(!is_null($this->fields->{$field['type']}))
+				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
+
 			if($field['key'] == 'PRI')
 				$primaryKey = $field['field'];
 		}
+		$this->view->setVar('tableInfo',$curTable);
+		$this->view->setVar('sysTypes',$this->tableEditor->systemEmTypes);
 		$this->view->setVar('primaryKey',$primaryKey);
-
+		
 		$element = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
 
 		// подгон под типы полей
-		foreach ($curTable['fields'] as $field)
-			if($field['type'] == 'em_file' && !empty($element[$field['field']]))
-			{
-				$jsonString = $element[$field['field']];
-				$filesArr = json_decode($element[$field['field']],true);
-				$element[$field['field']] = [];
-				foreach ($filesArr as $key => $fileArr)
-				{
-					$element[$field['field']][] = 
-					array_merge($fileArr,[
-						'jsonFileObj' => htmlspecialchars(json_encode($fileArr),ENT_QUOTES),
-						'index' => $key
-					]);
-				}
-			}
-			elseif($field['type'] == 'em_node' && !empty($element[$field['field']]))
-			{
-				// для поля привязки необходимо определить таблицу привязки
-				// поле по которому привязываются элеменыт
-				// поле по которому ведется поис элементов 
-				$nodeElements = [];
-				// ===================================================================
-					$db       = $this->di->get('db');
-					$whereSql = $field['settings']['nodeField'] ." IN (".$element[$field['field']].")";
-					$tableResult = $db->fetchAll(
-						"SELECT * FROM ".$field['settings']['nodeTable']." WHERE  $whereSql ",
-						Phalcon\Db::FETCH_ASSOC
-					);
-					foreach ($tableResult as $key => $tRes)
-					{
-						$nodeElement         = [];
-						$nodeElement['id']   = $tRes[$field['settings']['nodeField']];
-						$nodeElement['name'] = $tRes[$field['settings']['nodeSearch']];
-						$nodeElements[]      = $nodeElement;
-					}
-				// ===================================================================
-
-				$element[$field['field']] = $nodeElements;
-				// $element[$field['field']] = explode(',', $element[$field['field']]);
-			}
+		foreach ($curTableFields as &$field)
+		{
+			if(!is_null($this->fields->{$field['type']}))
+				$element[$field['field']] = $this->fields->{$field['type']}->getValue($element[$field['field']],$field['settings']);
 			else
-			{
 				$element[$field['field']] = htmlspecialchars($element[$field['field']]);
-			}
+		}
 		$this->view->setVar('element',$element);
+		
 	}
 
 	/**
@@ -211,10 +178,8 @@ class TableController extends ControllerBase
 					$validationErrors[] = $fieldArr['field'].' required';
 				else
 					if(!empty( $field[$fieldArr['field']]))
-						if($fieldArr['type'] == 'em_file')
-							$formData[$fieldArr['field']] = $this->tableEditor->handleUploadedFiles($field[$fieldArr['field']], $fieldArr);
-						elseif($fieldArr['type'] == 'em_node')
-							$formData[$fieldArr['field']] = implode(',',$field[$fieldArr['field']]);
+						if(!is_null($this->fields->{$fieldArr['type']}))
+							$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr);
 						else
 							$formData[$fieldArr['field']] = $field[$fieldArr['field']];
 					else
@@ -538,7 +503,7 @@ class TableController extends ControllerBase
 	    $tempName = tempnam('/tmp', 'php');
 	    $originalName = basename(parse_url($url, PHP_URL_PATH));
 
-	    $imgRawData = file_get_contents($url);
+	    $imgRawData = @file_get_contents($url);
 	    file_put_contents($tempName, $imgRawData);
 	    $_FILES[$key] = array(
 	        'name' => $originalName,
@@ -550,4 +515,3 @@ class TableController extends ControllerBase
 	}
 
 }
-

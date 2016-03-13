@@ -189,10 +189,10 @@ class Image extends Phalcon\Mvc\User\Plugin
 	 * @acces public
 	 */
 	function crop($x, $y, $width, $height) {
-		$image = imagecreatetruecolor($width, $height);
-		imagealphablending($image, false);
-		imagesavealpha($image, true);
-		imagecopyresampled($image, $this->image, 0, 0, $x, $y, $width, $height, $width, $height);
+		$image = @imagecreatetruecolor($width, $height);
+		@imagealphablending($image, false);
+		@imagesavealpha($image, true);
+		@imagecopyresampled($image, $this->image, 0, 0, $x, $y, $width, $height, $width, $height);
 		$this->image = $image;
 		$this->width = $width;
 		$this->height = $height;
@@ -381,7 +381,7 @@ class Image extends Phalcon\Mvc\User\Plugin
 				break;
 
 			case 'jpeg': case 'jpg':
-				imagejpeg($this->image, $path, 100);
+				@imagejpeg($this->image, $path, 100);
 				break;
 
 			default:

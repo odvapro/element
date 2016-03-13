@@ -124,11 +124,6 @@ class SettingsController extends ControllerBase
 				{
 					$settings = json_decode($emType->settings,true);
 				}
-				
-				if($emType->type == 'em_text')
-				{
-					$settingFields['visualEditor'] = (!empty($settings['visualEditor']))?$settings['visualEditor']:0;
-				}
 
 				$this->view->setVar('settings',$settings);
 				$this->view->setVar('settingFields',$settingFields);

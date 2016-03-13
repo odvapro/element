@@ -11,3 +11,4 @@
 		<input type="text" name="field[{{fieldArr['field']}}]" placeholder="{{fieldArr['field']}}" value="{% if element[fieldArr['field']] is defined %}{{element[fieldArr['field']]}}{% endif %}" />
 	</div>
 {% endblock %}
+{% block TPLS %}{% endblock %}

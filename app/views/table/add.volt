@@ -26,16 +26,11 @@
 		{% for fieldArr in tableInfo['fields'] %}
 			<div class="line">
 				{% set formMode = "add" %}
-				{% if fieldArr['type'] in sysTypes %}
-					{{ partial("editFields/"~fieldArr['type']) }}
-				{% else %}
-					{{ partial("editFields/notsys") }}
-				{% endif %}
+				{{ partial(fieldArr['formPath']) }}
 			</div>
 		{% endfor %}
 		</form>
 	</div>
-	{{ partial("editFields/tpls") }}
 {% endblock %}
 {% block pageScripts %}
 	<script type="text/javascript" src="{{baseUri}}js/ckeditor/ckeditor.js"></script>
