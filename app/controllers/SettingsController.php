@@ -125,48 +125,18 @@ class SettingsController extends ControllerBase
 					$settings = json_decode($emType->settings,true);
 				}
 				
-				// в зависомости от типа поля достаем разные параметры 
-				if($emType->type == 'em_file')
-				{
-					$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->tableEditor->getDefaultFilesSavePath();
-					$settingFields['fileTypes'] = (!empty($settings['fileTypes']))?$settings['fileTypes']:[];
-					
-					// определяем доп переменную для типов файлов
-					$this->view->setVar('fileTypes',['jpeg','png','gif','bmp','pdf','doc']);
-				}
-				elseif($emType->type == 'em_text')
+				if($emType->type == 'em_text')
 				{
 					$settingFields['visualEditor'] = (!empty($settings['visualEditor']))?$settings['visualEditor']:0;
+				}
 
-				}
-				elseif($emType->type == 'em_node')
-				{
-					// таблица к которой идет привязка
-					$settingFields['nodeTable'] = (!empty($settings['nodeTable']))?$settings['nodeTable']:false;
-					// поле по которому привязываются элементы (желательно - id)
-					$settingFields['nodeField'] = (!empty($settings['nodeField']))?$settings['nodeField']:false;
-					// поле по которуму ищутся элементы (например - имя)
-					$settingFields['nodeSearch'] = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
-					
-					// определяем доп переменные для таблиц
-					// весь список таблиц и их полей
-					// для нужд привязки к ним в данном типе поля
-					$resTables = $this->tables;
-					foreach ($resTables as $tableRealName => &$tableArr)
-					{
-						$curCols = $this->tableEditor->getTableColumns($tableRealName);
-						$tableArr['fields'] = [];
-						foreach ($curCols as $colArr)
-							$tableArr['fields'][$colArr['field']] = $colArr['type'];
-					}
-					$this->view->setVar('tables',$resTables);
-					$this->view->setVar('tablesJSON',json_encode($resTables));
-				}
-				
 				$this->view->setVar('settings',$settings);
 				$this->view->setVar('settingFields',$settingFields);
 				$this->view->setVar('fieldsPulicNames',$this->fieldsPulicNames);
 				$this->view->setVar('fieldFormType',$emType->type);
+
+				if(!is_null($this->fields->{$emType->type}))
+					$this->fields->{$emType->type}->getSettings($settings, ['tables' => $this->tables,'settingFields'=>$settingFields]);
 
 				$this->jsonResult([
                 	'result' => 'success',
@@ -221,7 +191,6 @@ class SettingsController extends ControllerBase
 				        echo $message, "\n";
 				    }
 				    exit();
-					// $this->jsonResult(['result'=>'error']);
 				}
 			}
 			else

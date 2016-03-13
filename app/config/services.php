@@ -52,8 +52,14 @@ $di->set('router', function(){
     return require __DIR__ . '/routes.php';
 }, true);
 
-$di->set('tableEditor', function(){
+$di->set('tableEditor', function()
+{
     return new TableEditor();
+}, true);
+
+$di->set('fields', function() use ($di)
+{
+    return new Fields($di);
 }, true);
 
 /**
