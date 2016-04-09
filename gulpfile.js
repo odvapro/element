@@ -33,6 +33,6 @@ gulp.task('svg:build', function () {
 // watch
 gulp.task('watch', function()
 {
-	gulp.watch(['public/scss/*.scss'],['css:build']);
+	gulp.watch(['public/scss/*.scss','public/scss/base/*.scss','public/scss/components/*.scss','public/scss/helpers/*.scss','public/scss/layout/*.scss','scss/pages/*.scss','scss/vendors/*.scss'],['css:build']);
 });
 gulp.task('default', ['css:build','svg:build', 'watch']);

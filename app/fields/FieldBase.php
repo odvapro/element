@@ -56,4 +56,16 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 		else
 			return $this->EditFieldPath;
 	}
+
+	/**
+	 * Возврощает путь к шаблону вывода поля в таблице
+	 * @return string
+	 */
+	public function getValueFieldPath()
+	{
+		if(empty($this->ValueFieldPath))
+			return false;
+		else
+			return 'fields/'.$this->ValueFieldPath;
+	}
 }

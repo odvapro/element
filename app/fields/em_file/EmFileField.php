@@ -3,6 +3,7 @@
 class EmFileField extends FieldBase
 {
 	public $EditFieldPath = 'em_file/view/field';
+	public $ValueFieldPath = 'em_file/view/value';
 	public function getSettings($settings, array $params)
 	{
 		$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->tableEditor->getDefaultFilesSavePath();

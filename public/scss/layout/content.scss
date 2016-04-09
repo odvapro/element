@@ -1,0 +1,73 @@
+body,html
+{ 
+	background:$backgroundColor;
+	position: relative;
+	height: 100%;
+	font-family:Arial;
+	width:100%;
+}
+
+section#contentBlock
+{
+	margin-left:266px;
+	overflow:auto; 
+	#contFixed
+	{
+		position: fixed;
+		top:0px;
+		left:266px;
+		width:calc(100% - 266px);
+		z-index: 10;
+	}
+	@import '../components/topNavLine';
+	@import '../components/titleButtons';
+	/* влкадки на странице настроек */
+	@import '../components/topTabs';
+	#content
+	{
+		margin-top:100px;
+		position:relative;
+		/* с вклабками верзнаяя часть увеличивается на 34px */
+		&.withTabs
+		{
+			margin-top:134px;
+		}
+		.contWrap
+		{
+			padding:20px; 
+		}
+		@import '../components/contentTable';
+		/* строка которая идет после таблицы натсроек, для добавления нового своства */
+		.addFieldLine
+		{
+			text-align: center;
+			margin-bottom: 20px;
+			button.addField
+			{
+				background:#F0F2F5;
+				padding:9px 123px;
+				color: $greyColor;
+				font-size: 12px;
+				font-weight: bold;
+				border-radius:0 0 3px 3px;
+				border:0px;
+				cursor: pointer;
+			}
+		}
+		@import '../components/pagination';
+		.tabCont
+		{
+			display: none;
+			&.act
+			{
+				display: block;
+			}
+		}
+
+		/* детальная странца элемента */
+		@import '../pages/elementDetail';
+
+		/* вкладки второго уровня */
+		@import '../components/tabsLine';
+	}
+}

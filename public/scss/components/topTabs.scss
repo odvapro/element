@@ -1,0 +1,36 @@
+#topTabs
+{
+	height: 34px;
+	background:#fff;
+	border-bottom:1px solid $bordersColor;
+	padding:0 20px;		
+	position:relative;
+	top:-1px;
+	ul
+	{
+		list-style: none;
+		li
+		{
+			display: block;
+			margin-right: 15px;
+			background: #fff;
+			border:1px solid $bordersColor;
+			border-radius:3px 3px 0 0;
+			float: left;
+			height: 32px;
+			padding: 0 58px;
+			line-height: 34px;
+			font-size:13px;
+			color: $blackColor;
+			font-weight: bold;
+			position:relative;
+			bottom:-1px;
+			cursor: pointer;
+			&.act
+			{
+				border-bottom:1px solid $backgroundColor;
+				background:$backgroundColor;
+			}
+		}
+	}
+}

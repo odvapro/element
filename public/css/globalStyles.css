@@ -1,1 +1,1 @@
-body:before{white-space:pre;font-family:monospace;content:"Error: Undefined variable: \"$greyColor\".\A         on line 4 of /Users/dzantiev/projects/element/www/element/public/scss/globalStyles.scss\A \A 1: .elbutton\A 2: {\A 3: 	font-size:12px;\A 4: 	border:1px solid $greyColor;\A 5: 	color:$greyColor;\A 6: 	font-size:12px;\A 7: 	padding:9px 14px;\A 8: 	background:none;\A 9: 	font-weight:bold;"}
+.centered{text-align:center!important}.righted{text-align:right!important}.clear{width:100%;clear:both}.rounded{border-radius:100%}.pointer{cursor:pointer}

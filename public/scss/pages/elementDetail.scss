@@ -1,0 +1,32 @@
+.elementDetail
+{
+	.line
+	{
+		padding:15px 20px;
+		min-width: 900px;
+		border-bottom: 1px solid $bordersColor;
+		overflow: hidden;
+		&:nth-child(2n)
+		{
+			background:#fff;
+		}
+		.name
+		{
+			float: left;
+			width:190px;
+			color: $greyColor;
+			font-size: 12px;
+			font-weight: bold;
+			line-height: 14px;
+		}
+		.filedEdit
+		{
+			float: left;
+			width:650px;
+			@import '../components/fields/inputAndTextarea';
+			@import '../components/fields/datepicker';
+			@import '../components/fields/attaches';
+			@import '../components/fields/nodes';
+		}
+	}
+}

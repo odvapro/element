@@ -1,17 +1,16 @@
-@import url('../css/reset.css');
-@import url('../css/froala_editor/froala_editor.min.css');
-@import url('../css/froala_editor/froala_style.min.css');
-@import url('../css/froala_editor/themes/gray.css');
+@import 'base/normalize';
+
 @import url('../img/css/sprite.css');
 
-@import 'variables';
-@import 'globalStyles';
-@import 'popupStyles';
-@import 'sidebarStyles';
-@import 'contentStyles';
-/* сообщения об шибках и тд */
-@import 'foldedStyles';
-@import 'alertStyles';
+@import 'helpers/variables';
+@import 'components/buttons';
+@import 'components/general';
+@import 'components/alerts';
+@import 'components/popups';
+@import 'layout/sidebar';
+@import 'layout/folded';
+@import 'layout/content';
+/* сообщения об шибках и тд */ 
 
 
 

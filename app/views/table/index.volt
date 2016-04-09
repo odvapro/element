@@ -22,7 +22,7 @@
 			<tr>
 				<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>
 				{% for fieldArr in tableInfo['fields'] %}
-					<th>{{fieldArr['field']}}</th>
+					<th>{{fieldArr['field']}} <span class="icon tablearrow"></span></th>
 				{% endfor %}
 			</tr>
 			{% if tableResult %}
@@ -38,19 +38,15 @@
 						</td>
 						{% for fieldArr in tableInfo['fields'] %}
 							{% if resLine[fieldArr['field']] != "" %}
-								{% if fieldArr['type'] == "em_file" %}
-									<td>
-										{% for aFile in resLine[fieldArr['field']] %}
-											{% if aFile['type'] == 'image' %}
-												<a href="{{aFile['path']}}" target="_blunk"><img src="{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"/></a>
-											{% else %}
-												<a href="{{aFile['path']}}" target="_blunk"><img src="{{baseUri}}img/fileIcon.png" alt="{{aFile['upName']}}"/></a>
-											{% endif %}
-										{% endfor %}
-									</td>
-								{% else %}
-									<td>{{resLine[fieldArr['field']]}}</td>
-								{% endif %}
+								<td>
+									{% if fieldArr['valueFieldPath'] is defined  and  fieldArr['valueFieldPath'] != "" %}
+										{#если есть шаблон вывода данного типа поля, выводим его в таком формате#}
+										{% set fieldVal = resLine[fieldArr['field']] %}
+										{{ partial(fieldArr['valueFieldPath']) }}
+									{% else %}
+										{{resLine[fieldArr['field']]}}
+									{% endif %}
+								</td>
 							{% else %}
 								<td class="centered">–</td>
 							{% endif %}

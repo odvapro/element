@@ -1,0 +1,41 @@
+#titleButtons
+{
+	overflow: hidden;
+	height: 60px;
+	background:#fff;
+	border-bottom:1px solid $bordersColor;
+	padding:0 20px;
+	.elbutton
+	{
+		margin-top:13px;
+	}
+	.titleBlock
+	{
+		float: left;
+		.ttl
+		{
+			margin-top:15px;
+			overflow:hidden;
+			float: left;
+			margin-right:20px;
+			h2
+			{
+				color: $blackColor;
+				font-size: 16px;
+				line-height: 16px;
+				margin:0px;
+				margin-bottom: 2px;
+			}
+			span
+			{
+				font-size: 10px;
+				display: block;
+				color: $greyColor;
+			}
+		}
+	}
+	.rightButtons
+	{
+		float: right;
+	}
+}

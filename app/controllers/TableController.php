@@ -20,7 +20,6 @@ class TableController extends ControllerBase
 		$overColumns        = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
 		$curTable           = array_merge($activeTable,['fields'=>[]]);
 		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
-		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('tableName',$tableName);
 
 		// ширина таблицы, менятся относительно того сколько полей в ней
@@ -40,16 +39,25 @@ class TableController extends ControllerBase
 		// подгон результатов по типам, для вывода 
 		$fieldTypes = [];
 		$primaryKey = false;
-		foreach ($curTable['fields'] as $field)
+		$settingsArr = [];
+		foreach ($curTable['fields'] as &$field)
 		{
 			$fieldTypes[$field['field']] = $field['type'];
 			if($field['key'] == 'PRI')
 				$primaryKey = $field['field'];
+			$fieldName = $field['field'];
+			$settingsArr[$field['field']] = (!empty($field['settings']))?$field['settings']:[];
+			// прописываем каждому типу поля свое отображение
+			if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
+				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
 		}
+		$this->view->setVar('tableInfo',$curTable);
+
+
 		foreach($tableResult as &$tRes)
 			foreach($tRes as $fieldName => &$fieldVal)
 				if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
-					$fieldVal = $this->fields->{$fieldTypes[$fieldName]}->getValue($fieldVal,[],true);
+					$fieldVal = $this->fields->{$fieldTypes[$fieldName]}->getValue($fieldVal,$settingsArr[$fieldName],true);
 
 		$this->view->setVar('primaryKey',$primaryKey);
 		$this->view->setVar('tableResult',$tableResult);

@@ -1,0 +1,21 @@
+input,textarea
+{
+	border:1px solid $bordersColor;
+	font-size: 12px;
+	color: $blackColor;
+	padding:6px 11px;
+	border-radius:2px;
+	width: 400px;
+	background:#fff;
+	&.datepicker, &.datetimepicker
+	{
+		width:225px;
+	}
+}
+textarea
+{
+	width:600px;
+	max-width:600px;
+	height: 190px;
+	max-height: 200px;
+}

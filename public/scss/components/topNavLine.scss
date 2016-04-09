@@ -1,0 +1,52 @@
+#topNavLine
+{
+	overflow: hidden;
+	height: 39px;
+	border-bottom:1px solid #EAECF1;
+	line-height: 39px;
+	background:#fff;
+	padding:0 20px; 
+	.navigation
+	{
+		float:left;
+		ul
+		{
+			list-style: none;
+			li
+			{
+				display: inline-block;
+				font-size: 12px;
+				a
+				{
+					color:$blueColor;
+					text-decoration: none;
+					font-weight: bold;
+					&:hover{ text-decoration:underline; }
+				}
+				&.last a
+				{
+					color:$greyColor;
+				}
+				&.arr
+				{
+					padding:0 5px;
+				}
+			}
+		}
+	}
+	.userbar
+	{
+		@extend .navigation;
+		float: right;
+		li.cirdel
+		{
+			padding:0 5px;
+		}
+		li.logout span
+		{
+			position: relative;
+			top: -1px;
+			margin-left: 2px;
+		}
+	}
+}

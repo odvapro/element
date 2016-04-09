@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="13px" height="6px" viewBox="0 0 13 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6.1 (26313) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="folded" transform="translate(-358.000000, -265.000000)" stroke="#979797">
+            <g id="content" transform="translate(49.000000, 0.000000)">
+                <g id="mai_content" transform="translate(21.000000, 249.000000)">
+                    <g id="newsTable">
+                        <g id="th" transform="translate(17.000000, 12.000000)">
+                            <g id="arrow" transform="translate(272.000000, 4.000000)">
+                                <path d="M0.189655172,0.2 L5.51352938,5.81426735" id="Line"></path>
+                                <path d="M5.5,0.2 L10.8238742,5.81426735" id="Line-Copy-8" transform="translate(8.155172, 3.000000) scale(-1, 1) translate(-8.155172, -3.000000) "></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

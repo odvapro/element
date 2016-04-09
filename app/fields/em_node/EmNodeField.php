@@ -3,6 +3,7 @@
 class EmNodeField extends FieldBase
 {
 	public $EditFieldPath = 'em_node/view/field';
+	public $ValueFieldPath = 'em_node/view/value';
 	public function getSettings($settings, array $params)
 	{
 		// таблица к которой идет привязка
@@ -36,32 +37,27 @@ class EmNodeField extends FieldBase
 
 	public function getValue($fieldValue,$settings,$table = false)
 	{
-		if($table)
-			return $fieldValue;
-		else
-		{
-			if(empty($fieldValue)) return '';
-			// для поля привязки необходимо определить таблицу привязки
-			// поле по которому привязываются элеменыт
-			// поле по которому ведется поис элементов 
-			$nodeElements = [];
-			// ===================================================================
-				$db       = $this->di->get('db');
-				$whereSql = $settings['nodeField'] ." IN (".$fieldValue.")";
-				$tableResult = $db->fetchAll(
-					"SELECT * FROM ".$settings['nodeTable']." WHERE  $whereSql ",
-					Phalcon\Db::FETCH_ASSOC
-				);
-				foreach ($tableResult as $key => $tRes)
-				{
-					$nodeElement         = [];
-					$nodeElement['id']   = $tRes[$settings['nodeField']];
-					$nodeElement['name'] = $tRes[$settings['nodeSearch']];
-					$nodeElements[]      = $nodeElement;
-				}
-			// ===================================================================
-			return $nodeElements;
-		}
+		if(empty($fieldValue)) return '';
+		// для поля привязки необходимо определить таблицу привязки
+		// поле по которому привязываются элеменыт
+		// поле по которому ведется поис элементов 
+		$nodeElements = [];
+		// ===================================================================
+			$db       = $this->di->get('db');
+			$whereSql = $settings['nodeField'] ." IN (".$fieldValue.")";
+			$tableResult = $db->fetchAll(
+				"SELECT * FROM ".$settings['nodeTable']." WHERE  $whereSql ",
+				Phalcon\Db::FETCH_ASSOC
+			);
+			foreach ($tableResult as $key => $tRes)
+			{
+				$nodeElement         = [];
+				$nodeElement['id']   = $tRes[$settings['nodeField']];
+				$nodeElement['name'] = $tRes[$settings['nodeSearch']];
+				$nodeElements[]      = $nodeElement;
+			}
+		// ===================================================================
+		return $nodeElements;
 	}
 
 	public function saveValue($fieldValue,$fieldArray)
