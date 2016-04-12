@@ -134,8 +134,8 @@ class SettingsController extends ControllerBase
 					$this->fields->{$emType->type}->getSettings($settings, ['tables' => $this->tables,'settingFields'=>$settingFields]);
 
 				$this->jsonResult([
-                	'result' => 'success',
-                	'form' => $this->view->getRender('settings','getFieldForm')
+					'result' => 'success',
+					'form'   => $this->view->getRender('settings','getFieldForm')
             	]);
 			}
 			else

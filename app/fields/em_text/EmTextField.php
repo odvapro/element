@@ -10,5 +10,9 @@ class EmTextField extends FieldBase
 		if(!empty($params['settingFields']))
 			$settingFields = array_merge($params['settingFields'],$settingFields);
 		$this->view->setVar('settingFields',$settingFields);
+
+		// обязательый параметр
+		// адрес формы редактирования настроек
+		$this->view->setVar('formPath','em_text/view/settingsForm');
 	}
 }

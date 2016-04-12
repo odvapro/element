@@ -35,8 +35,22 @@
 	</div>
 {% endblock %}
 {% block pageScripts %}
+	{# TODO  перенести в авто подключение #}
 	<script type="text/javascript" src="{{baseUri}}js/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="{{baseUri}}js/ckeditor/init.js"></script>
+
+	<link rel="stylesheet" href="{{baseUri}}fields/em_text/src/codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="{{baseUri}}fields/em_text/src/codemirror/theme/neo.css">
+	<script src="{{baseUri}}fields/em_text/src/codemirror/lib/codemirror.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/addon/hint/show-hint.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/addon/hint/xml-hint.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/addon/hint/html-hint.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/mode/xml/xml.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/codemirror/addon/selection/active-line.js"></script>
+	<script src="{{baseUri}}fields/em_text/src/init.js"></script>
+	{# -TODO  перенести в авто подключение #}
+
 
 	<link rel="stylesheet" type="text/css" href="{{baseUri}}js/datetimepicker/jquery.datetimepicker.css"/ >
 	<script src="{{baseUri}}js/datetimepicker/jquery.datetimepicker.js"></script>
