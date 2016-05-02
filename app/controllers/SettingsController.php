@@ -25,7 +25,11 @@ class SettingsController extends ControllerBase
 
 	public function indexAction()
 	{
-		$this->view->setVar( 'EmTypes', $this->tableEditor->systemEmTypes );
+		$emTypes = $this->tableEditor->getFeieldTypes();
+		// $this->view->setVar('EmTypes', $this->tableEditor->systemEmTypes );
+		$this->view->setVar('EmTypes', $emTypes );
+		$this->view->setVar('EmTypesCodes', array_keys($emTypes) );
+
 
 		// достаем все таблицы
 		$detailTables = [];

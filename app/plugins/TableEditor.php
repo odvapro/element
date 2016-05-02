@@ -583,6 +583,39 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		return '/'.ltrim($config->application->baseUri.$config->application->defaultFilesUploadPath,'/');
 	}
 
+
+	/**
+	 * Возвращаес список типов полей
+	 * -- проходится по директории с типами полей сибирвает info.json
+	 * @return array ['code'=>[name=>'---']]
+	 */
+	public function getFeieldTypes()
+	{
+		$config = $this->di->get('config');
+		$fieldsArr = [];
+		if(is_dir($config->application->fldDir))
+		{
+			$dirs = scandir($config->application->fldDir);
+			foreach ($dirs as $dirName)
+			{
+				$dirPage = $config->application->fldDir.$dirName;
+				if(!in_array($dirName,['.','..'])  && is_dir($dirPage))
+				{
+					$curFieldType = ['name'=>$dirName];
+					$infoJsonPath = $dirPage.'/info.json';
+					// если есть файл info.json - парсим его
+					if(file_exists($infoJsonPath))
+					{
+						$infoJsonCont = @json_decode(file_get_contents($infoJsonPath),true);
+						$curFieldType['name'] = (!empty($infoJsonCont['name']))?$infoJsonCont['name']:$curFieldType['name'];
+					}
+					$fieldsArr[$dirName] = $curFieldType;
+				}
+			}
+		}
+		return $fieldsArr;
+	}
+
 }
 
 ?>

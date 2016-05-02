@@ -54,9 +54,9 @@
 					</tr>
 				{% endfor %}
 			{% else %}
-					<tr>
-						<td class="centered">no data</td>
-					</tr>
+				<tr>
+					<td colspan="{{tableFieldsCount}}" class="centered">no data</td>
+				</tr>
 			{% endif %}
 		</table>
 		{% if  pagination['countOfPages'] > 1 %}

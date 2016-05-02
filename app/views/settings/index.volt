@@ -52,7 +52,7 @@
 						{% for field in tableDetail['fields'] %}
 							<tr>
 								<td class="centered">
-									{% if field['type'] in EmTypes %}
+									{% if field['type'] in EmTypesCodes %}
 										<div class="editLine">
 											<a href="javascript:void(0)" onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')">Настройки</a>
 											<a href="javascript:void(0)">Копировать</a>
@@ -67,17 +67,12 @@
 								<td>
 									{% if field['key'] != "PRI" %}
 										<select name="tables[{{relaTableName}}][fields][{{field['field']}}][type]">
-											{% if field['type'] not in EmTypes %}
+											{% if field['type'] not in EmTypesCodes %}
 												<option value="notsys">{{field['type']}}</option>
 											{% endif %}
-											<option value="em_int" {% if field['type'] == "em_int" %}selected="true"{% endif %}>Число</option>
-											<option value="em_string" {% if field['type'] == "em_string" %}selected="true"{% endif %}>Строка</option>
-											<option value="em_text" {% if field['type'] == "em_text" %}selected="true"{% endif %}>Текст</option>
-											<option value="em_date" {% if field['type'] == "em_date" %}selected="true"{% endif %}>Дата</option>
-											<option value="em_datetime" {% if field['type'] == "em_datetime" %}selected="true"{% endif %}>Дата и время</option>
-											<option value="em_file" {% if field['type'] == "em_file" %}selected="true"{% endif %}>Файл</option>
-											<option value="em_bool" {% if field['type'] == "em_bool" %}selected="true"{% endif %}>Флаг</option>
-											<option value="em_node" {% if field['type'] == "em_node" %}selected="true"{% endif %}>Привязка к элементу</option>
+											{% for EmTypeCode, EmType in EmTypes %}
+												<option value="{{EmTypeCode}}" {% if field['type'] == EmTypeCode %}selected="true"{% endif %}>{{EmType['name']}}</option>
+											{% endfor %}
 										</select>
 									{% else %}
 										PRIMARY KEY

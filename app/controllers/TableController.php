@@ -52,6 +52,7 @@ class TableController extends ControllerBase
 				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
 		}
 		$this->view->setVar('tableInfo',$curTable);
+		$this->view->setVar('tableFieldsCount',count($curTable['fields'])+1);
 
 
 		foreach($tableResult as &$tRes)
