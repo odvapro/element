@@ -52,6 +52,7 @@
 		}
 		.popupContLine
 		{
+			@import '../components/contentTable';
 			overflow: auto;
 			max-height: 400px;
 			.tabsLine

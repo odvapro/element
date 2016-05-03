@@ -744,6 +744,16 @@ var el =
 				document.cookie = name + '='+escape(value) + expires + '; path=/' + (domain ? '; domain=.' + domain : '') + ((secure && H.locProtocol == 'https:') ? '; secure' : '');
 			}
 		},
+		/* подключение скрипта один раз */
+		requiredfiles:[],
+		requireonce:function(url)
+		{
+			if(this.requiredfiles.indexOf(url) === -1)
+			{
+				$.getScript(url);
+				this.requiredfiles.push(url);
+			}
+		}
 	}
 }
 // end init.js

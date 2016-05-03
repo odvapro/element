@@ -48,7 +48,11 @@ aside#sidebar
 						position:relative;
 						top:-2px;
 						margin-right:14px;
-						&.text{white-space:nowrap;}
+						&.text
+						{
+							white-space:nowrap;
+							font-weight: normal;
+						}
 					}
 				}
 				&.folding .unfold {display:none; }
