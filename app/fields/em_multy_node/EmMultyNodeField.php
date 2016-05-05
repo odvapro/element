@@ -10,8 +10,11 @@ class EmMultyNodeField extends FieldBase
 		'select_from_table' =>'Выбор из таблицы',
 		'textarea'          =>'Текст',
 	];
+
 	public function getSettings($settings, array $params)
 	{
+		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+
 		foreach($settings['cols'] as $key => $col)
 			if(!is_numeric($key)) unset($settings['cols'][$key]);
 		$settings['cols'] = (!empty($settings['cols']))?$settings['cols']:[];
@@ -42,6 +45,8 @@ class EmMultyNodeField extends FieldBase
 	 */
 	public function getValue($fieldValue,$settings,$table = false)
 	{
+		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+
 		if(!empty($settings['cols']) && !empty($fieldValue))
 		{
 			if(!$table)

@@ -62,5 +62,6 @@
 			el.init();
 		</script>
 		{% block pageScripts %}{% endblock %}
+		{{ assets.outputJs() }}
 	</body>
 </html>

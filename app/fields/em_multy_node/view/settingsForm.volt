@@ -69,6 +69,4 @@
 		</select>
 	</div>
 </div>
-<script>
-	el.hlp.requireonce("{{baseUri}}fields/em_multy_node/src/js/init.js");
-</script>
+{{ assets.outputJs() }}

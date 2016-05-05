@@ -49,7 +49,44 @@ el.emMultyNode =
 						$(this).attr('name',nameMask);
 					}
 				})
-			})
+			});
+		}
+	},
+	field:
+	{
+		addNodeLine:function(instance)
+		{
+			var tplClass = $(instance).parents('.filedEdit').data('addfieldtpl');
+			var addTpl = $('.'+tplClass+' tbody').html();
+			$(instance).parents('tr').before(addTpl);
+			this._reinitFields(instance);
+		},
+		removeNodeLine:function(instance)
+		{
+			var self = this;
+			$(instance).parents('tr').fadeOut(function()
+			{
+				$(this).remove();
+				self._reinitFields(instance);
+			});
+		},
+		// пересчитывает номера полей
+		// #number#
+		_reinitFields:function(instance)
+		{
+			$(instance).parents('table.em_multy_node').find('tr').each(function()
+			{
+				var trIndex = $(this).index();
+				$(this).find('input').each(function()
+				{
+					var nameMask = $(this).data('namemask');
+					if(typeof nameMask != 'undefined')
+					{
+						nameMask = nameMask.replace('#number#',trIndex);
+						$(this).attr('name',nameMask);
+					}
+				})
+			});
 		}
 	}
 }

@@ -7,6 +7,7 @@ use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Assets\Manager  as AssetsManager;
 
 /**
  * CONSTATNTS
@@ -113,6 +114,10 @@ $di->set('db', function () use ($config) {
  */
 $di->set('modelsMetadata', function () {
     return new MetaDataAdapter();
+});
+
+$di->set('assets', function () {
+    return new AssetsManager();
 });
 
 $di->set('config', function () use ($config){
