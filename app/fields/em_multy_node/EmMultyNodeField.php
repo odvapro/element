@@ -46,12 +46,11 @@ class EmMultyNodeField extends FieldBase
 	public function getValue($fieldValue,$settings,$table = false)
 	{
 		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
-
 		if(!empty($settings['cols']) && !empty($fieldValue))
 		{
 			if(!$table)
 			{
-				$res = @json_decode($fieldValue);
+				$res = @json_decode($fieldValue,true);
 				if(is_array($res))
 					return $res;
 				else
@@ -74,11 +73,11 @@ class EmMultyNodeField extends FieldBase
 			}
 		}
 		else
-			return $fieldValue;
+			return (!empty($fieldValue))?$fieldValue:[];
 	}
 
 	public function saveValue($fieldValue,$fieldArray)
 	{
-		return implode(',',$fieldValue);
+		return json_encode($fieldValue);
 	}
 }

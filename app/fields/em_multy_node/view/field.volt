@@ -1,14 +1,16 @@
 {% extends "table/stringEditField.volt" %}
 {% block input %}
 	<div class="filedEdit" data-addfieldtpl="multynodeField_{{fieldArr['field']}}">
-		<pre>
-		{{dump(element[fieldArr['field']])}}
-		{{dump(fieldArr['settings']['cols'])}}
-		</pre>
-		<div class="fieldEditorBlock">
-			<input type="text"  value="test"/>
+		<div class="fieldEditorBlock" style="display:none;">
+			<input onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp input" type="text"  value=""/>
+			<select onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp select_from_table" name="" id="">
+				<option >test</option>
+				<option >test2</option>
+			</select>
+			<textarea onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp textarea" name="" id="" cols="30" rows="10"></textarea>
 		</div>
 		<table class="elements em_multy_node" cellspacing="0">
+			{# вывод стольбцов #}
 			{% if fieldArr['settings']['cols'] is defined %}
 				<tr>
 					{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
@@ -17,16 +19,20 @@
 					<th class="centered">удалить</th>
 				</tr>
 			{% endif %}
-			{% for fieldLine in element[fieldArr['field']] %}
+			{# вывод значиений #}
+			{% for fieldIndex,fieldLine in element[fieldArr['field']] %}
 				<tr>
-					<td>1</td>
-					<td class="edittd ">name</td>
-					<td>selct value</td>
-					<td class="centered"><span class="delete icon deleteBtn"></span></td>
+					{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
+						<td data-type="{{col['type']}}" onclick="el.emMultyNode.field.edit(this)">
+							<span class="value">{{fieldLine[col['name']]}}</span>
+							<input type="hidden" value="{{fieldLine[col['name']]}}" name="field[{{fieldArr['field']}}][{{fieldIndex}}][{{col['name']}}]" data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" />
+						</td>
+					{% endfor %}
+					<td class="centered"><span onclick="el.emMultyNode.field.removeNodeLine(this)" class="delete icon deleteBtn"></span></td>
 				</tr>
 			{% endfor %}
 			<tr>
-				<td colspan="4" class="centered"><a href="javascript:void(0)" onclick="el.emMultyNode.field.addNodeLine(this)"><span class="icon addBtn"></span></a></td>
+				<td colspan="{{fieldArr['settings']['cols']|length}}" class="centered"><a href="javascript:void(0)" onclick="el.emMultyNode.field.addNodeLine(this)"><span class="icon addBtn"></span></a></td>
 			</tr>
 		</table>
 	</div>
@@ -37,10 +43,11 @@
 			<table>
 				<tbody>
 					<tr>
+						{# вывод шаблона новой линии #}
 						{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
-							<td data-type="{{col['type']}}">
-								{{col['name']}}
-								<input type="hidden" name="" data-namemask="field[{{fieldArr['field']}}][#number#][{{colKey}}]" />
+							<td data-type="{{col['type']}}" onclick="el.emMultyNode.field.edit(this)">
+								<span class="value"></span>
+								<input type="hidden" name="" data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" />
 							</td>
 						{% endfor %}
 						<td class="centered"><span onclick="el.emMultyNode.field.removeNodeLine(this)" class="delete icon deleteBtn"></span></td>
