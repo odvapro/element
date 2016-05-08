@@ -46,6 +46,41 @@ class EmMultyNodeField extends FieldBase
 	public function getValue($fieldValue,$settings,$table = false)
 	{
 		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+		// если есть поле с табличной привязкой нужно достать значения таблицы
+		if(!empty($settings['cols']))
+		{
+			$tablesToView = [];
+			foreach ($settings['cols'] as $col)
+			{
+				if($col['type'] == 'select_from_table')
+				{
+					$curTablesJson = [];
+					$db = $this->di->get('db');
+					$sqlWhere = $col['table'];
+					$tableResult = $db->fetchAll(
+						"SELECT * FROM ".$sqlWhere,
+						Phalcon\Db::FETCH_ASSOC
+					);
+
+					// берем id и name
+					// --- TODO  любое сочетание
+					if(!empty($tableResult))
+					{
+						$fRow = reset($tableResult);
+						if(!empty($fRow['id']) && !empty($fRow['name']))
+						foreach ($tableResult as $tRow)
+						{
+							$curTablesJson[$tRow['id']] = ['id'=>$tRow['id'],'name'=>$tRow['name']];
+						}
+					}
+					$tablesToView[$col['table']] = $curTablesJson;
+				}
+			}
+			$tablesToViewOld = $this->view->getVar('multynode_tables');
+				$tablesToView = (!empty($tablesToViewOld))?array_merge($tablesToView,$tablesToViewOld):$tablesToView;
+			$this->view->setVar('multynode_tables',$tablesToView);
+		}
+
 		if(!empty($settings['cols']) && !empty($fieldValue))
 		{
 			if(!$table)

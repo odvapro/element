@@ -104,7 +104,13 @@ el.emMultyNode =
 			var fieldName = $(instance).parents('.fieldEditorBlock').data('ename');
 			var $inp = $(instance).parents('.filedEdit').find('input[name="'+fieldName+'"]');
 			$inp.val($(instance).val());
-			$inp.siblings('span.value').html($(instance).val());
+			if(!$(instance).hasClass('selectinp'))
+				$inp.siblings('span.value').html($(instance).val());
+			else
+			{
+				var htmlVal = $(instance).find('option:selected').html();
+				$inp.siblings('span.value').html(htmlVal);
+			}
 		},
 		// пересчитывает номера полей
 		// #number#

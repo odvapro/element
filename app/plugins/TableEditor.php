@@ -2,21 +2,6 @@
 class TableEditor extends Phalcon\Mvc\User\Plugin
 {
 	/**
-	 * Системые типы полей (к ним можно преобразовать поля)
-	 */
-	public $systemEmTypes = 
-	[
-		'em_int',
-		'em_string',
-		'em_text',
-		'em_date',
-		'em_datetime',
-		'em_file',
-		'em_node',
-		'em_bool'
-	];
-
-	/**
 	 * Вставляет в нужную таблицу переданные значение
 	 * предпологается что значения предварительно проверенны на обязательность и тд
 	 * @var string $tableName имя таблицы

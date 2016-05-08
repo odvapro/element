@@ -2,12 +2,29 @@
 {% block input %}
 	<div class="filedEdit" data-addfieldtpl="multynodeField_{{fieldArr['field']}}">
 		<div class="fieldEditorBlock" style="display:none;">
-			<input onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp input" type="text"  value=""/>
-			<select onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp select_from_table" name="" id="">
-				<option >test</option>
-				<option >test2</option>
-			</select>
-			<textarea onblur="el.emMultyNode.field.hideEditing(this)" onchange="el.emMultyNode.field.save(this)" class="editinp textarea" name="" id="" cols="30" rows="10"></textarea>
+			<input
+				onblur="el.emMultyNode.field.hideEditing(this)"
+				onchange="el.emMultyNode.field.save(this)"
+				class="editinp input"
+				type="text"/>
+			{# вывод cелектов для всех таблиц #}
+			{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
+				{% if col['type'] == 'select_from_table' %}
+					<select
+						data-table="{{col['table']}}"
+						onblur="el.emMultyNode.field.hideEditing(this)" 
+						onchange="el.emMultyNode.field.save(this)"
+						class="editinp select_from_table selectinp">
+						{% for tOption in multynode_tables[col['table']] %}
+							<option value="{{tOption['id']}}">{{tOption['name']}}</option>
+						{% endfor %}
+					</select>
+				{% endif %}
+			{% endfor %}
+			<textarea
+				onblur="el.emMultyNode.field.hideEditing(this)"
+				onchange="el.emMultyNode.field.save(this)"
+				class="editinp textarea"></textarea>
 		</div>
 		<table class="elements em_multy_node" cellspacing="0">
 			{# вывод стольбцов #}
@@ -24,7 +41,11 @@
 				<tr>
 					{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
 						<td data-type="{{col['type']}}" onclick="el.emMultyNode.field.edit(this)">
-							<span class="value">{{fieldLine[col['name']]}}</span>
+							{% if col['type'] == 'select_from_table' %}
+								<span class="value">{{multynode_tables[col['table']][fieldLine[col['name']]]['name']}}</span>
+							{% else %}
+								<span class="value">{{fieldLine[col['name']]}}</span>
+							{% endif %}
 							<input type="hidden" value="{{fieldLine[col['name']]}}" name="field[{{fieldArr['field']}}][{{fieldIndex}}][{{col['name']}}]" data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" />
 						</td>
 					{% endfor %}
@@ -35,8 +56,6 @@
 				<td colspan="{{fieldArr['settings']['cols']|length}}" class="centered"><a href="javascript:void(0)" onclick="el.emMultyNode.field.addNodeLine(this)"><span class="icon addBtn"></span></a></td>
 			</tr>
 		</table>
-	</div>
-	<div class="filedEdit" data-fieldName="{{fieldArr['field']}}" data-multiple="{{fieldArr['multiple']}}">
 	</div>
 	<div id="TPLS" style="display:none;">
 		<div class="multynodeField_{{fieldArr['field']}}">

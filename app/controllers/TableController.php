@@ -136,7 +136,7 @@ class TableController extends ControllerBase
 				$primaryKey = $field['field'];
 		}
 		$this->view->setVar('tableInfo',$curTable);
-		$this->view->setVar('sysTypes',$this->tableEditor->systemEmTypes);
+		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
 		$this->view->setVar('primaryKey',$primaryKey);
 		
 		$element = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
