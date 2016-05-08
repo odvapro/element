@@ -14,12 +14,20 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	public function getSettings($settings, array $params){}
 
 	/**
+	 * Всегда вызывается перед всеми формами и выводами
+	 * @param  array $settings настройки поля
+	 * @param  bool $table возварщять значение для вывода в таблицу, по умолчанию false
+	 * @return void
+	 */
+	public function prolog($settings,$table = false){}
+
+	/**
 	 * Возвращает значение поля, обрабатывае то что в БД
 	 * для вывода
 	 * @param  string $fieldValue значение хранаящееся в БД
 	 * @param  array $settings настройки поля
 	 * @param  bool $table возварщять значение для вывода в таблицу, по умолчанию false
-	 * @return string
+	 * @return значение поля string/array/что угодно
 	 */
 	public function getValue($fieldValue,$settings,$table = false)
 	{

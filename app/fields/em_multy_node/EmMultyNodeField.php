@@ -14,9 +14,9 @@ class EmMultyNodeField extends FieldBase
 	public function getSettings($settings, array $params)
 	{
 		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
-
-		foreach($settings['cols'] as $key => $col)
-			if(!is_numeric($key)) unset($settings['cols'][$key]);
+		if(!empty($settings['cols']))
+			foreach($settings['cols'] as $key => $col)
+				if(!is_numeric($key)) unset($settings['cols'][$key]);
 		$settings['cols'] = (!empty($settings['cols']))?$settings['cols']:[];
 		$this->view->setVar('cols',$settings['cols']);
 		$this->view->setVar('colTypes',$this->colTypes);
@@ -39,13 +39,8 @@ class EmMultyNodeField extends FieldBase
 		$this->view->setVar('formPath','em_multy_node/view/settingsForm');
 	}
 
-	/**
-	 * Формат хранения - JSON
-	 * [ [ 'colcode1'=>val,'colcode2'=>'val2' ], [ 'colcode1'=>val,'colcode2'=>'val2' ] ]
-	 */
-	public function getValue($fieldValue,$settings,$table = false)
+	public function prolog($settings,$table = false)
 	{
-		$this->assets->addJs('fields/em_multy_node/src/js/init.js');
 		// если есть поле с табличной привязкой нужно достать значения таблицы
 		if(!empty($settings['cols']))
 		{
@@ -81,6 +76,16 @@ class EmMultyNodeField extends FieldBase
 			$this->view->setVar('multynode_tables',$tablesToView);
 		}
 
+		if($table == false)
+			$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+	}
+
+	/**
+	 * Формат хранения - JSON
+	 * [ [ 'colcode1'=>val,'colcode2'=>'val2' ], [ 'colcode1'=>val,'colcode2'=>'val2' ] ]
+	 */
+	public function getValue($fieldValue,$settings,$table = false)
+	{
 		if(!empty($settings['cols']) && !empty($fieldValue))
 		{
 			if(!$table)

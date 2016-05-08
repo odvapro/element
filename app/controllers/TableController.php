@@ -95,7 +95,10 @@ class TableController extends ControllerBase
 		foreach ($curTable['fields'] as &$field)
 		{
 			if(!is_null($this->fields->{$field['type']}))
+			{
+				$this->fields->{$field['type']}->prolog($field['settings']);
 				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+			}
 			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
 		}
 
@@ -129,7 +132,10 @@ class TableController extends ControllerBase
 		foreach ($curTable['fields'] as  &$field)
 		{
 			if(!is_null($this->fields->{$field['type']}))
+			{
+				$this->fields->{$field['type']}->prolog($field['settings']);
 				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+			}
 			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
 
 			if($field['key'] == 'PRI')
