@@ -91,6 +91,17 @@ class EmMultyNodeField extends FieldBase
 			if(!$table)
 			{
 				$res = @json_decode($fieldValue,true);
+				// подгон результата под settings cols
+				$cols = [];
+				if(!empty($settings['cols']))
+					foreach ($settings['cols'] as $col)
+						if(!empty($col['name']))
+							$cols[$col['name']] = false;
+				$res = array_map(function($arr) use($cols)
+				{
+					return array_merge($cols,$arr);
+				}, $res);
+
 				if(is_array($res))
 					return $res;
 				else
