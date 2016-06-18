@@ -16,10 +16,12 @@ gulp.task('css:build', function()
 		.pipe(compass({
 			css: './public/css',
 			sass: './public/scss',
-			image: './public/img'
+			image: './public/img',
+			style:'expanded',
+			comments:true
 		}))
-		.pipe(minifyCss())
-		.pipe(sourcemaps.write())
+		// .pipe(minifyCss())
+		// .pipe(sourcemaps.write())
 		.pipe(gulp.dest('public/css'))
 		.pipe(notify('Done!'));
 });

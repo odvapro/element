@@ -15,4 +15,19 @@ class EmTextField extends FieldBase
 		// адрес формы редактирования настроек
 		$this->view->setVar('formPath','em_text/view/settingsForm');
 	}
+	public function getValue($fieldValue,$settings,$table = false)
+	{
+		if($table)
+		{
+			$fieldValue = strip_tags($fieldValue);
+			if(strlen($fieldValue) > 200)
+				$fieldValue = substr($fieldValue, 0,200).'...';
+			return $fieldValue;
+		}
+		else
+		{
+			$fieldValue = str_replace('&', '&amp;', $fieldValue);
+			return $fieldValue;
+		}
+	}
 }
