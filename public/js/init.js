@@ -528,7 +528,7 @@ var el =
 			var nodeTextVal = $('#nodeAddForm input[name="nodetext"]').val();
 			if(nodeVal > 0)
 			{
-				var nodeTPL = $('#TPLS .nodeTPL').html();
+				var nodeTPL = $('.NodeFieldTPL.f'+fieldName).html();
 					nodeTPL = nodeTPL.replace(/#value#/g,nodeVal)
 						.replace(/#searchValue#/g,nodeTextVal)
 						.replace(/#fieldName#/g,fieldName);

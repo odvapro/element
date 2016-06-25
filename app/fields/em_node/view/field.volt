@@ -14,4 +14,11 @@
 			<button class="attachAdd" onclick="el.edit.getNodeAddForm(this,'{{fieldArr['field']}}');"><span class="icon addBtn"></span></button>
 		</div>
 	</div>
+	<div class="NodeFieldTPL f{{fieldArr['field']}}" style="display:none;">
+		<div class="node">
+			<span class="delete icon deleteBtn" onclick="el.edit.removeNode(this);"></span>
+			<div class="noIcon">#searchValue#</div>
+			<input type="hidden" name="field[#fieldName#][]" value="#value#" />
+		</div>
+	</div>
 {% endblock %}
