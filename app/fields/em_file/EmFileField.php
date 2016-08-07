@@ -29,11 +29,22 @@ class EmFileField extends FieldBase
 		{
 			$resFilesArray = [];
 			$filesArr = json_decode($fieldValue,true);
-			foreach ($filesArr as $key => $fileArr)
+			if($filesArr)
 			{
+				foreach ($filesArr as $key => $fileArr)
+				{
+					$resFilesArray[] = array_merge($fileArr,[
+						'jsonFileObj' => htmlspecialchars(json_encode($fileArr),ENT_QUOTES),
+						'index' => $key
+					]);
+				}
+			}
+			elseif(file_exists(ROOT.$fieldValue))
+			{
+				$fileArr = ['upName'=>'untittled','type'=>'file','path' => $fieldValue];
 				$resFilesArray[] = array_merge($fileArr,[
 					'jsonFileObj' => htmlspecialchars(json_encode($fileArr),ENT_QUOTES),
-					'index' => $key
+					'index' => 0
 				]);
 			}
 			return $resFilesArray;
