@@ -3,10 +3,14 @@
 return new \Phalcon\Config(array(
 	'database' => array(
 		'adapter'     => 'Mysql',
-		'host'        => '#host#',
-		'username'    => '#username#',
-		'password'    => '#password#',
-		'dbname'      => '#dbname#',
+		'host'        => 'localhost',
+		'username'    => 'root',
+		'password'    => 'pass',
+		'dbname'      => 'element_cms',
+/*		'host'        => '185.18.53.7',
+		'username'    => 'root',
+		'password'    => 'pass',
+		'dbname'      => 'hotpie_phalcon',*/
 	),
 	'application' => array(
 		'appDir'         => __DIR__ . '/../../app/',
@@ -19,7 +23,7 @@ return new \Phalcon\Config(array(
 		'configDir'      => __DIR__ . '/../../app/config/',
 		'extDir'         => __DIR__ . '/../../app/extensions/',
 		'fldDir'         => __DIR__ . '/../../app/fields/',
-		'baseUri'        => '#baseuri#', 
+		'baseUri'        => '/element/', 
 		
 		// указывается относительно baseUri, так как вставляется после него
 		'defaultFilesUploadPath' => 'public/upload/'
