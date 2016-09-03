@@ -2,8 +2,8 @@
 
 class EmFileField extends FieldBase
 {
-	public $EditFieldPath = 'em_file/view/field';
-	public $ValueFieldPath = 'em_file/view/value';
+	public $EditFieldPath = 'em_file/views/field';
+	public $ValueFieldPath = 'em_file/views/value';
 	public function getSettings($settings, array $params)
 	{
 		$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->tableEditor->getDefaultFilesSavePath();
@@ -17,7 +17,7 @@ class EmFileField extends FieldBase
 		$this->view->setVar('settingFields',$settingFields);
 		
 		// обязательый параметр
-		$this->view->setVar('formPath','em_file/view/settingsForm');
+		$this->view->setVar('formPath','em_file/views/settingsForm');
 	}
 
 	public function getValue($fieldValue,$settings,$table = false)
@@ -54,5 +54,10 @@ class EmFileField extends FieldBase
 	public function saveValue($fieldValue,$fieldArray)
 	{
 		return $this->tableEditor->handleUploadedFiles($fieldValue, $fieldArray);
+	}
+
+	public function prolog($settings,$table = false)
+	{
+		$this->assets->addJs('fields/em_file/src/js/init.js');
 	}
 }

@@ -8,17 +8,14 @@ class ExtController extends ControllerBase
 	public function indexAction($extName,$extController,$extAction = 'index')
 	{
 		global $config;
-		// установленность значений
 		if(empty($extName) || empty($extController))
 		{
-			// страница не найдена
 			$this->pageNotFound();
 			return false;
 		}
 		
 		//############################################################
 		// CONTROLLERS
-		// существование файлов
 		$extControllerName     = ucfirst($extController).'EController';
 		$extPath           = $config->application->extDir.$extName.'/';
 		$extControllerPath = $extPath.'controllers/'.$extControllerName.'.php';

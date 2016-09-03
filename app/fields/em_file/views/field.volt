@@ -5,7 +5,7 @@
 			{% if element[fieldArr['field']] is defined and element[fieldArr['field']] != '' %}
 				{% for aFile in element[fieldArr['field']] %}
 					<div class="attach" title="{{aFile['upName']}}">
-						<span onclick="el.edit.removeFileAttach(this);" class="delete icon deleteBtn"></span>
+						<span onclick="el.fileField.removeFileAttach(this);" class="delete icon deleteBtn"></span>
 						{% if aFile['type'] == "image" %}
 							<div class="atIcon"><img src="{{aFile['sizes']['small']}}" alt="{{aFile['upName']}}"></div>
 						{% else %}
@@ -15,7 +15,7 @@
 					</div>
 				{% endfor %}
 			{% endif %}
-			<button class="attachAdd" onclick="el.edit.getFileUploadForm(this,'{{fieldArr['field']}}');" ><span class="icon addBtn"></span></button>
+			<button class="attachAdd" onclick="el.fileField.getUploadForm(this,'{{fieldArr['field']}}');" ><span class="icon addBtn"></span></button>
 		</div>
 	</div>
 {% endblock %}
@@ -23,7 +23,7 @@
 	<div id="TPLS" style="display:none;">
 		<div class="fileTPL">
 			<div class="attach" title="#name#">
-				<span onclick="el.edit.removeFileAttach(this);" class="delete icon deleteBtn"></span>
+				<span onclick="el.fileField.removeFileAttach(this);" class="delete icon deleteBtn"></span>
 				<div class="atIcon"><img src="#icon#" alt="#name#" /></div>
 				<input type="hidden" name="field[#fieldName#][#index#][jsonFileObj]" value="#value#" />
 				<input type="hidden" class="tmpfield deleteaftersave" name="field[#fieldName#][#index#][tmp]" value="1" />

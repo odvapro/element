@@ -81,5 +81,13 @@ $router->add(
 		"params"     => 1
 	)
 );
+$router->add(
+	"/fld/:params",
+	array(
+		"controller" => "fld",
+		"action"     => 'index',
+		"params"     => 1
+	)
+);
 $router->handle();
 return $router;

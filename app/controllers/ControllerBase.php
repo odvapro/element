@@ -31,18 +31,10 @@ class ControllerBase extends Controller
 		// собираем ссылки левого сайдбара для расширений
 		$this->extenLinks = [];
 		if(count($extensions))
-		{
 			foreach($extensions as $ext)
-			{
 				if(!empty($ext['sidebarlinks']))
-				{
 					foreach ($ext['sidebarlinks'] as $link)
-					{
 						$this->extenLinks[] = $link;
-					}
-				}
-			}
-		}
 		$this->view->setVar('extenLinks',$this->extenLinks);
 
 		// свернутость сайдбара
