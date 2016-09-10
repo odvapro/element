@@ -180,10 +180,9 @@ class TableController extends ControllerBase
 			$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
 
 			// проход по всем полям, проверка важное это поле или нет
-			// + обробатывает данные файлов, переносит их из временных папок или удаляет
 			$validationErrors = [];
-			$formData = [];
-			$primaryKey = [];
+			$formData         = [];
+			$primaryKey       = [];
 			foreach ($curTable['fields'] as $key => $fieldArr)
 			{
 				$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
@@ -191,7 +190,7 @@ class TableController extends ControllerBase
 				if($required && empty($field[$fieldArr['field']])) 
 					$validationErrors[] = $fieldArr['field'].' required';
 				else
-					if(!empty( $field[$fieldArr['field']]))
+					if(!empty($field[$fieldArr['field']]))
 						if(!is_null($this->fields->{$fieldArr['type']}))
 							$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr);
 						else
@@ -200,17 +199,10 @@ class TableController extends ControllerBase
 						$formData[$fieldArr['field']] = null;
 
 				if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
-					$primaryKey = ['field'=>$fieldArr['field'], 'value'=>intval($field[$fieldArr['field']])];
-			}
-
-			// проверка на удаление файлов
-			// при удалении из базы, файл нужно удалить физически
-			// для этого сравниваем текущее значение поля файл, с обновляемым
-			// тем самым выявляя удаленные файлы, и затем удаляем их
-			if(!empty($primaryKey) && !count($validationErrors))
-			{
-				$elementArr = $this->tableEditor->getElement($tableName,$primaryKey);
-				$this->tableEditor->deleteOldFiles($elementArr,$formData,$curTable['fields']);
+					$primaryKey = [
+						'field' => $fieldArr['field'],
+						'value' => intval($field[$fieldArr['field']])
+					];
 			}
 
 			// добавление или обновление после проверок валидиции 
@@ -248,17 +240,7 @@ class TableController extends ControllerBase
 		if($this->request->isAjax())
 		{
 			if(!empty($tableName) || !empty($primaryKey) ||  !empty($elementId) )
-			{
-				// -----------------------------------
-				$columns     = $this->tableEditor->getTableColumns($tableName);
-				$overColumns = $this->tableEditor->getOverTableColumns($tableName);
-				$curTable    = [];
-				$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
-
-				$elementArr = $this->tableEditor->getElement($tableName,['field'=>$primaryKey, 'value'=>intval($elementId)]);
-				$this->tableEditor->deleteOldFiles($elementArr,[],$curTable['fields']);
-				// -----------------------------------
-				
+			{	
 				$sqlErrors = [];
 				if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
 					$this->jsonResult(['result'=>'success']);
