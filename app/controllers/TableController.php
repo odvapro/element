@@ -184,6 +184,15 @@ class TableController extends ControllerBase
 			$formData         = [];
 			$primaryKey       = [];
 			foreach ($curTable['fields'] as $key => $fieldArr)
+				if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
+				{
+					$primaryKey = [
+						'field' => $fieldArr['field'],
+						'value' => intval($field[$fieldArr['field']])
+					];
+					break;
+				}
+			foreach ($curTable['fields'] as $key => $fieldArr)
 			{
 				$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
 				$required = ($fieldArr['extra'] == "auto_increment")?false:$required;
@@ -192,7 +201,7 @@ class TableController extends ControllerBase
 				else
 					if(!empty($field[$fieldArr['field']]))
 						if(!is_null($this->fields->{$fieldArr['type']}))
-							$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr);
+							$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
 						else
 							$formData[$fieldArr['field']] = $field[$fieldArr['field']];
 					else
@@ -208,7 +217,7 @@ class TableController extends ControllerBase
 			// добавление или обновление после проверок валидиции 
 			if(!count($validationErrors))
 			{
-				$res = false;
+				$res       = false;
 				$sqlErrors = [];
 				if($editMode == 'add')
 					$res = $this->tableEditor->insert($tableName, $formData, $sqlErrors);
@@ -241,6 +250,9 @@ class TableController extends ControllerBase
 		{
 			if(!empty($tableName) || !empty($primaryKey) ||  !empty($elementId) )
 			{	
+				// TODO
+				// запустить для всех типов полей сохранение пустоты
+				// для удаления мусора в виде файлов, которые потеряют ссылки с бд
 				$sqlErrors = [];
 				if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
 					$this->jsonResult(['result'=>'success']);

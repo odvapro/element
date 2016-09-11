@@ -51,9 +51,30 @@ class EmFileField extends FieldBase
 		}
 	}
 
-	public function saveValue($fieldValue,$fieldArray)
+	public function saveValue($fieldValue,$fieldArray,$tableName = false, $primaryKey = false)
 	{
-		return $this->handleUploadedFiles($fieldValue, $fieldArray);
+		$newFiles = [];
+		foreach ($fieldValue as $file)
+		{
+			if(!empty($file['tmp']))
+				// новый файл
+				// переносим его в основную папку
+				$newFiles[] = $this->saveFile($file,$fieldArray['settings']);
+			else
+				// файл уже был загружен
+				// оставляем как есть
+				$newFiles[] = json_decode($file['jsonFileObj'],true);
+		}
+
+		// достаем текущее состояние файлов
+		// определяем разницу и удаляем лишние файлы
+		$elementArr = $this->tableEditor->getElement($tableName,$primaryKey);
+		$oldFiles   = json_decode($elementArr[$fieldArray['field']],true);
+		foreach ($oldFiles as $oldFile)
+			if(!in_array($oldFile, $newFiles))
+				$this->deleteFile($oldFile,$fieldArray['settings']);
+
+		return json_encode($newFiles);
 	}
 
 	public function prolog($settings,$table = false)
@@ -61,70 +82,67 @@ class EmFileField extends FieldBase
 		$this->assets->addJs('fields/em_file/src/js/init.js');
 	}
 
-
 	////////////////////////////////////////////////////////////
 	/// Функции вне абстрактоного класса
 	////////////////////////////////////////////////////////////
+	
 	/**
-	 * Обробатывает загруженные файлы для записи в БД
-	 * проверяет удаленные файлы, и удаляет их физически
-	 * @var array $uploadedFiles
-	 * @return string json объект файлов для записи в  
+	 * Переносит файл из tmp 
+	 * @param  json $fileObj
+	 * @param  array $settings
+	 * @return array
 	 */
-	public function handleUploadedFiles($uploadedFiles, $fieldArr)
+	public function saveFile($fileObj,$settings)
 	{
-		$resFiles = [];
-		$settings = (!empty($fieldArr['settings']))?$fieldArr['settings']:[];
-		foreach ($uploadedFiles as $key => $file)
+		$fileArr      = json_decode($fileObj['jsonFileObj'],true);
+		$savePath     = $this->getSavePath($settings);
+		$fullFilePath = ROOT.$fileArr['path'];
+		$newName      = false;
+		if(is_file($fullFilePath))
 		{
-			// загружен во временную папку
-			if(!empty($file['tmp']))
+			$path_parts = pathinfo($fullFilePath);
+			$newName = $savePath.$path_parts['basename'];
+			rename($fullFilePath, ROOT.$newName);
+		}
+		$fileArr['path'] = $newName;
+
+		// если это картинка, то нужно перенести еще и доп размеры
+		if($fileArr['type'] == 'image')
+		{
+			$sizes = [];
+			if(!empty($settings['imageSizes']))
 			{
-				$fileArr         = json_decode($file['jsonFileObj'],true);
-				$savePath        = $this->getSavePath($settings);
-
-				$fullFilePath    = ROOT.$fileArr['path'];
-				$newName = false;
-				if(is_file($fullFilePath))
+				foreach ($settings['imageSizes'] as $imageSize)
 				{
-					$path_parts = pathinfo($fullFilePath);
-					$newName = $savePath.$path_parts['basename'];
-					rename($fullFilePath, ROOT.$newName);
-				}
-				$fileArr['path'] = $newName;
-
-				// если это картинка, то нужно перенести еще и доп размеры
-				if($fileArr['type'] == 'image')
-				{
-					$sizes = [];
-					if(!empty($settings['imageSizes']))
+					if(empty($fileArr['sizes'][$imageSize['name']])) continue;
+					$fullFilePath = ROOT.$fileArr['sizes'][$imageSize['name']];
+					$path_parts   = pathinfo($fullFilePath);
+					$newName      = $savePath.$path_parts['basename'];
+					if(file_exists($fullFilePath))
 					{
-						foreach ($settings['imageSizes'] as $imageSize)
-						{
-							if(empty($fileArr['sizes'][$imageSize['name']])) continue;
-							$fullFilePath = ROOT.$fileArr['sizes'][$imageSize['name']];
-							$path_parts   = pathinfo($fullFilePath);
-							$newName      = $savePath.$path_parts['basename'];
-							if(file_exists($fullFilePath))
-							{
-								rename($fullFilePath, ROOT.$newName);
-								$sizes[$imageSize['name']] = $newName;							
-							}
-						}
+						rename($fullFilePath, ROOT.$newName);
+						$sizes[$imageSize['name']] = $newName;							
 					}
-					$fileArr['sizes'] = $sizes;
 				}
-				$resFiles[] = $fileArr;
 			}
-			else
-				$resFiles[] = json_decode($file['jsonFileObj'],true);
+			$fileArr['sizes'] = $sizes;
 		}
 
-		// достает текущее значение поля
-		// проверяет разницу
-		// если она есть, удаляет удаленные файлы 
+		return $fileArr;
+	}
 
-		return json_encode($resFiles);
+	/**
+	 * Физиеское удалеие файла
+	 * @param  array $fileObj 
+	 * @param  array $settings
+	 */
+	public function deleteFile($fileObj,$settings)
+	{
+		@unlink(ROOT.$fileObj['path']);
+		if(!empty($fileObj['sizes']))
+			foreach($fileObj['sizes'] as $fileSizePath)
+				@unlink(ROOT.$fileSizePath);
+		return true;
 	}
 
 	/**
