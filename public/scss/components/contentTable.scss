@@ -12,7 +12,8 @@ table
 	th
 	{
 		background:#F0F2F5;
-	    padding: 11px 10px;
+	    padding: 11px 28px 11px 10px;
+        position: relative;
 		border-right:1px solid $bordersColor;
 		font-size: 12px;
 		font-weight: bold;
@@ -54,6 +55,10 @@ table
 		{
 			float:right;
 			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			right: 8px;
+			margin-top: -7px;
 		}
 		&.righted label
 		{

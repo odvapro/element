@@ -24,6 +24,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# test
+vendor
+tests
+composer.json
+composer.lock
+
 /public/upload/
 /node_modules/
 /app/cache/*
