@@ -31,8 +31,22 @@ class TableController extends ControllerBase
 		$limit    = 20;
 		$from     = $limit*(intval($page)-1);
 		$sqlWhere = $activeTable['real_name'];
+		
+		// Sorting
+		$sortString = ' ';
+		$sort       = $this->request->get('sort');
+		if($sort)
+		{
+			$sortDir = $this->request->get('sortdir');
+			$sortString = ' ORDER BY  '.$sort;
+			if(!empty($sortDir))
+				$sortString .= ' '.$sortDir; 
+			else
+				$sortString .= ' DESC'; 
+		}
+
 		$tableResult = $db->fetchAll(
-			"SELECT * FROM ".$sqlWhere." LIMIT $from,$limit",
+			"SELECT * FROM ".$sqlWhere." ".$sortString." LIMIT $from,$limit",
 			Phalcon\Db::FETCH_ASSOC
 		);
 
@@ -45,11 +59,18 @@ class TableController extends ControllerBase
 			$fieldTypes[$field['field']] = $field['type'];
 			if($field['key'] == 'PRI')
 				$primaryKey = $field['field'];
+			
+			$field['sort'] = 'desc';
+			if(!empty($sort) && $sort == $field['field'] && !empty($sortDir))
+				$field['sort'] = $sortDir;
+
 			$fieldName = $field['field'];
 			$settingsArr[$field['field']] = (!empty($field['settings']))?$field['settings']:[];
+			
 			// прописываем каждому типу поля свое отображение
 			if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
 				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
+
 		}
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('tableFieldsCount',count($curTable['fields'])+1);

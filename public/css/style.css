@@ -330,24 +330,28 @@ input, select {
   margin-top: -7px;
 }
 /* line 63, ../scss/components/contentTable.scss */
+#popupWrap .popupCont .popupContLine table th .icon.tablearrow.asc {
+  transform: rotate(180deg);
+}
+/* line 67, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table th.righted label {
   font-size: 11px;
   font-weight: normal;
   cursor: pointer;
 }
-/* line 70, ../scss/components/contentTable.scss */
+/* line 74, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:hover {
   background: #F5F9FF;
 }
-/* line 73, ../scss/components/contentTable.scss */
+/* line 77, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:hover td {
   border-color: #AACBFD;
 }
-/* line 77, ../scss/components/contentTable.scss */
+/* line 81, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:hover + tr td {
   border-top: 1px solid #AACBFD;
 }
-/* line 81, ../scss/components/contentTable.scss */
+/* line 85, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td {
   padding: 11px 10px;
   border-top: 1px solid #D3D3DB;
@@ -364,22 +368,22 @@ input, select {
   font-weight: normal;
   /* тип поля - выделение цветом */
 }
-/* line 96, ../scss/components/contentTable.scss */
+/* line 100, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td span.value {
   width: 100%;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 103, ../scss/components/contentTable.scss */
+/* line 107, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td:first-child {
   overflow: visible;
 }
-/* line 106, ../scss/components/contentTable.scss */
+/* line 110, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td:last-child {
   border-right: 0px;
 }
-/* line 110, ../scss/components/contentTable.scss */
+/* line 114, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td img {
   height: 20px;
   max-width: 50px;
@@ -387,15 +391,15 @@ input, select {
   float: left;
   margin-right: 3px;
 }
-/* line 117, ../scss/components/contentTable.scss */
+/* line 121, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td img :last-child {
   margin-right: 0px;
 }
-/* line 122, ../scss/components/contentTable.scss */
+/* line 126, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td:hover .editLine {
   display: block;
 }
-/* line 126, ../scss/components/contentTable.scss */
+/* line 130, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td .editLine {
   height: 100%;
   background: #fff;
@@ -409,22 +413,22 @@ input, select {
   z-index: 1;
   display: none;
 }
-/* line 139, ../scss/components/contentTable.scss */
+/* line 143, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td .editLine a {
   color: #2276A8;
   margin-right: 10px;
   position: relative;
   top: calc(50% - 5px);
 }
-/* line 145, ../scss/components/contentTable.scss */
+/* line 149, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td .editLine a:hover {
   text-decoration: none;
 }
-/* line 151, ../scss/components/contentTable.scss */
+/* line 155, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td input[type="checkbox"] {
   cursor: pointer;
 }
-/* line 156, ../scss/components/contentTable.scss */
+/* line 160, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td .colorTag {
   background: #deebfe;
   display: inline-block;
@@ -435,7 +439,7 @@ input, select {
   margin-top: -7px;
   margin-bottom: -7px;
 }
-/* line 167, ../scss/components/contentTable.scss */
+/* line 171, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table td .collection {
   background: #EFEFEF;
   display: inline-block;
@@ -446,27 +450,27 @@ input, select {
   margin-top: -7px;
   margin-bottom: -7px;
 }
-/* line 181, ../scss/components/contentTable.scss */
+/* line 185, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:last-child td {
   border-bottom: 0px;
 }
-/* line 184, ../scss/components/contentTable.scss */
+/* line 188, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:last-child td:first-child {
   border-bottom-left-radius: 3px;
 }
-/* line 190, ../scss/components/contentTable.scss */
+/* line 194, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:last-child td:last-child {
   border-bottom-right-radius: 3px;
 }
-/* line 194, ../scss/components/contentTable.scss */
+/* line 198, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:first-child th:first-child {
   border-top-left-radius: 3px;
 }
-/* line 198, ../scss/components/contentTable.scss */
+/* line 202, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr:first-child th:last-child {
   border-top-right-radius: 3px;
 }
-/* line 202, ../scss/components/contentTable.scss */
+/* line 206, ../scss/components/contentTable.scss */
 #popupWrap .popupCont .popupContLine table tr.black td {
   color: #3D3F3E;
 }
@@ -1040,24 +1044,28 @@ section#contentBlock #content table th .icon.tablearrow {
   margin-top: -7px;
 }
 /* line 63, ../scss/components/contentTable.scss */
+section#contentBlock #content table th .icon.tablearrow.asc {
+  transform: rotate(180deg);
+}
+/* line 67, ../scss/components/contentTable.scss */
 section#contentBlock #content table th.righted label {
   font-size: 11px;
   font-weight: normal;
   cursor: pointer;
 }
-/* line 70, ../scss/components/contentTable.scss */
+/* line 74, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:hover {
   background: #F5F9FF;
 }
-/* line 73, ../scss/components/contentTable.scss */
+/* line 77, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:hover td {
   border-color: #AACBFD;
 }
-/* line 77, ../scss/components/contentTable.scss */
+/* line 81, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:hover + tr td {
   border-top: 1px solid #AACBFD;
 }
-/* line 81, ../scss/components/contentTable.scss */
+/* line 85, ../scss/components/contentTable.scss */
 section#contentBlock #content table td {
   padding: 11px 10px;
   border-top: 1px solid #D3D3DB;
@@ -1074,22 +1082,22 @@ section#contentBlock #content table td {
   font-weight: normal;
   /* тип поля - выделение цветом */
 }
-/* line 96, ../scss/components/contentTable.scss */
+/* line 100, ../scss/components/contentTable.scss */
 section#contentBlock #content table td span.value {
   width: 100%;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 103, ../scss/components/contentTable.scss */
+/* line 107, ../scss/components/contentTable.scss */
 section#contentBlock #content table td:first-child {
   overflow: visible;
 }
-/* line 106, ../scss/components/contentTable.scss */
+/* line 110, ../scss/components/contentTable.scss */
 section#contentBlock #content table td:last-child {
   border-right: 0px;
 }
-/* line 110, ../scss/components/contentTable.scss */
+/* line 114, ../scss/components/contentTable.scss */
 section#contentBlock #content table td img {
   height: 20px;
   max-width: 50px;
@@ -1097,15 +1105,15 @@ section#contentBlock #content table td img {
   float: left;
   margin-right: 3px;
 }
-/* line 117, ../scss/components/contentTable.scss */
+/* line 121, ../scss/components/contentTable.scss */
 section#contentBlock #content table td img :last-child {
   margin-right: 0px;
 }
-/* line 122, ../scss/components/contentTable.scss */
+/* line 126, ../scss/components/contentTable.scss */
 section#contentBlock #content table td:hover .editLine {
   display: block;
 }
-/* line 126, ../scss/components/contentTable.scss */
+/* line 130, ../scss/components/contentTable.scss */
 section#contentBlock #content table td .editLine {
   height: 100%;
   background: #fff;
@@ -1119,22 +1127,22 @@ section#contentBlock #content table td .editLine {
   z-index: 1;
   display: none;
 }
-/* line 139, ../scss/components/contentTable.scss */
+/* line 143, ../scss/components/contentTable.scss */
 section#contentBlock #content table td .editLine a {
   color: #2276A8;
   margin-right: 10px;
   position: relative;
   top: calc(50% - 5px);
 }
-/* line 145, ../scss/components/contentTable.scss */
+/* line 149, ../scss/components/contentTable.scss */
 section#contentBlock #content table td .editLine a:hover {
   text-decoration: none;
 }
-/* line 151, ../scss/components/contentTable.scss */
+/* line 155, ../scss/components/contentTable.scss */
 section#contentBlock #content table td input[type="checkbox"] {
   cursor: pointer;
 }
-/* line 156, ../scss/components/contentTable.scss */
+/* line 160, ../scss/components/contentTable.scss */
 section#contentBlock #content table td .colorTag {
   background: #deebfe;
   display: inline-block;
@@ -1145,7 +1153,7 @@ section#contentBlock #content table td .colorTag {
   margin-top: -7px;
   margin-bottom: -7px;
 }
-/* line 167, ../scss/components/contentTable.scss */
+/* line 171, ../scss/components/contentTable.scss */
 section#contentBlock #content table td .collection {
   background: #EFEFEF;
   display: inline-block;
@@ -1156,27 +1164,27 @@ section#contentBlock #content table td .collection {
   margin-top: -7px;
   margin-bottom: -7px;
 }
-/* line 181, ../scss/components/contentTable.scss */
+/* line 185, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:last-child td {
   border-bottom: 0px;
 }
-/* line 184, ../scss/components/contentTable.scss */
+/* line 188, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:last-child td:first-child {
   border-bottom-left-radius: 3px;
 }
-/* line 190, ../scss/components/contentTable.scss */
+/* line 194, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:last-child td:last-child {
   border-bottom-right-radius: 3px;
 }
-/* line 194, ../scss/components/contentTable.scss */
+/* line 198, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:first-child th:first-child {
   border-top-left-radius: 3px;
 }
-/* line 198, ../scss/components/contentTable.scss */
+/* line 202, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr:first-child th:last-child {
   border-top-right-radius: 3px;
 }
-/* line 202, ../scss/components/contentTable.scss */
+/* line 206, ../scss/components/contentTable.scss */
 section#contentBlock #content table tr.black td {
   color: #3D3F3E;
 }

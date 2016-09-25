@@ -22,7 +22,7 @@
 			<tr>
 				<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>
 				{% for fieldArr in tableInfo['fields'] %}
-					<th>{{fieldArr['field']}} <span class="icon tablearrow"></span></th>
+					<th data-code="{{fieldArr['field']}}">{{fieldArr['field']}} <span onclick="el.table.setsort(this)" class="icon tablearrow {{fieldArr['sort']}}"></span></th>
 				{% endfor %}
 			</tr>
 			{% if tableResult %}

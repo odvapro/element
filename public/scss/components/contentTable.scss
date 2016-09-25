@@ -60,6 +60,10 @@ table
 			right: 8px;
 			margin-top: -7px;
 		}
+		.icon.tablearrow.asc
+		{
+			transform: rotate(180deg);
+		}
 		&.righted label
 		{
 			font-size: 11px;

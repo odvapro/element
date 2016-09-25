@@ -55,8 +55,7 @@
 		</section>
 		<div class="alert error"><span class="msg"></span> <span onclick="el.message.close();" class="icon closeButton"></span></div>
 		<div id="popupWrap"><div class="popupCont"></div></div>
-		<script type="text/javascript" src="{{baseUri}}js/jquery.js"></script>
-		<script type="text/javascript" src="{{baseUri}}js/init.js"></script>
+		<script type="text/javascript" src="{{baseUri}}js/init.min.js"></script>
 		<script type="text/javascript">
 			el.config.baseUri = '{{baseUri}}';
 			el.init();
