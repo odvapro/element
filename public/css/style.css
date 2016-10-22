@@ -819,6 +819,7 @@ section#contentBlock {
   margin-left: 266px;
   overflow: auto;
   /* влкадки на странице настроек */
+  /* вкладки второго уровня */
 }
 /* line 14, ../scss/layout/content.scss */
 section#contentBlock #contFixed {
@@ -1438,5 +1439,31 @@ section#contentBlock #content .subTabsCont .subTabCont {
 section#contentBlock #content .subTabsCont .subTabCont.act {
   display: block;
 }
-
+/* line 1, ../scss/components/loadingAnimation.scss */
+section#contentBlock.loading .loader {
+  display: block;
+}
+/* line 2, ../scss/components/loadingAnimation.scss */
+section#contentBlock.loading #content {
+  opacity: 0.3;
+}
+/* line 3, ../scss/components/loadingAnimation.scss */
+section#contentBlock .loader {
+  display: none;
+  width: 14px;
+  height: 14px;
+  background: #531f5d;
+  border-radius: 50%;
+  position: fixed;
+  top: calc(50% - 14px);
+  left: calc(50% - 14px);
+  box-shadow: #531f5d 10px 0, #531f5d 20px 0, #531f5d -10px 0, #531f5d -20px 0;
+  animation: anim 1s infinite;
+}
+@keyframes anim {
+  50% {
+    box-shadow: #531f5d 65px 0, #531f5d 120px 0, #531f5d -65px 0, #531f5d -120px 0;
+    transform: scale(0.4);
+  }
+}
 /* сообщения об шибках и тд */

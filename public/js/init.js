@@ -11,6 +11,28 @@ var el =
 	init : function()
 	{
 		this.popup.init();
+		$.ajaxSetup({
+			beforeSend:function()
+			{
+				el.loader.show();
+			},
+			complete:function()
+			{
+				el.loader.hide();
+			}
+		});
+	},
+
+	loader :
+	{
+		show:function()
+		{
+			$('#contentBlock').addClass('loading');
+		},
+		hide:function()
+		{
+			$('#contentBlock').removeClass('loading');
+		}
 	}
 }
 // end init.js

@@ -52,6 +52,7 @@
 			<div id="content" {% block contentBoxAttributes %}{% endblock %}>
 				{% block content %}{% endblock %}
 			</div>
+			<div class="loader"></div>
 		</section>
 		<div class="alert error"><span class="msg"></span> <span onclick="el.message.close();" class="icon closeButton"></span></div>
 		<div id="popupWrap"><div class="popupCont"></div></div>
