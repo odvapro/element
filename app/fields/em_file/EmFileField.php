@@ -6,7 +6,7 @@ class EmFileField extends FieldBase
 	public $ValueFieldPath = 'em_file/views/value';
 	public function getSettings($settings, array $params)
 	{
-		$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->tableEditor->getDefaultFilesSavePath();
+		$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->getDefaultFilesSavePath();
 		$settingFields['fileTypes'] = (!empty($settings['fileTypes']))?$settings['fileTypes']:[];
 		
 		// определяем доп переменную для типов файлов

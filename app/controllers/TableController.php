@@ -69,7 +69,10 @@ class TableController extends ControllerBase
 			
 			// прописываем каждому типу поля свое отображение
 			if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
+			{
+				$this->fields->{$fieldTypes[$fieldName]}->prolog($field['settings'],true);
 				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
+			}
 
 		}
 		$this->view->setVar('tableInfo',$curTable);

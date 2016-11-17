@@ -14,6 +14,7 @@
 						data-table="{{col['table']}}"
 						onblur="el.emMultyNode.field.hideEditing(this)" 
 						onchange="el.emMultyNode.field.save(this)"
+						data-colname="{{col['name']}}"
 						class="editinp select_from_table selectinp">
 							<option value="">Выбрать</option>
 							{% for tOption in multynode_tables[col['table']] %}
@@ -48,7 +49,13 @@
 								{% else %}
 									<span class="value">{{fieldLine[col['name']]}}</span>
 								{% endif %}
-								<input type="hidden" value="{{fieldLine[col['name']]}}" name="field[{{fieldArr['field']}}][{{fieldIndex}}][{{col['name']}}]" data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" />
+								<input 
+									type="hidden" 
+									value="{{fieldLine[col['name']]}}" 
+									name="field[{{fieldArr['field']}}][{{fieldIndex}}][{{col['name']}}]" 
+									data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" 
+									data-colname="{{col['name']}}" 
+								/>
 							</td>
 						{% endfor %}
 						<td class="centered"><span onclick="el.emMultyNode.field.removeNodeLine(this)" class="delete icon deleteBtn"></span></td>
@@ -69,7 +76,12 @@
 						{% for colKey,col in fieldArr['settings']['cols'] if colKey != '#num#'  %}
 							<td data-type="{{col['type']}}" onclick="el.emMultyNode.field.edit(this)">
 								<span class="value"></span>
-								<input type="hidden" name="" data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" />
+								<input 
+									type="hidden" 
+									name="" 
+									data-namemask="field[{{fieldArr['field']}}][#number#][{{col['name']}}]" 
+									data-colname="{{col['name']}}"
+								/>
 							</td>
 						{% endfor %}
 						<td class="centered"><span onclick="el.emMultyNode.field.removeNodeLine(this)" class="delete icon deleteBtn"></span></td>
@@ -78,4 +90,13 @@
 			</table>
 		</div>
 	</div>
+	<style>
+		{# TODOO2 - must compile #}
+		.select_from_table
+		{
+			width: 95%;
+		    margin-top: 10px;
+		    margin-left: 2.5%;
+		}
+	</style>
 {% endblock %}

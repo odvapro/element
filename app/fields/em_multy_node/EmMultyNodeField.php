@@ -2,8 +2,8 @@
 
 class EmMultyNodeField extends FieldBase
 {
-	public $EditFieldPath = 'em_multy_node/view/field';
-	public $ValueFieldPath = 'em_multy_node/view/value';
+	public $EditFieldPath = 'em_multy_node/views/field';
+	public $ValueFieldPath = 'em_multy_node/views/value';
 	public $colTypes = [
 		'input'             =>'Строка',
 		'select'            =>'Выбор',
@@ -36,7 +36,7 @@ class EmMultyNodeField extends FieldBase
 		$this->view->setVar('tablesJSON',json_encode($resTables));
 		
 		// обязательый параметр
-		$this->view->setVar('formPath','em_multy_node/view/settingsForm');
+		$this->view->setVar('formPath','em_multy_node/views/settingsForm');
 	}
 
 	public function prolog($settings,$table = false)
@@ -76,8 +76,15 @@ class EmMultyNodeField extends FieldBase
 			$this->view->setVar('multynode_tables',$tablesToView);
 		}
 
-		if($table == false)
-			$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+		static $included = false;
+		if($included === false)
+		{
+			if($table == false)
+				$this->assets->addJs('fields/em_multy_node/src/js/init.js');
+			else
+				$this->assets->addJs('fields/em_multy_node/src/js/tableInit.js');
+			$included = true;
+		}
 	}
 
 	/**
@@ -109,15 +116,10 @@ class EmMultyNodeField extends FieldBase
 			}
 			else
 			{
-				$res = @json_decode($fieldValue);
+				$res = @json_decode($fieldValue,true);
 				if(is_array($res))
 				{
-					$resString = '';
-					foreach ($res as $colsArr)
-					{
-						$resString .= (is_array($colsArr))?implode(',',$colsArr):$colsArr;
-					}
-					return $resString;
+					return $res;
 				}
 				else
 					return $fieldValue;

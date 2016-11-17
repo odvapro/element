@@ -7,5 +7,5 @@
         <span class="colorTag">{{fVal['name']}}</span>
     {% endfor %}
 {% else %}
-	{{fieldVal}}
+	<span class="colorTag">{{fieldVal}}</span>
 {% endif %}

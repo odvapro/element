@@ -2,7 +2,7 @@
 {% block input %}
 	<div class="filedEdit" data-addfieldtpl="multynodeField_{{fieldArr['field']}}">
 		<select name="field[{{fieldArr['field']}}]">
-			{% for elem in list %}
+			{% for elem in fieldArr['settings']['cols'] %}
 				<option
 					{% if element[fieldArr['field']] ==  elem['code'] %}
 						selected

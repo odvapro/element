@@ -31,6 +31,12 @@ class EmListField extends FieldBase
 	 */
 	public function getValue($fieldValue,$settings,$table = false)
 	{
+		if($table)
+		{
+			foreach ($settings['cols'] as $key => $col)
+				if($col['code'] == $fieldValue)
+					return $col['name'];
+		}
 		return $fieldValue;
 	}
 
