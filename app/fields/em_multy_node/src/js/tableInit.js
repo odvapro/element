@@ -9,7 +9,7 @@ el.emMultyNode =
 			primaryKey = $table.data('primarykey'),
 			id = $(instance).parents('tr').data('id');
 		$.ajax({
-			url      :'/fld/em_multy_node/index/getMatrix/',
+			url      :el.config.baseUri+'fld/em_multy_node/index/getMatrix/',
 			type     :'POST',
 			dataType :'json',
 			data     :{
