@@ -1,4 +1,5 @@
 {
 	"name":"Файл",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-file"
 }

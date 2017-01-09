@@ -9,10 +9,16 @@
 	font-weight:bold;
 	border-radius:40px;
 	cursor:pointer;
+    transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
 	&.blue
 	{
 		border:1px solid $blueColor;
 		color:$blueColor;
+		&:hover
+		{
+			color:#fff;
+			background:$blueColor;
+		}
 	}
 	// совершенно другие кнопки
 	&.dotts

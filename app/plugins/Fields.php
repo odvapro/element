@@ -71,24 +71,20 @@ class Fields extends Phalcon\Mvc\User\Plugin
 		}
 	}
 
-
-	public function fieldType($value='')
-	{
-		# code...
-	}
-
 	/**
 	 * [getTypes description]
 	 * @return array типы полей
 	 */
 	public function getTypes()
 	{
-		// print_r($this->);
 		$this->view->setVar('settingFields',[]);
 	}
 
-	private function _addFieldType()
+	public function getTypeInfo($typeName)
 	{
-		# code...
+		if(array_key_exists($typeName, $this->_types))
+			return $this->_types[$typeName];
+		return false;
 	}
+
 }

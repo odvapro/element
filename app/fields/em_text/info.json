@@ -1,4 +1,5 @@
 {
 	"name":"Текст",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-align-left"
 }

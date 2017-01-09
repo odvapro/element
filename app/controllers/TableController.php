@@ -16,10 +16,8 @@ class TableController extends ControllerBase
 		}
 
 		// достаем информацию о таблице
-		$columns            = $this->tableEditor->getTableColumns($activeTable['real_name']);
-		$overColumns        = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
-		$curTable           = array_merge($activeTable,['fields'=>[]]);
-		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+		$curTable = $activeTable;
+		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		$this->view->setVar('tableName',$tableName);
 
 		// ширина таблицы, менятся относительно того сколько полей в ней
@@ -107,10 +105,8 @@ class TableController extends ControllerBase
 		$activeTable = $this->_setActiveTable($tableName);
 
 		// достаем информацию о таблице
-		$columns = $this->tableEditor->getTableColumns($activeTable['real_name']);
-		$overColumns = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
-		$curTable = array_merge($activeTable,['fields'=>[]]);
-		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+		$curTable = $activeTable;
+		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as &$field)
@@ -142,10 +138,8 @@ class TableController extends ControllerBase
 		}
 
 		// достаем информацию о таблице
-		$columns            = $this->tableEditor->getTableColumns($activeTable['real_name']);
-		$overColumns        = $this->tableEditor->getOverTableColumns($activeTable['real_name']);
-		$curTable           = array_merge($activeTable,['fields'=>[]]);
-		$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+		$curTable           = $activeTable;
+		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		$curTableFields     = $curTable['fields'];
 		
 		// определяем адреса форм редактирования полей

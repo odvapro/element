@@ -11,6 +11,7 @@ var el =
 	init : function()
 	{
 		this.popup.init();
+		this.table.init();
 		$.ajaxSetup({
 			beforeSend:function()
 			{

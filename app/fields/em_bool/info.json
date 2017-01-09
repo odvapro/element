@@ -1,4 +1,5 @@
 {
 	"name":"Флаг",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-check-square-o"
 }

@@ -1,4 +1,5 @@
 {
 	"name":"Множественная связь",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-table"
 }

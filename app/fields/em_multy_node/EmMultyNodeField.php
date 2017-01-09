@@ -27,7 +27,7 @@ class EmMultyNodeField extends FieldBase
 		$resTables = $params['tables'];
 		foreach ($resTables as $tableRealName => &$tableArr)
 		{
-			$curCols = $this->tableEditor->getTableColumns($tableRealName);
+			$curCols = $this->tableEditor->getTableFilelds($tableRealName);
 			$tableArr['fields'] = [];
 			foreach ($curCols as $colArr)
 				$tableArr['fields'][$colArr['field']] = $colArr['type'];

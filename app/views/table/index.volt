@@ -22,7 +22,20 @@
 			<tr>
 				<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>
 				{% for fieldArr in tableInfo['fields'] %}
-					<th data-code="{{fieldArr['field']}}">{{fieldArr['field']}} <span onclick="el.table.setsort(this)" class="icon tablearrow {{fieldArr['sort']}}"></span></th>
+					<th data-code="{{fieldArr['field']}}">
+						<i 
+							class="fa  {{(fieldArr['typeInfo']['iconClass'])?fieldArr['typeInfo']['iconClass']:'fa-font'}} fieldType"
+							aria-hidden="true"
+						></i>
+						{{fieldArr['field']}} 
+						<span onclick="el.table.openFieldSettings(this)" class="icon tablearrow"></span>
+						<ul class="filter-menu">
+							<li onclick="el.table.setsort(this,'desc')"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i> Сортировать A → Z</li>
+							<li onclick="el.table.setsort(this,'asc')"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i> Сортировать Z → A</li>
+							<li><i class="fa fa-times" aria-hidden="true"></i> Скрыть колонку</li>
+							<li><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Переименовать</li>
+						</ul>
+					</th>
 				{% endfor %}
 			</tr>
 			{% if tableResult %}

@@ -214,11 +214,30 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			return false;
 	}
 
+
+	/**
+	 * Возврощает всю информацию о полях таблицы
+	 * @param  string $tableName имя таблицы
+	 * @return array описание полей
+	 */
+	public function getTableFilelds($tableName)
+	{
+		$fields = [];
+		$columns     = $this->getTableColumns($tableName);
+		$overColumns = $this->getOverTableColumns($tableName);
+		$fields      = $this->tableEditor->getOverTable($columns,$overColumns);
+		
+		foreach ($fields as &$field)
+			$field['typeInfo'] = $this->fields->getTypeInfo($field['type']);
+
+		return $fields;
+	}
+
 	/**
 	 * Возврощает списко всех полей таблицы, с их полями какого они типа и тд
 	 * @return pdo fetch result
 	 */
-	public function getTableColumns($tableName)
+	private function getTableColumns($tableName)
 	{
 		$db = $this->di->get('db');
 		$tableColumns = $db->fetchAll(
@@ -232,7 +251,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 * Возврощает надстрокйки к полям таблицы
 	 * @return phalcon find result
 	 */
-	public function getOverTableColumns($tableName)
+	private function getOverTableColumns($tableName)
 	{
 		return EmTypes::find([
 			'conditions' => "table = ?0",
@@ -245,7 +264,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 * @var array $columns как в базе
 	 * @var array $overColumns как в
 	 */
-	public function getOverTable($columns,$overColumns)
+	private function getOverTable($columns,$overColumns)
 	{
 		$resFields = [];
 		foreach ($columns as $col)
@@ -260,6 +279,8 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					{
 						if(!empty($ovCol->settings))
 							$ovCol->settings = json_decode($ovCol->settings,true);
+						else
+							$ovCol->settings = [];
 						
 						$curOvCol = array_merge($curOvCol,[
 							'type'     =>$ovCol->type,

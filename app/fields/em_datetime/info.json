@@ -1,4 +1,5 @@
 {
 	"name":"Дата и время",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-calendar"
 }

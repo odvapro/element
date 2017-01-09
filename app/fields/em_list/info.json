@@ -1,4 +1,5 @@
 {
 	"name":"Список",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-bars"
 }

@@ -1,4 +1,5 @@
 {
 	"name":"Связь",
-	"fromtypes":["*"]
+	"fromtypes":["*"],
+	"iconClass":"fa-bars"
 }

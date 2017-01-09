@@ -39,10 +39,8 @@ class SettingsController extends ControllerBase
 			// переопределение типов если они имеются
 			foreach ($this->tables as $realTableName => $tableArr)
 			{
-				$columns = $this->tableEditor->getTableColumns($realTableName);
-				$overColumns = $this->tableEditor->getOverTableColumns($realTableName);
-				$curTable = array_merge($tableArr,['fields'=>[]]);
-				$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
+				$curTable                     = $tableArr;
+				$curTable['fields']           = $curTable['fields'] = $this->tableEditor->getTableFilelds($realTableName);
 				$detailTables[$realTableName] = $curTable;
 			}
 		}
