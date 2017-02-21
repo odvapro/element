@@ -35,23 +35,6 @@ class EmUsers extends \Phalcon\Mvc\Model
      */
     public $email;
 
-    /**
-     * Validations and business logic
-     */
-    public function validation()
-    {
 
-        $this->validate(
-            new Email(
-                array(
-                    'field'    => 'email',
-                    'required' => true,
-                )
-            )
-        );
-        if ($this->validationHasFailed() == true) {
-            return false;
-        }
-    }
 
 }
