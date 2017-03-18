@@ -198,6 +198,79 @@ el.settings =
 		});
 	},
 
+	fieldName:
+	{
+		/**
+		 * Показывает форму редатирования названия на странице таблицы
+		 * @param  domnode instance 
+		 * @return void
+		 */
+		showTableEdit:function(instance)
+		{
+			var editForm = $('.TPLS .fieldNameEditForm').html(),
+			tableName    = $(instance).parents('table').data('tablename'),
+			fieldName    = $(instance).parents('th').data('code'),
+			value		 = $(instance).parents('ul').siblings('._ename').html();
+
+			$.ajax({
+				url: el.config.baseUri+"settings/getFieldNameEditForm",
+				type:'POST',
+				dataType:'json',
+				data: {tableName:tableName,fieldName:fieldName,fieldNewName:value},
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					el.popup.show(e.form);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		},
+		showEdit:function(instance)
+		{
+			var editForm = $('.TPLS .fieldNameEditForm').html(),
+			tableName    = $(instance).parents('table').data('tablename'),
+			fieldName    = $(instance).parents('tr').data('fieldname'),
+			value		 = $(instance).siblings('._ename').html();
+
+			$.ajax({
+				url: el.config.baseUri+"settings/getFieldNameEditForm",
+				type:'POST',
+				dataType:'json',
+				data: {tableName:tableName,fieldName:fieldName,fieldNewName:value},
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					el.popup.show(e.form);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		},
+		save:function(instance)
+		{
+			$.ajax({
+				url: el.config.baseUri+"settings/saveFieldName",
+				type:'POST',
+				dataType:'json',
+				data: $(instance).serialize(),
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					el.message.success('Настрокйки сохранены.');
+					el.popup.hide();
+					$('table[data-tablename="'+e.data.table+'"] tr[data-fieldname="'+e.data.field+'"] ._ename').html(e.data.name);
+					$('table[data-tablename="'+e.data.table+'"] th[data-code="'+e.data.field+'"] ._ename').html(e.data.name);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		}
+	},
+
 	/*обработка формы редактирования поля типа файл*/
 	file : 
 	{

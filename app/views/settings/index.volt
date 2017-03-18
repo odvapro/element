@@ -50,7 +50,7 @@
 							<td>Множественное</td>
 						</tr>
 						{% for field in tableDetail['fields'] %}
-							<tr>
+							<tr data-fieldname="{{field['field']}}">
 								<td class="centered">
 									{% if field['type'] in EmTypesCodes %}
 										<div class="editLine">
@@ -63,7 +63,13 @@
 										–
 									{% endif %}
 								</td>
-								<td>{{field['field']}}</td>
+								<td>
+									<span class="ename _ename">{{(field['ename']!='')?field['ename']:field['field']}}</span>
+									<span class="name">{{field['field']}}</span>
+									<div onclick="el.settings.fieldName.showEdit(this)" class="nameEditButton">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</td>
 								<td>
 									{% if field['key'] != "PRI" %}
 										<select name="tables[{{relaTableName}}][fields][{{field['field']}}][type]">

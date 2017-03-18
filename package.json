@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "devDependencies": {
     "gulp": "^3.9.0",
-    "gulp-compass": "^2.1.0",
     "gulp-concat-css": "^2.2.0",
     "gulp-minify-css": "^1.2.0",
     "gulp-notify": "^2.2.0",

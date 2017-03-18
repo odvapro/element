@@ -27,13 +27,13 @@
 							class="fa  {{(fieldArr['typeInfo']['iconClass'])?fieldArr['typeInfo']['iconClass']:'fa-font'}} fieldType"
 							aria-hidden="true"
 						></i>
-						{{fieldArr['field']}} 
+						<span class="fmane _ename">{{(fieldArr['ename'])?fieldArr['ename']:fieldArr['field']}}</span>
 						<span onclick="el.table.openFieldSettings(this)" class="icon tablearrow"></span>
 						<ul class="filter-menu">
 							<li onclick="el.table.setsort(this,'desc')"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i> Сортировать A → Z</li>
 							<li onclick="el.table.setsort(this,'asc')"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i> Сортировать Z → A</li>
 							<li><i class="fa fa-times" aria-hidden="true"></i> Скрыть колонку</li>
-							<li><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Переименовать</li>
+							<li onclick="el.settings.fieldName.showTableEdit(this)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Переименовать</li>
 						</ul>
 					</th>
 				{% endfor %}

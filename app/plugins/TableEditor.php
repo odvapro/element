@@ -137,14 +137,13 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		{
 			// поиск смененного названия таблицы (type = 0 - названия таблиц)
 			$emName = EmNames::find([
-				'conditions'=>'table = ?0 AND type = 0',
+				'conditions'=>"table = ?0 AND field = ''",
 				'bind' => [$tableRealName]
 			]);
 			if(!count($emName))
 			{
 				$emName = new EmNames();
 				$emName->table = $tableRealName;
-				$emName->type = 0;
 				$emName->show = 0;
 			}
 			else
@@ -235,6 +234,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 
 	/**
 	 * Возврощает списко всех полей таблицы, с их полями какого они типа и тд
+	 * также достаются их переименованные значения
 	 * @return pdo fetch result
 	 */
 	private function getTableColumns($tableName)
@@ -244,6 +244,22 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			"SHOW COLUMNS  FROM ".$tableName,
 			Phalcon\Db::FETCH_ASSOC
 		);
+
+		// достаем переопределения колонок
+		$emNames = EmNames::find(['conditions'=>"table = ?0 AND field != ''",'bind'=>[$tableName]]);
+		$ovverides = [];
+		foreach ($emNames as $emName)
+		{
+			$ovverides[$emName->field] = $emName->name;
+		}
+
+		foreach ($tableColumns as &$col)
+		{
+			if(!empty($ovverides[$col['field']]))
+				$col['ename'] = $ovverides[$col['field']];
+			else
+				$col['ename'] = '';
+		}
 		return $tableColumns;
 	}
 

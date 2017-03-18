@@ -10,6 +10,28 @@ table
 		margin-bottom: 0px;
 	}
 }
+.settings
+{
+	.ename
+	{
+		font-size:12px;
+		font-weight:bold;
+		display:block;
+	}
+	.name{font-size:10px;}
+	
+	.nameEditButton
+	{
+		float:right;
+		position:absolute;
+		right:10px;
+		top:50%;
+		margin-top:-6px;
+		cursor:pointer;
+		visibility:hidden;
+	}
+	td:hover .nameEditButton{visibility:visible;}
+}
 th
 {
 	background:#F0F2F5;

@@ -77,7 +77,7 @@ class ControllerBase extends Controller
 		}
 
 		// ищем названия только для таблиц (type=0)
-		$named_tables = EmNames::find(['conditions'=>'type = 0']);
+		$named_tables = EmNames::find(['conditions'=>"field = ''"]);
 		foreach($named_tables as $key => $table)
 		{
 			if(array_key_exists($table->table, $tables))
