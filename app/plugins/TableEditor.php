@@ -249,9 +249,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$emNames = EmNames::find(['conditions'=>"table = ?0 AND field != ''",'bind'=>[$tableName]]);
 		$ovverides = [];
 		foreach ($emNames as $emName)
-		{
 			$ovverides[$emName->field] = $emName->name;
-		}
 
 		foreach ($tableColumns as &$col)
 		{

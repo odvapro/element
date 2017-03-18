@@ -182,81 +182,75 @@ class TableController extends ControllerBase
 	 */
 	public function saveAction()
 	{
-		if($this->request->isAjax())
+		if(!$this->request->isAjax())
+			return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
+
+
+		// тип сохранения - обновление/добавление
+		// и все нужные поля
+		$editMode  = $this->request->getPost('editMode');
+		$tableName = $this->request->getPost('tableName');
+		$field     = $this->request->getPost('field');
+
+		// валидация
+		// для этого достаем полное описание таблицы
+		$curTable    = [];
+		$curTable['fields'] = $this->tableEditor->getTableFilelds($tableName);
+
+		// проход по всем полям, проверка важное это поле или нет
+		$validationErrors = [];
+		$formData         = [];
+		$primaryKey       = [];
+		foreach ($curTable['fields'] as $key => $fieldArr)
+			if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
+			{
+				$primaryKey = [
+					'field' => $fieldArr['field'],
+					'value' => intval($field[$fieldArr['field']])
+				];
+				break;
+			}
+		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
-			// тип сохранения - обновление/добавление
-			// и все нужные поля
-			$editMode  = $this->request->getPost('editMode');
-			$tableName = $this->request->getPost('tableName');
-			$field     = $this->request->getPost('field');
-
-			// валидация
-			// для этого достаем полное описание таблицы
-			$columns     = $this->tableEditor->getTableColumns($tableName);
-			$overColumns = $this->tableEditor->getOverTableColumns($tableName);
-			$curTable    = [];
-			$curTable['fields'] = $this->tableEditor->getOverTable($columns,$overColumns);
-
-			// проход по всем полям, проверка важное это поле или нет
-			$validationErrors = [];
-			$formData         = [];
-			$primaryKey       = [];
-			foreach ($curTable['fields'] as $key => $fieldArr)
-				if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
-				{
-					$primaryKey = [
-						'field' => $fieldArr['field'],
-						'value' => intval($field[$fieldArr['field']])
-					];
-					break;
-				}
-			foreach ($curTable['fields'] as $key => $fieldArr)
-			{
-				$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
-				$required = ($fieldArr['extra'] == "auto_increment")?false:$required;
-				if($required && empty($field[$fieldArr['field']])) 
-					$validationErrors[] = $fieldArr['field'].' required';
-				else
-					if(!empty($field[$fieldArr['field']]))
-						if(!is_null($this->fields->{$fieldArr['type']}))
-							$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
-						else
-							$formData[$fieldArr['field']] = $field[$fieldArr['field']];
-					else
-						$formData[$fieldArr['field']] = null;
-
-				if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
-					$primaryKey = [
-						'field' => $fieldArr['field'],
-						'value' => intval($field[$fieldArr['field']])
-					];
-			}
-
-			// добавление или обновление после проверок валидиции 
-			if(!count($validationErrors))
-			{
-				$res       = false;
-				$sqlErrors = [];
-				if($editMode == 'add')
-					$res = $this->tableEditor->insert($tableName, $formData, $sqlErrors);
-				else
-					$res = $this->tableEditor->update($tableName, $primaryKey, $formData, $sqlErrors);
-				
-				if($res)
-				{
-					if($editMode == 'add')
-						$this->jsonResult(['result'=>'success','elId'=>$res]);
-					else
-						$this->jsonResult(['result'=>'success','msg'=>'элемент сохранен', 'type'=>'update']);
-				}
-				else
-					$this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors ]);
-			}
+			$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
+			$required = ($fieldArr['extra'] == "auto_increment")?false:$required;
+			if($required && empty($field[$fieldArr['field']])) 
+				$validationErrors[] = $fieldArr['field'].' required';
 			else
-				$this->jsonResult(['result'=>'error', 'msg'=>implode(';<br/>', $validationErrors)]);
+				if(!empty($field[$fieldArr['field']]))
+					if(!is_null($this->fields->{$fieldArr['type']}))
+						$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
+					else
+						$formData[$fieldArr['field']] = $field[$fieldArr['field']];
+				else
+					$formData[$fieldArr['field']] = null;
+
+			if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
+				$primaryKey = [
+					'field' => $fieldArr['field'],
+					'value' => intval($field[$fieldArr['field']])
+				];
 		}
+
+		// добавление или обновление после проверок валидиции 
+		if(count($validationErrors))
+			$this->jsonResult(['result'=>'error', 'msg'=>implode(';<br/>', $validationErrors)]);	
+		
+		$res       = false;
+		$sqlErrors = [];
+		if($editMode == 'add')
+			$res = $this->tableEditor->insert($tableName, $formData, $sqlErrors);
 		else
-			$this->jsonResult(['result'=>'error']);
+			$res = $this->tableEditor->update($tableName, $primaryKey, $formData, $sqlErrors);
+		
+		if(!$res)
+			return $this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors ]);
+
+		if($editMode == 'add')
+			return $this->jsonResult(['result'=>'success','elId'=>$res]);
+		else
+			return $this->jsonResult(['result'=>'success','msg'=>'элемент сохранен', 'type'=>'update']);
+		
 	}
 
 	/**
