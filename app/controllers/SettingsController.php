@@ -120,8 +120,8 @@ class SettingsController extends ControllerBase
 	 */
 	public function getFieldFormAction()
 	{
-		if($this->request->isAjax())
-			return $this->jsonResult(['result'=>'error']);
+		if(!$this->request->isAjax())
+			return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
 
 		$tableName = $this->request->getPost('tableName');
 		$fieldName = $this->request->getPost('fieldName');

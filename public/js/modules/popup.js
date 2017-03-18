@@ -16,13 +16,13 @@ el.popup =
 	show : function(cont)
 	{
 		$('#popupWrap .popupCont').html(cont);
-		$('#popupWrap .popupCont').addClass('show');
+		$('#popupWrap').addClass('show');
 		$('body').css('overflow','hidden');
 	},
 
 	hide : function()
 	{
-		$('#popupWrap .popupCont').removeClass('show');
+		$('#popupWrap').removeClass('show');
 		$('body').css('overflow','auto');
 	},
 

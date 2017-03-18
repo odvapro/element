@@ -1,5 +1,26 @@
 #popupWrap
 {
+	position: fixed;
+    z-index: 1000;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.04);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    &.show
+    {
+    	visibility: visible;
+    	opacity: 1;
+    }
+    &.show .popupCont
+    {
+    	top:15px;
+		opacity: 1;
+		visibility: visible;
+    }
 	.popupCont
 	{
 		width:600px;
@@ -14,16 +35,7 @@
 		opacity: 0;
 		visibility: hidden;
 		z-index: 11;
-		-webkit-transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
-		   -moz-transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
-			 -o-transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
-				transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
-		&.show
-		{
-			top:15px;
-			opacity: 1;
-			visibility: visible;
-		}
+		transition: all 200ms cubic-bezier(0.215, 0.610, 0.355, 1.000);
 		.popupTopLine
 		{
 			height: 41px;
