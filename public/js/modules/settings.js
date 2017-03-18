@@ -271,6 +271,14 @@ el.settings =
 		}
 	},
 
+	toggleShowTable:function(instance)
+	{
+		if($(instance).find('input').is(':checked'))
+			$(instance).addClass('checked');
+		else
+			$(instance).removeClass('checked');
+	},
+
 	/*обработка формы редактирования поля типа файл*/
 	file : 
 	{

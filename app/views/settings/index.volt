@@ -39,7 +39,10 @@
 							<th class="righted" colspan="3">
 								{{relaTableName}}
 								<input type="hidden" name="tables[{{relaTableName}}][show]" value="0"/>
-								<label>(показывать <input type="checkbox" {%if tableDetail['show'] is defined and tableDetail['show'] == 1 %}checked{% endif %} name="tables[{{relaTableName}}][show]" value="1"/>)</label>
+								<label onclick="el.settings.toggleShowTable(this)" class="showTable {%if tableDetail['show'] is defined and tableDetail['show'] == 1 %}checked{% endif %}">
+									<i class="fa fa-eye" aria-hidden="true"></i>
+									<input type="checkbox" {%if tableDetail['show'] is defined and tableDetail['show'] == 1 %}checked{% endif %} name="tables[{{relaTableName}}][show]" value="1"/>
+								</label>
 							</th>
 						</tr>
 						<tr class="black">
@@ -91,7 +94,10 @@
 						{% endfor %}
 					</table>
 					<div class="addFieldLine">
+					{#
+					#todo
 						<button class="addField">Добавить поле</button>
+					#}
 					</div>
 					<div class="clear"></div>
 				{% endfor  %}

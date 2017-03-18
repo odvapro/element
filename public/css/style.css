@@ -2561,6 +2561,17 @@ input, select {
       visibility: hidden; }
     #popupWrap .popupCont .popupContLine .settings td:hover .nameEditButton {
       visibility: visible; }
+    #popupWrap .popupCont .popupContLine .settings .showTable input {
+      visibility: hidden;
+      width: 0px;
+      margin: 0px; }
+    #popupWrap .popupCont .popupContLine .settings .showTable .fa {
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+      margin-left: 5px; }
+    #popupWrap .popupCont .popupContLine .settings .showTable.checked {
+      color: #2276A8; }
     #popupWrap .popupCont .popupContLine th {
       background: #F0F2F5;
       padding: 11px 28px 11px 10px;
@@ -3108,6 +3119,17 @@ section#contentBlock {
       visibility: hidden; }
     section#contentBlock #content .settings td:hover .nameEditButton {
       visibility: visible; }
+    section#contentBlock #content .settings .showTable input {
+      visibility: hidden;
+      width: 0px;
+      margin: 0px; }
+    section#contentBlock #content .settings .showTable .fa {
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+      margin-left: 5px; }
+    section#contentBlock #content .settings .showTable.checked {
+      color: #2276A8; }
     section#contentBlock #content th {
       background: #F0F2F5;
       padding: 11px 28px 11px 10px;
