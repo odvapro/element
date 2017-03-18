@@ -47,7 +47,6 @@
 							<td>Наименование</td>
 							<td>Тип поля</td>
 							<td>Обязательное</td>
-							<td>Множественное</td>
 						</tr>
 						{% for field in tableDetail['fields'] %}
 							<tr data-fieldname="{{field['field']}}">
@@ -87,9 +86,6 @@
 								</td>
 								<td class="centered">
 									<input type="checkbox" name="tables[{{relaTableName}}][fields][{{field['field']}}][required]" {% if (field['required'] is defined and field['required'] == 1) or field['null'] == "NO" %}checked="true"{% endif %} />
-								</td>
-								<td class="centered">
-									<input type="checkbox" name="tables[{{relaTableName}}][fields][{{field['field']}}][multiple]" {% if field['multiple'] is defined and field['multiple'] == 1 %}checked="true"{% endif %} />
 								</td>
 							</tr>
 						{% endfor %}
