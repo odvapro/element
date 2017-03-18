@@ -288,18 +288,12 @@ class EmFileField extends FieldBase
 		else
 			$fileArr['type'] = 'file';
 		
-		if( ($fileArr['type'] == 'image' &&  $settigs['saveOriginalImage'] == 1) || $fileArr['type'] != 'image' )
-		{
-			if(is_uploaded_file($file->getTempName()))
-				$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
-			else
-			{
-				rename($file->getTempName(), ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
-			}
-			$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
-		}
+		if(is_uploaded_file($file->getTempName()))
+			$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
 		else
-			$fileArr['path'] = false;
+			rename($file->getTempName(), ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
+		
+		$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
 
 		return $fileArr;
 	}

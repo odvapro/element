@@ -30,12 +30,6 @@
 </div>
 <div class="editLine">
 	<div class="name"><u>Копии изображений</u>&nbsp;&nbsp;&nbsp;<span onclick="el.settings.file.addImageSizeLine(this)" class="icon addBtn pointer"></span></div>
-	<div class="inp">
-		<label class="checkLab">
-			<input type="hidden" name="set[saveOriginalImage]" value="0"/>
-			<input type="checkbox" name="set[saveOriginalImage]" value="1" {% if settings['saveOriginalImage'] is defined and settings['saveOriginalImage'] == 1 %}checked="true"{% endif %}/> Cохронять оригинал
-		</label>
-	</div>
 </div>
 <div class="editLine">
 	<div class="inp imageSize">
