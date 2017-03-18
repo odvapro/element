@@ -320,16 +320,20 @@ class SettingsController extends ControllerBase
 	public function saveUserAction($userId = false)
 	{
 		if(!$this->request->isAjax())
-			$this->jsonResult(['result'=>'error', 'msg'=>'only ajax']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'only ajax']);
+
 		$name     = $this->request->getPost('name');
 		$login    = $this->request->getPost('login');
 		$email    = $this->request->getPost('email');
 		$password = $this->request->getPost('password');
-		if(empty($name) || empty($login) || empty($email) || empty($password) || !empty($userId))
-			$this->jsonResult(['result'=>'error', 'msg'=>'не все поля заполнены']);	
+		
+		if(empty($name) || empty($login) || empty($email) || empty($password) || empty($userId))
+			return $this->jsonResult(['result'=>'error', 'msg'=>'не все поля заполнены']);
+		
 		$user = EmUsers::findFirst($userId);
 		if(!$user)
 			return $this->jsonResult(['result'=>'error', 'msg'=>'пользователь не найден']);
+		
 		if($user->password != md5($password))
 			return $this->jsonResult(['result'=>'error', 'msg'=>'Пароль не совпадает']);
 
@@ -340,15 +344,16 @@ class SettingsController extends ControllerBase
 		$newPassword = $this->request->getPost('newpassword');
 		$repassword  = $this->request->getPost('repassword');
 		if(!empty($newPassword) && !empty($repassword))
-		{
 			if($newPassword == $repassword)
 				$user->password = md5($newPassword);
 			else
-				return $this->jsonResult(['result'=>'error', 'msg'=>'Пароли не совпадают']);
-		}
-		
+			{
+				$this->jsonResult(['result'=>'error', 'msg'=>'Пароли не совпадают']);
+				return false;
+			}
+
 		if($user->save())
-			return $this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
+			$this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
 
 	}
 

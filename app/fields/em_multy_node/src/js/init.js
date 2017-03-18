@@ -75,6 +75,7 @@ el.emMultyNode =
 		// data-type = тип поля [input/select/textarea]
 		edit:function(instance)
 		{
+			event.preventDefault();
 			$this = $(instance);
 			var offsetTd = $this.offset();
 			var offsetLine = $this.parents('.filedEdit').offset();
@@ -84,9 +85,13 @@ el.emMultyNode =
 			// устанаввливаем имя поля для редактирования
 				var fieldName = $this.find('input').attr('name'); 
 				var fieldVal = $this.find('input').val();
+				var colName = $this.find('input').data('colname');
 				$editBox.data('ename',fieldName);
 			// установка текущего значения в нужнео поле
-				$editBox.find('.editinp').hide().end().find('.'+editType).show().val(fieldVal).trigger('focus');
+				var $needField = $editBox.find('.editinp').hide().end().find('.'+editType);
+				if(typeof $needField.data('colname') != 'undefined')
+					$needField = $needField.filter('[data-colname="'+colName+'"]');
+				$needField.show().val(fieldVal).trigger('focus');
 			$editBox.css(
         	{
         		top:offsetTd.top - offsetLine.top,
@@ -125,7 +130,6 @@ el.emMultyNode =
 					var nameMask = $(this).data('namemask');
 					if(typeof nameMask != 'undefined')
 					{
-						// debugger;
 						nameMask = nameMask.replace('#number#',trIndex);
 						$(this).attr('name',nameMask);
 					}

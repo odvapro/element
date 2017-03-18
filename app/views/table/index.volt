@@ -18,7 +18,7 @@
 {% endblock %}
 {% block content %}
 	<div class="contWrap" style="width:{{tableWidth}}px;">
-		<table class="elements" cellspacing='0' data-tablename="{{tableName}}" data-primarykey="{{primaryKey}}">
+		<table class="elements _em_table" cellspacing='0' data-tablename="{{tableName}}" data-primarykey="{{primaryKey}}">
 			<tr>
 				<th class="centered"><button class="elbutton dotts"><span class="icon buttonDotts"></span></button></th>
 				{% for fieldArr in tableInfo['fields'] %}
@@ -55,6 +55,7 @@
 									{% if fieldArr['valueFieldPath'] is defined  and  fieldArr['valueFieldPath'] != "" %}
 										{#если есть шаблон вывода данного типа поля, выводим его в таком формате#}
 										{% set fieldVal = resLine[fieldArr['field']] %}
+										{% set fieldCode = fieldArr['field'] %}
 										{{ partial(fieldArr['valueFieldPath']) }}
 									{% else %}
 										{{resLine[fieldArr['field']]}}

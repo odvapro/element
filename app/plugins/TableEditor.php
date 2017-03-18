@@ -313,6 +313,30 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	}
 
 	/**
+	 * Возвращает тип поля и его настройки
+	 * @param  string $tableName имя таблицы
+	 * @param  string $fieldCode имя поля
+	 * @return [
+	 *         'type'=><string тип поля>,
+	 *         'settings'=><array настройки поля>,
+	 *         'required' => <int>
+	 *         'multiple' => <int>
+	 * ]
+	 */
+	public function getFieldInfo($tableName,$fieldCode)
+	{
+		$settingsObj = EmTypes::findFirst([
+			'conditions' => "table = ?0 AND field = ?1",
+			'bind' => [$tableName,$fieldCode],
+		]);
+
+		$settings = $settingsObj->toArray();
+		if(!empty($settings['settings']))
+			$settings['settings'] = @json_decode($settings['settings'],true);
+		return $settings;
+	}
+
+	/**
 	 * Возвращаес список типов полей
 	 * -- проходится по директории с типами полей сибирвает info.json
 	 * @return array ['code'=>[name=>'---']]
