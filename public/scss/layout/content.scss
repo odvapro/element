@@ -27,10 +27,15 @@ section#contentBlock
 	{
 		margin-top:100px;
 		position:relative;
-		/* с вклабками верзнаяя часть увеличивается на 34px */
+		/* с вкладками верхнаяя часть увеличивается на 34px */
 		&.withTabs
 		{
 			margin-top:134px;
+		}
+		/* с фильтром верхнаяя часть увеличивается на 40px */
+		&.withFilter
+		{
+			margin-top:140px;
 		}
 		.contWrap
 		{

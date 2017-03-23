@@ -2860,6 +2860,71 @@ input, select {
               top: 4px;
               cursor: pointer; }
 
+#filterLine {
+  padding: 10px 20px;
+  font-size: 11px;
+  background: rgba(83, 31, 93, 0.3); }
+
+.filterBlockWrap {
+  position: relative;
+  height: 30px;
+  -webkit-border-radius: 5px;
+          border-radius: 5px;
+  display: inline-block;
+  font-size: 0px;
+  background: #f7f8fa; }
+  .filterBlockWrap.open {
+    -webkit-border-radius: 5px 5px 0px 0px;
+            border-radius: 5px 5px 0px 0px; }
+
+.fBlock {
+  z-index: 10;
+  line-height: 30px;
+  font-size: 12px;
+  color: #8D8D96;
+  display: inline-block;
+  border-right: 1px solid rgba(83, 31, 93, 0.3);
+  padding: 0 10px;
+  cursor: pointer; }
+  .fBlock:last-child {
+    border: 0px; }
+  .fBlock.open {
+    background: #deebfe; }
+  .fBlock.open:last-child {
+    -webkit-border-radius: 0 5px 0 0;
+            border-radius: 0 5px 0 0;
+    border: 0px; }
+  .fBlock.open:first-child {
+    -webkit-border-radius: 5px 0 0 0;
+            border-radius: 5px 0 0 0; }
+
+.fBlock.sorting .fa {
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg); }
+
+/* Filter popup */
+.fBlock.open .filterPopup {
+  visibility: visible; }
+
+.filterPopup {
+  visibility: hidden;
+  position: absolute;
+  width: 400px;
+  left: 0px;
+  top: 30px;
+  padding: 10px;
+  cursor: default;
+  background: #deebfe;
+  -webkit-border-radius: 0px 5px 5px 5px;
+          border-radius: 0px 5px 5px 5px; }
+  .filterPopup .closeButton {
+    right: 5px;
+    position: absolute;
+    top: 5px;
+    line-height: 12px;
+    cursor: pointer; }
+
 aside#sidebar {
   position: fixed;
   top: 0;
@@ -3102,12 +3167,15 @@ section#contentBlock {
   section#contentBlock #content {
     margin-top: 100px;
     position: relative;
-    /* с вклабками верзнаяя часть увеличивается на 34px */
+    /* с вкладками верхнаяя часть увеличивается на 34px */
+    /* с фильтром верхнаяя часть увеличивается на 40px */
     /* строка которая идет после таблицы натсроек, для добавления нового своства */
     /* детальная странца элемента */
     /* вкладки второго уровня */ }
     section#contentBlock #content.withTabs {
       margin-top: 134px; }
+    section#contentBlock #content.withFilter {
+      margin-top: 140px; }
     section#contentBlock #content .contWrap {
       padding: 20px; }
     section#contentBlock #content table {

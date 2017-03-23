@@ -117,7 +117,7 @@
 								<td class="centered">
 									<div class="editLine">
 										<a href="{{baseUri}}settings/user/{{user.id}}">Редактировать</a>
-										<a href="javascript:alert('не реализовано'); void(0);">Копировать</a>
+										<a href="javascript:alert('не реализовано'); void(0);">Сортировка</a>
 										<a href="javascript:alert('не реализовано'); void(0);">Удалить</a>
 									</div>
 									<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>

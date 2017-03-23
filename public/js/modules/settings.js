@@ -271,6 +271,10 @@ el.settings =
 		}
 	},
 
+	/**
+	 * Скрытие/показ таблиы из левого сайдбара
+	 * @param  dom instance 
+	 */
 	toggleShowTable:function(instance)
 	{
 		if($(instance).find('input').is(':checked'))
@@ -278,7 +282,7 @@ el.settings =
 		else
 			$(instance).removeClass('checked');
 	},
-
+	
 	/*обработка формы редактирования поля типа файл*/
 	file : 
 	{
