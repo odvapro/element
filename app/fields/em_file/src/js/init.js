@@ -62,42 +62,36 @@ el.fileField =
 			contentType: contentType,
 			success: function(data, textStatus, jqXHR)
 			{
-				if(typeof data.result != "undefined" && data.result == "success")
-				{
-					/*находим в форме поле куда добавляли файл
-					  в зависимости от типа загруженного файла выводм нужную пиктограмму и нужные поля ввода*/
-					if(typeof data.files != "undefined")
-					{
-						var mustInsertHtml = '';
-						var curIndex = $('.filedEdit[data-fieldName="'+fieldName+'"] .attach').size();
-						$.each(data.files, function(key, fileObj)
-						{
-							/*подготовка пиктограммы*/
-							var icon = '';
-							if(fileObj.type == 'image')
-								icon = fileObj.sizes.small;
-							else
-								icon = el.config.baseUri+'img/fileIcon.png';
-
-							/*блок прикрепления*/
-							var fileTPL = $('#TPLS .fileTPL').html();
-							fileTPL = fileTPL.replace(/#icon#/g,icon)
-								.replace(/#name#/g,fileObj.upName)
-								.replace(/#index#/g,curIndex)
-								.replace(/#value#/g,el.hlp.jsonStringifyWidthEscaping(fileObj))
-								.replace(/#fieldName#/g,fieldName);
-							mustInsertHtml = mustInsertHtml+fileTPL;
-
-							curIndex++;
-						});
-						$('.filedEdit[data-fieldName="'+fieldName+'"] .attaches .attachAdd').before(mustInsertHtml);
-						el.popup.hide();
-					}
-					else
-						el.message.error('что-то пошло не так 1');
-				}
-				else
+				if(typeof data.result == "undefined" || data.result != "success")
 					el.message.error(data.msg);
+				/*находим в форме поле куда добавляли файл
+				  в зависимости от типа загруженного файла выводм нужную пиктограмму и нужные поля ввода*/
+				if(typeof data.files == "undefined")
+					el.message.error('что-то пошло не так 1');
+				var mustInsertHtml = '';
+				var curIndex = $('.filedEdit[data-fieldName="'+fieldName+'"] .attach').size();
+				$.each(data.files, function(key, fileObj)
+				{
+					/*подготовка пиктограммы*/
+					var icon = '';
+					if(fileObj.type == 'image')
+						icon = fileObj.sizes.small;
+					else
+						icon = el.config.baseUri+'img/fileIcon.png';
+
+					/*блок прикрепления*/
+					var fileTPL = $('#TPLS .fileTPL').html();
+					fileTPL = fileTPL.replace(/#icon#/g,icon)
+						.replace(/#name#/g,fileObj.upName)
+						.replace(/#index#/g,curIndex)
+						.replace(/#value#/g,el.hlp.jsonStringifyWidthEscaping(fileObj))
+						.replace(/#fieldName#/g,fieldName);
+					mustInsertHtml = mustInsertHtml+fileTPL;
+
+					curIndex++;
+				});
+				$('.filedEdit[data-fieldName="'+fieldName+'"] .attaches .attachAdd').before(mustInsertHtml);
+				el.popup.hide();
 			},
 			errorThrown: function(jqXHR, textStatus, errorThrown)
 			{

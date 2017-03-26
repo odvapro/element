@@ -50,13 +50,11 @@ class TableController extends ControllerBase
 
 		// подгон результатов по типам, для вывода 
 		$fieldTypes = [];
-		$primaryKey = false;
+		$primaryKey = $this->tableEditor->getPrimaryKey($tableName);
 		$settingsArr = [];
 		foreach ($curTable['fields'] as &$field)
 		{
 			$fieldTypes[$field['field']] = $field['type'];
-			if($field['key'] == 'PRI')
-				$primaryKey = $field['field'];
 			
 			$field['sort'] = 'desc';
 			if(!empty($sort) && $sort == $field['field'] && !empty($sortDir))
@@ -71,7 +69,6 @@ class TableController extends ControllerBase
 				$this->fields->{$fieldTypes[$fieldName]}->prolog($field['settings'],true);
 				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
 			}
-
 		}
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('tableFieldsCount',count($curTable['fields'])+1);
@@ -144,9 +141,9 @@ class TableController extends ControllerBase
 		$curTable           = $activeTable;
 		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		$curTableFields     = $curTable['fields'];
+		$primaryKey         = $this->tableEditor->getPrimaryKey($activeTable['real_name']);
 		
 		// определяем адреса форм редактирования полей
-		$primaryKey = false;
 		foreach ($curTable['fields'] as  &$field)
 		{
 			if(!is_null($this->fields->{$field['type']}))
@@ -155,9 +152,6 @@ class TableController extends ControllerBase
 				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
 			}
 			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
-
-			if($field['key'] == 'PRI')
-				$primaryKey = $field['field'];
 		}
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
@@ -200,16 +194,12 @@ class TableController extends ControllerBase
 		// проход по всем полям, проверка важное это поле или нет
 		$validationErrors = [];
 		$formData         = [];
-		$primaryKey       = [];
-		foreach ($curTable['fields'] as $key => $fieldArr)
-			if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
-			{
-				$primaryKey = [
-					'field' => $fieldArr['field'],
-					'value' => intval($field[$fieldArr['field']])
-				];
-				break;
-			}
+		$primaryKeyName   = $this->tableEditor->getPrimaryKey($tableName);
+		$primaryKey = [
+			'field' => $primaryKeyName,
+			'value' => intval($field[$primaryKeyName])
+		];
+
 		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
 			$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
@@ -224,12 +214,6 @@ class TableController extends ControllerBase
 						$formData[$fieldArr['field']] = $field[$fieldArr['field']];
 				else
 					$formData[$fieldArr['field']] = null;
-
-			if($fieldArr['key'] == 'PRI' && !empty($field[$fieldArr['field']]))
-				$primaryKey = [
-					'field' => $fieldArr['field'],
-					'value' => intval($field[$fieldArr['field']])
-				];
 		}
 
 		// добавление или обновление после проверок валидиции 

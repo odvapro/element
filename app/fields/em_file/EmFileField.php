@@ -215,75 +215,12 @@ class EmFileField extends FieldBase
 			// обрботка по настойкам копий картинок
 			$fileArr['sizes'] = [];
 			if(!empty($settigs['imageSizes']))
-			{
 				foreach($settigs['imageSizes'] as $imageSize)
 				{
-					$image = new Image();
-					$image->createFromFile($file->getTempName());
-					$img_inf = $image->getInfos();
-					if(!empty($imageSize['fixed']) && $imageSize['fixed'] == 1)
-					{
-						$k = $imageSize['width']/$img_inf['width'];
-						$new_height = $img_inf['height'] * $k;
-
-						// считаем высоту с измененной шириной
-						if($new_height <= $imageSize['height'])
-							$image->resize(0,$imageSize['height']);
-						else
-							$image->resize($imageSize['width'],0);
-						$image->crop(0,0, $imageSize['width'],$imageSize['height']);
-					}
-					else
-					{
-						/*РАСЧЕТ СТОРОН*/
-						// и ширина и высота больше заданных
-							// уменьшаем по большей стороне на столько чтобы меньшая тоже вошла в рамки
-						// только ширина больше
-							// уменьшаем только ширину
-						// только высота больше
-							// уменьшаем только высоту
-						$needWidth = $img_inf['width'];
-						$needHeight = $img_inf['height'];
-						$imageSize['width'] = ($imageSize['width'] == '*')?0:$imageSize['width'];
-						$imageSize['height'] = ($imageSize['height'] == '*')?0:$imageSize['height'];
-						if($img_inf['width'] > $imageSize['width'] && $img_inf['height'] > $imageSize['height'])
-						{
-							if($img_inf['width'] > $img_inf['height'])
-							{
-								$needHeight = $img_inf['height']*$needWidth/$img_inf['width'];
-								if($needHeight > $img_inf['height'])
-								{
-									$needHeight = $img_inf['height'];
-									$needWidth = 0;
-								}
-								else
-									$needHeight = 0;
-							}
-							else
-							{
-								$needWidth = $img_inf['width']*$needHeight/$img_inf['height'];
-								if($needWidth > $img_inf['width'])
-								{
-									$needWidth = $img_inf['width'];
-									$needHeight = 0;
-								}
-								else
-									$needWidth = 0;
-							}
-						}
-						elseif($img_inf['width'] > $imageSize['width'])
-							$needHeight = 0;
-						elseif($img_inf['height'] > $imageSize['height'])
-							$needWidth = 0;
-
-						$image->resize($needWidth,$needHeight);
-					}
-
-					$publicPath = $tmpPath.$imageSize['name'].'_'.$newName.'.jpg';
-					$image->save(ROOT.$publicPath);
-					$fileArr['sizes'][$imageSize['name']] = $publicPath;
+					$publicPath = $this->_resizeImage($file->getTempName(),$imageSize,$newName,$tmpPath);
+					if($publicPath !== false)
+						$fileArr['sizes'][$imageSize['name']] = $publicPath;
 				}
-			}
 		}
 		else
 			$fileArr['type'] = 'file';
@@ -293,9 +230,29 @@ class EmFileField extends FieldBase
 		else
 			rename($file->getTempName(), ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
 		
-		$fileArr['path'] = $tmpPath.'o_'.$newName.'.'.$ext;
+		$fileArr['path'] = "{$tmpPath}o_{$newName}.{$ext}";
 
 		return $fileArr;
+	}
+
+	/**
+	 * Ресайз картинки 
+	 * @param  string $imagePath путь исходной картинки
+	 * @param  array $imageSize массив [width,height,name]
+	 * @param  string $newName   новое имя файла
+	 * @param  string $savePath  путь сохранения файла
+	 * @return string / boolean
+	 */
+	public function _resizeImage($imagePath,$imageSize,$newName,$savePath)
+	{
+		if(empty($imageSize['width']) || empty($imageSize['height']))
+			return false;
+		$image = new Image($imagePath);
+		$image->crop($imageSize['width'], $imageSize['height']);
+
+		$publicPath = "{$savePath}{$imageSize['name']}_{$newName}.jpg";
+		$image->save(ROOT.$publicPath);
+		return $publicPath;
 	}
 
 	/**
@@ -308,7 +265,7 @@ class EmFileField extends FieldBase
 		$tempName = tempnam('/tmp', 'php');
 		$originalName = basename(parse_url($url, PHP_URL_PATH));
 
-		$imgRawData = @file_get_contents($url);
+		$imgRawData = file_get_contents($url);
 		file_put_contents($tempName, $imgRawData);
 		$_FILES[$key] = array(
 			'name'     => $originalName,
@@ -329,7 +286,6 @@ class EmFileField extends FieldBase
 	{
 		$valid = false;
 		if(!empty($fileTypes))
-		{
 			foreach($fileTypes as $fileType)
 			{
 				if(strpos($file->getType(), $fileType) !== false)
@@ -338,7 +294,6 @@ class EmFileField extends FieldBase
 					break;
 				}
 			}
-		}
 		else
 			// если не указано ни одного типа, загрюжается все файлы
 			$valid = true;

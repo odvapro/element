@@ -57,6 +57,9 @@
 	{% endfor %}
 {% endif %}
 <div class="newImageSizesDelimetr"></div>
+<div class="editLine">
+	<button class="elbutton blue" onclick="return el.settings.fieldFile.reGenerate(this)">Перегенерировать картинки</button>
+</div>
 
 <div id="TPLS" style="display:none;">
 	<div class="imageSizeTPL">
@@ -72,3 +75,4 @@
 		</div>
 	</div>
 </div>
+<script src="{{baseUri}}fields/em_file/src/js/settings.js"></script>

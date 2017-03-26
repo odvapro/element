@@ -124,6 +124,19 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			return false;
 	}
 
+	/**
+	 * Определяет и возврощает ptimarykey таблицы
+	 * @param  string $tableName имя таблицы
+	 * @return string имя колонки или false
+	 */
+	public function getPrimaryKey($tableName)
+	{
+		$tableFields = $this->tableEditor->getTableFilelds($tableName);
+		foreach($tableFields as $field)
+			if($field['key'] == 'PRI')
+				return $field['field'];
+		return false;
+	}
 
 	/**
 	 * Применяет изменения к таблице
