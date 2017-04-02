@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-		<title>Element v 0.1</title>
+		<title>Element v 0.2</title>
 		<!--[if lt IE 9]>
 			<script src="{{baseUri}}js/html5shiv.js"></script>
 		<![endif]-->
