@@ -2596,7 +2596,8 @@ input, select {
         font-weight: bold;
         color: #8D8D96;
         line-height: 14px;
-        text-align: left; }
+        text-align: left;
+        white-space: nowrap; }
         #popupWrap .popupCont .popupContLine th:last-child {
           border-right: none; }
         #popupWrap .popupCont .popupContLine th.tableName {
@@ -3222,7 +3223,8 @@ section#contentBlock {
       font-weight: bold;
       color: #8D8D96;
       line-height: 14px;
-      text-align: left; }
+      text-align: left;
+      white-space: nowrap; }
       section#contentBlock #content th:last-child {
         border-right: none; }
       section#contentBlock #content th.tableName {

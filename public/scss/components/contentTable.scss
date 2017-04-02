@@ -60,6 +60,7 @@ th
 	color: $greyColor;
 	line-height:14px;
 	text-align: left;
+	white-space:nowrap;
 	&:last-child{border-right:none;}
 	&.tableName
 	{
