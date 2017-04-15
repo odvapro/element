@@ -194,7 +194,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$emType = $emType[0];
 				$emType->type = $fieldArr['type'];
 				$emType->required = (!empty($fieldArr['required']))?1:0;
-				$emType->multiple = (!empty($fieldArr['multiple']))?1:0;
 				if(!$emType->save())
 					$noErrors = false;
 			}
@@ -298,25 +297,23 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		{
 			$curOvCol = $col;
 			// поиск переопределений
-			if(count($overColumns))
+			if(!count($overColumns)) continue;
+			
+			foreach ($overColumns as $ovCol)
 			{
-				foreach ($overColumns as $ovCol)
-				{
-					if($ovCol->field == $col['field'])
-					{
-						if(!empty($ovCol->settings))
-							$ovCol->settings = json_decode($ovCol->settings,true);
-						else
-							$ovCol->settings = [];
-						
-						$curOvCol = array_merge($curOvCol,[
-							'type'     =>$ovCol->type,
-							'settings' =>$ovCol->settings,
-							'multiple' =>$ovCol->multiple,
-							'required' =>$ovCol->required
-						]);
-					}
-				}
+				if($ovCol->field != $col['field']) continue;
+
+				if(!empty($ovCol->settings))
+					$ovCol->settings = json_decode($ovCol->settings,true);
+				else
+					$ovCol->settings = [];
+				
+				$curOvCol = array_merge($curOvCol,[
+					'type'     =>$ovCol->type,
+					'settings' =>$ovCol->settings,
+					'multiple' =>$ovCol->multiple,
+					'required' =>$ovCol->required
+				]);
 			}
 			$resFields[] = $curOvCol;
 		}

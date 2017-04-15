@@ -67,29 +67,27 @@ class SettingsController extends ControllerBase
 	 */
 	public function saveAction()
 	{
-		if($this->request->isAjax())
+		if(!$this->request->isAjax())
+			return $this->jsonResult(['result'=>'error']);
+
+		$tablesInfo = $this->request->getPost('tables');
+		$errors = false;
+		foreach ($tablesInfo as $tableRealName => $tableArr)
 		{
-			$tablesInfo = $this->request->getPost('tables');
-			$errors = false;
-			foreach ($tablesInfo as $tableRealName => $tableArr)
+			$changes = $this->tableEditor->getTableChanges($tableRealName,$tableArr);
+			if($changes === false) continue;
+			if($this->tableEditor->applyTableChanges($tableRealName,$changes) === false)
 			{
-				$changes = $this->tableEditor->getTableChanges($tableRealName,$tableArr);
-				if($changes !== false)
-				{
-					if($this->tableEditor->applyTableChanges($tableRealName,$changes) === false)
-					{
-						$errors = true;
-						break;
-					}
-				}
+				$errors = true;
+				break;
 			}
-			if(!$errors)
-				$this->jsonResult(['result'=>'success']);
-			else
-				$this->jsonResult(['result'=>'error']);
 		}
+		
+		if(!$errors)
+			$this->jsonResult(['result'=>'success']);
 		else
 			$this->jsonResult(['result'=>'error']);
+
 	}
 
 	public function saveFieldNameAction()
