@@ -292,12 +292,13 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	private function getOverTable($columns,$overColumns)
 	{
+		// поиск переопределений
+		if(!count($overColumns)) return $columns;
 		$resFields = [];
 		foreach ($columns as $col)
 		{
 			$curOvCol = $col;
-			// поиск переопределений
-			if(!count($overColumns)) continue;
+			
 			
 			foreach ($overColumns as $ovCol)
 			{
@@ -377,5 +378,3 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	}
 
 }
-
-?>
