@@ -30,7 +30,7 @@ class IndexFController extends ControllerBase
 
 		$settings = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
 		if(!empty($settings['fileTypes']))
-			return $this->view->setVar('fileTypes',implode(', ', $settings['fileTypes']));
+			$this->view->setVar('fileTypes',implode(', ', $settings['fileTypes']));
 		
 		$this->view->setVar('settings',$settings);
 		$this->view->setVar('fieldName',$fieldName);
