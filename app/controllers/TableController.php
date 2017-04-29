@@ -195,9 +195,10 @@ class TableController extends ControllerBase
 		$validationErrors = [];
 		$formData         = [];
 		$primaryKeyName   = $this->tableEditor->getPrimaryKey($tableName);
+		$primaryKeyValue = (!empty($field[$primaryKeyName]))?intval($field[$primaryKeyName]):false;
 		$primaryKey = [
 			'field' => $primaryKeyName,
-			'value' => intval($field[$primaryKeyName])
+			'value' => $primaryKeyValue 
 		];
 
 		foreach ($curTable['fields'] as $key => $fieldArr)
