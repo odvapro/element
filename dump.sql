@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Версия 4499
+# Версия 4541
 #
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
 # Адрес: 127.0.0.1 (MySQL 5.6.19)
 # Схема: element_cms
-# Время создания: 2016-01-02 12:02:25 +0000
+# Время создания: 2017-04-28 14:33:04 +0000
 # ************************************************************
 
 
@@ -29,7 +29,6 @@ CREATE TABLE `em_names` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `table` varchar(200) NOT NULL DEFAULT '',
   `field` varchar(200) DEFAULT '',
-  `type` int(5) NOT NULL,
   `name` varchar(200) NOT NULL DEFAULT '',
   `show` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -70,7 +69,7 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
-	(1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
+  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
