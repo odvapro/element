@@ -22,7 +22,7 @@ class AuthController extends ControllerBase
 						// make auth
 						$this->_registerSession($user);
 						
-						$this->response->redirect('/');
+						$this->response->redirect('');
 						$this->view->disable();
 						return;
 					}
@@ -42,7 +42,7 @@ class AuthController extends ControllerBase
 	public function logoutAction()
 	{
 		$this->session->remove('auth');
-		$this->response->redirect('/');
+		$this->response->redirect('');
 		$this->view->disable();
 		return;
 	}
