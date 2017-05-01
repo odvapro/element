@@ -115,7 +115,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getElement($tableName, $primaryKey = false)
 	{
-		if(!empty($primaryKey))
+		if(!empty($primaryKey) && !empty($primaryKey['value']))
 		{
 			$db = $this->di->get('db');
 			return $db->fetchOne("SELECT * FROM ".$tableName." WHERE ".$primaryKey['field']." = ".$primaryKey['value'], Phalcon\Db::FETCH_ASSOC);

@@ -70,9 +70,12 @@ class EmFileField extends FieldBase
 		// определяем разницу и удаляем лишние файлы
 		$elementArr = $this->tableEditor->getElement($tableName,$primaryKey);
 		$oldFiles   = json_decode($elementArr[$fieldArray['field']],true);
-		foreach ($oldFiles as $oldFile)
-			if(!in_array($oldFile, $newFiles))
-				$this->deleteFile($oldFile,$fieldArray['settings']);
+		if(is_array($oldFiles))
+		{
+			foreach ($oldFiles as $oldFile)
+				if(!in_array($oldFile, $newFiles))
+					$this->deleteFile($oldFile,$fieldArray['settings']);
+		}
 
 		return json_encode($newFiles);
 	}
