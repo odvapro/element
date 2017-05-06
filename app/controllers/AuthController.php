@@ -2,41 +2,38 @@
 
 class AuthController extends ControllerBase
 {
+	/**
+	 * Autharization 
+	 * @return void
+	 */
 	public function indexAction()
 	{
-		// обработка входа в админку
-		$errors = [];
-		if($this->request->isPost())
-		{
-			$login    = $this->request->getPost('login');
-			$password = $this->request->getPost('password');
-			if(empty($login)) $errors[] = 'Введите логин';
-			if(empty($password)) $errors[] = 'Введите пароль';
-			if(!count($errors))
-			{
-				$user = EmUsers::findFirst("login = '$login'");
-				if($user)
-				{
-					if($user->password == MD5($password))
-					{
-						// make auth
-						$this->_registerSession($user);
-						
-						$this->response->redirect('');
-						$this->view->disable();
-						return;
-					}
-					else
-						$errors[] = 'Неправильный пароль';
-				}
-				else
-					$errors[] = 'Пользователь не найден';
-			}
-		}
-		
+		$login    = $this->request->getPost('login');
+		$password = $this->request->getPost('password');
 		$this->view->setVar('login',$login);
 		$this->view->setVar('password',$password);
-		$this->view->setVar('errors',$errors);
+		$this->view->setVar('errors',[]);
+		if($this->request->isPost())
+		{
+			if(empty($login)) 
+				return $this->view->setVar('errors',['Введите логин']);
+			if(empty($password))
+				return $this->view->setVar('errors',['Введите пароль']);
+
+			$user = EmUsers::findFirst("login = '$login'");
+			if(!$user)
+				return $this->view->setVar('errors',['Пользователь не найден']);
+
+			if($user->password != MD5($password))
+				return $this->view->setVar('errors',['Неправильный пароль']);
+
+			// make auth
+			$this->_registerSession($user);
+			
+			$this->response->redirect('');
+			$this->view->disable();
+			return;
+		}
 	}
 
 	public function logoutAction()

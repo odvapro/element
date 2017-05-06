@@ -42,7 +42,6 @@ class ControllerBase extends Controller
 		if(isset($_COOKIE['sFolded']))
             $sFolded = $_COOKIE['sFolded'];
         $this->view->setVar('sFolded',$sFolded);
-
 	}
 
 	/**
@@ -52,7 +51,6 @@ class ControllerBase extends Controller
 	{
 		$db     = $this->di->get('db');
 		$config = $this->di->get('config');
-
 
 		// системные таблицы которые не нужно нигде выводить
 		$systemTables = array('em_names','em_types','em_users');
@@ -117,21 +115,11 @@ class ControllerBase extends Controller
 
 	public function pageNotFound()
 	{
-		if(!$this->request->isAjax())
-		{
-			$this->response->redirect('/notfound/');
-			$this->view->disable();
-		}
-		else
-		{
-			$this->jsonResult(['result'=>'error','msg'=>'not found']);
-		}
+		if($this->request->isAjax())
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'not found']);	
+		
+		$this->response->redirect('/notfound/');
+		$this->view->disable();
 	}
 
-	public function jsonResult($data)
-	{
-		echo json_encode($data);
-		$this->view->disable();
-		return;
-	}
 }

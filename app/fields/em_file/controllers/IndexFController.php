@@ -12,7 +12,7 @@ class IndexFController extends ControllerBase
 	public function getFileUploadFormAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->jsonResult(['result'=>'error','msg'=>'только ajax']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'только ajax']);
 
 		$fieldName = $this->request->getPost('fieldName');
 		$tableName = $this->request->getPost('tableName');
@@ -22,11 +22,11 @@ class IndexFController extends ControllerBase
 			'bind' => [$tableName,$fieldName],
 		]);
 		if(!count($fieldDesc))
-			return $this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
 
 		$fieldDesc = $fieldDesc[0];
 		if($fieldDesc->type != "em_file")
-			return $this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
 
 		$settings = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
 		if(!empty($settings['fileTypes']))
@@ -36,7 +36,7 @@ class IndexFController extends ControllerBase
 		$this->view->setVar('fieldName',$fieldName);
 		$this->view->setVar('tableName',$tableName);
 
-		$this->jsonResult([
+		$this->response->setJsonContent([
 			'result' => 'success',
 			'form'   => $this->view->getRender('index','getFileUploadForm')
     	]);
@@ -53,18 +53,18 @@ class IndexFController extends ControllerBase
 		]);
 	
 		if(!count($fieldDesc))
-			return $this->jsonResult(['result'=>'error','msg'=>'поле не имеет настроек']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'поле не имеет настроек']);
 		$fieldDesc = $fieldDesc[0];
 		
 		if($fieldDesc->type != "em_file")
-			return $this->jsonResult(['result'=>'error','msg'=>'поле не является файловым']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'поле не является файловым']);
 	
 		// загрузка по URL
 		// файл просто добавлется в массив $_FILES для обычной обработки
 		if($this->request->getPost('type') == 'byUrl' && !empty($this->request->getPost('url')))
 			$this->fields->em_file->addToFiles('file',$this->request->getPost('url'));
 
-		$this->jsonResult($this->fields->em_file->uploadFiles($fieldDesc));
+		$this->response->setJsonContent($this->fields->em_file->uploadFiles($fieldDesc));
 	}
 
 	/**
@@ -83,7 +83,7 @@ class IndexFController extends ControllerBase
 		]);
 		
 		if(!count($fieldDesc))
-			return $this->jsonResult(['success'=>false]);
+			return $this->response->setJsonContent(['success'=>false]);
 		$fieldDesc = $fieldDesc[0];
 		$settings = json_decode($fieldDesc->settings,true);
 		$savePath = $this->fields->em_file->getSavePath($settings,true);
@@ -123,7 +123,6 @@ class IndexFController extends ControllerBase
 			$this->tableEditor->update($tableName, $searchField, $updateField);
 		}
 		
-		$this->jsonResult(['success'=>true]);
+		$this->response->setJsonContent(['success'=>true]);
 	}
 }
-

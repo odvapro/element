@@ -177,7 +177,7 @@ class TableController extends ControllerBase
 	public function saveAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'only ajax']);
 
 
 		// тип сохранения - обновление/добавление
@@ -219,7 +219,10 @@ class TableController extends ControllerBase
 
 		// добавление или обновление после проверок валидиции 
 		if(count($validationErrors))
-			$this->jsonResult(['result'=>'error', 'msg'=>implode(';<br/>', $validationErrors)]);	
+			return $this->response->setJsonContent([
+				'result' => 'error', 
+				'msg'    => implode(';<br/>', $validationErrors)
+			]);
 		
 		$res       = false;
 		$sqlErrors = [];
@@ -229,12 +232,16 @@ class TableController extends ControllerBase
 			$res = $this->tableEditor->update($tableName, $primaryKey, $formData, $sqlErrors);
 		
 		if(!$res)
-			return $this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors ]);
+			return $this->response->setJsonContent(['result'=>'error', 'msg'=>$sqlErrors ]);
 
 		if($editMode == 'add')
-			return $this->jsonResult(['result'=>'success','elId'=>$res]);
+			return $this->response->setJsonContent(['result'=>'success','elId'=>$res]);
 		else
-			return $this->jsonResult(['result'=>'success','msg'=>'элемент сохранен', 'type'=>'update']);
+			return $this->response->setJsonContent([
+				'result' => 'success',
+				'msg'    => 'элемент сохранен',
+				'type'   => 'update'
+			]);
 		
 	}
 
@@ -243,24 +250,18 @@ class TableController extends ControllerBase
 	 */
 	public function deleteAction($tableName = false, $primaryKey = false, $elementId = false)
 	{
-		if($this->request->isAjax())
-		{
-			if(!empty($tableName) || !empty($primaryKey) ||  !empty($elementId) )
-			{	
-				// TODO
-				// запустить для всех типов полей сохранение пустоты
-				// для удаления мусора в виде файлов, которые потеряют ссылки с бд
-				$sqlErrors = [];
-				if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
-					$this->jsonResult(['result'=>'success']);
-				else
-					$this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors]);
-			}
-			else
-				$this->jsonResult(['result'=>'error', 'msg'=>'не все нужные поля']);
-		}
+		if(!$this->request->isAjax())
+			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'только ajax']);
+	
+		if(empty($tableName) || empty($primaryKey) ||  empty($elementId) )
+			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'не все нужные поля']);
+		
+		$sqlErrors = [];
+		if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
+			return $this->response->setJsonContent(['result'=>'success']);
 		else
-			$this->jsonResult(['result'=>'error', 'msg'=>'только ajax']);
+			return $this->response->setJsonContent(['result'=>'error', 'msg'=>$sqlErrors]);
+
 	}
 
 	/**
@@ -272,48 +273,46 @@ class TableController extends ControllerBase
 	 */
 	public function getNodeAddFormAction()
 	{
-		if($this->request->isAjax())
-		{
-			$fieldName = $this->request->getPost('fieldName');
-			$tableName = $this->request->getPost('tableName');
-			// достаем настроки текущего поля
-			$fieldDesc = EmTypes::find([
-				'conditions' => "table = ?0 AND field = ?1",
-				'bind' => [$tableName,$fieldName],
-			]);
-			if(count($fieldDesc))
-			{
-				$fieldDesc = $fieldDesc[0];
-				if($fieldDesc->type == "em_node")
-				{
-					$settings   = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
-					// поле по которому привязвается другой элемент - id например
-					$nodeField  = (!empty($settings['nodeField']))?$settings['nodeField']:false;
-					$this->view->setVar('nodeField',$nodeField);
-					// таблица из которой берутся эелементы
-					$nodeTable  = (!empty($settings['nodeTable']))?$settings['nodeTable']:false;
-					$this->view->setVar('nodeTable',$nodeTable);
-					// поле которому ведется поиск - name например
-					$nodeSearch = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
-					$this->view->setVar('nodeSearch',$nodeSearch);
+		if(!$this->request->isAjax())
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'только ajax']);
 
-					$this->view->setVar('settings',$settings);
-					$this->view->setVar('fieldName',$fieldName);
-					$this->view->setVar('tableName',$tableName);
+		$fieldName = $this->request->getPost('fieldName');
+		$tableName = $this->request->getPost('tableName');
+	
+		// get current field settings
+		$fieldDesc = EmTypes::find([
+			'conditions' => "table = ?0 AND field = ?1",
+			'bind' => [$tableName,$fieldName],
+		]);
+		
+		if(!count($fieldDesc))
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
 
-					$this->jsonResult([
-	                	'result' => 'success',
-	                	'form' => $this->view->getRender('table','getNodeAddForm')
-	            	]);
-				}
-				else
-					$this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
-			}
-			else
-				$this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
-		}
-		else
-			$this->jsonResult(['result'=>'error','msg'=>'только ajax']);
+		$fieldDesc = $fieldDesc[0];
+		if($fieldDesc->type != "em_node")
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
+
+		$settings   = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
+		// поле по которому привязвается другой элемент - id например
+		$nodeField  = (!empty($settings['nodeField']))?$settings['nodeField']:false;
+		$this->view->setVar('nodeField',$nodeField);
+		// таблица из которой берутся эелементы
+		$nodeTable  = (!empty($settings['nodeTable']))?$settings['nodeTable']:false;
+		$this->view->setVar('nodeTable',$nodeTable);
+		// поле которому ведется поиск - name например
+		$nodeSearch = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
+		$this->view->setVar('nodeSearch',$nodeSearch);
+
+		$this->view->setVar('settings',$settings);
+		$this->view->setVar('fieldName',$fieldName);
+		$this->view->setVar('tableName',$tableName);
+
+		return $this->response->setJsonContent([
+			'result' => 'success',
+			'form' => $this->view->getRender('table','getNodeAddForm')
+		]);
+		
+			
 	}
 
 	/**
@@ -325,38 +324,35 @@ class TableController extends ControllerBase
 	 */
 	public function autoCompleteAction()
 	{
-		if($this->request->isAjax())
+		if(!$this->request->isAjax())
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'only xhttp requests']);
+
+		$nodeField  = $this->request->getPost('nodeField');
+		$nodeTable  = $this->request->getPost('nodeTable');
+		$nodeSearch = $this->request->getPost('nodeSearch');
+		$q          = $this->request->getPost('q');
+
+		if(empty($nodeField) || empty($nodeTable) || empty($q))
+			return $this->response->setJsonContent(['result'=>'error','msg'=>'некорректные настройки']);
+
+		$db       = $this->di->get('db');
+		$limit    = 7;
+		$from     = 0;
+		$sqlWhere = $nodeTable;
+		$nodeSearchSQL = (!empty($nodeSearch))?$nodeSearch." LIKE '%".$q."%'":'';
+		$tableResult = $db->fetchAll(
+			"SELECT * FROM ".$sqlWhere." WHERE ".$nodeSearchSQL." LIMIT $from,$limit",
+			Phalcon\Db::FETCH_ASSOC
+		);
+		$result = [];
+		foreach ($tableResult as $key => $tRes)
 		{
-			$nodeField  = $this->request->getPost('nodeField');
-			$nodeTable  = $this->request->getPost('nodeTable');
-			$nodeSearch = $this->request->getPost('nodeSearch');
-			$q          = $this->request->getPost('q');
-			if(!empty($nodeField) && !empty($nodeTable) && !empty($q))
-			{
-				$db       = $this->di->get('db');
-				$limit    = 7;
-				$from     = 0;
-				$sqlWhere = $nodeTable;
-				$nodeSearchSQL = (!empty($nodeSearch))?$nodeSearch." LIKE '%".$q."%'":'';
-				$tableResult = $db->fetchAll(
-					"SELECT * FROM ".$sqlWhere." WHERE ".$nodeSearchSQL." LIMIT $from,$limit",
-					Phalcon\Db::FETCH_ASSOC
-				);
-				$result = [];
-				foreach ($tableResult as $key => $tRes)
-				{
-					$resEl         = [];
-					$resEl['id']   = $tRes[$nodeField];
-					$resEl['name'] = $tRes[$nodeSearch];
-					$result[]      = $resEl;
-				}
-				$this->jsonResult(['result'=>'success','elements'=>$result]);
-			}
-			else
-				$this->jsonResult(['result'=>'error','msg'=>'некорректные настройки']);
+			$resEl         = [];
+			$resEl['id']   = $tRes[$nodeField];
+			$resEl['name'] = $tRes[$nodeSearch];
+			$result[]      = $resEl;
 		}
-		else
-			$this->jsonResult(['result'=>'error','msg'=>'только ajax']);
+		return $this->response->setJsonContent(['result'=>'success','elements'=>$result]);
 	}
 	
 	/*HELPERS*/
