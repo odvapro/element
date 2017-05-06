@@ -24,43 +24,43 @@ $di = new FactoryDefault();
  */
 $di->set('dispatcher', function() use ($di)
 {
-    $eventsManager = $di->getShared('eventsManager');
+	$eventsManager = $di->getShared('eventsManager');
 
-    $security = new Security($di);
+	$security = new Security($di);
 
-    /**
-     * Listen for events in the dispatcher using the Security plugin
-     */
-    $eventsManager->attach('dispatch', $security);
+	/**
+	 * Listen for events in the dispatcher using the Security plugin
+	 */
+	$eventsManager->attach('dispatch', $security);
 
-    $dispatcher = new Phalcon\Mvc\Dispatcher();
-    $dispatcher->setEventsManager($eventsManager);
+	$dispatcher = new Phalcon\Mvc\Dispatcher();
+	$dispatcher->setEventsManager($eventsManager);
 
-    return $dispatcher;
+	return $dispatcher;
 });
 
 /**
  * The URL component is used to generate all kind of urls in the application
  */
 $di->set('url', function () use ($config) {
-    $url = new UrlResolver();
-    $url->setBaseUri($config->application->baseUri);
+	$url = new UrlResolver();
+	$url->setBaseUri($config->application->baseUri);
 
-    return $url;
+	return $url;
 }, true);
 
 $di->set('router', function(){
-    return require __DIR__ . '/routes.php';
+	return require __DIR__ . '/routes.php';
 }, true);
 
 $di->set('tableEditor', function()
 {
-    return new TableEditor();
+	return new TableEditor();
 }, true);
 
 $di->set('fields', function() use ($di)
 {
-    return new Fields($di);
+	return new Fields($di);
 }, true);
 
 /**
@@ -68,68 +68,67 @@ $di->set('fields', function() use ($di)
  */
 $di->set('view', function () use ($config) {
 
-    $view = new View();
+	$view = new View();
 
-    $view->setViewsDir($config->application->viewsDir);
+	$view->setViewsDir($config->application->viewsDir);
 
-    $view->registerEngines(array(
-        '.volt' => function ($view, $di) use ($config) {
+	$view->registerEngines(array(
+		'.volt' => function ($view, $di) use ($config) {
 
-            $volt = new VoltEngine($view, $di);
+			$volt = new VoltEngine($view, $di);
 
-            $volt->setOptions(array(
-                'compiledPath' => $config->application->cacheDir,
-                'compiledSeparator' => '_',
-                'compileAlways' => true
-            ));
+			$volt->setOptions(array(
+				'compiledPath' => $config->application->cacheDir,
+				'compiledSeparator' => '_',
+				'compileAlways' => true
+			));
 
-            return $volt;
-        },
-        '.phtml' => 'Phalcon\Mvc\View\Engine\Php'
-    ));
+			return $volt;
+		},
+		'.phtml' => 'Phalcon\Mvc\View\Engine\Php'
+	));
 
-
-    return $view;
+	return $view;
 }, true);
 
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->set('db', function () use ($config) {
-    return new DbAdapter(array(
-        'host' => $config->database->host,
-        'username' => $config->database->username,
-        'password' => $config->database->password,
-        'dbname' => $config->database->dbname,
-        "options" => array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-            PDO::ATTR_CASE => PDO::CASE_LOWER,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING
-        )
-    ));
+	return new DbAdapter(array(
+		'host' => $config->database->host,
+		'username' => $config->database->username,
+		'password' => $config->database->password,
+		'dbname' => $config->database->dbname,
+		"options" => array(
+			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+			PDO::ATTR_CASE => PDO::CASE_LOWER,
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING
+		)
+	));
 });
 
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
 $di->set('modelsMetadata', function () {
-    return new MetaDataAdapter();
+	return new MetaDataAdapter();
 });
 
 $di->set('assets', function () {
-    return new AssetsManager();
+	return new AssetsManager();
 });
 
 $di->set('config', function () use ($config){
-    return $config;
+	return $config;
 });
 
 /**
  * Start the session the first time some component request the session service
  */
 $di->set('session', function () {
-    $session = new SessionAdapter();
-    $session->start();
+	$session = new SessionAdapter();
+	$session->start();
 
-    return $session;
+	return $session;
 });

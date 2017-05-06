@@ -1,6 +1,12 @@
 <?php
 class TableEditor extends Phalcon\Mvc\User\Plugin
 {
+	var $db;
+	public function __construct()
+	{
+		$this->db = $this->di->get('db');
+	}
+
 	/**
 	 * Вставляет в нужную таблицу переданные значение
 	 * предпологается что значения предварительно проверенны на обязательность и тд
@@ -15,12 +21,11 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			$errors[] = 'Ни одного поля не заполнено';
 			return false;
 		}
-		$db = $this->di->get('db');
 		
 		$success = false;
 		try
 		{
-			$success = $db->insert(
+			$success = $this->db->insert(
 				$tableName,
 				array_values($values),
 				array_keys($values)
@@ -32,7 +37,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		}
 
 		if($success)
-			return $db->lastInsertId();
+			return $this->db->lastInsertId();
 		else
 			return false;
 	}
@@ -52,12 +57,11 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			$errors[] = 'Ни одного поля не заполнено';
 			return false;
 		}
-		$db = $this->di->get('db');
 		
 		$success = false;
 		try
 		{
-			$success = $db->update(
+			$success = $this->db->update(
 				$tableName,
 				array_keys($values),
 				array_values($values),
@@ -87,13 +91,10 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			return false;
 		}
 
-		$db = $this->di->get('db');
 		$success = false;
 		try
 		{
-			//TODO удаление файлов если они имеются
-
-			$success = $db->delete(
+			$success = $this->db->delete(
 				$tableName,
 				$primaryKey['field']." = ".$primaryKey['value']
 			);
@@ -116,10 +117,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getElement($tableName, $primaryKey = false)
 	{
 		if(!empty($primaryKey) && !empty($primaryKey['value']))
-		{
-			$db = $this->di->get('db');
-			return $db->fetchOne("SELECT * FROM ".$tableName." WHERE ".$primaryKey['field']." = ".$primaryKey['value'], Phalcon\Db::FETCH_ASSOC);
-		}
+			return $this->db->fetchOne("SELECT * FROM ".$tableName." WHERE ".$primaryKey['field']." = ".$primaryKey['value'], Phalcon\Db::FETCH_ASSOC);
 		else
 			return false;
 	}
@@ -251,8 +249,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	private function getTableColumns($tableName)
 	{
-		$db = $this->di->get('db');
-		$tableColumns = $db->fetchAll(
+		$tableColumns = $this->db->fetchAll(
 			"SHOW COLUMNS  FROM ".$tableName,
 			Phalcon\Db::FETCH_ASSOC
 		);

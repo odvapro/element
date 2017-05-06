@@ -6,17 +6,12 @@ class EmDateField extends FieldBase
 
 	public function getValue($fieldValue,$settings,$table = false)
 	{
-		if($table)
-		{
-			if(!empty($fieldValue))
-			{
-				$timeVal = strtotime($fieldValue);
-				return date('d/m/Y',$timeVal);
-			}
-			else
-				return false;
-		}
-		else
-			return $fieldValue;
+		if(!$table) return $fieldValue;
+
+		if(empty($fieldValue))
+			return false;
+		
+		$timeVal = strtotime($fieldValue);
+		return date('d/m/Y',$timeVal);
 	}
 }

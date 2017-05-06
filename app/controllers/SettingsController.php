@@ -234,11 +234,13 @@ class SettingsController extends ControllerBase
 		
 		if(empty($sysFileArr['version']))
 			return $this->response->setJsonContent(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
+		
 		// отправляем на сервер обновлений информацию о версии
 		// чтобы получить информацию о имеющихся обновлениях
 		$jsonRes = file_get_contents('http://element.woorkup.ru/chekUpdates.php?version='.$sysFileArr['version']);
+		
 		if(!empty($jsonRes))
-			return $this->response->setJsonContent(json_decode($jsonres));
+			return $this->response->setJsonContent(json_decode($jsonRes,true));
 		else
 			return $this->response->setJsonContent(['result'=>'error','msg'=>'something wrong on the server']);
 	}
