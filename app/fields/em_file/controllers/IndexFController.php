@@ -36,10 +36,12 @@ class IndexFController extends ControllerBase
 		$this->view->setVar('fieldName',$fieldName);
 		$this->view->setVar('tableName',$tableName);
 
-		$this->response->setJsonContent([
+		#todo
+		echo json_encode([
 			'result' => 'success',
 			'form'   => $this->view->getRender('index','getFileUploadForm')
     	]);
+    	exit();
 	}
 
 	// загружает файл на сервер
