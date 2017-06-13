@@ -177,7 +177,7 @@ class TableController extends ControllerBase
 	public function saveAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'only ajax']);
+			return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
 
 
 		// тип сохранения - обновление/добавление
@@ -219,7 +219,7 @@ class TableController extends ControllerBase
 
 		// добавление или обновление после проверок валидиции 
 		if(count($validationErrors))
-			return $this->response->setJsonContent([
+			return $this->jsonResult([
 				'result' => 'error', 
 				'msg'    => implode(';<br/>', $validationErrors)
 			]);
@@ -232,12 +232,12 @@ class TableController extends ControllerBase
 			$res = $this->tableEditor->update($tableName, $primaryKey, $formData, $sqlErrors);
 		
 		if(!$res)
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>$sqlErrors ]);
+			return $this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors ]);
 
 		if($editMode == 'add')
-			return $this->response->setJsonContent(['result'=>'success','elId'=>$res]);
+			return $this->jsonResult(['result'=>'success','elId'=>$res]);
 		else
-			return $this->response->setJsonContent([
+			return $this->jsonResult([
 				'result' => 'success',
 				'msg'    => 'элемент сохранен',
 				'type'   => 'update'
@@ -251,16 +251,16 @@ class TableController extends ControllerBase
 	public function deleteAction($tableName = false, $primaryKey = false, $elementId = false)
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'только ajax']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'только ajax']);
 	
 		if(empty($tableName) || empty($primaryKey) ||  empty($elementId) )
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'не все нужные поля']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'не все нужные поля']);
 		
 		$sqlErrors = [];
 		if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
-			return $this->response->setJsonContent(['result'=>'success']);
+			return $this->jsonResult(['result'=>'success']);
 		else
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>$sqlErrors]);
+			return $this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors]);
 
 	}
 
@@ -274,7 +274,7 @@ class TableController extends ControllerBase
 	public function getNodeAddFormAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'только ajax']);
+			return $this->jsonResult(['result'=>'error','msg'=>'только ajax']);
 
 		$fieldName = $this->request->getPost('fieldName');
 		$tableName = $this->request->getPost('tableName');
@@ -286,11 +286,11 @@ class TableController extends ControllerBase
 		]);
 		
 		if(!count($fieldDesc))
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
+			return $this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
 
 		$fieldDesc = $fieldDesc[0];
 		if($fieldDesc->type != "em_node")
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'настройки поля не найдены']);
+			return $this->jsonResult(['result'=>'error','msg'=>'настройки поля не найдены']);
 
 		$settings   = (!empty($fieldDesc->settings))?json_decode($fieldDesc->settings,true):[];
 		// поле по которому привязвается другой элемент - id например
@@ -307,7 +307,7 @@ class TableController extends ControllerBase
 		$this->view->setVar('fieldName',$fieldName);
 		$this->view->setVar('tableName',$tableName);
 
-		return $this->response->setJsonContent([
+		return $this->jsonResult([
 			'result' => 'success',
 			'form' => $this->view->getRender('table','getNodeAddForm')
 		]);
@@ -325,7 +325,7 @@ class TableController extends ControllerBase
 	public function autoCompleteAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'only xhttp requests']);
+			return $this->jsonResult(['result'=>'error','msg'=>'only xhttp requests']);
 
 		$nodeField  = $this->request->getPost('nodeField');
 		$nodeTable  = $this->request->getPost('nodeTable');
@@ -333,7 +333,7 @@ class TableController extends ControllerBase
 		$q          = $this->request->getPost('q');
 
 		if(empty($nodeField) || empty($nodeTable) || empty($q))
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'некорректные настройки']);
+			return $this->jsonResult(['result'=>'error','msg'=>'некорректные настройки']);
 
 		$db       = $this->di->get('db');
 		$limit    = 7;
@@ -352,7 +352,7 @@ class TableController extends ControllerBase
 			$resEl['name'] = $tRes[$nodeSearch];
 			$result[]      = $resEl;
 		}
-		return $this->response->setJsonContent(['result'=>'success','elements'=>$result]);
+		return $this->jsonResult(['result'=>'success','elements'=>$result]);
 	}
 	
 	/*HELPERS*/

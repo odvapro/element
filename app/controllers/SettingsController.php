@@ -68,7 +68,7 @@ class SettingsController extends ControllerBase
 	public function saveAction()
 	{
 		if(!$this->request->isAjax())
-		    return $this->response->setJsonContent(['result'=>'error']);
+		    return $this->jsonResult(['result'=>'error']);
 
 		$tablesInfo = $this->request->getPost('tables');
 		$errors = false;
@@ -84,15 +84,15 @@ class SettingsController extends ControllerBase
 		}
 		
 		if(!$errors)
-		    return $this->response->setJsonContent(['result'=>'success']);
+		    return $this->jsonResult(['result'=>'success']);
 		else
-		    return $this->response->setJsonContent(['result'=>'error']);
+		    return $this->jsonResult(['result'=>'error']);
 	}
 
 	public function saveFieldNameAction()
 	{
 		if(!$this->request->isAjax())
-    		return $this->response->setJsonContent(['result'=>'error']);
+    		return $this->jsonResult(['result'=>'error']);
 
 		$tableName    = $this->request->getPost('tableName');
 		$fieldName    = $this->request->getPost('fieldName');
@@ -108,9 +108,9 @@ class SettingsController extends ControllerBase
 		$fieldObj->name = $fieldNewName; 
 
 		if($fieldObj->save())
-		    return $this->response->setJsonContent(['result'=>'success','data'=>$fieldObj->toArray()]);
+		    return $this->jsonResult(['result'=>'success','data'=>$fieldObj->toArray()]);
 		else
-		    return $this->response->setJsonContent(['result'=>'error']);
+		    return $this->jsonResult(['result'=>'error']);
 	}
 
 	/**
@@ -120,7 +120,7 @@ class SettingsController extends ControllerBase
 	public function getFieldFormAction()
 	{
 		if(!$this->request->isAjax())
-		    return $this->response->setJsonContent(['result'=>'error','msg'=>'only ajax']);
+		    return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
 
 		$tableName = $this->request->getPost('tableName');
 		$fieldName = $this->request->getPost('fieldName');
@@ -135,7 +135,7 @@ class SettingsController extends ControllerBase
 		]);
 
 		if(!count($emType))
-		    return $this->response->setJsonContent(['result'=>'error','msg'=>'для такого поля нет настроек']);
+		    return $this->jsonResult(['result'=>'error','msg'=>'для такого поля нет настроек']);
 		
 		$emType        = $emType[0];
 		$settingFields = [];
@@ -155,7 +155,7 @@ class SettingsController extends ControllerBase
 		if(!is_null($this->fields->{$emType->type}))
 			$this->fields->{$emType->type}->getSettings($settings, ['tables' => $this->tables,'settingFields'=>$settingFields]);
 
-	    return $this->response->setJsonContent([
+	    return $this->jsonResult([
 			'result' => 'success',
 			'form'   => $this->view->getRender('settings','getFieldForm')
     	]);
@@ -170,7 +170,7 @@ class SettingsController extends ControllerBase
 		$this->view->setVar('fieldName',$fieldName);
 		$this->view->setVar('fieldNewName',$fieldNewName);
 
-	    return $this->response->setJsonContent([
+	    return $this->jsonResult([
 			'result' => 'success',
 			'form'   => $this->view->getRender('settings','fieldNameEditForm')
     	]);
@@ -182,7 +182,7 @@ class SettingsController extends ControllerBase
 	public function saveFieldFormAction()
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'only xhttp requests']);
+			return $this->jsonResult(['result'=>'only xhttp requests']);
 	
 		$tableName = $this->request->getPost('tableName');
 		$fieldName = $this->request->getPost('fieldName');
@@ -194,7 +194,7 @@ class SettingsController extends ControllerBase
 		// проходи по всем полям, переопредение всего что есть
 		// сохранение
 		if(!count($emType))
-    		return $this->response->setJsonContent(['result'=>'error']);
+    		return $this->jsonResult(['result'=>'error']);
 		
 		$emType = $emType[0];
 		$settings = $this->request->getPost('set');
@@ -212,7 +212,7 @@ class SettingsController extends ControllerBase
 			$emType->settings = json_encode($settingsArr);
 		
 		if($emType->save())
-			return $this->response->setJsonContent(['result'=>'success']);
+			return $this->jsonResult(['result'=>'success']);
 		else
 		{
 			foreach ($emType->getMessages() as $message) {
@@ -233,16 +233,16 @@ class SettingsController extends ControllerBase
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
 		
 		if(empty($sysFileArr['version']))
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
+			return $this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
 		
 		// отправляем на сервер обновлений информацию о версии
 		// чтобы получить информацию о имеющихся обновлениях
 		$jsonRes = file_get_contents('http://element.woorkup.ru/chekUpdates.php?version='.$sysFileArr['version']);
 		
 		if(!empty($jsonRes))
-			return $this->response->setJsonContent(json_decode($jsonRes,true));
+			return $this->jsonResult(json_decode($jsonRes,true));
 		else
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'something wrong on the server']);
+			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
 	}
 
 	/**
@@ -257,17 +257,17 @@ class SettingsController extends ControllerBase
 		$preambula = ROOT.'/'.ltrim($this->di->get('config')->application->baseUri,'/');
 
 		if(empty($sysFileArr['version']))
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
+			return $this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
 		
 		// отправляем на сервер обновлений информацию о версии
 		// чтобы получить информацию о имеющихся обновлениях
 		$jsonNeedUpdateFiles = file_get_contents('http://element.woorkup.ru/update.php?version='.$sysFileArr['version']);
 		if(empty($jsonNeedUpdateFiles))
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'something wrong on the server']);
+			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
 			
 		$needUpdateFiles = json_decode($jsonNeedUpdateFiles,true);
 		if(empty($needUpdateFiles['result']) || $needUpdateFiles['result'] != 'success')
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'something wrong on the server']);
+			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
 		
 		$newVersion = '';
 		foreach($needUpdateFiles['files'] as $filePath => $fileArr)
@@ -299,7 +299,7 @@ class SettingsController extends ControllerBase
 				@file_put_contents($sysFile, json_encode($sysFileArr,JSON_PRETTY_PRINT));
 			}
 		}
-		return $this->response->setJsonContent(['result'=>'success','msg'=>'Система обновлена до версии - '.$newVersion]);
+		return $this->jsonResult(['result'=>'success','msg'=>'Система обновлена до версии - '.$newVersion]);
 	}
 
 	/**
@@ -324,7 +324,7 @@ class SettingsController extends ControllerBase
 	public function saveUserAction($userId = false)
 	{
 		if(!$this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'only ajax']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'only ajax']);
 
 		$name     = $this->request->getPost('name');
 		$login    = $this->request->getPost('login');
@@ -332,14 +332,14 @@ class SettingsController extends ControllerBase
 		$password = $this->request->getPost('password');
 		
 		if(empty($name) || empty($login) || empty($email) || empty($password) || empty($userId))
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'не все поля заполнены']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'не все поля заполнены']);
 		
 		$user = EmUsers::findFirst($userId);
 		if(!$user)
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'пользователь не найден']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'пользователь не найден']);
 		
 		if($user->password != md5($password))
-			return $this->response->setJsonContent(['result'=>'error', 'msg'=>'Пароль не совпадает']);
+			return $this->jsonResult(['result'=>'error', 'msg'=>'Пароль не совпадает']);
 
 		$user->name  = $name;
 		$user->login = $login;
@@ -351,10 +351,10 @@ class SettingsController extends ControllerBase
 			if($newPassword == $repassword)
 				$user->password = md5($newPassword);
 			else
-				return $this->response->setJsonContent(['result'=>'error', 'msg'=>'Пароли не совпадают']);
+				return $this->jsonResult(['result'=>'error', 'msg'=>'Пароли не совпадают']);
 
 		if($user->save())
-			return $this->response->setJsonContent(['result'=>'success', 'msg'=>'Настройки сохранены']);
+			return $this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
 
 	}
 

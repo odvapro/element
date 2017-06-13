@@ -129,7 +129,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getPrimaryKey($tableName)
 	{
-		$tableFields = $this->tableEditor->getTableFilelds($tableName);
+		$tableFields = $this->getTableFilelds($tableName);
 		foreach($tableFields as $field)
 			if($field['key'] == 'PRI')
 				return $field['field'];

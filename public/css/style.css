@@ -2934,7 +2934,8 @@ aside#sidebar {
   width: 266px;
   background: #531F5D;
   height: 100%;
-  overflow: auto; }
+  overflow: auto;
+  z-index: 10; }
   aside#sidebar #logo {
     border-bottom: 1px solid #451A4D;
     text-align: center;
@@ -3067,7 +3068,6 @@ body, html {
 
 section#contentBlock {
   margin-left: 266px;
-  overflow: auto;
   /* влкадки на странице настроек */
   /* вкладки второго уровня */ }
   section#contentBlock #contFixed {

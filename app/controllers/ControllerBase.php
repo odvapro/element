@@ -116,10 +116,17 @@ class ControllerBase extends Controller
 	public function pageNotFound()
 	{
 		if($this->request->isAjax())
-			return $this->response->setJsonContent(['result'=>'error','msg'=>'not found']);	
+			return $this->jsonResult(['result'=>'error','msg'=>'not found']);	
 		
 		$this->response->redirect('/notfound/');
 		$this->view->disable();
+	}
+
+	public function jsonResult($data)
+	{
+		echo json_encode($data);
+		$this->view->disable();
+		return;
 	}
 
 }
