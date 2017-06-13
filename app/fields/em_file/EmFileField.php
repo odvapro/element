@@ -157,7 +157,8 @@ class EmFileField extends FieldBase
 	 */
 	public function getSavePath($settigs, $tmp = false)
 	{
-		$settigs['savePath'] = '/'.ltrim($settigs['savePath'],'/');
+		if(!empty($settigs['savePath']))
+			$settigs['savePath'] = '/'.ltrim($settigs['savePath'],'/');
 		if(!empty($settigs['savePath']) && is_dir(ROOT.$settigs['savePath']))
 			$savePath = $settigs['savePath'];
 		else
