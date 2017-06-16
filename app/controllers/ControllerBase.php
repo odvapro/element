@@ -13,7 +13,7 @@ class ControllerBase extends Controller
 	{
 		$config = $this->di->get('config');
 
-		// определение всех таблиц системы для вывода
+		// define all database tables for output
 		$this->sidebarTables = [];
 		$this->tables = $this->_getTables($this->sidebarTables);
 		$this->view->setVar('tables',$this->tables);
