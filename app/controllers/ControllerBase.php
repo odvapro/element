@@ -83,7 +83,7 @@ class ControllerBase extends Controller
 				$tables[$table->table]['table_name'] = $table->name;
 				$tables[$table->table]['show']       = $table->show;
 			}
-			if($table->show == 1)
+			if($table->show == 1 && array_key_exists($table->table, $tables))
 				$shownTables[$table->table] = $tables[$table->table];
 		}
 		return $tables;

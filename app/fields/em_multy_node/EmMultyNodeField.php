@@ -52,10 +52,13 @@ class EmMultyNodeField extends FieldBase
 					$curTablesJson = [];
 					$db = $this->di->get('db');
 					$sqlWhere = $col['table'];
-					$tableResult = $db->fetchAll(
-						"SELECT * FROM ".$sqlWhere,
-						Phalcon\Db::FETCH_ASSOC
-					);
+					try
+					{
+						$tableResult = $db->fetchAll("SELECT * FROM ".$sqlWhere, Phalcon\Db::FETCH_ASSOC );
+					} catch (Exception $e)
+					{
+						#todo some logging
+					}
 
 					// берем id и name
 					// --- TODO  любое сочетание
@@ -64,9 +67,7 @@ class EmMultyNodeField extends FieldBase
 						$fRow = reset($tableResult);
 						if(!empty($fRow['id']) && !empty($fRow['name']))
 						foreach ($tableResult as $tRow)
-						{
 							$curTablesJson[$tRow['id']] = ['id'=>$tRow['id'],'name'=>$tRow['name']];
-						}
 					}
 					$tablesToView[$col['table']] = $curTablesJson;
 				}
