@@ -5,18 +5,18 @@
 			{% if element[fieldArr['field']] is defined and element[fieldArr['field']] != '' %}
 				{% for node in element[fieldArr['field']] %}
 					<div class="node">
-						<span class="delete icon deleteBtn" onclick="el.edit.removeNode(this);"></span>
+						<span class="delete icon deleteBtn" onclick="el.nodeField.removeNode(this);"></span>
 						<div class="noIcon">{{node['name']}}</div>
 						<input type="hidden" name="field[{{fieldArr['field']}}][]" value="{{node['id']}}" />
 					</div>
 				{% endfor %}
 			{% endif %}
-			<button class="attachAdd" onclick="el.edit.getNodeAddForm(this,'{{fieldArr['field']}}');"><span class="icon addBtn"></span></button>
+			<button class="attachAdd" onclick="el.nodeField.getNodeAddForm(this,'{{fieldArr['field']}}');"><span class="icon addBtn"></span></button>
 		</div>
 	</div>
 	<div class="NodeFieldTPL f{{fieldArr['field']}}" style="display:none;">
 		<div class="node">
-			<span class="delete icon deleteBtn" onclick="el.edit.removeNode(this);"></span>
+			<span class="delete icon deleteBtn" onclick="el.nodeField.removeNode(this);"></span>
 			<div class="noIcon">#searchValue#</div>
 			<input type="hidden" name="field[#fieldName#][]" value="#value#" />
 		</div>

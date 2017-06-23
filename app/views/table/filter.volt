@@ -1,4 +1,4 @@
-<div id="filterLine" style="display:none;">
+<div id="filterLine">
 	<div class="filterBlock">
 		<div class="filterBlockWrap _filterWraper">
 			<div class="fBlock hideFields" onclick="el.table.filter.openSubPopup(this,event)">
@@ -23,7 +23,7 @@
 					<span onclick="el.table.filter.closeSubPopup(event)" class="closeButton"><i class="fa fa-times" aria-hidden="true"></i></span>
 				</div>
 			</div>
-			<div class="fBlock sorting open" onclick="el.table.filter.openSubPopup(this,event)">
+			<div class="fBlock sorting " onclick="el.table.filter.openSubPopup(this,event)">
 				<div class="ttl"><i class="fa fa-exchange" aria-hidden="true"></i> Сортировка</div>
 				<div class="filterPopup _subPoup open">
 					<div class="filterLines">

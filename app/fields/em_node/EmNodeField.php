@@ -2,8 +2,8 @@
 
 class EmNodeField extends FieldBase
 {
-	public $EditFieldPath = 'em_node/view/field';
-	public $ValueFieldPath = 'em_node/view/value';
+	public $EditFieldPath = 'em_node/views/field';
+	public $ValueFieldPath = 'em_node/views/value';
 	public function getSettings($settings, array $params)
 	{
 		// таблица к которой идет привязка
@@ -32,7 +32,12 @@ class EmNodeField extends FieldBase
 		$this->view->setVar('settingFields',$settingFields);
 		
 		// обязательый параметр
-		$this->view->setVar('formPath','em_node/view/settingsForm');
+		$this->view->setVar('formPath','em_node/views/settingsForm');
+	}
+
+	public function prolog($settings,$table = false)
+	{
+		$this->assets->addJs('fields/em_node/src/init.js');
 	}
 
 	public function getValue($fieldValue,$settings,$table = false)

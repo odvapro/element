@@ -3,7 +3,7 @@
 	<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
 	<li class="last"><a href="{{baseUri}}table/{{curTable['real_name']}}/">{{curTable['table_name']}}</a></li>
 {% endblock %}
-{% block contentBoxAttributes %}{# class="withFilter" #}{% endblock %}
+{% block contentBoxAttributes %} class="withFilter" {% endblock %}
 {% block titleLine %}
 	<div id="titleButtons">
 		<div class="titleBlock">
