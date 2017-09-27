@@ -16,7 +16,7 @@ class FldController extends ControllerBase
 
 		//############################################################
 		// CONTROLLERS
-		$fldControllerName     = ucfirst($fldController).'FController';
+		$fldControllerName = ucfirst($fldController).'FController';
 		$fldPath           = $config->application->fldDir.$fldName.'/';
 		$fldControllerPath = $fldPath.'controllers/'.$fldControllerName.'.php';
 		if(!is_dir($fldPath) || !file_exists($fldControllerPath))
@@ -55,7 +55,5 @@ class FldController extends ControllerBase
 
 		$contr = new $fldControllerName();
 		call_user_func_array([$contr,$fldAction.'Action'],$actionArgs);
-
 	}
-
 }

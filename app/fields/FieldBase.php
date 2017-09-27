@@ -1,6 +1,6 @@
 <?php
 /**
-* Абстрактный класс типа поля
+* Abstract class for field type
 */
 abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 {
