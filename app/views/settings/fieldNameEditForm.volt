@@ -9,10 +9,10 @@
 			<div class="inp">
 				<input data-autocompleteid="node" type="text" name="fieldNewName" value="{{fieldNewName}}" placeholder="Введите новое название">
 			</div>
-		</div>	
+		</div>
 	</div>
 	<div class="popupBottomLine">
-		<input type="hidden" name="tableName" value="{{tableName}}"/> 
+		<input type="hidden" name="tableName" value="{{tableName}}"/>
 		<input type="hidden" name="fieldName" value="{{fieldName}}"/>
 		<button class="elbutton blue" type="submit">Сохранить</button>
 		<button class="elbutton gray" onclick="el.popup.hide(); return false;">Отмена</button>

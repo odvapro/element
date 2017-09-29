@@ -1,5 +1,5 @@
 /* скрипты страницы настроек */
-el.settings =  
+el.settings =
 {
 	submit : function()
 	{
@@ -24,27 +24,8 @@ el.settings =
 		return false;
 	},
 
-	/*показывает поле для изменения названия таблицы*/
-	showEditTable : function(instance)
-	{
-		$(instance).parent('.tableName').find('input').addClass('show').focus();
-	},
-	
-	/*скрывает поле для изменения названия таблицы*/
-	hideEditTable:function(instance)
-	{
-		$(instance).removeClass('show');
-	},
-
-	/*синхронизирует значение в поле с текстом*/
-	refreshTableName : function(instance)
-	{
-		var curVal = $(instance).val();
-		$(instance).parent('.tableName').find('span.tableNamePlace').html(curVal);
-	},
-
 	/**
-	 * Открывает настройки данного поля 
+	 * Открывает настройки данного поля
 	 * отправляет запрос на сервер, для формы редактирования
 	 * запрос отправляется сюда settings/getFieldForm
 	 * @param  instance -  dom элемент ссылка по коотрой открывается форма
@@ -65,13 +46,13 @@ el.settings =
 				el.popup.show(e.form);
 			else
 				el.message.error('Неопознанная ошибка');
-			// после обновление значений (обязательное поле и множественное) 
+			// после обновление значений (обязательное поле и множественное)
 		});
 	},
 
 	/**
-	 * Cохранение настроек конкретного своства 
-	 * форма берется тут settings/getFieldForm 
+	 * Cохранение настроек конкретного своства
+	 * форма берется тут settings/getFieldForm
 	 * на сохранение отправляется settings/saveFieldForm
 	 * @param  instance - dom кнопка в форме
 	 * @return false
@@ -138,7 +119,7 @@ el.settings =
 					$('#refreshUpdates').html(e.msg);
 					if(e.hasUpdates === true)
 					{
-						// имеются обновления 
+						// имеются обновления
 						$('.updatingbutton').show();
 					}
 				}
@@ -151,7 +132,7 @@ el.settings =
 	},
 
 	/*Обновление системы до последней версии
-	  в первую очередь скрываются кнопки обновления 
+	  в первую очередь скрываются кнопки обновления
 	  и показывается строка о том что проводится обновление*/
 	updateSystem : function()
 	{
@@ -198,11 +179,12 @@ el.settings =
 		});
 	},
 
+
 	fieldName:
 	{
 		/**
 		 * Показывает форму редатирования названия на странице таблицы
-		 * @param  domnode instance 
+		 * @param  domnode instance
 		 * @return void
 		 */
 		showTableEdit:function(instance)
@@ -271,9 +253,65 @@ el.settings =
 		}
 	},
 
+	table:
+	{
+		showEditPopup:function(tableCode)
+		{
+			$.ajax({
+				url: el.config.baseUri+"settings/getTableNameEditForm",
+				type:'POST',
+				dataType:'json',
+				data: {tableCode:tableCode},
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					el.popup.show(e.form);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		},
+		save:function(instance)
+		{
+			$.ajax({
+				url: el.config.baseUri+"settings/saveTableName",
+				type:'POST',
+				dataType:'json',
+				data: $(instance).serialize(),
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+				{
+					el.popup.hide();
+					el.message.success('Настрокйки сохранены.');
+					$('._ename[data-table-code="'+e.table+'"]').html(e.name);
+				}
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		},
+		setShow:function(checkoibInstance,tableCode)
+		{
+			var checkedStatus = $(checkoibInstance).is(':checked');
+			$.ajax({
+				url      : el.config.baseUri+"settings/setTableShow",
+				type     :'POST',
+				dataType :'json',
+				data     : {tableCode:tableCode,show:checkedStatus},
+			}).done(function(e)
+			{
+				if(typeof e.result != 'undefined' && e.result == 'success')
+					el.message.success('Настрокйки сохранены.');
+				else
+					el.message.error('Неизвестная шибка.');
+			});
+		}
+	},
+
 	/**
 	 * Скрытие/показ таблиы из левого сайдбара
-	 * @param  dom instance 
+	 * @param  dom instance
 	 */
 	toggleShowTable:function(instance)
 	{
@@ -281,38 +319,5 @@ el.settings =
 			$(instance).addClass('checked');
 		else
 			$(instance).removeClass('checked');
-	},
-	
-	/*обработка формы редактирования поля типа файл*/
-	file : 
-	{
-		/*добавляет дополнительное поле для еще одного размера изображения*/
-		addImageSizeLine : function(instance)
-		{
-			var imageSizeLineTPL = $('#TPLS .imageSizeTPL').html();
-			// определить индекс нового поля
-			var sizeIndex = $('.editLine .inp.imageSize').size()*1-1;
-			imageSizeLineTPL = imageSizeLineTPL.replace(/#key#/g,sizeIndex);
-			$('.newImageSizesDelimetr').before(imageSizeLineTPL);
-			$('.popupContLine').scrollTop($('.popupContLine').height());
-		},
-		/* удяляет дополнительное поле для размера изображения
-			также производится перерасчет ключей инпутов*/
-		removeImageSizeLine : function(instance)
-		{
-			$(instance).parents('.editLine').fadeOut(200,function()
-			{
-				$(this).remove();
-			});
-			// перерасчет индексов полей ввода
-			$('.popupContLine .editLine .inp.imageSize').each(function()
-			{
-				var index = $(this).index()*1;
-				$(this).find('input').each(function()
-				{
-					$(this).attr('name',$(this).attr('name').replace(/\d/, index+1 ));
-				});
-			})
-		}
 	}
 }

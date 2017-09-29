@@ -11,7 +11,7 @@ class SettingsController extends ControllerBase
 	/**
 	 * Публичные названия полей настроек
 	 */
-	public $fieldsPulicNames = 
+	public $fieldsPulicNames =
 	[
 		'required'     =>'Обязательное',
 		'multiple'     =>'Множественное',
@@ -71,7 +71,7 @@ class SettingsController extends ControllerBase
 		    return $this->jsonResult(['result'=>'error']);
 
 		$tablesInfo = $this->request->getPost('tables');
-		$errors = false;
+		$errors     = false;
 		foreach ($tablesInfo as $tableRealName => $tableArr)
 		{
 			$changes = $this->tableEditor->getTableChanges($tableRealName,$tableArr);
@@ -82,7 +82,7 @@ class SettingsController extends ControllerBase
 				break;
 			}
 		}
-		
+
 		if(!$errors)
 		    return $this->jsonResult(['result'=>'success']);
 		else
@@ -105,7 +105,7 @@ class SettingsController extends ControllerBase
 			$fieldObj->table = $tableName;
 			$fieldObj->field = $fieldName;
 		}
-		$fieldObj->name = $fieldNewName; 
+		$fieldObj->name = $fieldNewName;
 
 		if($fieldObj->save())
 		    return $this->jsonResult(['result'=>'success','data'=>$fieldObj->toArray()]);
@@ -127,7 +127,7 @@ class SettingsController extends ControllerBase
 
 		$this->view->setVar('tableName',$tableName);
 		$this->view->setVar('getFieldName',$fieldName);
-		
+
 		// определяем текущие настройки поля
 		$emType = EmTypes::find([
 			'conditions' => 'table = ?0 and field = ?1 ',
@@ -136,10 +136,10 @@ class SettingsController extends ControllerBase
 
 		if(!count($emType))
 		    return $this->jsonResult(['result'=>'error','msg'=>'для такого поля нет настроек']);
-		
+
 		$emType        = $emType[0];
 		$settingFields = [];
-		
+
 		// обязательые параметры для всех типов полей
 		$settingFields['required'] = $emType->required;
 		$settingFields['multiple'] = $emType->multiple;
@@ -170,11 +170,72 @@ class SettingsController extends ControllerBase
 		$this->view->setVar('fieldName',$fieldName);
 		$this->view->setVar('fieldNewName',$fieldNewName);
 
-	    return $this->jsonResult([
+		return $this->jsonResult([
 			'result' => 'success',
 			'form'   => $this->view->getRender('settings','fieldNameEditForm')
-    	]);
-	}		
+		]);
+	}
+
+	public function getTableNameEditFormAction()
+	{
+		$tableCode = $this->request->getPost('tableCode');
+		$tableInfo = $this->tableEditor->getTableInfo($tableCode);
+		$this->view->setVar('tableInfo',$tableInfo);
+
+		return $this->jsonResult([
+			'result' => 'success',
+			'form'   => $this->view->getRender('settings','tableNameEditForm')
+		]);
+	}
+
+	public function saveTableNameAction()
+	{
+		if(!$this->request->isAjax())
+			return $this->jsonResult(['result'=>'only xhttp requests']);
+		$tableCode = $this->request->getPost('tableCode');
+		$tableName = $this->request->getPost('tableName');
+		$tableNameObj = EmNames::find([
+			'conditions' =>"table = ?0 AND field = ''",
+			'bind'       =>[$tableCode],
+			'limit'      =>1
+		]);
+
+		if(!count($tableNameObj))
+			return $this->jsonResult(['result'=>'error']);
+
+		$tableNameObj[0]->name = $tableName;
+		if($tableNameObj[0]->save())
+			return $this->jsonResult([
+				'result' =>'success',
+				'table'  => $tableCode,
+				'name'   => $tableName
+			]);
+
+		return $this->jsonResult(['result'=>'error']);
+	}
+
+	public function setTableShowAction()
+	{
+		if(!$this->request->isAjax())
+			return $this->jsonResult(['result'=>'only xhttp requests']);
+		$tableCode = $this->request->getPost('tableCode');
+		$show      = $this->request->getPost('show');
+		$tableNameObj = EmNames::find([
+			'conditions' =>"table = ?0 AND field = ''",
+			'bind'       =>[$tableCode],
+			'limit'      =>1
+		]);
+
+		if(!count($tableNameObj))
+			return $this->jsonResult(['result'=>'error']);
+
+		$tableNameObj[0]->show = ($show != 'false')?1:0;
+		if($tableNameObj[0]->save())
+			return $this->jsonResult(['result' =>'success']);
+
+		return $this->jsonResult(['result'=>'error']);
+	}
+
 
 	/**
 	 * Сохранение настройки поля таблицы
@@ -183,7 +244,7 @@ class SettingsController extends ControllerBase
 	{
 		if(!$this->request->isAjax())
 			return $this->jsonResult(['result'=>'only xhttp requests']);
-	
+
 		$tableName = $this->request->getPost('tableName');
 		$fieldName = $this->request->getPost('fieldName');
 		// достаем EmTypes (настройки поля)
@@ -195,13 +256,13 @@ class SettingsController extends ControllerBase
 		// сохранение
 		if(!count($emType))
     		return $this->jsonResult(['result'=>'error']);
-		
+
 		$emType = $emType[0];
 		$settings = $this->request->getPost('set');
 
 		$emType->required = (!empty($settings['required']))?1:0;
 		$emType->multiple = (!empty($settings['multiple']))?1:0;
-		
+
 		$settingsArr = [];
 		foreach ($settings as $settingKey => $settingVal)
 		{
@@ -210,7 +271,7 @@ class SettingsController extends ControllerBase
 		}
 		if(!empty($settingsArr))
 			$emType->settings = json_encode($settingsArr);
-		
+
 		if($emType->save())
 			return $this->jsonResult(['result'=>'success']);
 		else
@@ -224,21 +285,21 @@ class SettingsController extends ControllerBase
 	}
 
 	/**
-	 * Проверяет на обновления 
+	 * Проверяет на обновления
 	 */
 	public function checkUpdatesAction()
 	{
 		// достаем тещую версию системы
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
-		
+
 		if(empty($sysFileArr['version']))
 			return $this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
-		
+
 		// отправляем на сервер обновлений информацию о версии
 		// чтобы получить информацию о имеющихся обновлениях
 		$jsonRes = file_get_contents('http://element.woorkup.ru/chekUpdates.php?version='.$sysFileArr['version']);
-		
+
 		if(!empty($jsonRes))
 			return $this->jsonResult(json_decode($jsonRes,true));
 		else
@@ -253,22 +314,22 @@ class SettingsController extends ControllerBase
 		// достаем тещую версию системы
 		$sysFile = $this->di->get('config')->application->configDir.'sysinfo.json';
 		$sysFileArr = json_decode(file_get_contents($sysFile),true);
-		
+
 		$preambula = ROOT.'/'.ltrim($this->di->get('config')->application->baseUri,'/');
 
 		if(empty($sysFileArr['version']))
 			return $this->jsonResult(['result'=>'error','msg'=>'wrong config/sysinfo.json file']);
-		
+
 		// отправляем на сервер обновлений информацию о версии
 		// чтобы получить информацию о имеющихся обновлениях
 		$jsonNeedUpdateFiles = file_get_contents('http://element.woorkup.ru/update.php?version='.$sysFileArr['version']);
 		if(empty($jsonNeedUpdateFiles))
 			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
-			
+
 		$needUpdateFiles = json_decode($jsonNeedUpdateFiles,true);
 		if(empty($needUpdateFiles['result']) || $needUpdateFiles['result'] != 'success')
 			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
-		
+
 		$newVersion = '';
 		foreach($needUpdateFiles['files'] as $filePath => $fileArr)
 		{
@@ -314,7 +375,18 @@ class SettingsController extends ControllerBase
 			$this->view->setVar('user',$user);
 		else
 			$this->pageNotFound();
-		
+	}
+
+	public function tableAction($tableName)
+	{
+		$fields = $this->tableEditor->getTableFilelds($tableName);
+		$tableInfo = $this->tableEditor->getTableInfo($tableName);
+		$this->view->setVar('fields',$fields);
+		$this->view->setVar('tableInfo',$tableInfo);
+
+		$emTypes = $this->tableEditor->getFeieldTypes();
+		$this->view->setVar('EmTypes', $emTypes );
+		$this->view->setVar('EmTypesCodes', array_keys($emTypes) );
 	}
 
 	/**
@@ -330,14 +402,14 @@ class SettingsController extends ControllerBase
 		$login    = $this->request->getPost('login');
 		$email    = $this->request->getPost('email');
 		$password = $this->request->getPost('password');
-		
+
 		if(empty($name) || empty($login) || empty($email) || empty($password) || empty($userId))
 			return $this->jsonResult(['result'=>'error', 'msg'=>'не все поля заполнены']);
-		
+
 		$user = EmUsers::findFirst($userId);
 		if(!$user)
 			return $this->jsonResult(['result'=>'error', 'msg'=>'пользователь не найден']);
-		
+
 		if($user->password != md5($password))
 			return $this->jsonResult(['result'=>'error', 'msg'=>'Пароль не совпадает']);
 
@@ -355,7 +427,6 @@ class SettingsController extends ControllerBase
 
 		if($user->save())
 			return $this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
-
 	}
 
 }

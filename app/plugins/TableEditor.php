@@ -21,7 +21,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			$errors[] = 'Ни одного поля не заполнено';
 			return false;
 		}
-		
 		$success = false;
 		try
 		{
@@ -57,7 +56,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			$errors[] = 'Ни одного поля не заполнено';
 			return false;
 		}
-		
 		$success = false;
 		try
 		{
@@ -117,7 +115,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getElement($tableName, $primaryKey = false)
 	{
 		if(!empty($primaryKey) && !empty($primaryKey['value']))
-			return $this->db->fetchOne("SELECT * FROM ".$tableName." WHERE ".$primaryKey['field']." = ".$primaryKey['value'], Phalcon\Db::FETCH_ASSOC);
+			return $this->db->fetchOne("SELECT * FROM {$tableName} WHERE {$primaryKey['field']} = {$primaryKey['value']}", Phalcon\Db::FETCH_ASSOC);
 		else
 			return false;
 	}
@@ -209,11 +207,9 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	{
 		// проверка на внесенные изменения
 		$changes = [];
-		if($tableName != $tableInfo['name'])
-			$changes['name'] = $tableInfo['name'];
 		if(isset($tableInfo['show']))
 			$changes['show'] = intval($tableInfo['show']);
-	
+
 		foreach ($tableInfo['fields'] as $fieldName => $field)
 			if($field['type'] != 'notsys')
 				$changes['fields'][$fieldName] = $field;
@@ -295,8 +291,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		foreach ($columns as $col)
 		{
 			$curOvCol = $col;
-			
-			
 			foreach ($overColumns as $ovCol)
 			{
 				if($ovCol->field != $col['field']) continue;
@@ -305,7 +299,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$ovCol->settings = json_decode($ovCol->settings,true);
 				else
 					$ovCol->settings = [];
-				
+
 				$curOvCol = array_merge($curOvCol,[
 					'type'     =>$ovCol->type,
 					'settings' =>$ovCol->settings,
@@ -372,6 +366,17 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			}
 		}
 		return $fieldsArr;
+	}
+
+	/**
+	 * Gets table info
+	 * @param  string $tableCode table name in database
+	 * @return array
+	 */
+	public function getTableInfo($tableCode)
+	{
+		$tableInfo = $this->db->fetchOne("SELECT * FROM em_names WHERE em_names.table = '{$tableCode}' AND em_names.field = ''", Phalcon\Db::FETCH_ASSOC);
+		return $tableInfo;
 	}
 
 }

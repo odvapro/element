@@ -111,7 +111,8 @@ body, html {
     #enterForm .logoLine .logo {
       display: block;
       background: url("../img/entform/element.png") no-repeat;
-      background-size: 100%;
+      -webkit-background-size: 100% 100%;
+              background-size: 100%;
       height: 29px;
       width: 149px;
       margin: 0 auto;

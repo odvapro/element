@@ -2431,6 +2431,7 @@ input, select {
           border-radius: 40px;
   cursor: pointer;
   -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
   .elbutton.blue {
     border: 1px solid #2276A8;
@@ -2479,6 +2480,7 @@ input, select {
   opacity: 0;
   visibility: hidden;
   -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   /* easeOutCubic */ }
   .alert.show {
@@ -2505,6 +2507,7 @@ input, select {
   visibility: hidden;
   opacity: 0;
   -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
   #popupWrap.show {
     visibility: visible;
@@ -2530,6 +2533,7 @@ input, select {
     visibility: hidden;
     z-index: 11;
     -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
     transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
     #popupWrap .popupCont .popupTopLine {
       height: 41px;
@@ -2678,14 +2682,16 @@ input, select {
         position: relative;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis;
         font-weight: normal;
         /* тип поля - выделение цветом */ }
         #popupWrap .popupCont .popupContLine td span.value {
           width: 100%;
           display: block;
           overflow: hidden;
-          text-overflow: ellipsis; }
+          -o-text-overflow: ellipsis;
+             text-overflow: ellipsis; }
         #popupWrap .popupCont .popupContLine td:first-child {
           overflow: visible; }
         #popupWrap .popupCont .popupContLine td:last-child {
@@ -2976,6 +2982,7 @@ aside#sidebar {
 
 aside#sidebar, .folded section#contentBlock {
   -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 aside#sidebar nav ul li a span.text {
@@ -3057,6 +3064,7 @@ aside#sidebar nav ul li a span.text {
   left: 57px;
   visibility: visible;
   -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
 
 body, html {
@@ -3305,14 +3313,16 @@ section#contentBlock {
       position: relative;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
       font-weight: normal;
       /* тип поля - выделение цветом */ }
       section#contentBlock #content td span.value {
         width: 100%;
         display: block;
         overflow: hidden;
-        text-overflow: ellipsis; }
+        -o-text-overflow: ellipsis;
+           text-overflow: ellipsis; }
       section#contentBlock #content td:first-child {
         overflow: visible; }
       section#contentBlock #content td:last-child {
