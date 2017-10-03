@@ -230,8 +230,8 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$fields = [];
 		$columns     = $this->getTableColumns($tableName);
 		$overColumns = $this->getOverTableColumns($tableName);
-		$fields      = $this->tableEditor->getOverTable($columns,$overColumns);
-		
+		$fields      = $this->getOverTable($columns,$overColumns);
+
 		foreach ($fields as &$field)
 			$field['typeInfo'] = $this->fields->getTypeInfo($field['type']);
 

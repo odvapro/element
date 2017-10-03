@@ -1,4 +1,4 @@
-el.table = 
+el.table =
 {
 	init:function()
 	{
@@ -17,24 +17,42 @@ el.table =
 	{
 		$('th.open-settings').removeClass('open-settings');
 	},
-
-	setsort:function(instance,direction)
+	view:
 	{
-		var fieldName =  $(instance).parents('th').data('code');
-		window.location = '?sort='+fieldName+'&sortdir='+direction;
-	},
-	filter:
-	{
-		openSubPopup:function(instance,event)
+		showAddPopup:function()
 		{
-			this.closeSubPopup(event);
-			$(instance).parents('._filterWraper').addClass('open');
-			$(instance).addClass('open');
+			var popupHtml = $('#filyetTPLS ._addTviewPopup').html();
+			el.popup.show(popupHtml);
 		},
-		closeSubPopup:function(event)
+		add:function(instance)
 		{
-			event.stopPropagation();
-			$('.fBlock,._filterWraper').removeClass('open');
+			$.ajax({
+				url      : el.config.baseUri+"table/addView",
+				type     :'POST',
+				dataType :'json',
+				data     : $(instance).serialize()
+			}).done(function(e)
+			{
+				if(typeof e.success != 'undefined' && e.success == true)
+					window.location = e.url;
+				else
+					el.message.error('что-то пошло не так');
+			});
+		},
+		saveTviewSettings:function(instance)
+		{
+			$.ajax({
+				url      : el.config.baseUri+"table/saveView",
+				type     :'POST',
+				dataType :'json',
+				data     : $(instance).serialize()
+			}).done(function(e)
+			{
+				if(typeof e.success != 'undefined' && e.success == true)
+					window.location.reload();
+				else
+					el.message.error('что-то пошло не так');
+			});
 		}
 	}
 }

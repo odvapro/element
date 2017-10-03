@@ -1,6 +1,6 @@
 <?php
 $router = new \Phalcon\Mvc\Router();
-	
+
 $router->add(
 	"/table/:params",
 	array(
@@ -31,6 +31,20 @@ $router->add(
 	array(
 		"controller" => "table",
 		"action"     => "save"
+	)
+);
+$router->add(
+	"/table/addView",
+	array(
+		"controller" => "table",
+		"action"     => "addView"
+	)
+);
+$router->add(
+	"/table/saveView",
+	array(
+		"controller" => "table",
+		"action"     => "saveView"
 	)
 );
 $router->add(

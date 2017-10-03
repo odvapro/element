@@ -71,6 +71,18 @@ INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
   (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
 
+DROP TABLE IF EXISTS `em_views`;
+CREATE TABLE `em_views` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `table` varchar(200) NOT NULL DEFAULT '',
+  `type` varchar(10) NOT NULL DEFAULT '',
+  `filter` text,
+  `sort` text,
+  `columns` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
 

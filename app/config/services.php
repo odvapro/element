@@ -63,6 +63,11 @@ $di->set('fields', function() use ($di)
 	return new Fields($di);
 }, true);
 
+$di->set('tableviews', function() use ($di)
+{
+	return new TableViews($di);
+}, true);
+
 /**
  * Setting up the view component
  */

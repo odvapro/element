@@ -1,64 +1,50 @@
 #filterLine
 {
-    padding: 10px 20px;
-    font-size: 11px;
-    background: rgba(83, 31, 93,0.3);
+	padding: 10px 20px;
+	font-size: 11px;
+	background: #fff;
+	border-bottom: 1px solid #D3D3DB;
 }
-.filterBlockWrap
+.filterBlock
 {
-    position:relative;
-    height: 30px;
-    border-radius: 5px;
-    display: inline-block;
-    font-size: 0px;
-    background: #f7f8fa;
-    &.open
-    {
-    	border-radius: 5px 5px 0px 0px;
-    }
+	display: inline-block;
+	padding: 7px;
+	margin-right: 5px;
+	font-size: 12px;
+	color: #3D3F3E;
+	cursor: pointer;
+	font-weight:bold;
+	border-radius:2px;
+	position:relative;
+	&:hover{background:#efefef;}
 }
-.fBlock
+.filterBlock:hover .filterBlock__popup{display:block;}
+.filterBlock__popup
 {
-    z-index:10;
-    line-height: 30px;
-    font-size: 12px;
-    color: #8D8D96;
-    display: inline-block;
-    border-right: 1px solid rgba(83, 31, 93,0.3);
-    padding:0 10px;
-    cursor: pointer;
-    &:last-child{border: 0px;}
-    &.open
-    {
-    	background: #deebfe;
-    }
-    &.open:last-child{border-radius: 0 5px 0 0;border: 0px;}
-    &.open:first-child{border-radius: 5px 0 0 0;}
+	display:none;
+	position: absolute;
+	background: #fff;
+	padding: 10px;
+	border: 2px solid #dedede;
+	border-radius: 2px;
+	top: 26px;
+	white-space: nowrap;
+	left:0px;
 }
-.fBlock.sorting .fa{transform: rotate(90deg);}
-
-/* Filter popup */
-.fBlock.open .filterPopup
-{
-	visibility:visible;
+.filterBlock__popup--dark{
+	background:#3D3F3E;
+	border:0px;
+	color:#fff;
 }
-.filterPopup
+.filterBlock__popup ul
 {
-	visibility:hidden;
-    position:absolute;
-    width:400px;
-    left:0px;
-    top:30px;
-    padding:10px;
-    cursor: default;
-    background: #deebfe;
-    border-radius: 0px 5px 5px 5px; 
-	.closeButton
-	{
-	    right:5px;
-	    position:absolute;
-	    top:5px;
-	    line-height:12px;
-	    cursor: pointer;
-	}
+	list-style:none;
+	font-weight:normal;
+}
+.filterBlock__popup li {padding:5px 0px; }
+.filterBlock__sqlInput
+{
+	padding: 10px;
+	width: 200px;
+	border: 1px solid #ededed;
 }

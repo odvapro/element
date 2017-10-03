@@ -2870,67 +2870,54 @@ input, select {
 #filterLine {
   padding: 10px 20px;
   font-size: 11px;
-  background: rgba(83, 31, 93, 0.3); }
+  background: #fff;
+  border-bottom: 1px solid #D3D3DB; }
 
-.filterBlockWrap {
-  position: relative;
-  height: 30px;
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+.filterBlock {
   display: inline-block;
-  font-size: 0px;
-  background: #f7f8fa; }
-  .filterBlockWrap.open {
-    -webkit-border-radius: 5px 5px 0px 0px;
-            border-radius: 5px 5px 0px 0px; }
-
-.fBlock {
-  z-index: 10;
-  line-height: 30px;
+  padding: 7px;
+  margin-right: 5px;
   font-size: 12px;
-  color: #8D8D96;
-  display: inline-block;
-  border-right: 1px solid rgba(83, 31, 93, 0.3);
-  padding: 0 10px;
-  cursor: pointer; }
-  .fBlock:last-child {
-    border: 0px; }
-  .fBlock.open {
-    background: #deebfe; }
-  .fBlock.open:last-child {
-    -webkit-border-radius: 0 5px 0 0;
-            border-radius: 0 5px 0 0;
-    border: 0px; }
-  .fBlock.open:first-child {
-    -webkit-border-radius: 5px 0 0 0;
-            border-radius: 5px 0 0 0; }
+  color: #3D3F3E;
+  cursor: pointer;
+  font-weight: bold;
+  -webkit-border-radius: 2px;
+          border-radius: 2px;
+  position: relative; }
+  .filterBlock:hover {
+    background: #efefef; }
 
-.fBlock.sorting .fa {
-  -webkit-transform: rotate(90deg);
-      -ms-transform: rotate(90deg);
-          transform: rotate(90deg); }
+.filterBlock:hover .filterBlock__popup {
+  display: block; }
 
-/* Filter popup */
-.fBlock.open .filterPopup {
-  visibility: visible; }
-
-.filterPopup {
-  visibility: hidden;
+.filterBlock__popup {
+  display: none;
   position: absolute;
-  width: 400px;
-  left: 0px;
-  top: 30px;
+  background: #fff;
   padding: 10px;
-  cursor: default;
-  background: #deebfe;
-  -webkit-border-radius: 0px 5px 5px 5px;
-          border-radius: 0px 5px 5px 5px; }
-  .filterPopup .closeButton {
-    right: 5px;
-    position: absolute;
-    top: 5px;
-    line-height: 12px;
-    cursor: pointer; }
+  border: 2px solid #dedede;
+  -webkit-border-radius: 2px;
+          border-radius: 2px;
+  top: 26px;
+  white-space: nowrap;
+  left: 0px; }
+
+.filterBlock__popup--dark {
+  background: #3D3F3E;
+  border: 0px;
+  color: #fff; }
+
+.filterBlock__popup ul {
+  list-style: none;
+  font-weight: normal; }
+
+.filterBlock__popup li {
+  padding: 5px 0px; }
+
+.filterBlock__sqlInput {
+  padding: 10px;
+  width: 200px;
+  border: 1px solid #ededed; }
 
 aside#sidebar {
   position: fixed;

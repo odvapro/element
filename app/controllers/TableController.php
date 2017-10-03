@@ -5,96 +5,41 @@ class TableController extends ControllerBase
 	/**
 	 * Работа с таблицами, содержимое таблицы
 	 */
-	public function indexAction($tableName = false, $page = 1)
+	public function indexAction($tableCode = false)
 	{
-		$activeTable = $this->_setActiveTable($tableName);
-		$page = intval($page);
-		if($page < 1 || !$activeTable)
-		{
-			$this->pageNotFound();
-			return false;
-		}
+		$this->_setActiveTable($tableCode);
+		$params         = $this->dispatcher->getParams();
+		$tableViewIndex = array_search('view', $params);
+		$tableViewId    = false;
+		if($tableViewIndex !== false)
+			$tableViewId = $params[$tableViewIndex+1];
 
-		// достаем информацию о таблице
-		$curTable = $activeTable;
-		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
-		$this->view->setVar('tableName',$tableName);
+		// check tables exsitance
+		// make filter
+		// select need lines from table
+		// make line values by field types
+		$tableInfo = $this->tableEditor->getTableInfo($tableCode);
+		if($tableInfo === false)
+			return $this->pageNotFound();
+		$this->view->setVar('tableInfo',$tableInfo);
 
-		// ширина таблицы, менятся относительно того сколько полей в ней
-		$tableWidth = count($curTable['fields'])*150;
-		$this->view->setVar('tableWidth',$tableWidth);
+		// find tableView
+		$tableViews = EmViews::find([
+			'conditions' => 'table = ?0',
+			'bind'       => [$tableInfo['table']]
+		]);
+		$this->view->setVar('tableViews',$tableViews);
+		$currentTableView = false;
+		if($tableViewId !== false)
+			$currentTableView =  EmViews::findFirst($tableViewId);
+		$this->view->setVar('currentTableView',$currentTableView);
 
-		//достаем все что есть в этой таблице
-		$db       = $this->di->get('db');
-		$limit    = 20;
-		$from     = $limit*(intval($page)-1);
-		$sqlWhere = $activeTable['real_name'];
-		
-		// Sorting
-		$sortString = ' ';
-		$sort       = $this->request->get('sort');
-		if($sort)
-		{
-			$sortDir = $this->request->get('sortdir');
-			$sortString = ' ORDER BY  '.$sort;
-			if(!empty($sortDir))
-				$sortString .= ' '.$sortDir; 
-			else
-				$sortString .= ' DESC'; 
-		}
-
-		$tableResult = $db->fetchAll(
-			"SELECT * FROM ".$sqlWhere." ".$sortString." LIMIT $from,$limit",
-			Phalcon\Db::FETCH_ASSOC
-		);
-
-		// подгон результатов по типам, для вывода 
-		$fieldTypes = [];
-		$primaryKey = $this->tableEditor->getPrimaryKey($tableName);
-		$settingsArr = [];
-		foreach ($curTable['fields'] as &$field)
-		{
-			$fieldTypes[$field['field']] = $field['type'];
-			
-			$field['sort'] = 'desc';
-			if(!empty($sort) && $sort == $field['field'] && !empty($sortDir))
-				$field['sort'] = $sortDir;
-
-			$fieldName = $field['field'];
-			$settingsArr[$field['field']] = (!empty($field['settings']))?$field['settings']:[];
-			
-			// прописываем каждому типу поля свое отображение
-			if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
-			{
-				$this->fields->{$fieldTypes[$fieldName]}->prolog($field['settings'],true);
-				$field['valueFieldPath'] =  $this->fields->{$fieldTypes[$fieldName]}->getValueFieldPath();
-			}
-		}
-		$this->view->setVar('tableInfo',$curTable);
-		$this->view->setVar('tableFieldsCount',count($curTable['fields'])+1);
-
-
-		foreach($tableResult as &$tRes)
-			foreach($tRes as $fieldName => &$fieldVal)
-				if(!is_null($this->fields->{$fieldTypes[$fieldName]}))
-					$fieldVal = $this->fields->{$fieldTypes[$fieldName]}->getValue($fieldVal,$settingsArr[$fieldName],true);
-
-		$this->view->setVar('primaryKey',$primaryKey);
-		$this->view->setVar('tableResult',$tableResult);
-
-		// постраничная навигация
-		$tableResultCount = $db->fetchOne(
-			"SELECT count(*) as elementcount FROM ".$sqlWhere,
-			Phalcon\Db::FETCH_ASSOC
-		);
-		$pagination                          = [];
-		$pagination['curPage']               = $page;
-		$pagination['countOfPages']          = ceil($tableResultCount['elementcount']/$limit);
-		$pagination['countOfElements']       = $tableResultCount['elementcount'];
-		$pagination['countOfElementsOnPage'] = $limit;
-		$pagination['fromPage']              = ( ($page - 3)<1 )?1:($page - 3);
-		$pagination['toPage']                = ( ($page + 7)>$pagination['countOfPages'] )?$pagination['countOfPages']:($page + 7);
-		$this->view->setVar('pagination',$pagination);
+		// default mode is sql
+		$tableViewType = ($currentTableView === false)?'em_sql':$currentTableView->type;
+		$tView         = $this->tableviews->getTypeObject($tableViewType);
+		$tView->setView($currentTableView);
+		$tView->setTableInfo($tableInfo);
+		$tView->makeViewLogic();
 	}
 
 	/**
@@ -107,7 +52,7 @@ class TableController extends ControllerBase
 		// достаем информацию о таблице
 		$curTable = $activeTable;
 		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
-		
+
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as &$field)
 		{
@@ -142,7 +87,7 @@ class TableController extends ControllerBase
 		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		$curTableFields     = $curTable['fields'];
 		$primaryKey         = $this->tableEditor->getPrimaryKey($activeTable['real_name']);
-		
+
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as  &$field)
 		{
@@ -156,7 +101,7 @@ class TableController extends ControllerBase
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
 		$this->view->setVar('primaryKey',$primaryKey);
-		
+
 		$element = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
 
 		// подгон под типы полей
@@ -198,14 +143,14 @@ class TableController extends ControllerBase
 		$primaryKeyValue = (!empty($field[$primaryKeyName]))?intval($field[$primaryKeyName]):false;
 		$primaryKey = [
 			'field' => $primaryKeyName,
-			'value' => $primaryKeyValue 
+			'value' => $primaryKeyValue
 		];
 
 		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
 			$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
 			$required = ($fieldArr['extra'] == "auto_increment")?false:$required;
-			if($required && empty($field[$fieldArr['field']])) 
+			if($required && empty($field[$fieldArr['field']]))
 				$validationErrors[] = $fieldArr['field'].' required';
 			else
 				if(!empty($field[$fieldArr['field']]))
@@ -217,20 +162,20 @@ class TableController extends ControllerBase
 					$formData[$fieldArr['field']] = null;
 		}
 
-		// добавление или обновление после проверок валидиции 
+		// добавление или обновление после проверок валидиции
 		if(count($validationErrors))
 			return $this->jsonResult([
-				'result' => 'error', 
+				'result' => 'error',
 				'msg'    => implode(';<br/>', $validationErrors)
 			]);
-		
+
 		$res       = false;
 		$sqlErrors = [];
 		if($editMode == 'add')
 			$res = $this->tableEditor->insert($tableName, $formData, $sqlErrors);
 		else
 			$res = $this->tableEditor->update($tableName, $primaryKey, $formData, $sqlErrors);
-		
+
 		if(!$res)
 			return $this->jsonResult(['result'=>'error', 'msg'=>$sqlErrors ]);
 
@@ -251,10 +196,10 @@ class TableController extends ControllerBase
 	{
 		if(!$this->request->isAjax())
 			return $this->jsonResult(['result'=>'error', 'msg'=>'только ajax']);
-	
+
 		if(empty($tableName) || empty($primaryKey) ||  empty($elementId) )
 			return $this->jsonResult(['result'=>'error', 'msg'=>'не все нужные поля']);
-		
+
 		$sqlErrors = [];
 		if($this->tableEditor->delete($tableName, ['field'=>$primaryKey, 'value'=>intval($elementId)], $sqlErrors))
 			return $this->jsonResult(['result'=>'success']);
@@ -283,5 +228,38 @@ class TableController extends ControllerBase
 			$this->pageNotFound();
 			return false;
 		}
+	}
+
+	public function addViewAction()
+	{
+		$tViewName = $this->request->getPost('tViewName');
+		$tableName = $this->request->getPost('tableName');
+		if(empty($tViewName) || empty($tableName))
+			return $this->jsonResult(['success'=>false]);
+		$newTview = new EmViews();
+		$newTview->name  = $tViewName;
+		$newTview->table = $tableName;
+		$newTview->type  = 'em_sql';
+		$newTview->save();
+		return $this->jsonResult(['success'=>true,'url'=>$newTview->getUrl()]);
+	}
+
+	public function saveViewAction()
+	{
+		$columns = $this->request->getPost('columns');
+		$filter  = $this->request->getPost('filter');
+		$sort    = $this->request->getPost('sort');
+		$viewid    = $this->request->getPost('viewid');
+		if(empty($viewid))
+			return $this->jsonResult(['success'=>false]);
+		$tView = EmViews::findFirst($viewid);
+		if(!$tView)
+			return $this->jsonResult(['success'=>false]);
+
+		$tView->filter  = $filter;
+		$tView->sort    = $sort;
+		$tView->columns = $columns;
+		$tView->save();
+		return $this->jsonResult(['success'=>true]);
 	}
 }

@@ -19,8 +19,8 @@ return new \Phalcon\Config(array(
 		'configDir'      => __DIR__ . '/../../app/config/',
 		'extDir'         => __DIR__ . '/../../app/extensions/',
 		'fldDir'         => __DIR__ . '/../../app/fields/',
-		'baseUri'        => '#baseuri#', 
-		
+		'tViewsDir'      => __DIR__ . '/../../app/tviews/',
+		'baseUri'        => '#baseuri#',
 		// указывается относительно baseUri, так как вставляется после него
 		'defaultFilesUploadPath' => 'public/upload/'
 	)

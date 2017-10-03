@@ -26,14 +26,12 @@ class Fields extends Phalcon\Mvc\User\Plugin
 				if(strpos($fieldName,'.') === false && is_dir($fieldDirPath))
 				{
 					$loader->registerDirs([$fieldDirPath],true)->register();
-					
+
 					// подгрузка информации о типе поля
 					$infoFilePath = $fieldDirPath.'/info.json';
 					$fieldInfo = [];
 					if(file_exists($infoFilePath))
-					{
 						$fieldInfo = json_decode(file_get_contents($infoFilePath),true);
-					}
 
 					// подготовка имени класса (если есть нижнее подчеркивание)
 					$className = explode('_',$fieldName);
@@ -42,11 +40,7 @@ class Fields extends Phalcon\Mvc\User\Plugin
 					$className[] = 'Field';
 					$className   = implode('',$className);
 
-					$field = 
-					[
-						'code'  => $fieldName,
-						'class' => $className
-					];
+					$field = ['code'  => $fieldName, 'class' => $className ];
 
 					$fieldInfo = array_merge($fieldInfo,$field);
 					$this->_types[$fieldName] = $fieldInfo;

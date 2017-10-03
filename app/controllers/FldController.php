@@ -1,6 +1,6 @@
 <?php
 class FldController extends ControllerBase
-{	
+{
 	/**
 	 * Роутинг полей
 	 * /fld/<имя типа поля>/<имя контроллера>/<имя действия>/<параметры/.../>
@@ -13,7 +13,7 @@ class FldController extends ControllerBase
 			$this->pageNotFound();
 			return false;
 		}
-		
+
 		//############################################################
 		// CONTROLLERS
 		$fldControllerName     = ucfirst($fldController).'FController';
