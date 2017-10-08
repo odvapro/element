@@ -12,7 +12,7 @@ class EmNodeField extends FieldBase
 		$settingFields['nodeField'] = (!empty($settings['nodeField']))?$settings['nodeField']:false;
 		// поле по которуму ищутся элементы (например - имя)
 		$settingFields['nodeSearch'] = (!empty($settings['nodeSearch']))?$settings['nodeSearch']:false;
-		
+
 		// определяем доп переменные для таблиц
 		// весь список таблиц и их полей
 		// для нужд привязки к ним в данном типе поля
@@ -26,11 +26,11 @@ class EmNodeField extends FieldBase
 		}
 		$this->view->setVar('tables',$resTables);
 		$this->view->setVar('tablesJSON',json_encode($resTables));
-		
+
 		if(!empty($params['settingFields']))
 			$settingFields = array_merge($params['settingFields'],$settingFields);
 		$this->view->setVar('settingFields',$settingFields);
-		
+
 		// обязательый параметр
 		$this->view->setVar('formPath','em_node/views/settingsForm');
 	}
@@ -45,7 +45,7 @@ class EmNodeField extends FieldBase
 		if(empty($fieldValue)) return '';
 		// для поля привязки необходимо определить таблицу привязки
 		// поле по которому привязываются элеменыт
-		// поле по которому ведется поис элементов 
+		// поле по которому ведется поис элементов
 		$nodeElements = [];
 		// ===================================================================
 			$db       = $this->di->get('db');

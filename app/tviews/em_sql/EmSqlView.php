@@ -56,7 +56,7 @@ class EmSqlView extends TviewBase
 		$fields      = $this->tableEditor->getTableFilelds($this->tableInfo['table']);
 		$needColumns = $this->getColumns();
 		$keyFields   = [];
-		foreach ($fields as $field)
+		foreach ($fields as &$field)
 		{
 			$fieldType = $this->_getFieldType($field['field']);
 			$fieldSettings = $this->_getFieldSettings($field['field']);
@@ -82,7 +82,7 @@ class EmSqlView extends TviewBase
 			foreach($tRes as $fieldName => &$fieldVal)
 			{
 				$fieldType     = $this->_getFieldType($fieldName);
-				$fieldSettings = $this->_getFieldType($fieldName);
+				$fieldSettings = $this->_getFieldSettings($fieldName);
 				if(!is_null($this->fields->{$fieldType}))
 					$fieldVal = $this->fields->{$fieldType}->getValue($fieldVal,$fieldSettings,true);
 			}
