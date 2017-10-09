@@ -157,7 +157,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 			}
 			else
 				$emName = $emName[0];
-			
+
 			if(!empty($tableChanges['name']))
 				$emName->name = $tableChanges['name'];
 			else
@@ -186,7 +186,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					$emType->table = $tableRealName;
 					$emType->field = $fieldName;
 				}
-				else 
+				else
 					$emType = $emType[0];
 				$emType->type = $fieldArr['type'];
 				$emType->required = (!empty($fieldArr['required']))?1:0;
@@ -376,6 +376,12 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getTableInfo($tableCode)
 	{
 		$tableInfo = $this->db->fetchOne("SELECT * FROM em_names WHERE em_names.table = '{$tableCode}' AND em_names.field = ''", Phalcon\Db::FETCH_ASSOC);
+		if($tableInfo == false)
+			return [
+				'table' => $tableCode,
+				'name'  => $tableCode,
+				'show'  => 0
+			];
 		return $tableInfo;
 	}
 
