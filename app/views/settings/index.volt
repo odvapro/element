@@ -36,7 +36,7 @@
 						<tr>
 							<td class="centered">
 								<div class="editLine">
-									<a href="/settings/table/{{ tableCode }}/">Редактировать</a>
+									<a href="{{ baseUri }}settings/table/{{ tableCode }}/">Редактировать</a>
 									<a href="javascript:alert('не реализовано'); void(0);">Сортировка</a>
 									<a href="javascript:alert('не реализовано'); void(0);">Удалить</a>
 								</div>

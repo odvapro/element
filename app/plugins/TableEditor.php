@@ -377,11 +377,15 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	{
 		$tableInfo = $this->db->fetchOne("SELECT * FROM em_names WHERE em_names.table = '{$tableCode}' AND em_names.field = ''", Phalcon\Db::FETCH_ASSOC);
 		if($tableInfo == false)
+		{
+			$table = $this->db->fetchOne("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{$tableCode}'",Phalcon\Db::FETCH_ASSOC);
+			if($table === false) return false;
 			return [
 				'table' => $tableCode,
 				'name'  => $tableCode,
 				'show'  => 0
 			];
+		}
 		return $tableInfo;
 	}
 

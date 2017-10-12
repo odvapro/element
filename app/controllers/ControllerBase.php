@@ -25,7 +25,7 @@ class ControllerBase extends Controller
 
 		$auth = $this->session->get('auth');
 		$this->view->setVar('auth',$auth);
-		
+
 		// достаем все установленные расширения
 		$extensions = $this->_getExtensions();
 		// собираем ссылки левого сайдбара для расширений
@@ -53,8 +53,8 @@ class ControllerBase extends Controller
 		$config = $this->di->get('config');
 
 		// системные таблицы которые не нужно нигде выводить
-		$systemTables = array('em_names','em_types','em_users');
-		
+		$systemTables = ['em_names','em_types','em_users','em_views'];
+
 		// достаем все имена таблиц, исключаем системные
 		// связываем их с другими
 		$tables = [];
