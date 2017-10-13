@@ -29,13 +29,16 @@
 					Скрытые поля
 				</div>
 				<div class="filterBlock__popup">
-					<input
-						class="filterBlock__sqlInput"
-						type="text"
-						name="columns"
-						value="{{ (currentTableView)?currentTableView.columns:'' }}"
-					/>
-					<button type="submit"><i class="fa fa-check-circle" aria-hidden="true"></i></button>
+					<div class="filterInput">
+						<input
+							class="filterBlock__sqlInput"
+							type="text"
+							name="columns"
+							value="{{ (currentTableView)?currentTableView.columns:'' }}"
+							onkeyup="el.table.view.showApplyInput(this)"
+						/>
+						<button type="submit"><i class="fa fa-check" aria-hidden="true"></i></button>
+					</div>
 				</div>
 			</div>
 			<div class="filterBlock">
@@ -44,13 +47,16 @@
 					Фильтр
 				</div>
 				<div class="filterBlock__popup">
-					<input
-						class="filterBlock__sqlInput"
-						type="text"
-						name="filter"
-						value="{{ (currentTableView)?currentTableView.filter:'' }}"
-					/>
-					<button type="submit"><i class="fa fa-check-circle" aria-hidden="true"></i></button>
+					<div class="filterInput">
+						<input
+							class="filterBlock__sqlInput"
+							type="text"
+							name="filter"
+							value="{{ (currentTableView)?currentTableView.filter:'' }}"
+							onkeyup="el.table.view.showApplyInput(this)"
+						/>
+						<button type="submit"><i class="fa fa-check" aria-hidden="true"></i></button>
+					</div>
 				</div>
 			</div>
 			<div class="filterBlock">
@@ -59,13 +65,16 @@
 					Сортировка
 				</div>
 				<div class="filterBlock__popup">
-					<input
-						class="filterBlock__sqlInput"
-						type="text"
-						name="sort"
-						value="{{ (currentTableView)?currentTableView.sort:'' }}"
-					/>
-					<button type="submit"><i class="fa fa-check-circle" aria-hidden="true"></i></button>
+					<div class="filterInput">
+						<input
+							class="filterBlock__sqlInput"
+							type="text"
+							name="sort"
+							value="{{ (currentTableView)?currentTableView.sort:'' }}"
+							onkeyup="el.table.view.showApplyInput(this)"
+						/>
+						<button type="submit"><i class="fa fa-check" aria-hidden="true"></i></button>
+					</div>
 				</div>
 			</div>
 			<div class="filterBlock">
@@ -74,7 +83,7 @@
 				</div>
 				<div class="filterBlock__popup filterBlock__popup--dark">
 					<ul>
-						<li>
+						<li onclick="el.table.view.showDeletePopup({{ (currentTableView)?currentTableView.id:'' }})">
 							<i class="fa fa-trash" aria-hidden="true"></i>
 							Удалить отображение
 						</li>
@@ -119,6 +128,20 @@
 			<div class="popupBottomLine">
 				<input type="hidden" name="tableName" value="{{ tableInfo['table'] }}">
 				<button class="elbutton blue" type="submit">Сохранить</button>
+				<button class="elbutton gray" onclick="el.popup.hide(); return false;">Отмена</button>
+			</div>
+		</form>
+		</div>
+	</div>
+	<div class="_deleteTviewPopup">
+		<div class="popupCont"><div class="popupTopLine">
+			<span class="name">Удаление отображения</span>
+			<span class="icon closeBtn10" onclick="el.popup.hide();"></span>
+		</div>
+		<form id="fieldSettings" onsubmit="el.table.view.delete(this); return false;" method="post">
+			<div class="popupBottomLine">
+				<input type="hidden" name="viewId" value="{{ (currentTableView)?currentTableView.id:'' }}">
+				<button class="elbutton blue" type="submit">Удалить</button>
 				<button class="elbutton gray" onclick="el.popup.hide(); return false;">Отмена</button>
 			</div>
 		</form>

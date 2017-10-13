@@ -41,6 +41,13 @@ $router->add(
 	)
 );
 $router->add(
+	"/table/deleteView",
+	array(
+		"controller" => "table",
+		"action"     => "deleteView"
+	)
+);
+$router->add(
 	"/table/saveView",
 	array(
 		"controller" => "table",

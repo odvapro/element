@@ -24,6 +24,28 @@ el.table =
 			var popupHtml = $('#filyetTPLS ._addTviewPopup').html();
 			el.popup.show(popupHtml);
 		},
+		showDeletePopup:function(viewId)
+		{
+			if(typeof viewId == 'undefined')
+				return el.message.error('Нельзя удалять основное отображение');
+			var popupHtml = $('#filyetTPLS ._deleteTviewPopup').html();
+			el.popup.show(popupHtml);
+		},
+		delete:function(instance)
+		{
+			$.ajax({
+				url      : el.config.baseUri+"table/deleteView",
+				type     :'POST',
+				dataType :'json',
+				data     : $(instance).serialize()
+			}).done(function(e)
+			{
+				if(typeof e.success != 'undefined' && e.success == true)
+					window.location = e.url;
+				else
+					el.message.error('что-то пошло не так');
+			});
+		},
 		add:function(instance)
 		{
 			$.ajax({
@@ -53,6 +75,10 @@ el.table =
 				else
 					el.message.error('что-то пошло не так');
 			});
+		},
+		showApplyInput:function(instance)
+		{
+			$(instance).parents('.filterInput').addClass('changed');
 		}
 	}
 }

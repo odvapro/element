@@ -230,6 +230,9 @@ class TableController extends ControllerBase
 		}
 	}
 
+	/**
+	 * Add table view action
+	 */
 	public function addViewAction()
 	{
 		$tViewName = $this->request->getPost('tViewName');
@@ -243,6 +246,23 @@ class TableController extends ControllerBase
 		$newTview->save();
 		return $this->jsonResult(['success'=>true,'url'=>$newTview->getUrl()]);
 	}
+
+	/**
+	 * Delete table view action
+	 */
+	public function deleteViewAction()
+	{
+		$viewId = $this->request->getPost('viewId');
+		if(empty($viewId))
+			return $this->jsonResult(['success'=>false]);
+		$tView = EmViews::findFirst($viewId);
+		if(!$tView)
+			return $this->jsonResult(['success'=>false]);
+		$url = "/table/{$tView->table}/";
+		$tView->delete();
+		return $this->jsonResult(['success'=>true,'url'=>$url]);
+	}
+
 
 	public function saveViewAction()
 	{

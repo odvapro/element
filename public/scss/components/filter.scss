@@ -40,11 +40,50 @@
 {
 	list-style:none;
 	font-weight:normal;
+	margin-bottom:10px;
 }
 .filterBlock__popup li {padding:5px 0px; }
+.filterBlock__popup li a{
+	padding:5px 0px;
+	font-weight: normal;
+	text-decoration: none;
+	color: #3b3b3b;
+	&:hover{
+		font-weight: bold;
+	}
+}
 .filterBlock__sqlInput
 {
 	padding: 10px;
 	width: 200px;
 	border: 1px solid #ededed;
+}
+.filterBlock__popup .filterInput
+{
+	position:relative;
+	input{margin:0px;}
+}
+.filterBlock__popup .filterInput button
+{
+	position:absolute;
+	height: 100%;
+	width: 35px;
+	border: 0px;
+	background: rgba(0, 152, 0, 0.56);
+	font-size: 13px;
+	right:0px;
+	top:0px;
+	padding:0px;
+	color:#fff;
+	cursor: pointer;
+	opacity:0;
+	visibility:hidden;
+	transform: translateX(35px);
+	transition: all 0.1s ease-in-out;
+}
+.filterBlock__popup .filterInput.changed button
+{
+	opacity:1;
+	visibility:visible;
+	transform: translateX(0px);
 }
