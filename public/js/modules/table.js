@@ -31,10 +31,15 @@ el.table =
 			var popupHtml = $('#filyetTPLS ._deleteTviewPopup').html();
 			el.popup.show(popupHtml);
 		},
+		showRanamePopup:function()
+		{
+			var popupHtml = $('#filyetTPLS ._renameTviewPopup').html();
+			el.popup.show(popupHtml);
+		},
 		delete:function(instance)
 		{
 			$.ajax({
-				url      : el.config.baseUri+"table/deleteView",
+				url      : el.config.baseUri+"tview/delete",
 				type     :'POST',
 				dataType :'json',
 				data     : $(instance).serialize()
@@ -49,7 +54,7 @@ el.table =
 		add:function(instance)
 		{
 			$.ajax({
-				url      : el.config.baseUri+"table/addView",
+				url      : el.config.baseUri+"tview/add",
 				type     :'POST',
 				dataType :'json',
 				data     : $(instance).serialize()
@@ -61,10 +66,25 @@ el.table =
 					el.message.error('что-то пошло не так');
 			});
 		},
+		rename:function(instance)
+		{
+			$.ajax({
+				url      : el.config.baseUri+"tview/rename",
+				type     :'POST',
+				dataType :'json',
+				data     : $(instance).serialize()
+			}).done(function(e)
+			{
+				if(typeof e.success != 'undefined' && e.success == true)
+					window.location.reload();
+				else
+					el.message.error('что-то пошло не так');
+			});
+		},
 		saveTviewSettings:function(instance)
 		{
 			$.ajax({
-				url      : el.config.baseUri+"table/saveView",
+				url      : el.config.baseUri+"tview/save",
 				type     :'POST',
 				dataType :'json',
 				data     : $(instance).serialize()

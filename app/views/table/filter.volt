@@ -87,7 +87,7 @@
 							<i class="fa fa-trash" aria-hidden="true"></i>
 							Удалить отображение
 						</li>
-						<li>
+						<li onclick="el.table.view.showRanamePopup()">
 							<i class="fa fa-pencil" aria-hidden="true"></i>
 							Переименовать отображение
 						</li>
@@ -142,6 +142,37 @@
 			<div class="popupBottomLine">
 				<input type="hidden" name="viewId" value="{{ (currentTableView)?currentTableView.id:'' }}">
 				<button class="elbutton blue" type="submit">Удалить</button>
+				<button class="elbutton gray" onclick="el.popup.hide(); return false;">Отмена</button>
+			</div>
+		</form>
+		</div>
+	</div>
+	<div class="_renameTviewPopup">
+		<div class="popupCont"><div class="popupTopLine">
+			<span class="name">Переименовть отображение</span>
+			<span class="icon closeBtn10" onclick="el.popup.hide();"></span>
+		</div>
+		<form
+			id="fieldSettings"
+			onsubmit="el.table.view.rename(this); return false;"
+			method="post"
+		>
+			<div class="popupContLine">
+				<div class="editLine">
+					<div class="name">Введите название отображения</div>
+					<div class="inp">
+						<input
+							name="tViewName"
+							type="text"
+							value="{{ (currentTableView)?currentTableView.name:'' }}"
+							placeholder="Введите название отображения"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="popupBottomLine">
+				<input type="hidden" name="viewId" value="{{ (currentTableView)?currentTableView.id:'' }}">
+				<button class="elbutton blue" type="submit">Сохранить</button>
 				<button class="elbutton gray" onclick="el.popup.hide(); return false;">Отмена</button>
 			</div>
 		</form>
