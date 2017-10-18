@@ -3,7 +3,7 @@
 class TableController extends ControllerBase
 {
 	/**
-	 * Работа с таблицами, содержимое таблицы
+	 * Settings index page
 	 */
 	public function indexAction($tableCode = false)
 	{
@@ -43,7 +43,7 @@ class TableController extends ControllerBase
 	}
 
 	/**
-	 * Страница с формой добавления элемента
+	 * Element adding page
 	 */
 	public function addAction($tableName = false)
 	{
@@ -69,8 +69,7 @@ class TableController extends ControllerBase
 	}
 
 	/**
-	 * Страница с формой редактирования элемента
-	 * @return всегда  json так как работает только при аякс запросах
+	 * Element editing page
 	 */
 	public function editAction($tableName = false, $elementId = false)
 	{
@@ -116,8 +115,8 @@ class TableController extends ControllerBase
 	}
 
 	/**
-	 * Сохранение/добавление элемента
-	 * @return всегда  json так как работает только при аякс запросах
+	 * Adding and updating action
+	 * @return json
 	 */
 	public function saveAction()
 	{
@@ -184,7 +183,7 @@ class TableController extends ControllerBase
 	}
 
 	/**
-	 * Удаление записи из таблицы
+	 * Removing table row
 	 */
 	public function deleteAction($tableName = false, $primaryKey = false, $elementId = false)
 	{
@@ -208,20 +207,18 @@ class TableController extends ControllerBase
 	 */
 	private function _setActiveTable($tableName = false)
 	{
-		// активируем нужную таблицу и переопределяем все таблицы в шаблоне
-		if(!empty($tableName) && array_key_exists($tableName, $this->sidebarTables))
+		$tableInfo = $this->tableEditor->getTableInfo($tableName);
+		if($tableInfo === false)
+			return $this->pageNotFound();
+		if(array_key_exists($tableName, $this->sidebarTables))
 		{
 			$this->sidebarTables[$tableName]['classes'] = 'act';
 			$this->view->setVar('sidebarTables',$this->sidebarTables);
-			$activeTable = array_merge($this->sidebarTables[$tableName],array('real_name'=>$tableName));
-			$this->view->setVar('curTable',$activeTable);
-			return $activeTable;
 		}
-		else
-		{
-			$this->pageNotFound();
-			return false;
-		}
+		$tableInfo['table_name'] = $tableInfo['name'];
+		$tableInfo['real_name']  = $tableInfo['table'];
+		$this->view->setVar('curTable',$tableInfo);
+		return $tableInfo;
 	}
 
 }

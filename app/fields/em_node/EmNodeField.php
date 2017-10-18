@@ -59,6 +59,7 @@ class EmNodeField extends FieldBase
 				$nodeElement         = [];
 				$nodeElement['id']   = $tRes[$settings['nodeField']];
 				$nodeElement['name'] = $tRes[$settings['nodeSearch']];
+				$nodeElement['url']  = "/table/{$settings['nodeTable']}/edit/{$tRes[$settings['nodeField']]}";
 				$nodeElements[]      = $nodeElement;
 			}
 		// ===================================================================

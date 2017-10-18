@@ -245,6 +245,8 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 */
 	private function getTableColumns($tableName)
 	{
+		if(empty($tableName))
+			return false;
 		$tableColumns = $this->db->fetchAll(
 			"SHOW COLUMNS  FROM ".$tableName,
 			Phalcon\Db::FETCH_ASSOC

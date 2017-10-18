@@ -2738,6 +2738,11 @@ input, select {
           color: #383838;
           margin-top: -7px;
           margin-bottom: -7px; }
+          #popupWrap .popupCont .popupContLine td .colorTag a {
+            text-decoration: none;
+            color: #383838; }
+          #popupWrap .popupCont .popupContLine td .colorTag a:hover {
+            font-weight: bold; }
         #popupWrap .popupCont .popupContLine td .collection {
           background: #EFEFEF;
           display: inline-block;
@@ -3398,6 +3403,11 @@ section#contentBlock {
         color: #383838;
         margin-top: -7px;
         margin-bottom: -7px; }
+        section#contentBlock #content td .colorTag a {
+          text-decoration: none;
+          color: #383838; }
+        section#contentBlock #content td .colorTag a:hover {
+          font-weight: bold; }
       section#contentBlock #content td .collection {
         background: #EFEFEF;
         display: inline-block;

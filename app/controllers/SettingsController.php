@@ -234,10 +234,17 @@ class SettingsController extends ControllerBase
 		]);
 
 		if(!count($tableNameObj))
-			return $this->jsonResult(['result'=>'error']);
+		{
+			$tableNameObj        = new EmNames();
+			$tableNameObj->table = $tableCode;
+			$tableNameObj->name  = $tableCode;
+			$tableNameObj->field = NULL;
+		}
+		else
+			$tableNameObj = $tableNameObj[0];
 
-		$tableNameObj[0]->show = ($show != 'false')?1:0;
-		if($tableNameObj[0]->save())
+		$tableNameObj->show = ($show != 'false')?1:0;
+		if($tableNameObj->save())
 			return $this->jsonResult(['result' =>'success']);
 
 		return $this->jsonResult(['result'=>'error']);
