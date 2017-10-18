@@ -124,7 +124,6 @@ class TableController extends ControllerBase
 		if(!$this->request->isAjax())
 			return $this->jsonResult(['result'=>'error','msg'=>'only ajax']);
 
-
 		// тип сохранения - обновление/добавление
 		// и все нужные поля
 		$editMode  = $this->request->getPost('editMode');
@@ -148,18 +147,13 @@ class TableController extends ControllerBase
 
 		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
-			$required = ( !empty($fieldArr['required']) && $fieldArr['required'] == 1  || $fieldArr['null'] == "NO" )?true:false;
-			$required = ($fieldArr['extra'] == "auto_increment")?false:$required;
-			if($required && empty($field[$fieldArr['field']]))
-				$validationErrors[] = $fieldArr['field'].' required';
-			else
-				if(!empty($field[$fieldArr['field']]))
-					if(!is_null($this->fields->{$fieldArr['type']}))
-						$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
-					else
-						$formData[$fieldArr['field']] = $field[$fieldArr['field']];
+			if(!empty($field[$fieldArr['field']]))
+				if(!is_null($this->fields->{$fieldArr['type']}))
+					$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
 				else
-					$formData[$fieldArr['field']] = null;
+					$formData[$fieldArr['field']] = $field[$fieldArr['field']];
+			else
+				$formData[$fieldArr['field']] = null;
 		}
 
 		// добавление или обновление после проверок валидиции
