@@ -31,11 +31,13 @@
 	white-space: nowrap;
 	left:0px;
 }
-.filterBlock__popup--dark{
+.filterBlock__popup--dark
+{
 	background:#3D3F3E;
 	border:0px;
 	color:#fff;
 }
+.filterBlock__popup.filterBlock__popup--dark ul{margin-bottom:0px; }
 .filterBlock__popup ul
 {
 	list-style:none;

@@ -79,4 +79,29 @@ class TviewController extends ControllerBase
 
 		return $this->jsonResult(['success'=>true]);
 	}
+
+	/**
+	 * Sets table view as Default view
+	 * check other table views as not default
+	 */
+	public function setAsDefaultAction()
+	{
+		$viewId = $this->request->getPost('viewId');
+		$tView     = EmViews::findFirst($viewId);
+		if(!$tView)
+			return $this->jsonResult(['success'=>false]);
+		$tView->default = 1;
+		$tView->update();
+
+		$tableViews = EmViews::find([
+			'conditions' => "table=?0 AND id != ?1",
+			'bind'       => [$tView->table,$tView->id]
+		]);
+		foreach($tableViews as $tableView)
+		{
+			$tableView->default = NULL;
+			$tableView->update();
+		}
+		return $this->jsonResult(['success'=>true]);
+	}
 }

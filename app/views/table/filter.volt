@@ -99,7 +99,7 @@
 							<i class="fa fa-clone" aria-hidden="true"></i>
 							Дублировать отображение
 						</li>
-						<li>
+						<li onclick="el.table.view.setViewAsDefault({{ (currentTableView)?currentTableView.id:'' }})">
 							<i class="fa fa-check-square-o" aria-hidden="true"></i>
 							По умолчанию
 						</li>

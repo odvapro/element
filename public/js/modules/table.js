@@ -99,6 +99,23 @@ el.table =
 		showApplyInput:function(instance)
 		{
 			$(instance).parents('.filterInput').addClass('changed');
+		},
+		setViewAsDefault:function(viewId)
+		{
+			if(typeof viewId == 'undefined')
+				return el.message.error('отображение не может быть по умолчанию');
+			$.ajax({
+				url      : el.config.baseUri+"tview/setAsDefault",
+				type     : 'POST',
+				dataType : 'json',
+				data     : {viewId:viewId}
+			}).done(function(e)
+			{
+				if(typeof e.success != 'undefined' && e.success == true)
+					el.message.success('Настрокйик сохранены');
+				else
+					el.message.error('что-то пошло не так');
+			});
 		}
 	}
 }

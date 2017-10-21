@@ -80,6 +80,7 @@ CREATE TABLE `em_views` (
   `filter` text,
   `sort` text,
   `columns` text,
+  `default` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
