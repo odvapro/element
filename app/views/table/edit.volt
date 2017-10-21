@@ -1,7 +1,7 @@
 {% extends "layouts/main.volt" %}
 {% block topBredcrumbs %}
 	<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
-	<li><a href="{{baseUri}}table/{{curTable['real_name']}}/">{{curTable['table_name']}}</a></li>
+	<li><a href="{{ tableEditor.getUrl(curTable['real_name']) }}">{{curTable['table_name']}}</a></li>
 	<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
 	<li class="last"><a href="javascript:void(0)">Редактирование элемента</a></li>
 {% endblock %}

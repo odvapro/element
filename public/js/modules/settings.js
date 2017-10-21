@@ -1,6 +1,9 @@
 /* скрипты страницы настроек */
 el.settings =
 {
+	/**
+	 * Submit table settings
+	 */
 	submit : function()
 	{
 		var formData = $('#settingsForm').serialize();

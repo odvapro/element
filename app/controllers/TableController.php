@@ -7,7 +7,7 @@ class TableController extends ControllerBase
 	 */
 	public function indexAction($tableCode = false)
 	{
-		$table = $this->_setActiveTable($tableCode);
+		$table          = $this->_setActiveTable($tableCode);
 		$params         = $this->dispatcher->getParams();
 		$tableViewIndex = array_search('view', $params);
 		$tableViewId    = false;

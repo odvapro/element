@@ -2,7 +2,7 @@
 {% block topBredcrumbs %}
 	<li class="arr"><span class="icon topBreadcrumbArrow"></span></li>
 	<li class="last">
-		<a href="{{baseUri}}table/{{ tableInfo['table'] }}/">{{ tableInfo['table'] }}</a>
+		<a href="{{ tableEditor.getUrl(tableInfo['table'],{'page':1}) }}">{{ tableInfo['table'] }}</a>
 	</li>
 {% endblock %}
 {% block contentBoxAttributes %} class="withFilter" {% endblock %}
@@ -91,11 +91,31 @@
 			<nav class="pagination">
 				<ul>
 					{% for page in pagination['fromPage']..pagination['toPage'] %}
-						<li{% if page == pagination['curPage'] %} class="act"{% endif %}><a href="{{baseUri}}table/{{tableInfo['table']}}/page/{{page}}/">{{page}}</a></li>
+						<li{% if page == pagination['curPage'] %} class="act"{% endif %}>
+							<a href="{{
+								tableEditor.getUrl(
+									tableInfo['table'],
+									{
+										'page':page,
+										'view':(currentTableView)?currentTableView.id:'',
+										'edit':false
+									}
+								)
+							}}">{{page}}</a>
+						</li>
 					{% endfor %}
 					{% if pagination['toPage'] < pagination['countOfPages'] %}
 						<li><button class="elbutton dotts" onclick="alert('выбор количества на странице');"><span class="icon buttonDotts"></span></button></li>
-						<li><a href="{{baseUri}}table/{{tableInfo['table']}}/page/{{pagination['countOfPages']}}/">{{pagination['countOfPages']}}</a></li>
+						<li><a href="{{
+							tableEditor.getUrl(
+								tableInfo['table'],
+								{
+									'page':pagination['countOfPages'],
+									'view':(currentTableView)?currentTableView.id:'',
+									'edit':false
+								}
+							)
+						}}">{{pagination['countOfPages']}}</a></li>
 					{% endif %}
 				</ul>
 			</nav>

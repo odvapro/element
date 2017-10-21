@@ -99,6 +99,10 @@
 							<i class="fa fa-clone" aria-hidden="true"></i>
 							Дублировать отображение
 						</li>
+						<li>
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							По умолчанию
+						</li>
 					</ul>
 				</div>
 			</div>

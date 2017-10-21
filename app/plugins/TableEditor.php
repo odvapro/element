@@ -146,14 +146,14 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		{
 			// поиск смененного названия таблицы (type = 0 - названия таблиц)
 			$emName = EmNames::find([
-				'conditions'=>"table = ?0 AND field = ''",
-				'bind' => [$tableRealName]
+				'conditions' => "table = ?0 AND field = ''",
+				'bind'       => [$tableRealName]
 			]);
 			if(!count($emName))
 			{
-				$emName = new EmNames();
+				$emName        = new EmNames();
 				$emName->table = $tableRealName;
-				$emName->show = 0;
+				$emName->show  = 0;
 			}
 			else
 				$emName = $emName[0];
@@ -391,4 +391,52 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		return $tableInfo;
 	}
 
+	/**
+	 * Gets table url
+	 * Check default view
+	 * @return string
+	 */
+	public function getUrl($tableCode,$params = [])
+	{
+		$config = $this->di->get('config');
+		// if request uri has table code and page number
+		// we try to save them
+		$defaultParams = [];
+		// delete base uri from beginnig of request uri
+		$url = parse_url($_SERVER['HTTP_REFERER']);
+		$url = $url['path'];
+		if (substr($url, 0, strlen($config->application->baseUri)) == $config->application->baseUri)
+		    $url = substr($url, strlen($config->application->baseUri));
+
+		if(strpos($url, "table/{$tableCode}") !== false)
+		{
+			$url = str_replace("table/{$tableCode}/", '', $url);
+			$url = explode('/',$url);
+			$url = array_chunk($url, 2);
+			foreach ($url as $urlPart)
+				if(count($urlPart) == 2)
+					$defaultParams[$urlPart[0]] = $urlPart[1];
+		}
+
+		// set default view
+		if(empty($defaultParams['view']))
+		{
+			$tableViews = EmViews::find([
+				'conditions' => 'table = ?0 AND default = 1',
+				'bind'       => [$tableCode]
+			]);
+			if(count($tableViews))
+				$defaultParams['view'] = $tableViews->getFirst()->id;
+		}
+
+		$params = array_merge($defaultParams,$params);
+		$urlParams = [];
+		foreach ($params as $paramCode => &$paramValue)
+			if(!empty($paramValue))
+				$urlParams[] = "{$paramCode}/$paramValue";
+
+		$urlParams = implode('/',$urlParams);
+		$urlParams = (!empty($urlParams))?"{$urlParams}/":'';
+		return "{$config->application->baseUri}table/{$tableCode}/{$urlParams}";
+	}
 }
