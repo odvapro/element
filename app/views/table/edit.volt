@@ -26,6 +26,7 @@
 		<input type="hidden" name="primaryKey" value="{{primaryKey}}" />
 		<input type="hidden" name="tableName" value="{{curTable['real_name']}}" />
 		{% for fieldArr in tableInfo['fields'] %}
+			{% if fieldArr['hidden'] is defined and fieldArr['hidden'] == 1 %}{% continue %}{% endif %}
 			<div class="line">
 				{% set formMode = "update" %}
 				{{ partial(fieldArr['formPath']) }}

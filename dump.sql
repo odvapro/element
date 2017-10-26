@@ -47,6 +47,7 @@ CREATE TABLE `em_types` (
   `required` int(5) NOT NULL DEFAULT '0',
   `multiple` int(5) NOT NULL DEFAULT '0',
   `settings` text,
+  `hidden` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

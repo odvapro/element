@@ -61,34 +61,80 @@ class SettingsController extends ControllerBase
 	}
 
 	/**
-	 * Save settings
-	 * - type settings save
-	 * - save names settingd
+	 * Sets field type
+	 * @return json
 	 */
-	public function saveAction()
+	public function setFieldTypeAction()
 	{
-		if(!$this->request->isAjax())
-		    return $this->jsonResult(['result'=>'error']);
+		$type      = $this->request->getPost('type');
+		$tableCode = $this->request->getPost('tableCode');
+		$fieldCode = $this->request->getPost('fieldCode');
+		if(empty($type) || empty($tableCode) || empty($fieldCode))
+			return $this->jsonResult(['result'=>false,'msg'=>'not all fields']);
 
-		$tablesInfo = $this->request->getPost('tables');
-		$errors     = false;
-		foreach ($tablesInfo as $tableRealName => $tableArr)
+		// get field type line
+		// if exsist, or create it
+		$fieldType = EmTypes::find([
+			'conditions' => 'table = ?0 AND field = ?1',
+			'bind'       => [$tableCode,$fieldCode]
+		]);
+		if(!count($fieldType))
 		{
-			$changes = $this->tableEditor->getTableChanges($tableRealName,$tableArr);
-			if($changes === false) continue;
-			if($this->tableEditor->applyTableChanges($tableRealName,$changes) === false)
-			{
-				$errors = true;
-				break;
-			}
+			$fieldType        = new EmTypes();
+			$fieldType->table = $tableCode;
+			$fieldType->field = $fieldCode;
+			$fieldType->type  = $type;
+			$fieldType->save();
 		}
-
-		if(!$errors)
-		    return $this->jsonResult(['result'=>'success']);
 		else
-		    return $this->jsonResult(['result'=>'error']);
+		{
+			$fieldType       = $fieldType[0];
+			$fieldType->type = $type;
+			$fieldType->update();
+		}
+		return $this->jsonResult(['result'=>true]);
 	}
 
+	/**
+	 * Sets field hidden status
+	 * @return  json
+	 */
+	public function setFieldHiddenAction()
+	{
+		$isHidden  = $this->request->getPost('isHidden');
+		$tableCode = $this->request->getPost('tableCode');
+		$fieldCode = $this->request->getPost('fieldCode');
+		if(empty($isHidden) || empty($tableCode) || empty($fieldCode))
+			return $this->jsonResult(['result'=>false,'msg'=>'not all fields']);
+
+		// get field type line
+		// if exsist, or create it
+		$fieldType = EmTypes::find([
+			'conditions' => 'table = ?0 AND field = ?1',
+			'bind'       => [$tableCode,$fieldCode]
+		]);
+		if(!count($fieldType))
+		{
+			$fieldType         = new EmTypes();
+			$fieldType->table  = $tableCode;
+			$fieldType->field  = $fieldCode;
+			$fieldType->type   = 'em_string';
+			$fieldType->hidden = ($isHidden != 'false')?1:NULL;
+			$fieldType->save();
+		}
+		else
+		{
+			$fieldType         = $fieldType[0];
+			$fieldType->hidden = ($isHidden != 'false')?1:NULL;
+			$fieldType->update();
+		}
+		return $this->jsonResult(['result'=>true]);
+	}
+
+	/**
+	 * Saves field name
+	 * @return json
+	 */
 	public function saveFieldNameAction()
 	{
 		if(!$this->request->isAjax())

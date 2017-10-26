@@ -2,25 +2,55 @@
 el.settings =
 {
 	/**
-	 * Submit table settings
+	 * Sets field type
+	 * @param instance of select
+	 * @param string tableName table name in db
+	 * @param string fieldName field name in db
 	 */
-	submit : function()
+	setFieldType:function(instance,tableName,fieldName)
 	{
-		var formData = $('#settingsForm').serialize();
+		var newType = $(instance).val();
 		$.ajax({
-			url: el.config.baseUri+"settings/save",
+			url: el.config.baseUri+"settings/setFieldType",
 			type:'POST',
 			dataType:'json',
-			data: formData,
+			data: {
+				type      :newType,
+				tableCode :tableName,
+				fieldCode :fieldName
+			},
 		}).done(function(e)
 		{
-			if(typeof e.result != 'undefined' && e.result == 'success')
-			{
+			if(typeof e.result != 'undefined' && e.result == true)
 				el.message.success('Настрокйки сохранены.');
-				setTimeout(function(){
-					window.location.reload();
-				},2000);
-			}
+			else
+				el.message.error('Неизвестная шибка.');
+		});
+		return false;
+	},
+
+	/**
+	 * Sets field type
+	 * @param instance of checkbox
+	 * @param string tableName table name in db
+	 * @param string fieldName field name in db
+	 */
+	setFieldHidden:function(instance,tableName,fieldName)
+	{
+		var isHidden = $(instance).is(':checked');
+		$.ajax({
+			url: el.config.baseUri+"settings/setFieldHidden",
+			type:'POST',
+			dataType:'json',
+			data: {
+				isHidden  :isHidden,
+				tableCode :tableName,
+				fieldCode :fieldName
+			},
+		}).done(function(e)
+		{
+			if(typeof e.result != 'undefined' && e.result == true)
+				el.message.success('Настрокйки сохранены.');
 			else
 				el.message.error('Неизвестная шибка.');
 		});

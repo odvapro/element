@@ -13,9 +13,6 @@
 				<span>{{ tableInfo['table'] }}</span>
 			</div>
 		</div>
-		<div class="rightButtons">
-			<button class="elbutton blue" onclick="el.settings.submit()">Сохранить</button>
-		</div>
 	</div>
 {% endblock %}
 {% block content %}
@@ -26,20 +23,17 @@
 					<th>Настройки</th>
 					<th>Наименование</th>
 					<th>Тип поля</th>
+					<th>Не показывать</th>
 				</tr>
 				{% for field in fields %}
 					<tr data-fieldname="{{field['field']}}">
 						<td class="centered">
-							{% if field['type'] in EmTypesCodes %}
-								<div class="editLine">
-									<a href="javascript:void(0)" onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')">Настройки</a>
-									<a href="javascript:void(0)">Копировать</a>
-									<a href="javascript:void(0)">Удалить</a>
-								</div>
-								<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
-							{% else %}
-								–
-							{% endif %}
+							<div class="editLine">
+								<a href="javascript:void(0)" onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')">Настройки</a>
+								<a href="javascript:void(0)">Копировать</a>
+								<a href="javascript:void(0)">Удалить</a>
+							</div>
+							<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
 						</td>
 						<td>
 							<span class="ename _ename">{{(field['ename']!='')?field['ename']:field['field']}}</span>
@@ -50,7 +44,9 @@
 						</td>
 						<td>
 							{% if field['key'] != "PRI" %}
-								<select name="tables[{{ tableInfo['table'] }}][fields][{{field['field']}}][type]">
+								<select
+									onchange="el.settings.setFieldType(this,'{{ tableInfo['table'] }}','{{field['field']}}')"
+								>
 									{% if field['type'] not in EmTypesCodes %}
 										<option value="notsys">{{field['type']}}</option>
 									{% endif %}
@@ -60,7 +56,30 @@
 								</select>
 							{% else %}
 								PRIMARY KEY
-								<input type="hidden" name="tables[{{ tableInfo['table'] }}][fields][{{field['field']}}][type]" value="notsys">
+								<input
+									type="hidden"
+									name="tables[{{ tableInfo['table'] }}][fields][{{field['field']}}][type]"
+									value="notsys"
+								/>
+							{% endif %}
+						</td>
+						<td>
+							{% if field['key'] != "PRI" %}
+								<input
+									type="checkbox"
+									name="tables[{{ tableInfo['table'] }}][fields][{{field['field']}}][hidden]"
+									value="checked"
+									onchange="el.settings.setFieldHidden(this,'{{ tableInfo['table'] }}','{{field['field']}}')"
+									{% if field['hidden'] is defined and field['hidden'] == 1 %}
+										checked="true"
+									{% endif %}
+								/>
+							{% else %}
+								<input
+									type="checkbox"
+									name="hidden"
+									disabled="true"
+								/>
 							{% endif %}
 						</td>
 					</tr>

@@ -135,92 +135,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	}
 
 	/**
-	 * Применяет изменения к таблице
-	 * @return true если не было ошибок и false наоборот
-	 */
-	public function applyTableChanges($tableRealName,$tableChanges)
-	{
-		$noErrors = true;
-		// смена названия таблицы
-		if(!empty($tableChanges['name']) || isset($tableChanges['show']))
-		{
-			// поиск смененного названия таблицы (type = 0 - названия таблиц)
-			$emName = EmNames::find([
-				'conditions' => "table = ?0 AND field = ''",
-				'bind'       => [$tableRealName]
-			]);
-			if(!count($emName))
-			{
-				$emName        = new EmNames();
-				$emName->table = $tableRealName;
-				$emName->show  = 0;
-			}
-			else
-				$emName = $emName[0];
-
-			if(!empty($tableChanges['name']))
-				$emName->name = $tableChanges['name'];
-			else
-				$emName->name = $tableRealName;
-			if(isset($tableChanges['show']))
-				$emName->show = $tableChanges['show'];
-			else
-				$emName->show = 0;
-
-			if(!$emName->save())
-				$noErrors = false;
-		}
-
-		// смена полей таблицы
-		if(!empty($tableChanges['fields']))
-		{
-			foreach($tableChanges['fields'] as $fieldName => $fieldArr)
-			{
-				$emType = EmTypes::find([
-					'conditions' => 'table = ?0 and field = ?1 ',
-					'bind' => [$tableRealName, $fieldName]
-				]);
-				if(!count($emType))
-				{
-					$emType = new EmTypes();
-					$emType->table = $tableRealName;
-					$emType->field = $fieldName;
-				}
-				else
-					$emType = $emType[0];
-				$emType->type = $fieldArr['type'];
-				$emType->required = (!empty($fieldArr['required']))?1:0;
-				if(!$emType->save())
-					$noErrors = false;
-			}
-		}
-		return $noErrors;
-	}
-
-	/**
-	 * Проверка на измененность таблицы
-	 * @var array $tableName имя таблицы в БД
-	 * @var array $tableInfo ['name','fields'=>[...]]
-	 * @return массив изменений ['name','fields'=>[...]] или false
-	 */
-	public function getTableChanges($tableName,$tableInfo)
-	{
-		// проверка на внесенные изменения
-		$changes = [];
-		if(isset($tableInfo['show']))
-			$changes['show'] = intval($tableInfo['show']);
-
-		foreach ($tableInfo['fields'] as $fieldName => $field)
-			if($field['type'] != 'notsys')
-				$changes['fields'][$fieldName] = $field;
-		if(!empty($changes))
-			return $changes;
-		else
-			return false;
-	}
-
-
-	/**
 	 * Возврощает всю информацию о полях таблицы
 	 * @param  string $tableName имя таблицы
 	 * @return array описание полей
@@ -306,7 +220,8 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					'type'     =>$ovCol->type,
 					'settings' =>$ovCol->settings,
 					'multiple' =>$ovCol->multiple,
-					'required' =>$ovCol->required
+					'required' =>$ovCol->required,
+					'hidden'   =>$ovCol->hidden
 				]);
 			}
 			$resFields[] = $curOvCol;
