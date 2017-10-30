@@ -389,17 +389,10 @@ class SettingsController extends ControllerBase
 		$needUpdateFiles = json_decode($jsonNeedUpdateFiles,true);
 		if(empty($needUpdateFiles['result']) || $needUpdateFiles['result'] != 'success')
 			return $this->jsonResult(['result'=>'error','msg'=>'something wrong on the server']);
-
 		$newVersion = '';
 		foreach($needUpdateFiles['files'] as $filePath => $fileArr)
 		{
-			if($fileArr['type'] == 'update')
-			{
-				$newCont = @file_get_contents($fileArr['path']);
-				if(!empty($newCont))
-					@file_put_contents($preambula.$filePath, $newCont);
-			}
-			elseif($fileArr['type'] == 'add')
+			if($fileArr['type'] == 'update' || $fileArr['type'] == 'add')
 			{
 				$newCont = @file_get_contents($fileArr['path']);
 				if(!empty($newCont))
@@ -408,15 +401,17 @@ class SettingsController extends ControllerBase
 			elseif($fileArr['type'] == 'delete')
 			{
 				if(is_file($preambula.$filePath))
-				{
 					@unlink($preambula.$filePath);
-				}
+			}
+			elseif($fileArr['type'] == 'link')
+			{
+				symlink($preambula.$filePath, $fileArr['path']);
 			}
 			elseif($fileArr['type'] == 'version')
 			{
 				// обновление версии системы
 				$sysFileArr['version'] = $fileArr['value'];
-				$newVersion = $fileArr['value'];
+				$newVersion            = $fileArr['value'];
 				@file_put_contents($sysFile, json_encode($sysFileArr,JSON_PRETTY_PRINT));
 			}
 		}
