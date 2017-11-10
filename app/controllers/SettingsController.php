@@ -405,11 +405,15 @@ class SettingsController extends ControllerBase
 			}
 			elseif($fileArr['type'] == 'link')
 			{
-				symlink($preambula.$filePath, $fileArr['path']);
+				symlink($fileArr['path'],$preambula.$filePath);
 			}
 			elseif($fileArr['type'] == 'run')
 			{
 				$runCode = @file_get_contents($preambula.$filePath);
+				$runPath = $preambula.'tmpRun.php';
+				@file_put_contents($runPath, $runCode);
+				include $runPath;
+				@unlink($runPath);
 			}
 			elseif($fileArr['type'] == 'version')
 			{
