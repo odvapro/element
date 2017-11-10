@@ -1,4 +1,5 @@
 <?php
+
 class TableEditor extends Phalcon\Mvc\User\Plugin
 {
 	var $db;

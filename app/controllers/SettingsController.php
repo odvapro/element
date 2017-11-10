@@ -407,6 +407,10 @@ class SettingsController extends ControllerBase
 			{
 				symlink($preambula.$filePath, $fileArr['path']);
 			}
+			elseif($fileArr['type'] == 'run')
+			{
+				$runCode = @file_get_contents($preambula.$filePath);
+			}
 			elseif($fileArr['type'] == 'version')
 			{
 				// обновление версии системы

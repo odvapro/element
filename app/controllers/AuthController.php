@@ -3,7 +3,7 @@
 class AuthController extends ControllerBase
 {
 	/**
-	 * Autharization 
+	 * Autharization
 	 * @return void
 	 */
 	public function indexAction()
@@ -15,7 +15,7 @@ class AuthController extends ControllerBase
 		$this->view->setVar('errors',[]);
 		if($this->request->isPost())
 		{
-			if(empty($login)) 
+			if(empty($login))
 				return $this->view->setVar('errors',['Введите логин']);
 			if(empty($password))
 				return $this->view->setVar('errors',['Введите пароль']);
@@ -29,7 +29,7 @@ class AuthController extends ControllerBase
 
 			// make auth
 			$this->_registerSession($user);
-			
+
 			$this->response->redirect('');
 			$this->view->disable();
 			return;
