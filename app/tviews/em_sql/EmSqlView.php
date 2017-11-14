@@ -84,7 +84,10 @@ class EmSqlView extends TviewBase
 				$fieldType     = $this->_getFieldType($fieldName);
 				$fieldSettings = $this->_getFieldSettings($fieldName);
 				if(!is_null($this->fields->{$fieldType}))
+				{
+					$this->fields->{$fieldType}->setRow($tRes);
 					$fieldVal = $this->fields->{$fieldType}->getValue($fieldVal,$fieldSettings,true);
+				}
 			}
 		return $result;
 	}

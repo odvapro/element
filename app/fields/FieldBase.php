@@ -8,7 +8,7 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	 * Подбор данных для формы настроек
 	 * обязательно должен передать в вьюху параметр  formPath
 	 * @param  array $settings насфтройки поля подгруженные из БД
-	 * @param  array  $params   параметры (таблицы сайта, поля формы настроек) 
+	 * @param  array  $params   параметры (таблицы сайта, поля формы настроек)
 	 * @return void
 	 */
 	public function getSettings($settings, array $params){}
@@ -20,6 +20,17 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	 * @return void
 	 */
 	public function prolog($settings,$table = false){}
+
+	public $row;
+
+	/**
+	 * Sets current row value
+	 * @param array $row array of row
+	 */
+	public function setRow($row)
+	{
+		$this->row = $row;
+	}
 
 	/**
 	 * Возвращает значение поля, обрабатывае то что в БД

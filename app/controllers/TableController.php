@@ -107,7 +107,10 @@ class TableController extends ControllerBase
 		foreach ($curTableFields as &$field)
 		{
 			if(!is_null($this->fields->{$field['type']}))
+			{
+				$this->fields->{$field['type']}->setRow($element);
 				$element[$field['field']] = $this->fields->{$field['type']}->getValue($element[$field['field']],$field['settings']);
+			}
 			else
 				$element[$field['field']] = htmlspecialchars($element[$field['field']]);
 		}

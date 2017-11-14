@@ -52,16 +52,20 @@ class Fields extends Phalcon\Mvc\User\Plugin
 
 	/**
 	 * [__call description]
-	 * @param  [type] $typeName  [description]
-	 * @param  [type] $arguments [description]
-	 * @return [type]            [description]
+	 * @param  string $typeName  field type name
+	 * @return object
 	 */
 	public function __get($typeName)
 	{
+		static $fieldsObjects = [];
+		if(array_key_exists($typeName, $fieldsObjects))
+			return $fieldsObjects[$typeName];
 		if(array_key_exists($typeName, $this->_types))
 		{
 			$fieldClassName = $this->_types[$typeName];
-			return new $fieldClassName['class']();
+			$fieldObject = new $fieldClassName['class']();
+			$fieldsObjects[$typeName] = $fieldObject;
+			return $fieldObject;
 		}
 	}
 
