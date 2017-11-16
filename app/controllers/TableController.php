@@ -149,6 +149,7 @@ class TableController extends ControllerBase
 
 		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
+			if(!empty($fieldArr['hidden'])) continue;
 			if(!empty($field[$fieldArr['field']]))
 				if(!is_null($this->fields->{$fieldArr['type']}))
 					$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);
