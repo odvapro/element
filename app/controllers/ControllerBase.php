@@ -15,9 +15,15 @@ class ControllerBase extends Controller
 
 		// define all database tables for output
 		$this->sidebarTables = [];
-		$this->tables = $this->_getTables($this->sidebarTables);
+		$this->tables        = $this->_getTables($this->sidebarTables);
 		$this->view->setVar('tables',$this->tables);
 		$this->view->setVar('sidebarTables',$this->sidebarTables);
+
+		// sets system version
+		$sysFile       = $config->application->configDir.'sysinfo.json';
+		$sysFileArr    = json_decode(file_get_contents($sysFile),true);
+		$systemVersion = (!empty($sysFileArr['version']))?$sysFileArr['version']:'';
+		$this->view->setVar('systemVersion',$systemVersion);
 
 		// некоторые важнве переменные
 		$this->view->setVar('baseUri',$config->application->baseUri);
