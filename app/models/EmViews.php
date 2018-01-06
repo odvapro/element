@@ -4,6 +4,7 @@ class EmViews extends \Phalcon\Mvc\Model
 {
 	public function getUrl()
 	{
-		return "/table/{$this->table}/view/{$this->id}/";
+		$baseUri = $this->di->get('config')->application->baseUri;
+		return "{$baseUri}table/{$this->table}/view/{$this->id}/";
 	}
 }

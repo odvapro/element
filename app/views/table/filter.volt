@@ -12,7 +12,7 @@
 				</div>
 				<div class="filterBlock__popup">
 					<ul>
-						<li><a href="/table/{{ tableInfo['table'] }}/">Основное отображение</a></li>
+						<li><a href="{{ baseUri }}table/{{ tableInfo['table'] }}/">Основное отображение</a></li>
 						{% for tableView in tableViews %}
 							<li><a href="{{ tableView.getUrl() }}">{{ tableView.name }}</a></li>
 						{% endfor %}

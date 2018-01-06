@@ -31,7 +31,7 @@ class TableController extends ControllerBase
 		$this->view->setVar('tableViews',$tableViews);
 		$currentTableView = false;
 		if($tableViewId !== false)
-			$currentTableView =  EmViews::findFirst($tableViewId);
+			$currentTableView = EmViews::findFirst($tableViewId);
 		$this->view->setVar('currentTableView',$currentTableView);
 
 		// default mode is sql
