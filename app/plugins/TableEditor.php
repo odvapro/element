@@ -326,8 +326,13 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		// we try to save them
 		$defaultParams = [];
 		// delete base uri from beginnig of request uri
-		$url = parse_url($_SERVER['HTTP_REFERER']);
-		$url = $url['path'];
+		if(!empty($_SERVER['HTTP_REFERER']))
+		{
+			$url = parse_url($_SERVER['HTTP_REFERER']);
+			$url = $url['path'];
+		}
+		else
+			$url = '/';
 		if (substr($url, 0, strlen($config->application->baseUri)) == $config->application->baseUri)
 		    $url = substr($url, strlen($config->application->baseUri));
 

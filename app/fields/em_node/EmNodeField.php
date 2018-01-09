@@ -47,6 +47,8 @@ class EmNodeField extends FieldBase
 		// поле по которому привязываются элеменыт
 		// поле по которому ведется поис элементов
 		$nodeElements = [];
+		$config  = $this->di->get('config');
+		$baseUri = $config->application->baseUri;
 		// ===================================================================
 			$db       = $this->di->get('db');
 			$whereSql = $settings['nodeField'] ." IN (".$fieldValue.")";
@@ -59,7 +61,7 @@ class EmNodeField extends FieldBase
 				$nodeElement         = [];
 				$nodeElement['id']   = $tRes[$settings['nodeField']];
 				$nodeElement['name'] = $tRes[$settings['nodeSearch']];
-				$nodeElement['url']  = "/table/{$settings['nodeTable']}/edit/{$tRes[$settings['nodeField']]}";
+				$nodeElement['url']  = "{$baseUri}table/{$settings['nodeTable']}/edit/{$tRes[$settings['nodeField']]}";
 				$nodeElements[]      = $nodeElement;
 			}
 		// ===================================================================
