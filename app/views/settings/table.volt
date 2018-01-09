@@ -9,7 +9,14 @@
 	<div id="titleButtons">
 		<div class="titleBlock">
 			<div class="ttl">
-				<h2>Таблица {{ tableInfo['name'] }}</h2>
+				<h2>
+					Таблица {{ tableInfo['name'] }}
+					<a
+						class="titleBlock__tableLink"
+						href="{{ tableEditor.getUrl(tableInfo['table']) }}"
+						title="Перейти к таблице"
+					><i class="fa fa-table" aria-hidden="true"></i></a>
+				</h2>
 				<span>{{ tableInfo['table'] }}</span>
 			</div>
 		</div>

@@ -34,6 +34,15 @@
 			}
 		}
 	}
+	.titleBlock__tableLink
+	{
+		font-size: 13px;
+    	color: #8D8D96;
+		position: relative;
+    	top: -1px;
+    	transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    	&:hover{color: #531F5D;}
+	}
 	.rightButtons
 	{
 		float: right;

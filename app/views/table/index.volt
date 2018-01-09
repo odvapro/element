@@ -10,7 +10,14 @@
 	<div id="titleButtons">
 		<div class="titleBlock">
 			<div class="ttl">
-				<h2>{{ tableInfo['name'] }}</h2>
+				<h2>
+					{{ tableInfo['name'] }}
+					<a
+						class="titleBlock__tableLink"
+						href="{{ tableEditor.getSettingsUrl(tableInfo['table']) }}"
+						title="Перейти к настройкам"
+					><i class="fa fa-pencil" aria-hidden="true"></i></a>
+				</h2>
 				<span>{{ tableInfo['table'] }}</span>
 			</div>
 		</div>
@@ -83,7 +90,7 @@
 				{% endfor %}
 			{% else %}
 				<tr>
-					<td colspan="{{ tableFieldsCount }}" class="centered">no data</td>
+					<td colspan="{{ (fields|length)+1 }}" class="centered">no data</td>
 				</tr>
 			{% endif %}
 		</table>

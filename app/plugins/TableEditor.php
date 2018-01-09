@@ -307,6 +307,13 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		return $tableInfo;
 	}
 
+	public function getSettingsUrl($tableCode)
+	{
+		$config  = $this->di->get('config');
+		$baseUri = $config->application->baseUri;
+		return "{$baseUri}settings/table/{$tableCode}/";
+	}
+
 	/**
 	 * Gets table url
 	 * Check default view

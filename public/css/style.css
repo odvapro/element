@@ -3179,6 +3179,16 @@ section#contentBlock {
           font-size: 10px;
           display: block;
           color: #8D8D96; }
+    section#contentBlock #titleButtons .titleBlock__tableLink {
+      font-size: 13px;
+      color: #8D8D96;
+      position: relative;
+      top: -1px;
+      -webkit-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+      -o-transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+      transition: all 200ms cubic-bezier(0.215, 0.61, 0.355, 1); }
+      section#contentBlock #titleButtons .titleBlock__tableLink:hover {
+        color: #531F5D; }
     section#contentBlock #titleButtons .rightButtons {
       float: right; }
   section#contentBlock #topTabs {
