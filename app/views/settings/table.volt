@@ -36,9 +36,11 @@
 					<tr data-fieldname="{{field['field']}}">
 						<td class="centered">
 							<div class="editLine">
-								<a href="javascript:void(0)" onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')">Настройки</a>
-								<a href="javascript:void(0)">Копировать</a>
-								<a href="javascript:void(0)">Удалить</a>
+								<a href="javascript:void(0)" onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')">Открыть настройки</a>
+								{#
+									<a href="javascript:void(0)">Копировать</a>
+									<a href="javascript:void(0)">Удалить</a>
+								#}
 							</div>
 							<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
 						</td>
@@ -94,11 +96,58 @@
 			</table>
 		</form>
 		<div class="addFieldLine">
-			{#
-				#todo
-				<button class="addField">Добавить поле</button>
-			#}
+			<button class="addField" onclick="el.settings.showAddFieldForm(this)">Добавить связь</button>
 		</div>
 		<div class="clear"></div>
+	</div>
+	<div id="TPLS" style="display:none;">
+		<div class="_addNodeForm">
+			<div class="popupTopLine">
+				<span class="name">Добавлене связи - один ко многим</span>
+				<span class="icon closeBtn10" onclick="el.popup.hide();"></span>
+			</div>
+			<form id="fieldSettings" onsubmit="return false;" method="post">
+				<div class="popupContLine">
+					<div class="editLine">
+						<div class="name">Ключ</div>
+						<div class="inp">
+							<select name="" id="">
+								<option value="">Поля текуще таблицы</option>
+							</select>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name">Таблица привязки</div>
+						<div class="inp">
+							<select name="" id="">
+								<option value="">Таблицы</option>
+							</select>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name">Поле привязки</div>
+						<div class="inp">
+							<select name="" id="">
+								<option value="">...</option>
+							</select>
+						</div>
+					</div>
+					<div class="editLine">
+						<div class="name">Поле поиска</div>
+						<div class="inp">
+							<select name="" id="">
+								<option value="">...</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="popupBottomLine">
+					<input type="hidden" name="tableName" value="test_table">
+					<input type="hidden" name="fieldName" value="datetime">
+					<button class="elbutton blue" onclick="return el.settings.fieldSettingsSubmit(this);">Сохранить</button>
+					<button class="elbutton gray" onclick="el.popup.hide();">Отмена</button>
+				</div>
+			</form>
+		</div>
 	</div>
 {% endblock %}

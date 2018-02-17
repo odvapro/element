@@ -199,7 +199,11 @@ class SettingsController extends ControllerBase
 		$this->view->setVar('fieldFormType',$emType->type);
 
 		if(!is_null($this->fields->{$emType->type}))
-			$this->fields->{$emType->type}->getSettings($settings, ['tables' => $this->tables,'settingFields'=>$settingFields]);
+			$this->fields->{$emType->type}->getSettings($settings, [
+				'tables'        => $this->tables,
+				'settingFields' =>$settingFields,
+				'tableName'     => $tableName
+			]);
 
 	    return $this->jsonResult([
 			'result' => 'success',

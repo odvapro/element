@@ -352,5 +352,14 @@ el.settings =
 			$(instance).addClass('checked');
 		else
 			$(instance).removeClass('checked');
+	},
+
+	/**
+	 * Adding node line
+	 */
+	showAddFieldForm:function(instance)
+	{
+		var form  = $('._addNodeForm').html();
+		el.popup.show(form);
 	}
 }

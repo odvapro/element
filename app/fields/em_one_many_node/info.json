@@ -1,0 +1,5 @@
+{
+	"name":"Связь один к многим",
+	"fromtypes":["*"],
+	"iconClass":"fa-bars"
+}
