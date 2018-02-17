@@ -29,7 +29,7 @@
 	</div>
 </div>
 <div class="editLine">
-	<div class="name"><u>Копии изображений</u>&nbsp;&nbsp;&nbsp;<span onclick="el.settings.file.addImageSizeLine(this)" class="icon addBtn pointer"></span></div>
+	<div class="name"><u>Копии изображений</u>&nbsp;&nbsp;&nbsp;<span onclick="el.settings.fieldFile.addImageSizeLine(this)" class="icon addBtn pointer"></span></div>
 </div>
 <div class="editLine">
 	<div class="inp imageSize">
@@ -50,7 +50,7 @@
 					<input title="Фиксированное изображение" class="imsFix pointer" name="set[imageSizes][{{isKey}}][fixed]" value="1" type="checkbox" {% if imageSize['fixed'] is defined and imageSize['fixed'] == 1 %}checked="true"{% endif %} />
 					<input class="imsWidth" name="set[imageSizes][{{isKey}}][width]" type="text" placeholder="ширина" value="{{imageSize['width']}}" />
 					<input class="imsHeight" name="set[imageSizes][{{isKey}}][height]" type="text" placeholder="высота" value="{{imageSize['height']}}" />
-					<span onclick="el.settings.file.removeImageSizeLine(this)" class="icon deleteBtn"></span>
+					<span onclick="el.settings.fieldFile.removeImageSizeLine(this)" class="icon deleteBtn"></span>
 				</div>
 			</div>
 		{% endif %}
@@ -70,7 +70,7 @@
 				<input class="imsFix" name="set[imageSizes][#key#][fixed]" value="1" type="checkbox" checked="true"/>
 				<input class="imsWidth" name="set[imageSizes][#key#][width]" type="text" placeholder="ширина"  />
 				<input class="imsHeight" name="set[imageSizes][#key#][height]" type="text" placeholder="высота" />
-				<span onclick="el.settings.file.removeImageSizeLine(this)" class="icon deleteBtn"></span>
+				<span onclick="el.settings.fieldFile.removeImageSizeLine(this)" class="icon deleteBtn"></span>
 			</div>
 		</div>
 	</div>
