@@ -2462,7 +2462,6 @@ input, select {
 
 .alert {
   position: fixed;
-  z-index: 12;
   top: 0px;
   left: -webkit-calc( (100% - 266px) / 2);
   left: calc( (100% - 266px) / 2);
@@ -2472,7 +2471,7 @@ input, select {
   color: #fff;
   text-align: center;
   margin-left: 116px;
-  z-index: 15;
+  z-index: 1010;
   -webkit-border-radius: 3px;
           border-radius: 3px;
   font-size: 12px;

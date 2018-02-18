@@ -32,6 +32,13 @@
 				{{ partial(fieldArr['formPath']) }}
 			</div>
 		{% endfor %}
+		{# Additional fields block #}
+		{% for fieldArr in tableInfo['additionalFields'] %}
+			<div class="line">
+				{% set formMode = "update" %}
+				{{ partial(fieldArr['formPath']) }}
+			</div>
+		{% endfor %}
 		</form>
 	</div>
 {% endblock %}

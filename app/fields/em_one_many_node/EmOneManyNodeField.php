@@ -40,37 +40,40 @@ class EmOneManyNodeField extends FieldBase
 		$this->view->setVar('formPath','em_one_many_node/views/settingsForm');
 	}
 
-	public function prolog($settings,$table = false)
-	{
-		$this->assets->addJs('fields/em_one_many_node/src/init.js');
-	}
+	public function prolog($settings,$table = false) {}
 
+	/**
+	 * Get value
+	 * @param  $fieldValue always false
+	 * @param  [type]  $settings   [description]
+	 * @param  boolean $table      [description]
+	 * @return [type]              [description]
+	 */
 	public function getValue($fieldValue,$settings,$table = false)
 	{
-		if(empty($fieldValue)) return '';
-		// для поля привязки необходимо определить таблицу привязки
-		// поле по которому привязываются элеменыт
-		// поле по которому ведется поис элементов
-		$nodeElements = [];
-		$config  = $this->di->get('config');
-		$baseUri = $config->application->baseUri;
-		// ===================================================================
-			$db       = $this->di->get('db');
-			$whereSql = $settings['nodeField'] ." IN (".$fieldValue.")";
-			$tableResult = $db->fetchAll(
-				"SELECT * FROM ".$settings['nodeTable']." WHERE  $whereSql ",
-				Phalcon\Db::FETCH_ASSOC
-			);
-			foreach ($tableResult as $key => $tRes)
-			{
-				$nodeElement         = [];
-				$nodeElement['id']   = $tRes[$settings['nodeField']];
-				$nodeElement['name'] = $tRes[$settings['nodeSearch']];
-				$nodeElement['url']  = "{$baseUri}table/{$settings['nodeTable']}/edit/{$tRes[$settings['nodeField']]}";
-				$nodeElements[]      = $nodeElement;
-			}
-		// ===================================================================
-		return $nodeElements;
+		if(empty($settings)) return [];
+		$fromNodeVal = $this->row[$settings['nodeFromFiled']];
+		$nodeTable   = $settings['nodeTable'];
+		$nodeField   = $settings['nodeField'];
+		$nodeName    = $settings['nodeName'];
+
+		$db       = $this->di->get('db');
+		$tableResult = $db->fetchAll(
+			"SELECT * FROM {$nodeTable} WHERE  {$nodeField} = {$fromNodeVal} ",
+			Phalcon\Db::FETCH_ASSOC
+		);
+
+		$resutl = [];
+		foreach ($tableResult as $key => $tRes)
+		{
+			$resutl[] = [
+				'key'  => $tRes[$nodeField],
+				'name' => $tRes[$nodeName],
+				'url'  => $this->tableEditor->getElementUrl($nodeTable,$tRes)
+			];
+		}
+		$addUrl = $this->tableEditor->getAddUrl($nodeTable);
+		return ['results'=>$resutl,'addUrl'=>$addUrl];
 	}
 
 	public function saveValue($fieldValue,$fieldArray)

@@ -86,34 +86,43 @@ class TableController extends ControllerBase
 		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 		$curTableFields     = $curTable['fields'];
 		$primaryKey         = $this->tableEditor->getPrimaryKey($activeTable['real_name']);
+		$element            = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
 
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as  &$field)
 		{
 			if(!is_null($this->fields->{$field['type']}))
 			{
+				// sets field type settings
 				$this->fields->{$field['type']}->prolog($field['settings']);
 				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
-			}
-			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
-		}
-		$this->view->setVar('tableInfo',$curTable);
-		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
-		$this->view->setVar('primaryKey',$primaryKey);
-
-		$element = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
-
-		// подгон под типы полей
-		foreach ($curTableFields as &$field)
-		{
-			if(!is_null($this->fields->{$field['type']}))
-			{
 				$this->fields->{$field['type']}->setRow($element);
+				// sets value
 				$element[$field['field']] = $this->fields->{$field['type']}->getValue($element[$field['field']],$field['settings']);
 			}
 			else
 				$element[$field['field']] = htmlspecialchars($element[$field['field']]);
+			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
 		}
+
+		// prepare additional fields
+		$additionalFields = $this->tableEditor->getAdditionalFields($tableName);
+		foreach ($additionalFields as &$field)
+		{
+			if(!is_null($this->fields->{$field['type']}))
+			{
+				$this->fields->{$field['type']}->prolog($field['settings']);
+				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+				$this->fields->{$field['type']}->setRow($element);
+				$element[$field['field']] = $this->fields->{$field['type']}->getValue(false,$field['settings']);
+			}
+			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
+		}
+		$curTable['additionalFields'] = $additionalFields;
+
+		$this->view->setVar('tableInfo',$curTable);
+		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
+		$this->view->setVar('primaryKey',$primaryKey);
 		$this->view->setVar('element',$element);
 	}
 

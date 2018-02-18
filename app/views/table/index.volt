@@ -65,7 +65,7 @@
 					<tr data-id="{{ resLine[primaryKey] }}">
 						<td class="centered">
 							<div class="editLine">
-								<a href="{{baseUri}}table/{{tableInfo['table']}}/edit/{{resLine[primaryKey]}}">Редактировать</a>
+								<a href="{{ tableEditor.getElementUrl(tableInfo['table'],resLine) }}">Редактировать</a>
 								<a href="javascript:alert('не реализовано'); void(0);">Копировать</a>
 								<a href="javascript:void(0);" onclick="el.edit.delete(this)">Удалить</a>
 							</div>

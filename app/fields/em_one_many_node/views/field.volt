@@ -1,24 +1,36 @@
 {% extends "table/stringEditField.volt" %}
-{% block input %}
-	<div class="filedEdit" data-fieldName="{{fieldArr['field']}}" data-multiple="{{fieldArr['multiple']}}">
-		<div class="nodes">
-			{% if element[fieldArr['field']] is defined and element[fieldArr['field']] != '' %}
-				{% for node in element[fieldArr['field']] %}
-					<div class="node">
-						<span class="delete icon deleteBtn" onclick="el.nodeField.removeNode(this);"></span>
-						<div class="noIcon"><a href="{{node['url']}}">{{node['name']}}</a></div>
-						<input type="hidden" name="field[{{fieldArr['field']}}][]" value="{{node['id']}}" />
-					</div>
-				{% endfor %}
-			{% endif %}
-			<button class="attachAdd" onclick="el.nodeField.getNodeAddForm(this,'{{fieldArr['field']}}');"><span class="icon addBtn"></span></button>
-		</div>
+{% block fieldName %}
+	<div class="name">
+		<span class="ename">
+			{{ fieldArr['field']  }}
+		</span>
+		<span class="tname">{{fieldArr['field']}}</span>
 	</div>
-	<div class="NodeFieldTPL f{{fieldArr['field']}}" style="display:none;">
-		<div class="node">
-			<span class="delete icon deleteBtn" onclick="el.nodeField.removeNode(this);"></span>
-			<div class="noIcon">#searchValue#</div>
-			<input type="hidden" name="field[#fieldName#][]" value="#value#" />
-		</div>
+{% endblock %}
+{% block input %}
+	<div class="filedEdit" data-fieldName="{{fieldArr['field']}}">
+		<table class="elements em_multy_node" cellspacing="0">
+			{# вывод стольбцов #}
+			<tr>
+				<th>Название</th>
+				<th>Редактировать</th>
+			</tr>
+			{# вывод значиений #}
+			{% if element is defined %}
+				{% for nodeLine in element[fieldArr['field']]['results'] %}
+					<tr>
+						<td class="centered">{{ nodeLine['name'] }}</td>
+						<td class="centered"><a href="{{ nodeLine['url'] }}">Редаактировать</a></td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td colspan="2"class="centered">
+						<a
+							href="{{ element[fieldArr['field']]['addUrl'] }}"
+						><span class="icon addBtn"></span></a>
+					</td>
+				</tr>
+			{% endif %}
+		</table>
 	</div>
 {% endblock %}

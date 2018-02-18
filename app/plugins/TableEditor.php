@@ -154,6 +154,43 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	}
 
 	/**
+	 * Gets additional fields
+	 * @return array
+	 */
+	public function getAdditionalFields($tableName)
+	{
+		$fields = [];
+		$columns     = $this->getTableColumns($tableName);
+		$overColumns = $this->getOverTableColumns($tableName);
+
+		// поиск переопределений
+		if(!count($overColumns)) return [];
+
+		$additionalFields = [];
+		foreach ($overColumns as $ovCol)
+		{
+			if(!empty($ovCol->settings))
+				$ovCol->settings = json_decode($ovCol->settings,true);
+			else
+				$ovCol->settings = [];
+
+			$hasColumn = false;
+			foreach($columns as &$col)
+			{
+				if($ovCol->field == $col['field'])
+				{
+					$hasColumn = true;
+					break;
+				}
+			}
+
+			if($hasColumn !== false) continue;
+			$additionalFields[] = $ovCol->toArray();
+		}
+		return $additionalFields;
+	}
+
+	/**
 	 * Возврощает списко всех полей таблицы, с их полями какого они типа и тд
 	 * также достаются их переименованные значения
 	 * @return pdo fetch result
@@ -198,26 +235,26 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	/**
 	 * Возврощает массив с измененными значенями типа поля и тд
 	 * @var array $columns как в базе
-	 * @var array $overColumns как в
+	 * @var array $overColumns как в настроках
 	 */
 	private function getOverTable($columns,$overColumns)
 	{
 		// поиск переопределений
 		if(!count($overColumns)) return $columns;
-		$resFields = [];
-		foreach ($columns as $col)
+
+		foreach ($overColumns as $ovCol)
 		{
-			$curOvCol = $col;
-			foreach ($overColumns as $ovCol)
+			if(!empty($ovCol->settings))
+				$ovCol->settings = json_decode($ovCol->settings,true);
+			else
+				$ovCol->settings = [];
+
+			$hasColumn = false;
+			foreach($columns as &$col)
 			{
 				if($ovCol->field != $col['field']) continue;
-
-				if(!empty($ovCol->settings))
-					$ovCol->settings = json_decode($ovCol->settings,true);
-				else
-					$ovCol->settings = [];
-
-				$curOvCol = array_merge($curOvCol,[
+				$hasColumn = true;
+				$col = array_merge($col,[
 					'type'     =>$ovCol->type,
 					'settings' =>$ovCol->settings,
 					'multiple' =>$ovCol->multiple,
@@ -225,9 +262,9 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					'hidden'   =>$ovCol->hidden
 				]);
 			}
-			$resFields[] = $curOvCol;
 		}
-		return $resFields;
+
+		return $columns;
 	}
 
 	/**
@@ -366,5 +403,33 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$urlParams = implode('/',$urlParams);
 		$urlParams = (!empty($urlParams))?"{$urlParams}/":'';
 		return "{$config->application->baseUri}table/{$tableCode}/{$urlParams}";
+	}
+
+	/**
+	 * Gets element detail page  url
+	 * @param  string $tableName
+	 * @param  array $elementRow
+	 * @return string
+	 */
+	public function getElementUrl($tableName,$elementRow)
+	{
+		$config     = $this->di->get('config');
+		$primaryKey = $this->getPrimaryKey($tableName);
+		$id         = $elementRow[$primaryKey];
+		$baseUri    = $config->application->baseUri;
+		return "{$baseUri}table/{$tableName}/edit/{$id}";
+	}
+
+	/**
+	 * Returns add url
+	 * @param  string $tableName
+	 * @return strign
+	 */
+	public function getAddUrl($tableName)
+	{
+		$config     = $this->di->get('config');
+		$id         = $elementRow[$primaryKey];
+		$baseUri    = $config->application->baseUri;
+		return "{$baseUri}table/{$tableName}/add/";
 	}
 }

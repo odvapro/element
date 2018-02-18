@@ -164,9 +164,11 @@ el.settings =
 		});
 	},
 
-	/*Обновление системы до последней версии
-	  в первую очередь скрываются кнопки обновления
-	  и показывается строка о том что проводится обновление*/
+	/**
+	 * Обновление системы до последней версии
+	 * в первую очередь скрываются кнопки обновления
+	 * и показывается строка о том что проводится обновление
+	 */
 	updateSystem : function()
 	{
 		$('.updateBox').hide().after('<p class="centered updatingline">Обновление...</p>');
@@ -361,5 +363,58 @@ el.settings =
 	{
 		var form  = $('._addNodeForm').html();
 		el.popup.show(form);
-	}
+	},
+
+	/**
+	 * Add node to table
+	 * @param dom instance
+	 */
+	addField:function(instance)
+	{
+		var form = $(instance).parents('form');
+		if(form.find('input[name="fieldName"]').val() == '')
+			return el.message.error('Заполните все поля');
+
+		$.ajax({
+			url: el.config.baseUri+"settings/addField",
+			type:'POST',
+			dataType:'json',
+			data: form.serialize(),
+		}).done(function(e)
+		{
+			if(typeof e.result != 'undefined' && e.result == true)
+			{
+				el.message.success('Настрокйки сохранены.');
+				el.popup.hide();
+			}
+			else
+				el.message.error('Неизвестная шибка.');
+		});
+		return false;
+	},
+
+	/**
+	 * Remove additional field
+	 * sends request to the server for removing additional field
+	 * @param  instance -  dom link
+	 * @param  fieldName
+	 * @return void
+	 */
+	deleteField:function(instance,fieldName)
+	{
+		var tableName = $(instance).parents('table').data('tablename');
+		$.ajax({
+			url: el.config.baseUri+"settings/deleteField",
+			type:'POST',
+			dataType:'json',
+			data: { tableName:tableName, fieldName:fieldName },
+		}).done(function(e)
+		{
+			if(typeof e.result != 'undefined' && e.result == "success")
+				$(instance).parents('tr').fadeOut();
+			else
+				el.message.error('Неопознанная ошибка');
+			// после обновление значений (обязательное поле и множественное)
+		});
+	},
 }

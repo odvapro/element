@@ -300,7 +300,6 @@ class SettingsController extends ControllerBase
 		return $this->jsonResult(['result'=>'error']);
 	}
 
-
 	/**
 	 * Сохранение настройки поля таблицы
 	 */
@@ -454,6 +453,9 @@ class SettingsController extends ControllerBase
 		$emTypes = $this->tableEditor->getFeieldTypes();
 		$this->view->setVar('EmTypes', $emTypes );
 		$this->view->setVar('EmTypesCodes', array_keys($emTypes) );
+
+		$additionalFields = $this->tableEditor->getAdditionalFields($tableName);
+		$this->view->setVar('additionalFields', $additionalFields);
 	}
 
 	/**
@@ -496,5 +498,57 @@ class SettingsController extends ControllerBase
 			return $this->jsonResult(['result'=>'success', 'msg'=>'Настройки сохранены']);
 	}
 
+	/**
+	 * Creates new field for table
+	 * @return json
+	 */
+	public function addFieldAction()
+	{
+		$tableName = $this->request->getPost('tableName');
+		$fieldName = $this->request->getPost('fieldName');
+		if(empty($tableName) || empty($fieldName))
+			return $this->jsonResult(['result'=>false]);
+
+		// check field existance
+		$fields = EmTypes::find([
+			'conditions' => "table = ?0 AND field = ?1",
+			'bind'       =>[$tableName,$fieldName]
+		]);
+		if(count($fields))
+			return $this->jsonResult(['result'=>false]);
+
+		$field        = new EmTypes();
+		$field->table = $tableName;
+		$field->field = $fieldName;
+		$field->type  = 'em_one_many_node';
+		if($field->save())
+			return $this->jsonResult(['result'=>true]);
+
+		return $this->jsonResult(['result'=>false]);
+	}
+
+	/**
+	 * Removes additional field
+	 * @return json
+	 */
+	public function deleteFieldAction()
+	{
+		$tableName = $this->request->getPost('tableName');
+		$fieldName = $this->request->getPost('fieldName');
+		if(empty($tableName) || empty($fieldName))
+			return $this->jsonResult(['result'=>false]);
+
+		// check field existance
+		$fields = EmTypes::find([
+			'conditions' => "table = ?0 AND field = ?1",
+			'bind'       =>[$tableName,$fieldName]
+		]);
+		if(!count($fields))
+			return $this->jsonResult(['result'=>false]);
+		if($fields->getFirst()->delete())
+			return $this->jsonResult(['result'=>'success']);
+
+		return $this->jsonResult(['result'=>false]);
+	}
 }
 
