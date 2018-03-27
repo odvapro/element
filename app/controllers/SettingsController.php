@@ -399,7 +399,17 @@ class SettingsController extends ControllerBase
 			{
 				$newCont = @file_get_contents($fileArr['path']);
 				if(!empty($newCont))
+				{
+					// check folder
+					$folderDir = explode('/',$preambula.$filePath);
+					unset($folderDir[count($folderDir)-1]);
+					$folderDir = implode('/',$folderDir);
+					// if its not a folder create it
+					if(!is_dir($folderDir))
+						mkdir($folderDir,0755,true);
+
 					@file_put_contents($preambula.$filePath, $newCont);
+				}
 			}
 			elseif($fileArr['type'] == 'delete')
 			{
