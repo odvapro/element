@@ -53,6 +53,12 @@ class TableController extends ControllerBase
 		$curTable = $activeTable;
 		$curTable['fields'] = $this->tableEditor->getTableFilelds($activeTable['real_name']);
 
+		// for auto compleate
+		$element = [];
+		$autoCompleat = [];
+		if(!empty($this->request->get('acom')))
+			$autoCompleat = $this->request->get('acom');
+
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as &$field)
 		{
@@ -60,12 +66,16 @@ class TableController extends ControllerBase
 			{
 				$this->fields->{$field['type']}->prolog($field['settings']);
 				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
+
+				$acomValue = (!empty($autoCompleat[$field['field']]))?$autoCompleat[$field['field']]:false;
+				$element[$field['field']] = $this->fields->{$field['type']}->getValue($acomValue,$field['settings']);
 			}
 			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
 		}
 
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('sysTypes',$this->tableEditor->systemEmTypes);
+		$this->view->setVar('element',$element);
 	}
 
 	/**

@@ -45,9 +45,9 @@ class EmOneManyNodeField extends FieldBase
 	/**
 	 * Get value
 	 * @param  $fieldValue always false
-	 * @param  [type]  $settings   [description]
-	 * @param  boolean $table      [description]
-	 * @return [type]              [description]
+	 * @param  array  $settings
+	 * @param  boolean $table
+	 * @return array
 	 */
 	public function getValue($fieldValue,$settings,$table = false)
 	{
@@ -72,7 +72,7 @@ class EmOneManyNodeField extends FieldBase
 				'url'  => $this->tableEditor->getElementUrl($nodeTable,$tRes)
 			];
 		}
-		$addUrl = $this->tableEditor->getAddUrl($nodeTable);
+		$addUrl = $this->tableEditor->getAddUrl($nodeTable)."?acom[{$nodeField}]={$fromNodeVal}";
 		return ['results'=>$resutl,'addUrl'=>$addUrl];
 	}
 

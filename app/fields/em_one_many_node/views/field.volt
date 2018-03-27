@@ -20,7 +20,7 @@
 				{% for nodeLine in element[fieldArr['field']]['results'] %}
 					<tr>
 						<td class="centered">{{ nodeLine['name'] }}</td>
-						<td class="centered"><a href="{{ nodeLine['url'] }}">Редаактировать</a></td>
+						<td class="centered"><a href="{{ nodeLine['url'] }}">Редактировать</a></td>
 					</tr>
 				{% endfor %}
 				<tr>
