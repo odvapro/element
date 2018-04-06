@@ -7,6 +7,7 @@
 			<script src="{{baseUri}}js/html5shiv.js"></script>
 		<![endif]-->
 		<link rel="stylesheet" href="{{baseUri}}css/style.css" />
+		{% block headerScripts %}{% endblock %}
 	</head>
 	<body {% if sFolded is defined and sFolded == 1 %}class="folded"{% endif %}>
 		<aside id="sidebar">

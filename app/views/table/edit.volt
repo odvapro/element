@@ -19,28 +19,42 @@
 		</div>
 	</div>
 {% endblock %}
-{% block content %}
-	<div class="elementDetail">
-		<form id="elementForm" onsubmit="return false;">
-		<input type="hidden" name="editMode" value="update" />
-		<input type="hidden" name="primaryKey" value="{{primaryKey}}" />
-		<input type="hidden" name="tableName" value="{{curTable['real_name']}}" />
-		{% for fieldArr in tableInfo['fields'] %}
-			{% if fieldArr['hidden'] is defined and fieldArr['hidden'] == 1 %}{% continue %}{% endif %}
-			<div class="line">
-				{% set formMode = "update" %}
-				{{ partial(fieldArr['formPath']) }}
-			</div>
-		{% endfor %}
-		{# Additional fields block #}
-		{% for fieldArr in tableInfo['additionalFields'] %}
-			<div class="line">
-				{% set formMode = "update" %}
-				{{ partial(fieldArr['formPath']) }}
-			</div>
-		{% endfor %}
-		</form>
+{% block tabsLine %}
+	<div id="topTabs">
+		<ul>
+			<li class="act" onclick="el.tabs.show(this)">Основное</li>
+			<li onclick="el.tabs.show(this)">Вкалдка 1</li>
+			<li onclick="el.tabs.show(this)">Вкладка 2</li>
+		</ul>
 	</div>
+{% endblock %}
+{% block contentBoxAttributes %}class="withTabs"{% endblock %}
+{% block content %}
+	<form id="elementForm" onsubmit="return false;">
+		<div class="tabCont cont_1 act">
+			<div class="elementDetail">
+					<input type="hidden" name="editMode" value="update" />
+					<input type="hidden" name="primaryKey" value="{{primaryKey}}" />
+					<input type="hidden" name="tableName" value="{{curTable['real_name']}}" />
+					{% for fieldArr in tableInfo['fields'] %}
+						{% if fieldArr['hidden'] is defined and fieldArr['hidden'] == 1 %}{% continue %}{% endif %}
+						<div class="line">
+							{% set formMode = "update" %}
+							{{ partial(fieldArr['formPath']) }}
+						</div>
+					{% endfor %}
+					{# Additional fields block #}
+					{% for fieldArr in tableInfo['additionalFields'] %}
+						<div class="line">
+							{% set formMode = "update" %}
+							{{ partial(fieldArr['formPath']) }}
+						</div>
+					{% endfor %}
+			</div>
+		</div>
+		<div class="tabCont cont_2">1212</div>
+		<div class="tabCont cont_3">eqeqe</div>
+	</form>
 {% endblock %}
 {% block pageScripts %}
 	{# TODO  перенести в авто подключение #}
