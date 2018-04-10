@@ -2,7 +2,7 @@
 	<h3>Вкладки</h3><br/>
 	<el-tag
 		:key="tag.id"
-		v-for="tag in dynamicTags"
+		v-for="tag in dynamicTabs"
 		:closable="tag.closable"
 		:disable-transitions="false"
 		@click.native.stop="selectTab(tag)"
@@ -17,7 +17,6 @@
 		ref="saveTagInput"
 		size="mini"
 		@keyup.enter.native="handleInputConfirm"
-		@blur="handleInputConfirm"
 	></el-input>
 	<el-button v-else class="button-new-tag" size="small" @click="showInput">+ Новая Вкладка</el-button>
 	<br/>
@@ -26,60 +25,36 @@
 	<h3>Содержимое вкладки</h3><br/>
 	<el-transfer
 		v-model="selectedFields"
-		:props="{key: 'value', label: 'desc',placeholder:'Нет полей'}"
-		:titles="['Доступные поля', 'Содержимое Вкалдки']"
+		:props="{key: 'value', label: 'desc'}"
+		:titles="transferTitles"
 		:data="filterFields"
+		@change="chnageTransfer"
 	></el-transfer>
 </div>
 <script>
 	var Main = {
 		data() {
 			return {
-				fields: [
-					{value:1,desc:'dasdas',tab:1},
-					{value:2,desc:'dasdas',tab:1},
-					{value:3,desc:'dasdas',tab:1},
-				],
-				selectedFields: [],
-				dynamicTags: [
-					{
-						name:'Основаное',
-						id:1,
-						closable:false,
-						selected:false
-					},
-					{
-						name:'Основаное2',
-						id:2,
-						closable:true,
-						selected:true
-					},
-					{
-						name:'Основаное3',
-						id:3,
-						closable:true,
-						selected:false
-					}
-
-				],
-				inputVisible: false,
-				inputValue: ''
+				fields         : {{ fieldsForTabsJSON }},
+				tableName      : '{{ tableInfo['table'] }}',
+				selectedFields : [],
+				selectedTabId  : false,
+				dynamicTabs    : {{ tabsJson }},
+				transferTitles : ['Доступные поля', 'Содержимое Вкалдки'],
+				inputVisible   : false,
+				inputValue     : ''
 			};
 		},
 		computed:
 		{
+			// show available fields
 			filterFields()
 			{
 				let resultFields = [];
-				let selectedTabId = false;
-				this.dynamicTags.forEach(function(aTag)
-				{
-					if(aTag.selected === true)
-						selectedTabId = aTag.id;
-				});
+				let self = this;
 				this.fields.forEach(function(aField)
 				{
-					if(aField.tab == selectedTabId)
+					if(aField.tab == false || aField.tab ==  self.selectedTabId)
 						resultFields.push(aField);
 				})
 				return resultFields;
@@ -87,19 +62,36 @@
 		},
 		methods:
 		{
+			// remove tab, and remove all fields from tab
 			handleClose(tag)
 			{
-		        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-		    },
-		    selectTab(tag)
-		    {
-		    	let setStatus = !tag.selected;
-				this.dynamicTags.forEach(function(aTag)
+				this.dynamicTabs.splice(this.dynamicTabs.indexOf(tag), 1);
+				this.fields.forEach(function(aField)
 				{
-		    		aTag.selected = false;
+					if(aField.tab == tag.id)
+						aField.tab = false;
+				});
+			},
+			selectTab(tag)
+			{
+				let setStatus = !tag.selected;
+				this.selectedTabId = (setStatus)?tag.id:false;
+				this.dynamicTabs.forEach(function(aTag)
+				{
+					aTag.selected = false;
 				})
-		    	tag.selected = setStatus;
-		    },
+				tag.selected = setStatus;
+
+				// select seleted tab fields
+				this.selectedFields = [];
+				let self = this;
+				this.fields.forEach(function(aField)
+				{
+					aField.disabled = !setStatus;
+					if(aField.tab == tag.id)
+						self.selectedFields.push(aField.value);
+				});
+			},
 			showInput()
 			{
 				this.inputVisible = true;
@@ -107,18 +99,45 @@
 					this.$refs.saveTagInput.$refs.input.focus();
 				});
 			},
+			// making new tab
 			handleInputConfirm()
 			{
+				let self = this;
+				$.ajax({
+					url      : el.config.baseUri+'settings/addNewTab',
+					type     :'POST',
+					dataType :'json',
+					data     : {tableName:self.tableName,tabName:self.inputValue}
+				}).done(function(e)
+				{
+					if(e.success !== true)
+						return el.message('что-то пошло не так')
+					self.dynamicTabs.push({
+						name     :inputValue,
+						id       :e.id,
+						closable :true,
+						selected :false
+					});
+				});
+
 				let inputValue = this.inputValue;
 				if (inputValue)
-					this.dynamicTags.push({
-						name:inputValue,
-						id:3,
-						closable:true,
-						selected:false
-					});
-				this.inputVisible = false;
+					this.inputVisible = false;
 				this.inputValue = '';
+			},
+			// sets fields current tab or set them to false
+			// if fields moved to right set them tab
+			// else false
+			chnageTransfer(rightFields,direction)
+			{
+				let self = this;
+				this.fields.forEach(function(aField)
+				{
+					if(aField.tab == self.selectedTabId && !rightFields.includes(aField.value))
+						aField.tab = false;
+					if(aField.tab != self.selectedTabId && rightFields.includes(aField.value))
+						aField.tab = self.selectedTabId;
+				});
 			}
 		}
 	}
@@ -129,23 +148,23 @@
   .el-tag{cursor: pointer;}
   .el-tag + .el-tag {margin-left: 10px; }
   .el-tag.active{
-  	color: #fff;
-  	background-color: #409EFF;
+	color: #fff;
+	background-color: #409EFF;
   }
   .el-tag.active .el-icon-close{color:#fff;}
   .button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
+	margin-left: 10px;
+	height: 32px;
+	line-height: 30px;
+	padding-top: 0;
+	padding-bottom: 0;
   }
   .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
+	width: 90px;
+	margin-left: 10px;
+	vertical-align: bottom;
   }
   .el-transfer-panel{
-  	width:400px;
+	width:400px;
   }
 </style>

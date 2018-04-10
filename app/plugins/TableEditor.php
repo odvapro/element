@@ -259,7 +259,8 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					'settings' =>$ovCol->settings,
 					'multiple' =>$ovCol->multiple,
 					'required' =>$ovCol->required,
-					'hidden'   =>$ovCol->hidden
+					'hidden'   =>$ovCol->hidden,
+					'tab'      =>$ovCol->tab,
 				]);
 			}
 		}

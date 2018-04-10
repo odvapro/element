@@ -460,6 +460,37 @@ class SettingsController extends ControllerBase
 		$this->view->setVar('fields',$fields);
 		$this->view->setVar('tableInfo',$tableInfo);
 
+		// prepare JSON for tabs manipulation
+		$fieldsForTabs = [];
+		foreach ($fields as $field)
+		{
+			if(!empty($field['hidden'])) continue;
+			$fieldsForTabs[] = [
+				'value'    => $field['field'],
+				'desc'     => (empty($field['ename']))?$field['field']:"{$field['ename']}[{$field['field']}]",
+				'tab'      => (!empty($field['tab']))?$field['tab']:false,
+				'disabled' => true
+			];
+		}
+		$fieldsForTabs = json_encode($fieldsForTabs);
+		$this->view->setVar('fieldsForTabsJSON',$fieldsForTabs);
+
+		// gets all tabs
+		$tabs = EmTabs::find(['conditions'=>"table = ?0",'bind'=>[$tableName]]);
+		$tabsJson = [];
+		foreach ($tabs as $tab)
+		{
+			$tabsJson[] = [
+				'name'     =>$tab->name,
+				'id'       =>$tab->id,
+				'closable' =>true,
+				'selected' =>false
+			];
+		}
+		$tabsJson = json_encode($tabsJson);
+		$this->view->setVar('tabsJson',$tabsJson);
+
+
 		$emTypes = $this->tableEditor->getFeieldTypes();
 		$this->view->setVar('EmTypes', $emTypes );
 		$this->view->setVar('EmTypesCodes', array_keys($emTypes) );
@@ -559,6 +590,28 @@ class SettingsController extends ControllerBase
 			return $this->jsonResult(['result'=>'success']);
 
 		return $this->jsonResult(['result'=>false]);
+	}
+
+	/**
+	 * Adds tab for the table
+	 * @return json
+	 */
+	public function addNewTabAction()
+	{
+		$tableName = $this->request->getPost('tableName');
+		$tabName = $this->request->getPost('tabName');
+		if(empty($tableName) || empty($tabName))
+			return $this->jsonResult(['success'=>false]);
+
+		$newTab        = new EmTabs();
+		$newTab->table = $tableName;
+		$newTab->name  = $tabName;
+		if(!$newTab->save())
+			return $this->jsonResult(['success'=>false]);
+		return $this->jsonResult([
+			'success' => true,
+			'id'      => $newTab->id
+		]);
 	}
 }
 

@@ -165,6 +165,7 @@
 {% endblock %}
 {% block headerScripts %}
 	<script src="//unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="//unpkg.com/element-ui/lib/index.js"></script>
 	<script src="//unpkg.com/element-ui/lib/umd/locale/ru-RU.js"></script>
 	<script>ELEMENT.locale(ELEMENT.lang.ruRU)</script>
