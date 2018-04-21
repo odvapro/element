@@ -208,14 +208,20 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 		$emNames = EmNames::find(['conditions'=>"table = ?0 AND field != ''",'bind'=>[$tableName]]);
 		$ovverides = [];
 		foreach ($emNames as $emName)
-			$ovverides[$emName->field] = $emName->name;
+			$ovverides[$emName->field] = ['ename'=>$emName->name, 'tab'=>$emName->tab];
 
 		foreach ($tableColumns as &$col)
 		{
 			if(!empty($ovverides[$col['field']]))
-				$col['ename'] = $ovverides[$col['field']];
+			{
+				$col['ename'] = $ovverides[$col['field']]['ename'];
+				$col['tab']   = $ovverides[$col['field']]['tab'];
+			}
 			else
+			{
+				$col['tab']   = false;
 				$col['ename'] = '';
+			}
 		}
 		return $tableColumns;
 	}
@@ -260,11 +266,9 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					'multiple' =>$ovCol->multiple,
 					'required' =>$ovCol->required,
 					'hidden'   =>$ovCol->hidden,
-					'tab'      =>$ovCol->tab,
 				]);
 			}
 		}
-
 		return $columns;
 	}
 

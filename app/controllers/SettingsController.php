@@ -472,6 +472,7 @@ class SettingsController extends ControllerBase
 				'disabled' => true
 			];
 		}
+
 		$fieldsForTabs = json_encode($fieldsForTabs);
 		$this->view->setVar('fieldsForTabsJSON',$fieldsForTabs);
 
@@ -596,7 +597,7 @@ class SettingsController extends ControllerBase
 	 * Adds tab for the table
 	 * @return json
 	 */
-	public function addNewTabAction()
+	public function addTabAction()
 	{
 		$tableName = $this->request->getPost('tableName');
 		$tabName = $this->request->getPost('tabName');
@@ -612,6 +613,68 @@ class SettingsController extends ControllerBase
 			'success' => true,
 			'id'      => $newTab->id
 		]);
+	}
+
+	/**
+	 * Removes tabs
+	 * reset field tabs
+	 * @return json
+	 */
+	public function removeTabAction()
+	{
+		$tabId = $this->request->getPost('tabId');
+		if(empty($tabId))
+			return $this->jsonResult(['success'=>false]);
+
+		$tab = EmTabs::findFirst($tabId);
+		if(!$tab)
+			return $this->jsonResult(['success'=>false]);
+		$tab->delete();
+
+		$EmNames = EmNames::find(['conditions'=>"tab = ?0",'bind'=>[$tabId]]);
+		foreach ($EmNames as $emName)
+		{
+			$emName->tab = NULL;
+			$emName->update();
+		}
+
+		return $this->jsonResult(['success' => true]);
+	}
+
+	/**
+	 * Update tabs
+	 * find all changed fields
+	 * @return json
+	 */
+	public function updateTabsAction()
+	{
+		$changedFields = $this->request->getPost('changedFields');
+		$tableName     = $this->request->getPost('tableName');
+		if(empty($changedFields) || empty($tableName))
+			return $this->jsonResult(['success'=>false]);
+		$emNames = EmNames::find(['conditions'=>"table = ?0",'bind'=>[$tableName]]);
+
+		// sets existing em name tabs
+		foreach($emNames as $emName)
+			foreach ($changedFields as $chKey => $changedField)
+			{
+				if($changedField['field'] != $emName->field) continue;
+				$emName->tab = $changedField['tab'];
+				$emName->update();
+				unset($changedFields[$chKey]);
+			}
+
+		// create new em names
+		foreach ($changedFields as $changedField)
+		{
+			$newEmName = new EmNames;
+			$newEmName->table = $tableName;
+			$newEmName->field = $changedField['field'];
+			$newEmName->name  = $changedField['field'];
+			$newEmName->show  = 1;
+			$newEmName->tab   = $changedField['tab'];
+		}
+		return $this->jsonResult(['success'=>true]);
 	}
 }
 

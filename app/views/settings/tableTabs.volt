@@ -63,6 +63,7 @@
 		methods:
 		{
 			// remove tab, and remove all fields from tab
+			// remove tab from database
 			handleClose(tag)
 			{
 				this.dynamicTabs.splice(this.dynamicTabs.indexOf(tag), 1);
@@ -70,6 +71,16 @@
 				{
 					if(aField.tab == tag.id)
 						aField.tab = false;
+				});
+				$.ajax({
+					url      : el.config.baseUri+'settings/removeTab',
+					type     :'POST',
+					dataType :'json',
+					data     : {tabId:tag.id}
+				}).done(function(e)
+				{
+					if(e.success !== true)
+						return el.message('что-то пошло не так');
 				});
 			},
 			selectTab(tag)
@@ -104,7 +115,7 @@
 			{
 				let self = this;
 				$.ajax({
-					url      : el.config.baseUri+'settings/addNewTab',
+					url      : el.config.baseUri+'settings/addTab',
 					type     :'POST',
 					dataType :'json',
 					data     : {tableName:self.tableName,tabName:self.inputValue}
@@ -131,12 +142,29 @@
 			chnageTransfer(rightFields,direction)
 			{
 				let self = this;
+				let changedFields = [];
 				this.fields.forEach(function(aField)
 				{
 					if(aField.tab == self.selectedTabId && !rightFields.includes(aField.value))
+					{
 						aField.tab = false;
+						changedFields.push({field:aField.value,tab:false});
+					}
 					if(aField.tab != self.selectedTabId && rightFields.includes(aField.value))
+					{
 						aField.tab = self.selectedTabId;
+						changedFields.push({field:aField.value,tab:self.selectedTabId});
+					}
+				});
+				$.ajax({
+					url      : el.config.baseUri+'settings/updateTabs',
+					type     :'POST',
+					dataType :'json',
+					data     : {tableName:self.tableName, changedFields:changedFields}
+				}).done(function(e)
+				{
+					if(e.success !== true)
+						return el.message('что-то пошло не так');
 				});
 			}
 		}
