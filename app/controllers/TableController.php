@@ -97,6 +97,7 @@ class TableController extends ControllerBase
 		$curTableFields     = $curTable['fields'];
 		$primaryKey         = $this->tableEditor->getPrimaryKey($activeTable['real_name']);
 		$element            = $this->tableEditor->getElement($tableName, ['field'=>$primaryKey, 'value'=>$elementId]);
+		$tabIds             = [];
 
 		// определяем адреса форм редактирования полей
 		foreach ($curTable['fields'] as  &$field)
@@ -113,7 +114,15 @@ class TableController extends ControllerBase
 			else
 				$element[$field['field']] = htmlspecialchars($element[$field['field']]);
 			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
+			if(!in_array($field['tab'], $tabIds) && !empty($field['tab']))
+				$tabIds[] = $field['tab'];
 		}
+
+		if(count($tabIds))
+			$tabs = EmTabs::find(['conditions'=>"id IN(".implode(',',$tabIds).")"]);
+		else
+			$tabs = [];
+		$this->view->setVar('tabs',$tabs);
 
 		// prepare additional fields
 		$additionalFields = $this->tableEditor->getAdditionalFields($tableName);

@@ -433,7 +433,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	public function getAddUrl($tableName)
 	{
 		$config     = $this->di->get('config');
-		$id         = $elementRow[$primaryKey];
 		$baseUri    = $config->application->baseUri;
 		return "{$baseUri}table/{$tableName}/add/";
 	}

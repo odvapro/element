@@ -659,7 +659,7 @@ class SettingsController extends ControllerBase
 			foreach ($changedFields as $chKey => $changedField)
 			{
 				if($changedField['field'] != $emName->field) continue;
-				$emName->tab = $changedField['tab'];
+				$emName->tab = ($changedField['tab'] == 'false')?false:$changedField['tab'];
 				$emName->update();
 				unset($changedFields[$chKey]);
 			}
@@ -673,6 +673,7 @@ class SettingsController extends ControllerBase
 			$newEmName->name  = $changedField['field'];
 			$newEmName->show  = 1;
 			$newEmName->tab   = $changedField['tab'];
+			$newEmName->save();
 		}
 		return $this->jsonResult(['success'=>true]);
 	}

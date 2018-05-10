@@ -23,8 +23,9 @@
 	<div id="topTabs">
 		<ul>
 			<li class="act" onclick="el.tabs.show(this)">Основное</li>
-			<li onclick="el.tabs.show(this)">Вкалдка 1</li>
-			<li onclick="el.tabs.show(this)">Вкладка 2</li>
+			{% for tab in tabs %}
+				<li onclick="el.tabs.show(this)">{{ tab.name }}</li>
+			{% endfor %}
 		</ul>
 	</div>
 {% endblock %}
@@ -33,27 +34,46 @@
 	<form id="elementForm" onsubmit="return false;">
 		<div class="tabCont cont_1 act">
 			<div class="elementDetail">
-					<input type="hidden" name="editMode" value="update" />
-					<input type="hidden" name="primaryKey" value="{{primaryKey}}" />
-					<input type="hidden" name="tableName" value="{{curTable['real_name']}}" />
-					{% for fieldArr in tableInfo['fields'] %}
-						{% if fieldArr['hidden'] is defined and fieldArr['hidden'] == 1 %}{% continue %}{% endif %}
-						<div class="line">
-							{% set formMode = "update" %}
-							{{ partial(fieldArr['formPath']) }}
+				<input type="hidden" name="editMode" value="update" />
+				<input type="hidden" name="primaryKey" value="{{primaryKey}}" />
+				<input type="hidden" name="tableName" value="{{curTable['real_name']}}" />
+				{% for fieldArr in tableInfo['fields'] %}
+					{% if fieldArr['tab'] is not empty %}{% continue %}{% endif %}
+					{% if fieldArr['hidden'] is defined and fieldArr['hidden'] == 1 %}{% continue %}{% endif %}
+					<div class="line">
+						{% set formMode = "update" %}
+						{{ partial(fieldArr['formPath']) }}
+					</div>
+				{% endfor %}
+				{# Additional fields block #}
+				{% if tableInfo['additionalFields']|length > 0 %}
+					<div class="line">
+						<div class="name">
+							<span class="ename">СВЯЗИ</span>
 						</div>
-					{% endfor %}
-					{# Additional fields block #}
-					{% for fieldArr in tableInfo['additionalFields'] %}
-						<div class="line">
-							{% set formMode = "update" %}
-							{{ partial(fieldArr['formPath']) }}
-						</div>
-					{% endfor %}
+					</div>
+				{% endif %}
+				{% for fieldArr in tableInfo['additionalFields'] %}
+					<div class="line">
+						{% set formMode = "update" %}
+						{{ partial(fieldArr['formPath']) }}
+					</div>
+				{% endfor %}
 			</div>
 		</div>
-		<div class="tabCont cont_2">1212</div>
-		<div class="tabCont cont_3">eqeqe</div>
+		{% for tabIndex,tab in tabs %}
+			<div class="tabCont cont_{{ (tabIndex+2) }}">
+				<div class="elementDetail">
+					{% for fieldArr in tableInfo['fields'] %}
+						{% if fieldArr['tab'] != tab.id %}{% continue %}{% endif %}
+						<div class="line">
+							{% set formMode = "update" %}
+							{{ partial(fieldArr['formPath']) }}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
 	</form>
 {% endblock %}
 {% block pageScripts %}
