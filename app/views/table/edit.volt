@@ -45,20 +45,6 @@
 						{{ partial(fieldArr['formPath']) }}
 					</div>
 				{% endfor %}
-				{# Additional fields block #}
-				{% if tableInfo['additionalFields']|length > 0 %}
-					<div class="line">
-						<div class="name">
-							<span class="ename">СВЯЗИ</span>
-						</div>
-					</div>
-				{% endif %}
-				{% for fieldArr in tableInfo['additionalFields'] %}
-					<div class="line">
-						{% set formMode = "update" %}
-						{{ partial(fieldArr['formPath']) }}
-					</div>
-				{% endfor %}
 			</div>
 		</div>
 		{% for tabIndex,tab in tabs %}

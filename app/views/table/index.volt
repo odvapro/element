@@ -72,7 +72,7 @@
 							<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
 						</td>
 						{% for fieldArr in fields %}
-							{% if resLine[fieldArr['field']] != "" %}
+							{% if resLine[fieldArr['field']] is defined and resLine[fieldArr['field']] != "" %}
 								<td>
 									{% if fieldArr['valueFieldPath'] is defined  and  fieldArr['valueFieldPath'] != "" %}
 										{% set fieldVal = resLine[fieldArr['field']] %}

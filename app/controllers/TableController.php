@@ -124,21 +124,6 @@ class TableController extends ControllerBase
 			$tabs = [];
 		$this->view->setVar('tabs',$tabs);
 
-		// prepare additional fields
-		$additionalFields = $this->tableEditor->getAdditionalFields($tableName);
-		foreach ($additionalFields as &$field)
-		{
-			if(!is_null($this->fields->{$field['type']}))
-			{
-				$this->fields->{$field['type']}->prolog($field['settings']);
-				$field['formPath'] = $this->fields->{$field['type']}->getEditFieldPath();
-				$this->fields->{$field['type']}->setRow($element);
-				$element[$field['field']] = $this->fields->{$field['type']}->getValue(false,$field['settings']);
-			}
-			$field['formPath'] = (!empty($field['formPath']))?'fields/'.$field['formPath']:'table/notSystemEditField';
-		}
-		$curTable['additionalFields'] = $additionalFields;
-
 		$this->view->setVar('tableInfo',$curTable);
 		$this->view->setVar('sysTypes',$this->tableEditor->getFeieldTypes());
 		$this->view->setVar('primaryKey',$primaryKey);

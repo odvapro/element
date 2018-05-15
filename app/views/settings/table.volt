@@ -103,30 +103,6 @@
 							</td>
 						</tr>
 					{% endfor %}
-					{% for field in additionalFields  %}
-						<tr>
-							<td class="centered">
-								<div class="editLine">
-									<a
-										href="javascript:void(0)"
-										onclick="el.settings.showFieldSetiings(this,'{{field['field']}}')"
-									>Открыть настройки</a>
-									<a
-										href="javascript:void(0)"
-										onclick="el.settings.deleteField(this,'{{field['field']}}')"
-									>Удалить</a>
-								</div>
-								<button class="elbutton dotts"><span class="icon buttonDotts"></span></button>
-							</td>
-							<td>
-								<span class="ename _ename">{{field['field']}}</span>
-							</td>
-							<td colspan="2">
-								<i class="fa fa-code-fork" aria-hidden="true"></i>
-								Связь один к многим
-							</td>
-						</tr>
-					{% endfor %}
 				</table>
 			</form>
 			<div class="addFieldLine">
@@ -136,7 +112,6 @@
 		</div>
 		<div class="tabCont cont_2">
 			{% include 'settings/tableTabs.volt' %}
-			
 		</div>
 	</div>
 	<div id="TPLS" style="display:none;">

@@ -495,9 +495,6 @@ class SettingsController extends ControllerBase
 		$emTypes = $this->tableEditor->getFeieldTypes();
 		$this->view->setVar('EmTypes', $emTypes );
 		$this->view->setVar('EmTypesCodes', array_keys($emTypes) );
-
-		$additionalFields = $this->tableEditor->getAdditionalFields($tableName);
-		$this->view->setVar('additionalFields', $additionalFields);
 	}
 
 	/**

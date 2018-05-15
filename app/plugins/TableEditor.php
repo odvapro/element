@@ -154,43 +154,6 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	}
 
 	/**
-	 * Gets additional fields
-	 * @return array
-	 */
-	public function getAdditionalFields($tableName)
-	{
-		$fields = [];
-		$columns     = $this->getTableColumns($tableName);
-		$overColumns = $this->getOverTableColumns($tableName);
-
-		// поиск переопределений
-		if(!count($overColumns)) return [];
-
-		$additionalFields = [];
-		foreach ($overColumns as $ovCol)
-		{
-			if(!empty($ovCol->settings))
-				$ovCol->settings = json_decode($ovCol->settings,true);
-			else
-				$ovCol->settings = [];
-
-			$hasColumn = false;
-			foreach($columns as &$col)
-			{
-				if($ovCol->field == $col['field'])
-				{
-					$hasColumn = true;
-					break;
-				}
-			}
-
-			if($hasColumn !== false) continue;
-			$additionalFields[] = $ovCol->toArray();
-		}
-		return $additionalFields;
-	}
-
-	/**
 	 * Возврощает списко всех полей таблицы, с их полями какого они типа и тд
 	 * также достаются их переименованные значения
 	 * @return pdo fetch result
@@ -247,7 +210,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	{
 		// поиск переопределений
 		if(!count($overColumns)) return $columns;
-
+		$additionalFields = [];
 		foreach ($overColumns as $ovCol)
 		{
 			if(!empty($ovCol->settings))
@@ -268,7 +231,31 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 					'hidden'   =>$ovCol->hidden,
 				]);
 			}
+
+			if(!$hasColumn)
+			{
+				// searching for tab
+				$addCol = [
+					'field'    => $ovCol->field,
+					'type'     => $ovCol->type,
+					'null'     => 'YES',
+					'key'      => '',
+					'default'  => '',
+					'extra'    => '',
+					'ename'    => $ovCol->field,
+					'tab'      => $ovCol->getTabId(),
+					'settings' => $ovCol->settings,
+					'multiple' => $ovCol->multiple,
+					'required' => $ovCol->required,
+					'hidden'   => $ovCol->hidden,
+					'nocolumn' => true
+				];
+				$additionalFields[] = $addCol;
+			}
 		}
+		// adds additional field
+		// fields wich not has columns in DB
+		$columns = array_merge($columns,$additionalFields);
 		return $columns;
 	}
 
