@@ -3,7 +3,7 @@
 	height: 34px;
 	background:#fff;
 	border-bottom:1px solid $bordersColor;
-	padding:0 20px;		
+	padding:0 20px;
 	position:relative;
 	top:-1px;
 	ul
@@ -12,13 +12,13 @@
 		li
 		{
 			display: block;
-			margin-right: 15px;
+			margin-right: 0.7em;
 			background: #fff;
 			border:1px solid $bordersColor;
 			border-radius:3px 3px 0 0;
 			float: left;
 			height: 32px;
-			padding: 0 58px;
+			padding: 0 1em;
 			line-height: 34px;
 			font-size:13px;
 			color: $blackColor;

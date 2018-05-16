@@ -38,7 +38,7 @@ section#contentBlock
 		}
 		.contWrap
 		{
-			padding:20px; 
+			padding:20px;
 		}
 		@import '../components/contentTable';
 		/* строка которая идет после таблицы натсроек, для добавления нового своства */
@@ -67,6 +67,14 @@ section#contentBlock
 				display: block;
 			}
 		}
+		a
+		{
+			color: #2276A8;
+			text-decoration: none;
+			font-weight: bold;
+			font-size:12px;
+			&:hover{text-decoration:underline;}
+		}
 
 		/* детальная странца элемента */
 		@import '../pages/elementDetail';
@@ -75,8 +83,8 @@ section#contentBlock
 		@import '../components/tabsLine';
 
 	}
-	
+
 	/* вкладки второго уровня */
 	@import '../components/loadingAnimation';
-	
+
 }
