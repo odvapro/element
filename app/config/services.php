@@ -20,7 +20,7 @@ define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/'));
 $di = new FactoryDefault();
 
 /**
- * Register events manager 
+ * Register events manager
  */
 $di->set('dispatcher', function() use ($di)
 {
@@ -55,7 +55,7 @@ $di->set('router', function(){
 
 $di->set('tableEditor', function()
 {
-	return new TableEditor();
+	return new \TableEditor();
 }, true);
 
 $di->set('fields', function() use ($di)

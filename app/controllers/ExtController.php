@@ -1,6 +1,6 @@
 <?php
 class ExtController extends ControllerBase
-{	
+{
 	/**
 	 * Роутинг расширений
 	 * /ext/<имя папки расширения>/<имя контроллера>/<имя действия>/<параметры/.../>
@@ -13,13 +13,12 @@ class ExtController extends ControllerBase
 			$this->pageNotFound();
 			return false;
 		}
-		
+
 		//############################################################
 		// CONTROLLERS
-		$extControllerName     = ucfirst($extController).'EController';
+		$extControllerName = ucfirst($extController).'EController';
 		$extPath           = $config->application->extDir.$extName.'/';
 		$extControllerPath = $extPath.'controllers/'.$extControllerName.'.php';
-
 		if(!is_dir($extPath) || !file_exists($extControllerPath))
 		{
 			$this->pageNotFound();
@@ -37,8 +36,16 @@ class ExtController extends ControllerBase
 		$extModelsDir  = $extPath.'models/';
 		if(is_dir($extModelsDir))
 		{
+
 			global $loader;
-			$loader->registerDirs([$extModelsDir])->register();
+			$loader->registerDirs([
+				$config->application->controllersDir,
+				$config->application->modelsDir,
+				$config->application->pluginsDir,
+				$config->application->fldDir,
+				$config->application->tViewsDir,
+				$extModelsDir
+			])->register();
 		}
 
 		//############################################################
@@ -52,7 +59,6 @@ class ExtController extends ControllerBase
 			$extTplPath = '';
 		$extTplPathPublic = str_replace($config->application->appDir, '', $extTplPath);
 		$this->view->setVar('extTplPath',$extTplPathPublic);
-
 
 		// установка активных ссылко в левом меню
 		$this->_setActiveExtansionLinks($extName,strtolower($extController),$extAction);

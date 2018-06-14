@@ -8,14 +8,14 @@ class EmFileField extends FieldBase
 	{
 		$settingFields['savePath'] = (!empty($settings['savePath']))?$settings['savePath']:$this->getDefaultFilesSavePath();
 		$settingFields['fileTypes'] = (!empty($settings['fileTypes']))?$settings['fileTypes']:[];
-		
+
 		// определяем доп переменную для типов файлов
 		$this->view->setVar('fileTypes',['jpeg','png','gif','bmp','pdf','doc']);
-		
+
 		if(!empty($params['settingFields']))
 			$settingFields = array_merge($params['settingFields'],$settingFields);
 		$this->view->setVar('settingFields',$settingFields);
-		
+
 		// обязательый параметр
 		$this->view->setVar('formPath','em_file/views/settingsForm');
 	}
@@ -88,9 +88,9 @@ class EmFileField extends FieldBase
 	////////////////////////////////////////////////////////////
 	/// Функции вне абстрактоного класса
 	////////////////////////////////////////////////////////////
-	
+
 	/**
-	 * Переносит файл из tmp 
+	 * Переносит файл из tmp
 	 * @param  json $fileObj
 	 * @param  array $settings
 	 * @return array
@@ -124,7 +124,7 @@ class EmFileField extends FieldBase
 					if(file_exists($fullFilePath))
 					{
 						rename($fullFilePath, ROOT.$newName);
-						$sizes[$imageSize['name']] = $newName;							
+						$sizes[$imageSize['name']] = $newName;
 					}
 				}
 			}
@@ -136,7 +136,7 @@ class EmFileField extends FieldBase
 
 	/**
 	 * Физиеское удалеие файла
-	 * @param  array $fileObj 
+	 * @param  array $fileObj
 	 * @param  array $settings
 	 */
 	public function deleteFile($fileObj,$settings)
@@ -151,8 +151,8 @@ class EmFileField extends FieldBase
 	/**
 	 * путь сохранения относительно  корня и настроек
 	 * если такой папки нет то она создается
-	 * @var array $settings настройки поля 
-	 * @var bool $settings вернуть путь к временной папке или к боевой 
+	 * @var array $settings настройки поля
+	 * @var bool $settings вернуть путь к временной папке или к боевой
 	 * @return  string
 	 */
 	public function getSavePath($settigs, $tmp = false)
@@ -182,7 +182,7 @@ class EmFileField extends FieldBase
 	}
 
 	/**
-	 * @return string путь по умолчанию для сохранения файлов, относительно DOCUMENT_ROOT 
+	 * @return string путь по умолчанию для сохранения файлов, относительно DOCUMENT_ROOT
 	 */
 	public function getDefaultFilesSavePath()
 	{
@@ -193,8 +193,8 @@ class EmFileField extends FieldBase
 	/**
 	 * Загружает файл во временную папку
 	 * если этот файл картинка, то создает два три размера маленький средний и оригинал
-	 * 50X50 600*600  
-	 * @var object file  Phalcon\Http\Request\File  
+	 * 50X50 600*600
+	 * @var object file  Phalcon\Http\Request\File
 	 * @var array settings из базы, настройки поля
 	 * @return array [upName,path,type,<sizes(small,medium)>]
 	 */
@@ -228,19 +228,19 @@ class EmFileField extends FieldBase
 		}
 		else
 			$fileArr['type'] = 'file';
-		
+
 		if(is_uploaded_file($file->getTempName()))
 			$file->moveTo(ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
 		else
 			rename($file->getTempName(), ROOT.$tmpPath.'o_'.$newName.'.'.$ext);
-		
+
 		$fileArr['path'] = "{$tmpPath}o_{$newName}.{$ext}";
 
 		return $fileArr;
 	}
 
 	/**
-	 * Ресайз картинки 
+	 * Ресайз картинки
 	 * @param  string $imagePath путь исходной картинки
 	 * @param  array $imageSize массив [width,height,name]
 	 * @param  string $newName   новое имя файла
@@ -261,7 +261,7 @@ class EmFileField extends FieldBase
 
 	/**
 	 * Добавлает файл по URL в массив $_FILES
-	 * @var $key  ключ по которому записывается файл  
+	 * @var $key  ключ по которому записывается файл
 	 * @var $url  url из которого берется файл
 	 */
 	public function addToFiles($key, $url)
@@ -282,9 +282,9 @@ class EmFileField extends FieldBase
 
 	/**
 	 * Проверяет переданный фал на соответсвия разрешенным типам
-	 * @var object file  Phalcon\Http\Request\File  
+	 * @var object file  Phalcon\Http\Request\File
 	 * @var array fileTypes типы файлов
-	 * @return bool 
+	 * @return bool
 	 */
 	private function _checkFileTypes($file, $fileTypes = [])
 	{
@@ -301,7 +301,7 @@ class EmFileField extends FieldBase
 		else
 			// если не указано ни одного типа, загрюжается все файлы
 			$valid = true;
-		return $valid; 
+		return $valid;
 	}
 
 	/**
@@ -317,7 +317,7 @@ class EmFileField extends FieldBase
 			$fileTypes = [];
 			if(!empty($settings['fileTypes']))
 				$fileTypes = $settings['fileTypes'];
-        	
+
         	// подготовка массива файлов/файла для записи в БД
         	$globValid = true;
         	$fileForDb = [];
@@ -335,8 +335,8 @@ class EmFileField extends FieldBase
 
 			if($globValid)
 			{
-				// результат массив загруженных файлов 
-				// во временную папку 
+				// результат массив загруженных файлов
+				// во временную папку
 				if(!empty($fileForDb))
 					return ['result'=>'success','files'=>$fileForDb];
 			}
