@@ -160,9 +160,12 @@ class TableController extends ControllerBase
 			'value' => $primaryKeyValue
 		];
 
+		$columns     = $this->tableEditor->getTableColumns($tableName);
+		$realColumns = array_column($columns, 'field');
 		foreach ($curTable['fields'] as $key => $fieldArr)
 		{
 			if(!empty($fieldArr['hidden'])) continue;
+			if(!in_array($fieldArr['field'], $realColumns)) continue;
 			if(!empty($field[$fieldArr['field']]))
 				if(!is_null($this->fields->{$fieldArr['type']}))
 					$formData[$fieldArr['field']] = $this->fields->{$fieldArr['type']}->saveValue($field[$fieldArr['field']],$fieldArr,$tableName,$primaryKey);

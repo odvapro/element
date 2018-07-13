@@ -158,7 +158,7 @@ class TableEditor extends Phalcon\Mvc\User\Plugin
 	 * также достаются их переименованные значения
 	 * @return pdo fetch result
 	 */
-	private function getTableColumns($tableName)
+	public function getTableColumns($tableName)
 	{
 		if(empty($tableName))
 			return false;
