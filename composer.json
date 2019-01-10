@@ -7,5 +7,7 @@
             "email": "axel0726@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+    	"phalcon/devtools": "dev-master"
+    }
 }
