@@ -1,0 +1,11 @@
+{
+    "name": "dzantiev/element",
+    "description": "element",
+    "authors": [
+        {
+            "name": "Mihail Dzantiev",
+            "email": "axel0726@gmail.com"
+        }
+    ],
+    "require": {}
+}

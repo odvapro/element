@@ -27,7 +27,6 @@ Temporary Items
 # test
 vendor
 tests
-composer.json
 composer.lock
 
 /public/upload/
