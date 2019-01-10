@@ -11,6 +11,6 @@
 	"prefer-stable": true,
     "require": {
     	"php": ">=7.0",
-    	"phalcon/devtools": "dev-master"
+    	"phalcon/devtools": "^2.0"
     }
 }
