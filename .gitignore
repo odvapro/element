@@ -38,3 +38,4 @@ composer.lock
 .sass-cache/*
 .phalcon/
 /app/config/config.php
+sftp-config.json
