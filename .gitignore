@@ -27,7 +27,6 @@ Temporary Items
 # test
 vendor
 tests
-composer.json
 composer.lock
 
 /public/upload/
@@ -39,3 +38,4 @@ composer.lock
 .sass-cache/*
 .phalcon/
 /app/config/config.php
+sftp-config.json

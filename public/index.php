@@ -1,6 +1,16 @@
 <?php
 
 error_reporting(E_ALL);
+/**
+ * CONSTATNTS
+ */
+define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/'));
+
+if(!file_exists(__DIR__ . "/../app/config/config.php"))
+{
+	header('location: /config-setup.php');
+	exit();
+}
 
 /**
  * Read the configuration

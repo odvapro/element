@@ -19,6 +19,17 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+# Дамп таблицы em_tabs
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `em_tabs`;
+
+CREATE TABLE `em_tabs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `table` varchar(200) NOT NULL DEFAULT '',
+  `name` varchar(200) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # Дамп таблицы em_names
 # ------------------------------------------------------------
@@ -65,7 +76,6 @@ CREATE TABLE `em_users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `em_users` WRITE;
 /*!40000 ALTER TABLE `em_users` DISABLE KEYS */;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
@@ -84,6 +94,7 @@ CREATE TABLE `em_views` (
   `default` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
