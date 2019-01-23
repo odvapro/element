@@ -5,15 +5,6 @@ use Phalcon\Mvc\Controller;
 class ControllerBase extends Controller
 {
 	/**
-	 * Инит функция
-	 * 	Получение информации об авторизованности пользователя
-	 */
-	public function initialize()
-	{
-		$this->view->disable();
-	}
-
-	/**
 	 * Функция открытия 404 страницы
 	 * @return view 404 страница
 	 */

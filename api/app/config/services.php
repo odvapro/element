@@ -7,7 +7,7 @@ use Phalcon\Mvc\Dispatcher as PhDispatcher;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 
-use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+use Phalcon\Db\Adapter\Pdo\Factory;
 
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
@@ -77,21 +77,22 @@ $di->set('view', function () use ($config)
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->set('db', function () use ($config)
+$di->set('eldb', function () use ($config)
 {
-	return new DbAdapter([
+	$options = [
 		'host'     => $config->database->host,
 		'username' => $config->database->username,
 		'password' => $config->database->password,
 		'dbname'   => $config->database->dbname,
-		'options'  => array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
-			PDO::ATTR_CASE => PDO::CASE_LOWER,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING
-		)
-	]);
-});
+		'adapter'  => $config->database->adapter
+	];
 
+	$adpterName = "{$config->database->adapter}Adapter";
+	$db         = Factory::load($options);
+	$eldb       = new $adpterName($db);
+
+	return $eldb;
+});
 /**
  * The URL component is used to generate all kind of urls in the application
  */
@@ -134,9 +135,4 @@ $di->set('session', function()
 	$session = new SessionAdapter();
 	$session->start();
 	return $session;
-});
-
-$di->set('elements', function ()
-{
-	return new Elements();
 });
