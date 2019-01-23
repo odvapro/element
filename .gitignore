@@ -30,7 +30,7 @@ tests
 composer.lock
 
 /public/upload/
-/node_modules/
+node_modules
 /app/cache/*
 !/app/cache/README.md
 /app/extensions/*
@@ -39,3 +39,5 @@ composer.lock
 .phalcon/
 config.php
 sftp-config.json
+package-lock.json
+deploy.php
