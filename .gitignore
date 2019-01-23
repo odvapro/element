@@ -37,5 +37,9 @@ composer.lock
 !/app/extensions/README.md
 .sass-cache/*
 .phalcon/
+<<<<<<< HEAD
 api/app/config/config.php
+=======
+/app/config/config.php
+>>>>>>> develop
 sftp-config.json
