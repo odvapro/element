@@ -1,1 +1,0 @@
-body:before{white-space:pre;font-family:monospace;content:"Error: Undefined variable: \"$backgroundColor\".\A         on line 3 of /Users/dzantiev/projects/element/www/element/public/scss/contentStyles.scss\A \A 1: body,html\A 2: { \A 3: 	background:$backgroundColor;\A 4: 	position: relative;\A 5: 	height: 100%;\A 6: 	font-family:Arial;\A 7: 	width:100%;\A 8: }"}
