@@ -30,6 +30,7 @@ Temporary Items
 !/api/app/cache/readme.md
 /public/upload/
 config.php
+.phalcon/migration-version
 
 # PROJECT
 sftp-config.json
