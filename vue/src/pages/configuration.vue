@@ -55,7 +55,7 @@
 				for (var item in this.config)
 					data.append(item, this.config[item]);
 
-				let result = await this.$axios.post('/config-setup.php', data);
+				let result = await this.$axios.post('/install.php', data);
 
 				this.config.password = oldPass;
 

@@ -10,14 +10,10 @@ import './plugins/axios.js'
 Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next) {
-	var valid = await router.app.$axios({
-		url: '/',
-	});
+	var valid = await router.app.$axios({url: '/' });
 
 	if (!valid.data.success && to.name != 'config')
-		next({
-			name: 'config'
-		});
+		next({name: 'config'});
 
 	next();
 });
