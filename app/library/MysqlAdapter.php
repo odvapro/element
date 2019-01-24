@@ -38,8 +38,16 @@ class MysqlAdapter extends SqlAdapter
 			Phalcon\Db::FETCH_ASSOC,
 			[ 'database' => $this->db->getDescriptor()['dbname'] ]
 		);
+		foreach ($dbTables as $table)
+		{
+			if(strpos($table['TABLE_NAME'], 'em_') === 0) continue;
+			$tables[] = [
+				'code'    => $table['TABLE_NAME'],
+				'name'    => false
+			];
+		}
 
-		return $dbTables;
+		return $tables;
 	}
 
 	public function getTableSchema($tableName)

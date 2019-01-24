@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-01-24 11:19:49 +0000
+# Время создания: 2019-01-24 11:44:43 +0000
 # ************************************************************
 
 
@@ -58,10 +58,23 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
-	(1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
+  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+# Дамп таблицы testTable
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `testTable`;
+
+CREATE TABLE `testTable` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 
