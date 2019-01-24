@@ -24,19 +24,20 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# test
-vendor
-composer.lock
 
+# PHALCON
+/api/app/cache/
+!/api/app/cache/readme.md
 /public/upload/
-node_modules
-/app/cache/*
-!/app/cache/README.md
-/app/extensions/*
-!/app/extensions/README.md
-.sass-cache/*
-.phalcon/
 config.php
+
+# PROJECT
 sftp-config.json
+node_modules
+googleSecrets.json
+vendor
+
+/dist/
+/docs/
+composer.lock
 package-lock.json
-deploy.php
