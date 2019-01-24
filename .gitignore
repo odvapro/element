@@ -37,6 +37,7 @@ sftp-config.json
 node_modules
 googleSecrets.json
 vendor
+codeception.yml
 
 /dist/
 /docs/
