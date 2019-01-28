@@ -21,6 +21,11 @@ var router = new Router({
 			path: '/table/:name',
 			name: 'tableDetail',
 			component: () => import(/* webpackChunkName: "about" */ './pages/table.vue')
+		},
+		{
+			path: '/auth',
+			name: 'auth',
+			component: () => import(/* webpackChunkName: "about" */ './pages/auth.vue')
 		}
 	]
 });
