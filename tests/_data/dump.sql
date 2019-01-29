@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-01-28 13:45:20 +0000
+# Время создания: 2019-01-29 14:11:04 +0000
 # ************************************************************
 
 
@@ -58,7 +58,22 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
-  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
+  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com'),
+  (2,'gaga','asd','safg','asdfds'),
+  (3,'gaga','asd','safg','asdfds'),
+  (4,'gaga','asd','safg','asdfds'),
+  (5,'gaga','asd','safg','asdfds'),
+  (6,'gaga','asd','safg','asdfds'),
+  (7,'gaga','asd','safg','asdfds'),
+  (8,'gaga','asd','safg','asdfds'),
+  (9,'gaga','asd','safg','asdfds'),
+  (10,'gaga','asd','safg','asdfds'),
+  (11,'gaga','asd','safg','asdfds'),
+  (12,'gaga','asd','safg','asdfds'),
+  (13,'gaga','asd','safg','asdfds'),
+  (14,'gaga','asd','safg','asdfds'),
+  (15,'gaga','asd','safg','asdfds'),
+  (16,'gaga','asd','safg','asdfds');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;

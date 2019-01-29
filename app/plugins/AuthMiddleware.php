@@ -30,6 +30,7 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 			//Private area resources
 			$privateResources = [
 				'el'  => ['*'],
+				'users' => ['*']
 			];
 
 			foreach($privateResources as $resource => $actions)
