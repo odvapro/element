@@ -30,6 +30,10 @@ class UsersController extends ControllerBase
 		return $this->jsonResult(['success' => true, 'user' => $user]);
 	}
 
+	/**
+	 * Обновить пользователя
+	 * @return json
+	 */
 	public function updateUserAction()
 	{
 		$id         = $this->request->getPost('id');
