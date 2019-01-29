@@ -5,6 +5,29 @@ class SqlAdapter extends PdoAdapter
 	private $db = false;
 
 	/**
+	 * Экранировать специальные символы
+	 * @param  string or array
+	 * @return string or array
+	 */
+	private function escapeRealStr($params)
+	{
+		if (!is_array($params))
+			return quotemeta($params);
+
+		foreach ($params as &$item)
+		{
+			if (!is_array($item))
+			{
+				$item = quotemeta($item);
+				continue;
+			}
+
+			$item = $this->escapeRealStr($item);
+		}
+
+		return $params;
+	}
+	/**
 	 * build where
 	 * @param  array
 	 * @return string
@@ -72,34 +95,34 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function select($requestParams)
 	{
-		$sql       = '';
-		$fields    = isset($requestParams['fields']) ? $requestParams['fields'] : [];
-		$fromTable = isset($requestParams['from']) ? $requestParams['from'] : [];
-		$where     = isset($requestParams['where']) ? $requestParams['where'] : [];
-		$order     = isset($requestParams['order']) ? $requestParams['order'] : [];
+		$requestParams = $this->escapeRealStr($requestParams);
+		$sql           = '';
+		$fields        = isset($requestParams['fields']) ? $requestParams['fields'] : [];
+		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
 
 		if (empty($fromTable))
 			return false;
 
 		if (empty($fields))
-			$sql = 'select * ';
+			$sql = 'SELECT * ';
 		else
-			$sql = 'select ' . implode(', ', $fields) . ' ';
+			$sql = 'SELECT ' . implode(', ', $fields) . ' ';
 
-		$sql .= "from {$fromTable} ";
+		$sql .= "FROM {$fromTable} ";
 
 		if (!empty($where))
-			$sql .= 'where ' . $this->buildWhere($where);
+			$sql .= 'WHERE ' . $this->buildWhere($where);
 
 		if (!empty($order))
-			$sql .= ' order by ' . implode(', ', $order);
+			$sql .= ' ORDER BY ' . implode(', ', $order);
 
 		try
 		{
 			$select = $this->db->fetchAll(
 				$sql,
-				Phalcon\Db::FETCH_ASSOC,
-				[ 'database' => $this->db->getDescriptor()['dbname']]
+				Phalcon\Db::FETCH_ASSOC
 			);
 		} catch (Exception $e) {
 			return false;
@@ -115,18 +138,19 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function update($requestParams)
 	{
-		$sql   = '';
-		$table = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$set   = isset($requestParams['set']) ? $requestParams['set'] : [];
-		$where = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$requestParams = $this->escapeRealStr($requestParams);
+		$sql           = '';
+		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
+		$set           = isset($requestParams['set']) ? $requestParams['set'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 
 		if (empty($table) || empty($set))
 			return false;
 
-		$sql .= "update {$table} set " . implode(', ', $set) . " ";
+		$sql .= "UPDATE {$table} SET " . implode(', ', $set) . " ";
 
 		if (!empty($where))
-			$sql .= 'where ' . $this->buildWhere($where);
+			$sql .= 'WHERE ' . $this->buildWhere($where);
 
 		try
 		{
@@ -144,10 +168,11 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function insert($requestParams)
 	{
-		$sql     = '';
-		$table   = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$columns = isset($requestParams['columns']) ? $requestParams['columns'] : [];
-		$values  = isset($requestParams['values']) ? $requestParams['values'] : [];
+		$requestParams = $this->escapeRealStr($requestParams);
+		$sql           = '';
+		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
+		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
+		$values        = isset($requestParams['values']) ? $requestParams['values'] : [];
 
 		if (empty($table) || empty($values))
 			return false;
@@ -175,9 +200,10 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function delete($requestParams)
 	{
-		$sql   = '';
-		$table = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$where = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$requestParams = $this->escapeRealStr($requestParams);
+		$sql           = '';
+		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 
 		if (empty($table))
 			return false;
@@ -185,7 +211,7 @@ class SqlAdapter extends PdoAdapter
 		$sql .= "DELETE FROM {$table} ";
 
 		if (!empty($where))
-			$sql .= 'where ' . $this->buildWhere($where);
+			$sql .= 'WHERE ' . $this->buildWhere($where);
 
 		try
 		{

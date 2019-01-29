@@ -65,155 +65,189 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/el/select',
+		[
+			'select' =>
 			[
-				'select' =>
+				'fields' => ['name', 'id', 'col'],
+				'from' => 'testTable'
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['n? +ame', 'id', 'col'],
+				'from' => 'testTable',
+				'where' =>
 				[
-					'fields' => ['name', 'id'],
-					'from' => 'testTable',
-					'where' =>
+					'operation' => 'and',
+					'fields' =>
 					[
-						'operation' => 'and',
-						'fields' =>
 						[
+							'code' => 'jil',
+							'operation' => 'IS',
+							'value' => 'aa'
+						],
+						[
+							'code' => 'jil2',
+							'operation' => 'IS NOT',
+							'value' => 'ff'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
 							[
-								'code' => 'jil',
-								'operation' => 'IS',
-								'value' => 'aa'
-							],
-							[
-								'code' => 'jil2',
-								'operation' => 'IS NOT',
-								'value' => 'ff'
-							],
-							[
-								'operation' => 'or',
-								'fields' =>
 								[
-									[
-										'code' => 'jil2',
-										'operation' => 'CONTAINS',
-										'value' => 'fa'
-									],
-									[
-										'code' => 'jil2',
-										'operation' => 'START WITH',
-										'value' => 'fa'
-									]
+									'code' => 'jil2',
+									'operation' => 'CONTAINS',
+									'value' => 'fa'
+								],
+								[
+									'code' => 'jil2',
+									'operation' => 'START WITH',
+									'value' => 'fa'
 								]
 							]
 						]
-					],
-					'order' => ['name DESC']
-				]
-			]);
+					]
+				],
+				'order' => ['name DESC']
+			]
+		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendGET('/el/select',
+		[
+			'select' =>
 			[
-				'select' =>
+				'fields' => ['name', 'id'],
+				'from' => 'testTable',
+				'where' =>
 				[
-					'fields' => ['name', 'id'],
-					'from' => 'testTable',
-					'where' =>
+					'operation' => 'and',
+					'fields' =>
 					[
-						'operation' => 'and',
-						'fields' =>
 						[
+							'code' => 'name',
+							'operation' => 'IS',
+							'value' => 'eee'
+						],
+						[
+							'code' => 'email',
+							'operation' => 'CONTAINS',
+							'value' => '3'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
 							[
-								'code' => 'name',
-								'operation' => 'IS',
-								'value' => 'eee'
-							],
-							[
-								'code' => 'email',
-								'operation' => 'CONTAINS',
-								'value' => '3'
-							],
-							[
-								'operation' => 'or',
-								'fields' =>
 								[
-									[
-										'code' => 'avat',
-										'operation' => 'IS EMPTY'
-									]
+									'code' => 'avat',
+									'operation' => 'IS EMPTY'
 								]
-							]
-						]
-					],
-					'order' => ['name DESC']
-				]
-			]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-
-		$I->sendGET('/el/select',
-			[
-				'select' =>
-				[
-					'fields' => ['name', 'id'],
-					'from' => 'testTable',
-					'where' =>
-					[
-						'operation' => 'and',
-						'fields' =>
-						[
-							[
-								'code' => 'name',
-								'operation' => 'IS',
-								'value' => 'eee'
-							],
-							[
-								'code' => 'email',
-								'operation' => 'DOES NOT CONTAIN',
-								'value' => '3'
-							],
-							[
-								'operation' => 'or',
-								'fields' =>
-								[
-									[
-										'code' => 'avat',
-										'operation' => 'IS',
-										'value' => '3'
-									]
-								]
-							]
-						]
-					],
-					'order' => ['name DESC']
-				]
-			]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-
-		$I->sendGET('/el/select',
-			[
-				'select' =>
-				[
-					'fields' => ['name', 'id'],
-					'from' => 'testTable',
-					'where' =>
-					[
-						'operation' => 'and',
-						'fields' =>
-						[
-							[
-								'code' => 'col',
-								'operation' => 'IS',
-								'value' => '4'
 							]
 						]
 					]
+				],
+				'order' => ['name DESC']
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['name', 'id'],
+				'from' => 'testTable',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'name',
+							'operation' => 'IS',
+							'value' => 'eee'
+						],
+						[
+							'code' => 'email',
+							'operation' => 'DOES NOT CONTAIN',
+							'value' => '3'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
+							[
+								[
+									'code' => 'avat',
+									'operation' => 'IS',
+									'value' => '3'
+								]
+							]
+						]
+					]
+				],
+				'order' => ['name DESC']
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['name', 'id'],
+				'from' => 'testTable',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'col',
+							'operation' => 'IS',
+							'value' => '4'
+						]
+					]
 				]
-			]);
+			]
+		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/el/select');
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['name', 'id', 'col'],
+				'from' => 'testTable',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'col',
+							'operation' => 'IS',
+							'value' => '4'
+						]
+					]
+				]
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
 	}
 
 	public function update(ApiTester $I)
@@ -222,119 +256,119 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/',
+		[
+			'update' =>
 			[
-				'update' =>
+				'table' => 'testTable',
+				'set' =>
 				[
-					'table' => 'testTable',
-					'set' =>
+					'email = 3',
+					'col = 5'
+				],
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
 					[
-						'email = 3',
-						'col = 5'
-					],
-					'where' =>
-					[
-						'operation' => 'and',
-						'fields' =>
 						[
+							'code' => 'name',
+							'operation' => 'IS',
+							'value' => 'eee'
+						],
+						[
+							'code' => 'email',
+							'operation' => 'DOES NOT CONTAIN',
+							'value' => '3'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
 							[
-								'code' => 'name',
-								'operation' => 'IS',
-								'value' => 'eee'
-							],
-							[
-								'code' => 'email',
-								'operation' => 'DOES NOT CONTAIN',
-								'value' => '3'
-							],
-							[
-								'operation' => 'or',
-								'fields' =>
 								[
-									[
-										'code' => 'avat',
-										'operation' => 'IS',
-										'value' => '3'
-									]
+									'code' => 'avat',
+									'operation' => 'IS',
+									'value' => '3'
 								]
 							]
 						]
-					],
-				]
-			]);
+					]
+				],
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/',
+		[
+			'update' =>
 			[
-				'update' =>
+				'table' => 'testTable',
+				'set' =>
 				[
-					'table' => 'testTable',
-					'set' =>
+					"email = 'rrrrr'",
+					"col = '222222'"
+				],
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
 					[
-						"email = 'rrrrr'",
-						"col = '222222'"
-					],
-					'where' =>
-					[
-						'operation' => 'and',
-						'fields' =>
 						[
-							[
-								'code' => 'id',
-								'operation' => 'IS',
-								'value' => 2
-							]
+							'code' => 'id',
+							'operation' => 'IS',
+							'value' => 2
 						]
 					]
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/',
+		[
+			'update' =>
 			[
-				'update' =>
+				'table' => 'testTable',
+				'set' =>
 				[
-					'table' => 'testTable',
-					'set' =>
+					"name = 'ggапфффыввфывg'",
+				],
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
 					[
-						"name = 'ggапфффыввфывg'",
-					],
-					'where' =>
-					[
-						'operation' => 'and',
-						'fields' =>
 						[
-							[
-								'code' => 'name',
-								'operation' => 'CONTAINS',
-								'value' => 'ggg'
-							]
+							'code' => 'name',
+							'operation' => 'CONTAINS',
+							'value' => 'ggg'
 						]
 					]
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/',
+		[
+			'update' =>
 			[
-				'update' =>
-				[
-					'table' => 'testTable'
-				]
-			]);
+				'table' => 'testTable'
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/update/',
-			[
-				'update' => []
-			]);
+		[
+			'update' => []
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
@@ -351,88 +385,88 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
 			[
-				'insert' =>
+				'table' => 'testTable',
+				'columns' =>
 				[
-					'table' => 'testTable',
-					'columns' =>
-					[
-						'name', 'email', 'col', 'avat'
-					],
-					'values' =>
-					[
-						'"11"', '"qwe"', '"222222"', '"222211211"'
-					]
+					'name', 'email', 'col', 'avat'
+				],
+				'values' =>
+				[
+					'"11"', '"qwe"', '"222222"', '"222211211"'
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
 			[
-				'insert' =>
+				'table' => 'testTable',
+				'columns' =>
 				[
-					'table' => 'testTable',
-					'columns' =>
-					[
-						'name', 'avat'
-					],
-					'values' =>
-					[
-						'"11"', '"qwe"', '"222222"', '"222211211"'
-					]
+					'name', 'avat'
+				],
+				'values' =>
+				[
+					'"11"', '"qwe"', '"222222"', '"222211211"'
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
 			[
-				'insert' =>
+				'table' => 'testTable',
+				'values' =>
 				[
-					'table' => 'testTable',
-					'values' =>
-					[
-						'"33"', '"qwe"', '"222222"', '"222211211"'
-					]
+					'"33"', '"qwe"', '"222222"', '"222211211"'
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
 			[
-				'insert' =>
+				'table' => 'testTable',
+				'values' =>
 				[
-					'table' => 'testTable',
-					'values' =>
-					[
-						'"44"'
-					]
+					'"44"'
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
 			[
-				'insert' =>
-				[
-					'table' => 'testTable'
-				]
-			]);
+				'table' => 'testTable'
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/insert/',
-			[
-				'insert' => []
-			]);
+		[
+			'insert' => []
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
@@ -449,71 +483,71 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/',
+		[
+			'delete' =>
 			[
-				'delete' =>
+				'table' => 'testTable',
+				'where' =>
 				[
-					'table' => 'testTable',
-					'where' =>
+					'operation' => 'and',
+					'fields' =>
 					[
-						'operation' => 'and',
-						'fields' =>
 						[
-							[
-								'code' => 'name',
-								'operation' => 'CONTAINS',
-								'value' => 'ggg'
-							]
+							'code' => 'name',
+							'operation' => 'CONTAINS',
+							'value' => 'ggg'
 						]
 					]
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/',
+		[
+			'delete' =>
 			[
-				'delete' =>
+				'table' => 'testTable',
+				'where' =>
 				[
-					'table' => 'testTable',
-					'where' =>
+					'operation' => 'or',
+					'fields' =>
 					[
-						'operation' => 'or',
-						'fields' =>
 						[
-							[
-								'code' => 'name',
-								'operation' => 'CONTAINS',
-								'value' => 'ggg'
-							],
-							[
-								'code' => 'email',
-								'operation' => 'IS',
-								'value' => '1'
-							]
+							'code' => 'name',
+							'operation' => 'CONTAINS',
+							'value' => 'ggg'
+						],
+						[
+							'code' => 'email',
+							'operation' => 'IS',
+							'value' => '1'
 						]
 					]
 				]
-			]);
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/',
+		[
+			'delete' =>
 			[
-				'delete' =>
-				[
-					'table' => 'testTable'
-				]
-			]);
+				'table' => 'testTable'
+			]
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/',
-			[
-				'delete' => []
-			]);
+		[
+			'delete' => []
+		]);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
