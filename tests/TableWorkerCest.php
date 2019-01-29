@@ -442,4 +442,85 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 	}
+
+	public function delete(ApiTester $I)
+	{
+		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/delete/',
+			[
+				'delete' =>
+				[
+					'table' => 'testTable',
+					'where' =>
+					[
+						'operation' => 'and',
+						'fields' =>
+						[
+							[
+								'code' => 'name',
+								'operation' => 'CONTAINS',
+								'value' => 'ggg'
+							]
+						]
+					]
+				]
+			]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/delete/',
+			[
+				'delete' =>
+				[
+					'table' => 'testTable',
+					'where' =>
+					[
+						'operation' => 'or',
+						'fields' =>
+						[
+							[
+								'code' => 'name',
+								'operation' => 'CONTAINS',
+								'value' => 'ggg'
+							],
+							[
+								'code' => 'email',
+								'operation' => 'IS',
+								'value' => '1'
+							]
+						]
+					]
+				]
+			]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/delete/',
+			[
+				'delete' =>
+				[
+					'table' => 'testTable'
+				]
+			]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/delete/',
+			[
+				'delete' => []
+			]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/el/delete/');
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => false]);
+	}
 }

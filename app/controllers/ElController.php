@@ -3,6 +3,24 @@
 class ElController extends ControllerBase
 {
 	/**
+	 * delete method SQL
+	 * @return json
+	 */
+	public function deleteAction()
+	{
+		$delete = $this->request->getPost('delete');
+
+		if (empty($delete))
+			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
+
+		$resultDelete = $this->eldb->delete($delete);
+
+		if ($resultDelete === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		return $this->jsonResult(['success' => true, 'result' => $resultDelete]);
+	}
+	/**
 	 * insert method SQL
 	 * @return json
 	 */

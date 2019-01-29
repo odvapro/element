@@ -168,9 +168,33 @@ class SqlAdapter extends PdoAdapter
 
 		return true;
 	}
-	public function delete()
+	/**
+	 * delete from table
+	 * @param  array
+	 * @return array
+	 */
+	public function delete($requestParams)
 	{
+		$sql   = '';
+		$table = isset($requestParams['table']) ? $requestParams['table'] : [];
+		$where = isset($requestParams['where']) ? $requestParams['where'] : [];
 
+		if (empty($table))
+			return false;
+
+		$sql .= "DELETE FROM {$table} ";
+
+		if (!empty($where))
+			$sql .= 'where ' . $this->buildWhere($where);
+
+		try
+		{
+			$this->db->execute($sql);
+		} catch (Exception $e) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

@@ -21,7 +21,7 @@ router.beforeEach(async function(to, from, next) {
 router.beforeEach(async function(to, from, next) {
 	var valid = await router.app.$axios({url: '/api/auth/isLogged/' });
 
-	if (!valid.data.success && to.name != 'auth')
+	if (!valid.data.success && to.name != 'config' && to.name != 'auth')
 		next({name: 'auth'});
 
 	next();
