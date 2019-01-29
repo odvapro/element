@@ -25,6 +25,9 @@ $di->set('dispatcher', function() use ($di)
 {
 	$eventsManager = $di->getShared('eventsManager');
 
+	$authMiddleware = new AuthMiddleware($di);
+	$eventsManager->attach('dispatch', $authMiddleware);
+
 	$eventsManager->attach(
 		"dispatch:beforeException",
 		function($event, $dispatcher, $exception)
@@ -77,22 +80,23 @@ $di->set('view', function () use ($config)
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->set('eldb', function () use ($config)
+$options = [
+	'host'     => $config->database->host,
+	'username' => $config->database->username,
+	'password' => $config->database->password,
+	'dbname'   => $config->database->dbname,
+	'adapter'  => $config->database->adapter
+];
+$db  = Factory::load($options);
+$di->set('eldb', function () use ($config,$db)
 {
-	$options = [
-		'host'     => $config->database->host,
-		'username' => $config->database->username,
-		'password' => $config->database->password,
-		'dbname'   => $config->database->dbname,
-		'adapter'  => $config->database->adapter
-	];
-
-	$adpterName = "{$config->database->adapter}Adapter";
-	$db         = Factory::load($options);
+	$dbs = ['Mysql'=>'Sql','Posgres'=>'Sql'];
+	$adpterName = "{$dbs[$config->database->adapter]}Adapter";
 	$eldb       = new $adpterName($db);
-
 	return $eldb;
 });
+
+$di->set('db', $db);
 /**
  * The URL component is used to generate all kind of urls in the application
  */

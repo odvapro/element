@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<ul>
-			<li v-for="item in tables"><router-link :to="'/table/' + item.table_name">{{item.table_name}}</router-link></li>
+			<li v-for="item in tables"><router-link :to="'/table/' + item.code">{{item.code}}</router-link></li>
 		</ul>
 	</div>
 </template>
@@ -18,7 +18,7 @@
 		{
 			var result = await this.$axios({
 				method: 'get',
-				url: '/table/getTables'
+				url: '/api/el/getTables'
 			});
 
 			if (!result.data.success)

@@ -10,10 +10,19 @@ import './plugins/axios.js'
 Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next) {
-	var valid = await router.app.$axios({url: '/' });
+	var valid = await router.app.$axios({url: '/api/' });
 
 	if (!valid.data.success && to.name != 'config')
 		next({name: 'config'});
+
+	next();
+});
+
+router.beforeEach(async function(to, from, next) {
+	var valid = await router.app.$axios({url: '/api/auth/isLogged/' });
+
+	if (!valid.data.success && to.name != 'config' && to.name != 'auth')
+		next({name: 'auth'});
 
 	next();
 });

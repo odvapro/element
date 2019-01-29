@@ -20,7 +20,7 @@ class ControllerBase extends Controller
 		}
 		else
 		{
-			$this->jsonResult(['result'=>'error','msg'=>'not found']);
+			$this->jsonResult(['result' => 'error', 'msg' => 'not found']);
 		}
 	}
 

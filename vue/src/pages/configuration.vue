@@ -4,6 +4,9 @@
 			<span class="logo">Данные БД</span>
 		</div>
 		<div class="margin-bottom">
+			<input placeholder="Адаптер" v-model="config.adapter">
+		</div>
+		<div class="margin-bottom">
 			<input placeholder="Хост" v-model="config.host">
 		</div>
 		<div class="margin-bottom">
@@ -33,6 +36,7 @@
 					host: 'localhost',
 					dbname: '',
 					username: '',
+					adapter: 'MySql',
 					password: 'Hi8R28XY|P',
 					baseUrl: '/',
 				}

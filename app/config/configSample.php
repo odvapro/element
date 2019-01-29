@@ -2,11 +2,11 @@
 
 return new \Phalcon\Config(array(
 	'database' => array(
-		'adapter'     => 'Mysql',
+		'adapter'     => '#adapter#',
 		'host'        => '#host#',
 		'username'    => '#username#',
 		'password'    => '#password#',
-		'dbname'      => '#dbname#',
+		'dbname'      => '#dbname#'
 	),
 	'application' => array(
 		'appDir'         => ROOT . '/app/',

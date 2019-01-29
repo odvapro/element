@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-01-24 11:44:43 +0000
+# Время создания: 2019-01-28 13:45:20 +0000
 # ************************************************************
 
 
@@ -64,6 +64,19 @@ VALUES
 UNLOCK TABLES;
 
 
+# Дамп таблицы newTest
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `newTest`;
+
+CREATE TABLE `newTest` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(222) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 # Дамп таблицы testTable
 # ------------------------------------------------------------
 
@@ -72,9 +85,23 @@ DROP TABLE IF EXISTS `testTable`;
 CREATE TABLE `testTable` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) DEFAULT NULL,
+  `email` varchar(222) DEFAULT NULL,
+  `col` int(11) DEFAULT NULL,
+  `avat` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `testTable` WRITE;
+/*!40000 ALTER TABLE `testTable` DISABLE KEYS */;
+
+INSERT INTO `testTable` (`id`, `name`, `email`, `col`, `avat`)
+VALUES
+  (1,'qqq','q',3,3),
+  (2,'ggg','rew',4,4),
+  (3,'45','4',4,4);
+
+/*!40000 ALTER TABLE `testTable` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 
