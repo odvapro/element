@@ -40,7 +40,6 @@ class UsersController extends ControllerBase
 		$login      = $this->request->getPost('login');
 		$name       = $this->request->getPost('name');
 		$password   = $this->request->getPost('password');
-		$repassword = $this->request->getPost('repassword');
 
 		if (empty($id))
 			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
@@ -50,13 +49,8 @@ class UsersController extends ControllerBase
 		if (empty($user))
 			return $this->jsonResult(['success' => false, 'message' => 'user not found']);
 
-		if (!empty($password) || !empty($repassword))
-		{
-			if ($password !== $repassword)
-				return $this->jsonResult(['success' => false, 'message' => 'passwords are not identical']);
-
+		if (!empty($password))
 			$user->password = md5($password);
-		}
 
 		$user->name      = !empty($name) ? $name : $user->name;
 		$user->email     = !empty($email) ? $email : $user->email;
@@ -100,13 +94,9 @@ class UsersController extends ControllerBase
 		$login      = $this->request->getPost('login');
 		$email      = $this->request->getPost('email');
 		$password   = $this->request->getPost('password');
-		$repassword = $this->request->getPost('repassword');
 
-		if (empty($name) || empty($login) || empty($email) || empty($password) || empty($repassword))
+		if (empty($name) || empty($login) || empty($email) || empty($password))
 			return $this->jsonResult(['success' => false, 'message' => 'fill all fields']);
-
-		if ($password !== $repassword)
-			return $this->jsonResult(['success' => false, 'message' => 'passwords are not identical']);
 
 		// if email exists - false
 		$user = EmUsers::find([
