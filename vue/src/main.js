@@ -1,6 +1,7 @@
 import scssVars from './assets/variables.scss'
 import scssNorm from './assets/normalize.scss'
 import scsssStyle from './assets/style.scss'
+import fonts from './assets/fonts.scss'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'

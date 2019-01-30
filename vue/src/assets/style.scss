@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&subset=cyrillic,cyrillic-ext');
+
 *{outline: 0px;}
 body{
 	font-family: $mainFont;
@@ -10,78 +11,4 @@ body{
 	width: 100%;
 	padding: 0 12px;
 	margin: 0 auto;
-}
-// buttons
-.btn
-{
-	font-size:12px;
-	color:#0B3457;
-	font-weight:600;
-	border:1px solid #E7ECF1;
-	border-radius: 4px;
-	background: #fff;
-	text-decoration: none;
-	display:inline-block;
-	height:40px;
-	line-height: 40px;
-	padding:0 23px;
-	transition: all 0.1s ease-in-out;
-	&:hover
-	{
-		border:1px solid #B8C7D4;
-		cursor: pointer;
-	}
-
-	// sizes
-	&--medium{
-		height:32px;
-		line-height: 32px;
-		padding:0 17px;
-	}
-}
-
-.btn-round
-{
-	height: 36px;
-	background: $red;
-	font-weight: 700;
-	font-size: 14px;
-	line-height: 36px;
-	color: #FFFFFF;
-	border-radius: 20px;
-	border:0px;
-	padding:0 23px;
-	cursor:pointer;
-	text-decoration: none;
-	display: inline-block;
-}
-
-//inputs
-.inp
-{
-	height: 40px;
-	padding:0 16px;
-	line-height: 40px;
-	background: $light;
-	font-size: 12px;
-	color: $dark;
-	border: 0px;
-	border-radius: 4px;
-	&:focus{background: $lighter01;}
-	&::-webkit-input-placeholder{color: $lighter03;}
-	&__error{box-shadow:inset 0px 0px 0px 1px $red07;}
-}
-
-// tags
-.tag
-{
-	height:24px;
-	line-height:24px;
-	border:1px solid $light;
-	font-size: 10px;
-	color: $lighter06;
-	padding:0 12px;
-	border-radius: 4px;
-	display: inline-block;
-	&:hover{border: 1px solid $lighter01}
 }
