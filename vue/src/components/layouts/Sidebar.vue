@@ -38,9 +38,7 @@
 				</div>
 			</a>
 		</div>
-		<!-- <ul>
-			<li v-for="item in tables"><router-link :to="'/table/' + item.code">{{item.code}}</router-link></li>
-		</ul> -->
+		<div class="drug"></div>
 	</div>
 </template>
 <script>
@@ -67,6 +65,15 @@
 	}
 </script>
 <style lang="scss">
+	.drug
+	{
+		width: 7px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		right: -4px;
+		cursor: col-resize;
+	}
 	.logo-wrapper
 	{
 		padding: 20px 20px 0;

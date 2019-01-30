@@ -179,6 +179,8 @@
 				{
 					event.preventDefault();
 					event.stopPropagation();
+					if (event.target.classList.value != 'drug')
+						return false;
 					self.points.isDrug = true;
 					self.points.x = event.pageX;
 					self.points.y = event.pageY;
@@ -195,6 +197,12 @@
 						return false;
 
 					app.style.gridTemplateColumns = event.pageX + 'px auto'
+				}, false);
+				document.addEventListener('mouseup', function(event)
+				{
+					event.preventDefault();
+					event.stopPropagation();
+					self.points.isDrug = false;
 				}, false);
 			},
 		},
