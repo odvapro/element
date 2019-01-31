@@ -28,141 +28,278 @@
 				</div>
 			</div>
 		</div>
-		<div class="table-row">
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
+		<div class="table-vertical-scroll">
+			<div class="table__min-width">
+				<div class="table-row no-hover">
+					<div class="overlay-row">
+						<Checkbox/>
+						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Identifier</div>
+							<div class="table-item-real-name">id</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Product name</div>
+							<div class="table-item-real-name">name</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Picture</div>
+							<div class="table-item-real-name">pic</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Price</div>
+							<div class="table-item-real-name">Price</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Categories</div>
+							<div class="table-item-real-name">sections</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-img">
+							<img src="/images/sharp.svg" alt="">
+						</div>
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Active</div>
+							<div class="table-item-real-name">act</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table__add-column-item">
+							<div class="table__add-col-img">
+								<img src="/images/plus-white.svg" alt="">
+							</div>
+							<span class="table__add-col-label">Add field</span>
+						</div>
+					</div>
 				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Identifier</div>
-					<div class="table-item-real-name">id</div>
+				<div class="table-row">
+					<div class="overlay-row">
+						<Checkbox/>
+						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">1sd sa dsa </div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Product name</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-image-col">
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Price</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-bound-item">
+							shirt
+						</div>
+						<div class="table-bound-item">
+							Pans
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-checkbox">
+							<Checkbox/>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-empty-col">
+
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
+				<div class="table-row">
+					<div class="overlay-row">
+						<Checkbox/>
+						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">1</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Product name</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-image-col">
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Price</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-bound-item">
+							shirt
+						</div>
+						<div class="table-bound-item">
+							Pans
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-checkbox">
+							<Checkbox/>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-empty-col">
+
+						</div>
+					</div>
 				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Product name</div>
-					<div class="table-item-real-name">name</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
-				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Picture</div>
-					<div class="table-item-real-name">pic</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
-				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Price</div>
-					<div class="table-item-real-name">Price</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
-				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Categories</div>
-					<div class="table-item-real-name">sections</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-img">
-					<img src="/images/sharp.svg" alt="">
-				</div>
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Active</div>
-					<div class="table-item-real-name">act</div>
+				<div class="table-row">
+					<div class="overlay-row">
+						<Checkbox/>
+						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">1</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Product name</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-image-col">
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+							<a href="#" class="table-item-img-wrapper">
+								<img src="/images/image.png" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-name-wrapper">
+							<div class="table-item-overide-name">Price</div>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-bound-item">
+							shirt
+						</div>
+						<div class="table-bound-item">
+							Pans
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-item-checkbox">
+							<Checkbox/>
+						</div>
+					</div>
+					<div class="table-item">
+						<div class="table-empty-col">
+
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="table-row">
-			<div class="table-item">
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">asdddslfkjdslkfjdsklafj</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Product name</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-image-col">
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-					<a href="#" class="table-item-img-wrapper">
-						<img src="/images/image.png" alt="">
-					</a>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-name-wrapper">
-					<div class="table-item-overide-name">Price</div>
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-bound-item">
-					shirt
-				</div>
-				<div class="table-bound-item">
-					Pans
-				</div>
-			</div>
-			<div class="table-item">
-				<div class="table-item-checkbox">
-					<label class="checkbox-label">
-						<input type="checkbox" class="checkbox">
-						<span>
-							<img src="/images/check.svg" alt="">
-						</span>
-					</label>
-				</div>
-			</div>
+		<div class="table-pagination-wrapper">
+			<ul>
+				<li>1</li>
+				<li class="active">2</li>
+				<li>3</li>
+				<li class="points"></li>
+				<li>10</li>
+			</ul>
 		</div>
 	</div>
 </template>
 <script>
+	import Checkbox from '@/components/forms/Checkbox.vue';
 	export default
 	{
+		components: {Checkbox},
 		data()
 		{
 			return {
 				points:
 				{
 					isDrug: false,
-					x: 0,
-					y: 0
+					posX: 0
 				}
 			}
 		},
@@ -175,38 +312,39 @@
 			{
 				var app = document.getElementsByClassName('app-wrapper')[0],
 					self = this;
+
+				if (this.$cookie.get('drugPosition') > 200)
+					app.style.gridTemplateColumns = this.$cookie.get('drugPosition') + 'px auto';
+				else
+					app.style.gridTemplateColumns = '400px auto';
+
 				document.addEventListener('mousedown', function(event)
 				{
-					event.preventDefault();
-					event.stopPropagation();
 					if (event.target.classList.value != 'drug')
 						return false;
+
 					self.points.isDrug = true;
-					self.points.x = event.pageX;
-					self.points.y = event.pageY;
 				}, false);
 
 				document.addEventListener('mousemove', function(event)
 				{
-					event.preventDefault();
-					event.stopPropagation();
-
 					if (!self.points.isDrug)
 						return false;
+
 					if (event.pageX < 200 || event.pageX > 480)
 						return false;
 
+					self.points.posX = event.pageX;
 					app.style.gridTemplateColumns = event.pageX + 'px auto'
 				}, false);
 				document.addEventListener('mouseup', function(event)
 				{
-					event.preventDefault();
-					event.stopPropagation();
 					self.points.isDrug = false;
+					self.$cookie.set('drugPosition', self.points.posX, 111);
 				}, false);
 			},
 		},
-		mounted()
+		created()
 		{
 			this.initEventScale();
 		}
@@ -219,10 +357,11 @@
 		justify-content: space-between;
 		align-items: flex-end;
 		margin-bottom: 16px;
+		padding-right: 95px;
 	}
 	.table-wrapper
 	{
-		padding: 23px 95px 23px 21px;
+		padding: 23px 0 23px 21px;
 	}
 	.table-head-name
 	{
@@ -294,6 +433,13 @@
 		height: 14px;
 		margin-right: 6px;
 	}
+	.overlay-row-option-icon
+	{
+		width: 19px;
+		height: 2px;
+		position: relative;
+		z-index: 2;
+	}
 	.table-item
 	{
 		display: flex;
@@ -301,11 +447,15 @@
 		align-items: center;
 		height: 49px;
 		padding-right: 10px;
-		min-width: 103px;
+		min-width: 120px;
 		width: 120px;
 		overflow: hidden;
 		padding-left: 9px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
+		&:last-child
+		{
+			border-right: none;
+		}
 	}
 	.table-item-overide-name
 	{
@@ -323,9 +473,51 @@
 	}
 	.table-row
 	{
+		.overlay-row
+		{
+			display: none;
+		}
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
-		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
+		position: relative;
+		&.no-hover:hover .overlay-row
+		{
+			display: none;
+		}
+		&:hover
+		{
+			.overlay-row
+			{
+				background-color: rgba(103, 115, 135, 0.1);
+				width: 100%;
+				padding-left: 10px;
+				display: flex;
+				align-items: center;
+				position: absolute;
+				height: 100%;
+				top: 0;
+				left: 0;
+				&:after
+				{
+					content: '';
+					background-color: #f0f1f3;
+					width: 139px;
+					height: 100%;
+					z-index: 0;
+					position: absolute;
+					left: 0;
+				}
+			}
+		}
+		.checkbox-label
+		{
+			margin-right: 8px;
+			z-index: 2;
+			span
+			{
+				background-color: #fff;
+			}
+		}
 	}
 	.table-item-image-col
 	{
@@ -416,5 +608,72 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.table-vertical-scroll
+	{
+		overflow: auto;
+	}
+	.table__min-width
+	{
+		min-width: 900px;
+	}
+	.table__add-column-item
+	{
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+	}
+	.table__add-col-label
+	{
+		color: rgba(103, 115, 135, 0.4);
+		font-size: 12px;
+	}
+	.table__add-col-img
+	{
+		margin-right: 9px;
+		img
+		{
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+	.table-pagination-wrapper
+	{
+		padding: 14px 0;
+		ul
+		{
+			display: flex;
+			align-items: center;
+		}
+		li
+		{
+			font-size: 12px;
+			color: rgba(25, 28, 33, 0.7);
+			width: 21px;
+			height: 25px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 2px;
+			margin-right: 2px;
+			&.active
+			{
+				background-color: rgba(103, 115, 135, 0.1);
+				color: #191C21;
+			}
+			&.points
+			{
+				position: relative;
+				padding: 0 7px;
+				&:after
+				{
+					content: '...';
+					position: absolute;
+					top: 3px;
+				}
+			}
+		}
 	}
 </style>

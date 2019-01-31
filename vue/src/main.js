@@ -8,6 +8,10 @@ import router from './router'
 import store from './store'
 import './plugins/axios.js'
 
+var VueCookie = require('vue-cookie');
+
+Vue.use(VueCookie);
+
 Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next) {

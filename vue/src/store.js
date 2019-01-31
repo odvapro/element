@@ -5,27 +5,20 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state:
 	{
-		user: {name:''},
-		auth:false
+		drugPosition: 400
 	},
 	mutations:
 	{
 		/**
-		 * Установка авторизованности
+		 * Установить ширину сайдбара
 		 */
-		setAuth(state,auth)
+		drugPosition(state, position)
 		{
-			state.auth = auth;
+			state.drugPosition = position;
 		},
-		/**
-		 * Установка пользователя
-		 */
-		setUser(state,user)
-		{
-			state.user = user;
-		}
 	},
 	actions:
 	{
+
 	}
 })
