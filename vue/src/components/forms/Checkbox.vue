@@ -1,12 +1,73 @@
 <template>
-	<label class="checkbox-label">
-		<input type="checkbox" class="checkbox">
-		<span>
-			<img src="/images/check.svg" alt="">
-		</span>
-	</label>
+	<div class="checkbox-wrapper">
+		<label class="checkbox-label">
+			<input type="checkbox" class="checkbox">
+			<span>
+				<img src="/images/check.svg" alt="">
+			</span>
+		</label>
+	</div>
 </template>
 <script>
 	export default
 	{}
 </script>
+<style lang="scss">
+.checkbox-wrapper
+{
+	display: inherit;
+	.checkbox-label
+	{
+		display: inline-block;
+		position: relative;
+		padding-left: 15px;
+		font-size: 14px;
+		height: 15px;
+		color: #334D66;
+		cursor: pointer;
+	}
+	.checkbox
+	{
+		visibility: hidden;
+		position: absolute;
+	}
+	.checkbox:not(checked) + span
+	{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 11px;
+		height: 11px;
+		border: 1px solid rgba(103, 115, 135, 0.4);
+		border-radius: 2px;
+		position: absolute;
+		left: 0;
+		transition: border 0.3s;
+	}
+	.checkbox:checked + span
+	{
+		background: #7C7791;
+		border: 1px solid #7C7791;
+		background-repeat: no-repeat;
+		background-size: contain;
+		transition: background 0.3s;
+		img
+		{
+			width: 7px;
+			height: 7px;
+			object-fit: contain;
+		}
+	}
+
+	.checkbox:checked:hover + span
+	{
+		transition: background 0.3s;
+		border: 1px solid rgba(103, 115, 135, 0.5);
+	}
+	.checkbox:not(checked):hover + span
+	{
+		border: 1px solid rgba(103, 115, 135, 0.8);
+		transition: border 0.3s;
+	}
+}
+</style>

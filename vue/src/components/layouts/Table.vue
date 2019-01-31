@@ -13,7 +13,10 @@
 			<div class="table-head-options">
 				<ul class="table-head-options-list">
 					<li>Views</li>
-					<li>Properties</li>
+					<li @click="propertiesPopupToggle">
+						Properties
+						<Properties v-if="openProperties"/>
+					</li>
 					<li>Sort</li>
 					<li>Filter</li>
 					<li>...</li>
@@ -290,9 +293,10 @@
 </template>
 <script>
 	import Checkbox from '@/components/forms/Checkbox.vue';
+	import Properties from '@/components/popups/Properties.vue';
 	export default
 	{
-		components: {Checkbox},
+		components: {Checkbox, Properties},
 		data()
 		{
 			return {
@@ -300,11 +304,19 @@
 				{
 					isDrug: false,
 					posX: 0
-				}
+				},
+				openProperties: false
 			}
 		},
 		methods:
 		{
+			/**
+			 * Открыть/закрыть вспрывающее окно properties
+			 */
+			propertiesPopupToggle()
+			{
+				this.openProperties = !this.openProperties;
+			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */
@@ -400,6 +412,7 @@
 			color: rgba(25, 28, 33, 0.7);
 			font-size: 12px;
 			margin-right: 21px;
+			cursor: pointer;
 		}
 	}
 	.table-head-add-btn
@@ -546,61 +559,6 @@
 		margin-right: 2px;
 		color: #7C7791;
 	}
-	//checkbox
-	.checkbox-label
-	{
-		display: inline-block;
-		position: relative;
-		padding-left: 15px;
-		font-size: 14px;
-		height: 15px;
-		color: #334D66;
-		cursor: pointer;
-	}
-	.checkbox
-	{
-		visibility: hidden;
-		position: absolute;
-	}
-	.checkbox:not(checked) + span
-	{
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 11px;
-		height: 11px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		position: absolute;
-		left: 0;
-		transition: border 0.3s;
-	}
-	.checkbox:checked + span
-	{
-		background: #7C7791;
-		border: 1px solid #7C7791;
-		background-repeat: no-repeat;
-		background-size: contain;
-		transition: background 0.3s;
-		img
-		{
-			width: 7px;
-			height: 7px;
-			object-fit: contain;
-		}
-	}
-
-	.checkbox:checked:hover + span
-	{
-		transition: background 0.3s;
-		border: 1px solid rgba(103, 115, 135, 0.5);
-	}
-	.checkbox:not(checked):hover + span
-	{
-		border: 1px solid rgba(103, 115, 135, 0.8);
-		transition: border 0.3s;
-	}
-	//---
 	.table-item-checkbox
 	{
 		width: 100%;
