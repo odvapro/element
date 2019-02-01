@@ -10,7 +10,9 @@
 </template>
 <script>
 	export default
-	{}
+	{
+
+	}
 </script>
 <style lang="scss">
 .checkbox-wrapper
@@ -20,9 +22,9 @@
 	{
 		display: inline-block;
 		position: relative;
-		padding-left: 15px;
+		padding-left: 13px;
 		font-size: 14px;
-		height: 15px;
+		height: 12px;
 		color: #334D66;
 		cursor: pointer;
 	}
@@ -43,6 +45,7 @@
 		position: absolute;
 		left: 0;
 		transition: border 0.3s;
+		background-color: #fff;
 	}
 	.checkbox:checked + span
 	{
