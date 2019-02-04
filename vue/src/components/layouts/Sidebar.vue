@@ -1,6 +1,6 @@
 <template>
 	<div class="sidebar-wrapper">
-		<div class="logo-wrapper">
+		<div class="sidebar-logo-wrapper">
 			<img src="/images/logo.svg" alt="">
 		</div>
 		<div class="sidebar-options">
@@ -74,7 +74,7 @@
 		right: -4px;
 		cursor: col-resize;
 	}
-	.logo-wrapper
+	.sidebar-logo-wrapper
 	{
 		padding: 20px 20px 0;
 	}

@@ -1,31 +1,31 @@
 <template>
 	<div class="tag-search">
-		<div class="tab-popup-head">
-			<div class="search-tag-item">
+		<div class="tag-search-popup-head">
+			<div class="tag-search-item">
 				shirt
 			</div>
 		</div>
-		<div class="tab-popup-item">
-			<div class="tag-icon">
+		<div class="tag-search-popup-item">
+			<div class="tag-search-icon">
 				<img src="/images/lines.svg" alt="">
 			</div>
-			<div class="search-tag-item">
+			<div class="tag-search-item">
 				shirt
 			</div>
 		</div>
-		<div class="tab-popup-item">
-			<div class="tag-icon">
+		<div class="tag-search-popup-item">
+			<div class="tag-search-icon">
 				<img src="/images/lines.svg" alt="">
 			</div>
-			<div class="search-tag-item">
+			<div class="tag-search-item">
 				shirt
 			</div>
 		</div>
-		<div class="tab-popup-item">
-			<div class="tag-icon">
+		<div class="tag-search-popup-item">
+			<div class="tag-search-icon">
 				<img src="/images/lines.svg" alt="">
 			</div>
-			<div class="search-tag-item">
+			<div class="tag-search-item">
 				shirt
 			</div>
 		</div>
@@ -39,7 +39,7 @@
 	}
 </script>
 <style lang="scss">
-	.tab-popup-head
+	.tag-search-popup-head
 	{
 		height: 49px;
 		display: flex;
@@ -58,7 +58,7 @@
 		border-radius: 2px;
 		background: white;
 	}
-	.tag-icon
+	.tag-search-icon
 	{
 		width: 6px;
 		height: 14px;
@@ -70,7 +70,7 @@
 			object-fit: contain;
 		}
 	}
-	.search-tag-item
+	.tag-search-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -80,7 +80,7 @@
 		color: #7C7791;
 		position: relative;
 	}
-	.tab-popup-item
+	.tag-search-popup-item
 	{
 		display: flex;
 		padding: 0 9px;

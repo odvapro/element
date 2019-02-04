@@ -1,7 +1,7 @@
 <template>
-	<transition name="popup-fade">
-		<div class="popup-overlay" v-if="$store.state.openPopup">
-			<div v-click-outside="close" id="popups-wrapper"
+	<transition name="main-popup-fade">
+		<div class="main-popup-overlay" v-if="$store.state.openPopup">
+			<div v-click-outside="close" id="main-popup-wrapper"
 				:style="styles" @load="console.log('kokok')">
 				<component v-bind:is="contentComponent" @width="setWidth"></component>
 			</div>
@@ -72,13 +72,13 @@
 	}
 </script>
 <style>
-	#popups-wrapper
+	#main-popup-wrapper
 	{
 		position: absolute;
 		display: none;
 		background-color: #fff;
 	}
-	.popup-overlay
+	.main-popup-overlay
 	{
 		position: fixed;
 		top:0px;
@@ -87,7 +87,7 @@
 		height: 100%;
 		z-index: 100;
 	}
-	.popup-block
+	.main-popup-block
 	{
 		background: #fff;
 		padding:30px;
@@ -96,7 +96,7 @@
 		margin-top:100px;
 		position: relative;
 	}
-	.popup-close
+	.main.popup-close
 	{
 		position: absolute;
 		top:20px;
@@ -105,7 +105,7 @@
 		/*svg{fill:#677387;}
 		&:hover svg{fill:#191C21;}*/
 	}
-	.popup-title
+	.main.popup-title
 	{
 		margin-bottom: 20px;
 		h3
@@ -123,26 +123,26 @@
 			color: rgba(103, 115, 135, 0.7);
 		}
 	}
-	.popup-cont
+	.main.popup-cont
 	{
 		margin-bottom: 20px;
 		.inp{width:calc(100% - 36px); }
 	}
-	.popup-btns
+	.main.popup-btns
 	{
 		text-align: right;
 		button{margin-left:20px;}
 	}
-	.popup-fade-enter-active
+	.main.popup-fade-enter-active
 	{
-		/*transition: all .05s ease;*/
+		transition: all .05s ease;
 	}
-	.popup-fade-leave-active
+	.main.popup-fade-leave-active
 	{
-		/*transition: all .05s cubic-bezier(1, -0.53, 0.405, 1.425);*/
+		transition: all .05s cubic-bezier(1, -0.53, 0.405, 1.425);
 	}
-	.popup-fade-enter, .popup-fade-leave-to
+	.main.popup-fade-enter, .popup-fade-leave-to
 	{
-	  /*transform: translateY(-5px);*/
+	  transform: translateY(-5px);
 	}
 </style>

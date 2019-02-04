@@ -1,5 +1,5 @@
 <template>
-	<div class="table-pagination-wrapper">
+	<div class="pagination-wrapper">
 		<ul>
 			<li v-for="item in getPaginatorArr" :class="{active: value == item, points: item == '...'}" @click="setPage(item)">{{(item != '...') ? item : ''}}</li>
 		</ul>
@@ -85,7 +85,7 @@
 	}
 </script>
 <style lang="scss">
-	.table-pagination-wrapper
+	.pagination-wrapper
 	{
 		padding: 14px 0;
 		ul

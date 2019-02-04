@@ -1,6 +1,6 @@
 <template>
-	<div class="props-popup">
-		<div class="props-list">
+	<div class="properties-popup">
+		<div class="properties-list">
 			<PropertyItem icon="/images/sharp.svg"/>
 			<PropertyItem icon="/images/price.svg"/>
 			<PropertyItem icon="/images/category.svg"/>
@@ -18,7 +18,7 @@
 	}
 </script>
 <style lang="scss">
-	.props-popup
+	.properties-popup
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border: 1px solid rgba(103, 115, 135, 0.1);

@@ -31,9 +31,9 @@
 		<div class="table-vertical-scroll">
 			<div class="table__min-width">
 				<div class="table-row no-hover">
-					<div class="overlay-row">
+					<div class="table-overlay-row">
 						<Checkbox/>
-						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item">
 						<div class="table-item-img">
@@ -99,9 +99,9 @@
 					</div>
 				</div>
 				<div class="table-row">
-					<div class="overlay-row">
+					<div class="table-overlay-row">
 						<Checkbox/>
-						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item">
 						<div class="table-item-name-wrapper">
@@ -165,9 +165,9 @@
 					</div>
 				</div>
 				<div class="table-row">
-					<div class="overlay-row">
+					<div class="table-overlay-row">
 						<Checkbox/>
-						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item">
 						<div class="table-item-name-wrapper">
@@ -215,9 +215,9 @@
 					</div>
 				</div>
 				<div class="table-row">
-					<div class="overlay-row">
+					<div class="table-overlay-row">
 						<Checkbox/>
-						<img class="overlay-row-option-icon" src="/images/points.svg" alt="">
+						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item">
 						<div class="table-item-name-wrapper">
@@ -417,7 +417,7 @@
 		height: 14px;
 		margin-right: 6px;
 	}
-	.overlay-row-option-icon
+	.table-overlay-row-option-icon
 	{
 		width: 19px;
 		height: 2px;
@@ -457,20 +457,20 @@
 	}
 	.table-row
 	{
-		.overlay-row
+		.table-overlay-row
 		{
 			display: none;
 		}
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		position: relative;
-		&.no-hover:hover .overlay-row
+		&.no-hover:hover .table-overlay-row
 		{
 			display: none;
 		}
 		&:hover
 		{
-			.overlay-row
+			.table-overlay-row
 			{
 				background-color: rgba(103, 115, 135, 0.1);
 				width: 100%;

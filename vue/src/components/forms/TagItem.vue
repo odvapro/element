@@ -1,6 +1,6 @@
 <template>
-	<div class="table-tag-item-wrapper">
-		<div class="table-tag-item" @click="showTagPopup($event)">
+	<div class="tag-item-wrapper">
+		<div class="tag-item" @click="showTagPopup($event)">
 			{{name}}
 		</div>
 	</div>
@@ -24,7 +24,7 @@
 	}
 </script>
 <style lang="scss">
-	.table-tag-item
+	.tag-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
