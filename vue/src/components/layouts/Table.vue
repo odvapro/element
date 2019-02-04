@@ -13,10 +13,7 @@
 			<div class="table-head-options">
 				<ul class="table-head-options-list">
 					<li>Views</li>
-					<li @click="propertiesPopupToggle">
-						Properties
-						<Properties v-if="openProperties"/>
-					</li>
+					<li @click="showPopup($event.target, 'Properties', 'center-bottom')">Properties</li>
 					<li>Sort</li>
 					<li>Filter</li>
 					<li>...</li>
@@ -266,24 +263,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="table-pagination-wrapper">
-			<ul>
-				<li>1</li>
-				<li class="active">2</li>
-				<li>3</li>
-				<li class="points"></li>
-				<li>10</li>
-			</ul>
-		</div>
+		<Pagination/>
 	</div>
 </template>
 <script>
 	import Checkbox from '@/components/forms/Checkbox.vue';
-	import Properties from '@/components/popups/Properties.vue';
+	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
+	import Popup from '@/mixins/popup.js';
 	export default
 	{
-		components: {Checkbox, Properties, TagItem},
+		mixins: [Popup],
+		components: {Checkbox, TagItem, Pagination},
 		data()
 		{
 			return {
@@ -297,13 +288,6 @@
 		},
 		methods:
 		{
-			/**
-			 * Открыть/закрыть вспрывающее окно properties
-			 */
-			propertiesPopupToggle()
-			{
-				this.openProperties = !this.openProperties;
-			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */
@@ -572,44 +556,6 @@
 			width: 100%;
 			height: 100%;
 			object-fit: contain;
-		}
-	}
-	.table-pagination-wrapper
-	{
-		padding: 14px 0;
-		ul
-		{
-			display: flex;
-			align-items: center;
-		}
-		li
-		{
-			font-size: 12px;
-			color: rgba(25, 28, 33, 0.7);
-			width: 21px;
-			height: 25px;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border-radius: 2px;
-			margin-right: 2px;
-			&.active
-			{
-				background-color: rgba(103, 115, 135, 0.1);
-				color: #191C21;
-			}
-			&.points
-			{
-				position: relative;
-				padding: 0 7px;
-				&:after
-				{
-					content: '...';
-					position: absolute;
-					top: 3px;
-				}
-			}
 		}
 	}
 </style>

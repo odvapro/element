@@ -10,8 +10,10 @@
 </template>
 <script>
 	import PropertyItem from '@/components/forms/PropertyItem.vue';
+	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
+		mixins: [PopupParams],
 		components: { PropertyItem }
 	}
 </script>
@@ -23,7 +25,5 @@
 		border-radius: 2px;
 		min-width: 191px;
 		background-color: #fff;
-		position: absolute;
-		z-index: 5;
 	}
 </style>

@@ -22,7 +22,7 @@
 	export default
 	{
 		props: ['icon'],
-		components: { Checkbox }
+		components: { Checkbox },
 	}
 </script>
 <style lang="scss">
@@ -39,7 +39,7 @@
 	.props-list-item
 	{
 		display: flex;
-		height: 43px;
+		height: 40px;
 		align-items: center;
 		padding: 0 9px;
 		&:hover
@@ -63,11 +63,13 @@
 	{
 		color: #677387;
 		font-size: 12px;
+		padding-right: 20px;
 	}
 	.props-real-name
 	{
 		color: rgba(103, 115, 135, 0.4);
 		font-size: 10px;
+		padding-right: 20px;
 	}
 	.props-checkbox-wrapper
 	{

@@ -1,22 +1,8 @@
 <template>
 	<div class="tag-search">
 		<div class="tab-popup-head">
-			Search tag
-		</div>
-		<div class="tab-popup-item">
-			<div class="tag-icon">
-				<img src="/images/lines.svg" alt="">
-			</div>
 			<div class="search-tag-item">
-				Shirt
-			</div>
-		</div>
-		<div class="tab-popup-item">
-			<div class="tag-icon">
-				<img src="/images/lines.svg" alt="">
-			</div>
-			<div class="search-tag-item">
-				Shirt
+				shirt
 			</div>
 		</div>
 		<div class="tab-popup-item">
@@ -24,21 +10,38 @@
 				<img src="/images/lines.svg" alt="">
 			</div>
 			<div class="search-tag-item">
-				Shirt
+				shirt
+			</div>
+		</div>
+		<div class="tab-popup-item">
+			<div class="tag-icon">
+				<img src="/images/lines.svg" alt="">
+			</div>
+			<div class="search-tag-item">
+				shirt
+			</div>
+		</div>
+		<div class="tab-popup-item">
+			<div class="tag-icon">
+				<img src="/images/lines.svg" alt="">
+			</div>
+			<div class="search-tag-item">
+				shirt
 			</div>
 		</div>
 	</div>
 </template>
 <script>
+	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
-
+		mixins: [PopupParams],
 	}
 </script>
 <style lang="scss">
 	.tab-popup-head
 	{
-		height: 43px;
+		height: 49px;
 		display: flex;
 		align-items: center;
 		padding: 0 9px;
@@ -53,6 +56,7 @@
 		width: 193px;
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
+		background: white;
 	}
 	.tag-icon
 	{
@@ -81,7 +85,7 @@
 		display: flex;
 		padding: 0 9px;
 		align-items: center;
-		height: 43px;
+		height: 30px;
 		cursor: pointer;
 		&:hover
 		{

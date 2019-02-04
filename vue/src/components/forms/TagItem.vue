@@ -1,33 +1,24 @@
 <template>
 	<div class="table-tag-item-wrapper">
-		<div class="table-tag-item" @click="openPopup">
+		<div class="table-tag-item" @click="showTagPopup($event)">
 			{{name}}
-		</div>
-		<div class="tag-search-popup-wrapper">
-			<TagSearch v-if="showTagPopup"/>
 		</div>
 	</div>
 </template>
 <script>
-	import TagSearch from '@/components/popups/TagSearch.vue';
+	import Popup from '@/mixins/popup.js';
 	export default
 	{
-		components: {TagSearch},
 		props: ['name'],
-		data()
-		{
-			return {
-				showTagPopup: false
-			}
-		},
+		mixins: [Popup],
 		methods:
 		{
 			/**
-			 * Открыть попап для поиска тегов
+			 * Отобразить попап тегов
 			 */
-			openPopup()
+			showTagPopup(event)
 			{
-				this.showTagPopup = !this.showTagPopup;
+				this.showPopup(event.target.closest('.table-item'), 'TagSearch', 'left-top');
 			}
 		}
 	}
@@ -43,11 +34,5 @@
 		color: #7C7791;
 		position: relative;
 		cursor: pointer;
-	}
-	.tag-search-popup-wrapper
-	{
-		position: absolute;
-		z-index: 4;
-		background-color: #fff;
 	}
 </style>

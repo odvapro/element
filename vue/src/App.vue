@@ -4,15 +4,18 @@
 			<Sidebar/>
 			<router-view class="content-wrapper"/>
 		</div>
+		<MainPopup/>
 	</div>
 </template>
 
 <script>
-	import Sidebar from '@/components/layouts/Sidebar.vue'
+	import Sidebar from '@/components/layouts/Sidebar.vue';
+	import MainPopup from '@/components/popups/MainPopup.vue';
+
 	export default
 	{
 		name: 'App',
-		components: { Sidebar }
+		components: { Sidebar, MainPopup }
 	}
 </script>
 <style lang="scss">
