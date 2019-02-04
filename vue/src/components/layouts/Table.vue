@@ -115,33 +115,9 @@
 					</div>
 					<div class="table-item">
 						<div class="table-item-image-col">
-							<a href="#" class="table-item-img-wrapper">
+							<div class="table-item-img-wrapper" v-for="item in 10" @click="showPopup($event.target.closest('.table-item'), 'Upload', 'left-top')">
 								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
+							</div>
 						</div>
 					</div>
 					<div class="table-item">
@@ -435,6 +411,7 @@
 		width: 120px;
 		overflow: hidden;
 		padding-left: 9px;
+		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&:last-child
 		{
@@ -487,7 +464,7 @@
 					background-color: #f0f1f3;
 					width: 139px;
 					height: 100%;
-					z-index: 0;
+					z-index: 1;
 					position: absolute;
 					left: 0;
 				}
@@ -513,6 +490,7 @@
 		width: 14px;
 		height: 14px;
 		margin-right: 3px;
+		cursor: pointer;
 		margin-bottom: 3px;
 		img
 		{

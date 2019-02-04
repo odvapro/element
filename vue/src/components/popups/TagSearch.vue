@@ -35,7 +35,7 @@
 	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
-		mixins: [PopupParams],
+		mixins: [PopupParams]
 	}
 </script>
 <style lang="scss">
