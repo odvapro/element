@@ -42,6 +42,9 @@
 		},
 		methods:
 		{
+			/**
+			 * Задать активность табу
+			 */
 			setActiveTab(tab)
 			{
 				for (var item of this.tabs)

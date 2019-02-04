@@ -407,8 +407,8 @@
 		align-items: center;
 		height: 49px;
 		padding-right: 10px;
-		min-width: 120px;
-		width: 120px;
+		min-width: 140px;
+		width: 140px;
 		overflow: hidden;
 		padding-left: 9px;
 		position: relative;

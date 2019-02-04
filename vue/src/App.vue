@@ -1,24 +1,44 @@
 <template>
-	<div id="app">
-		<div class="app-wrapper">
-			<Sidebar/>
-			<router-view class="content-wrapper"/>
-		</div>
-		<MainPopup/>
+	<div class="app-layouts-wrapper">
+		<component v-bind:is="layout"></component>
 	</div>
 </template>
 
 <script>
-	import Sidebar from '@/components/layouts/Sidebar.vue';
-	import MainPopup from '@/components/popups/MainPopup.vue';
+	import Auth from './layouts/auth';
+	import Content from './layouts/content';
+	import SetupDb from './layouts/setupDb';
 
 	export default
 	{
-		name: 'App',
-		components: { Sidebar, MainPopup }
+		components: { SetupDb, Content, Auth },
+		computed:
+		{
+			/**
+			 * Подключение нужного шаблона
+			 */
+			layout()
+			{
+				if (!this.$store.state.isIntallDb)
+					return 'SetupDb';
+
+				if (!this.$store.state.isAuth)
+					return 'Auth';
+
+				return 'Content';
+			}
+		}
 	}
 </script>
 <style lang="scss">
+	.app-layouts-wrapper
+	{
+		height: 100vh;
+	}
+	*
+	{
+		box-sizing: border-box;
+	}
 	body
 	{
 		min-width: 1180px;

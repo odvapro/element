@@ -114,6 +114,8 @@
 			{
 				position: relative;
 				padding: 0 7px;
+				width: 35px;
+				pointer-events: none;
 				&:after
 				{
 					content: '...';

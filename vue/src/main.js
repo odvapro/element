@@ -17,18 +17,26 @@ Vue.config.productionTip = false;
 router.beforeEach(async function(to, from, next) {
 	var valid = await router.app.$axios({url: '/api/' });
 
-	if (!valid.data.success && to.name != 'config')
-		next({name: 'config'});
+	if (!valid.data.success)
+	{
+		store.commit('setInstallDb', false);
+		return false;
+	}
 
+	store.commit('setInstallDb', true);
 	next();
 });
 
 router.beforeEach(async function(to, from, next) {
 	var valid = await router.app.$axios({url: '/api/auth/isLogged/' });
 
-	if (!valid.data.success && to.name != 'config' && to.name != 'auth')
-		next({name: 'auth'});
+	if (!valid.data.success)
+	{
+		store.commit('setAuth', false);
+		return false;
+	}
 
+	store.commit('setAuth', true);
 	next();
 });
 

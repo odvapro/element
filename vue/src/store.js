@@ -8,10 +8,26 @@ export default new Vuex.Store({
 		drugPosition: 400,
 		openPopupName:false,
 		popupCoords: '',
-		openPopup: false
+		openPopup: false,
+		isAuth: false,
+		isIntallDb: false
 	},
 	mutations:
 	{
+		/**
+		 * Установить статус конфигурации бд
+		 */
+		setInstallDb(state, status)
+		{
+			state.isIntallDb = status;
+		},
+		/**
+		 * Установить статус авторизации
+		 */
+		setAuth(state, status)
+		{
+			state.isAuth = status;
+		},
 		/**
 		 * Установить ширину сайдбара
 		 */

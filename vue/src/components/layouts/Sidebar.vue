@@ -67,12 +67,17 @@
 <style lang="scss">
 	.drug
 	{
-		width: 7px;
+		width: 4px;
 		height: 100%;
 		position: absolute;
 		top: 0;
-		right: -4px;
+		right: -2px;
 		cursor: col-resize;
+		transition: all 0.3s;
+		&:hover
+		{
+			background-color: #e6e6e6;
+		}
 	}
 	.sidebar-logo-wrapper
 	{
