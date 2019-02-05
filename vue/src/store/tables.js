@@ -7,9 +7,10 @@ const table =
 {
 	state:
 	{
+		selectRequest: {},
 		tablesList   : [],
 		tableColumns : [],
-		tableContent : [],
+		tableContent : {},
 		tableName    :
 		{
 			overide  : '',
@@ -18,6 +19,13 @@ const table =
 	},
 	mutations:
 	{
+		/**
+		 * Select запрос шаблон
+		 */
+		setSelectRequest(state, select)
+		{
+			state.selectRequest = select;
+		},
 		/**
 		 * Записать название таблицы
 		 */
@@ -31,6 +39,18 @@ const table =
 		setTables(state, tables)
 		{
 			state.tablesList = tables;
+			this.commit('setTableInfo', tables[0]);
+		},
+		/**
+		 * Установить информацию о выбранной таблице
+		 */
+		setTableInfo(state, info)
+		{
+			var names = {
+					overide : info.code,
+					real    : info.code
+				};
+			this.commit('setTableName', names)
 		},
 		/**
 		 * Записать названия столбцов таблицы
@@ -45,7 +65,7 @@ const table =
 		setTableContent(state, tableContent)
 		{
 			state.tableContent = tableContent;
-		}
+		},
 	},
 	actions:
 	{
@@ -87,6 +107,7 @@ const table =
 		 */
 		async select(store, params)
 		{
+			store.commit('setSelectRequest', params);
 			var data = qs.stringify(params);
 
 			var result = await axios({
@@ -103,6 +124,15 @@ const table =
 				return false;
 
 			store.commit('setTableContent', result.data.result);
+		},
+		/**
+		 * задать
+		 */
+		async selectPage(store, page)
+		{
+			var newParams = Object.assign(store.state.selectRequest, {});
+			newParams.select.page = page;
+			await store.dispatch('select', newParams);
 		}
 	}
 }

@@ -13,7 +13,7 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="item in $store.state.tables.tablesList" :class="{active: item.code == $store.state.tables.tableName.real}">
+				<li v-for="item in tablesList" :class="{active: item.code == $store.state.tables.tableName.real}">
 					<div class="sidebar-points">
 						<img src="/images/points.svg" alt="">
 					</div>
@@ -44,6 +44,23 @@
 <script>
 	export default
 	{
+		computed:
+		{
+			/**
+			 * Достать список таблиц
+			 */
+			tablesList()
+			{
+				return this.$store.state.tables.tablesList;
+			},
+			/**
+			 * Достать название таблицы
+			 */
+			tableName()
+			{
+				return this.$store.state.tables.tableName;
+			}
+		},
 		methods:
 		{
 			/**
@@ -52,16 +69,14 @@
 			async getTableContent(tableCol)
 			{
 				await this.$store.dispatch('getColumns', tableCol.code);
-				await this.$store.commit('setTableName', {overide: tableCol.code, real: tableCol.code});
+				await this.$store.commit('setTableInfo', tableCol);
 				await this.$store.dispatch('select', {select: { from: tableCol.code }});
 			}
 		},
 		async mounted()
 		{
 			await this.$store.dispatch('getTables');
-			await this.$store.dispatch('getColumns', this.$store.state.tables.tablesList[0].code);
-			await this.$store.dispatch('select', {select: { from: this.$store.state.tables.tablesList[0].code }});
-			await this.$store.commit('setTableName', {overide: this.$store.state.tables.tablesList[0].code, real: this.$store.state.tables.tablesList[0].code});
+			await this.getTableContent(this.tablesList[0]);
 		}
 	}
 </script>

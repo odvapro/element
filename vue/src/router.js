@@ -11,11 +11,6 @@ var router = new Router({
 			path: '/',
 			name: 'index',
 			component: () => import(/* webpackChunkName: "about" */ './pages/index.vue')
-		},
-		{
-			path: '/table/:name',
-			name: 'tableDetail',
-			component: () => import(/* webpackChunkName: "about" */ './pages/table.vue')
 		}
 	]
 });

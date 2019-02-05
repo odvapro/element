@@ -1,4 +1,5 @@
 <?php
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 class ElController extends ControllerBase
 {
@@ -63,6 +64,7 @@ class ElController extends ControllerBase
 	public function selectAction()
 	{
 		$select = $this->request->get('select');
+		$page   = (!empty($select['page'])) ? $select['page'] : 1;
 
 		if (empty($select))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
@@ -71,6 +73,15 @@ class ElController extends ControllerBase
 
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		$paginator = new PaginatorArray(
+		[
+			'data'  => $resultSelect,
+			'limit' => 20,
+			'page'  => $page,
+		]);
+
+		$resultSelect = $paginator->getPaginate();
 
 		return $this->jsonResult(['success' => true, 'result' => $resultSelect]);
 	}

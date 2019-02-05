@@ -1,13 +1,13 @@
 <template>
 	<div class="table-wrapper">
 		<div class="table-head">
-			<div class="table-head-name" v-if="$store.state.tables.tableName.real">
+			<div class="table-head-name" v-if="tableInfo">
 				<div class="table-icon-wrapper">
 					<img src="/images/tableicon.svg" alt="">
 				</div>
 				<div class="table-name-wrapper">
-					<div class="table-overide-name">{{$store.state.tables.tableName.overide}}</div>
-					<div class="table-real-name">{{$store.state.tables.tableName.real}}</div>
+					<div class="table-overide-name">{{tableInfo.name.overide}}</div>
+					<div class="table-real-name">{{tableInfo.name.real}}</div>
 				</div>
 			</div>
 			<div class="table-head-options">
@@ -35,7 +35,7 @@
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
-					<div class="table-item" v-for="item in $store.state.tables.tableColumns" :style="{width: '140px', 'min-width': '140px'}">
+					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-img">
 							<img src="/images/sharp.svg" alt="">
 						</div>
@@ -43,6 +43,7 @@
 							<div class="table-item-overide-name">{{item.Field}}</div>
 							<div class="table-item-real-name">{{item.Field}}</div>
 						</div>
+						<div class="drug-col" @mousedown="resizeCol(item)"></div>
 					</div>
 					<div class="table-item">
 						<div class="table__add-column-item">
@@ -53,14 +54,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="table-row" v-for="row in $store.state.tables.tableContent">
+				<div class="table-row" v-for="(row, rowIndex) in result.items">
 					<div class="table-overlay-row">
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
-					<div class="table-item" v-for="item in row" :style="{'min-width': '140px', width: '140px'}">
+					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{item}}</div>
+							<div class="table-item-overide-name">{{row[item.Field]}}</div>
 						</div>
 					</div>
 					<!-- <div class="table-item">
@@ -194,7 +195,12 @@
 				</div> -->
 			</div>
 		</div>
-		<Pagination/>
+		<Pagination
+			v-if="result.total_pages > 1"
+			:maxPage="result.total_pages"
+			:current="result.current"
+			@change="selectPage"
+		/>
 	</div>
 </template>
 <script>
@@ -214,11 +220,66 @@
 					isDrug: false,
 					posX: 0
 				},
+				column:
+				{
+					isDrug: false,
+					posX: 0
+				},
 				openProperties: false
+			}
+		},
+		computed:
+		{
+			/**
+			 * Результат запроса на доставание содержимого таблицы
+			 */
+			result()
+			{
+				if(typeof this.$store.state.tables.tableContent.items == 'undefined')
+					return {};
+
+				return this.$store.state.tables.tableContent;
+			},
+			/**
+			 * Достать информацию о таблице
+			 */
+			tableInfo()
+			{
+				if(!this.$store.state.tables.tableName.real)
+					return false;
+
+				return {
+					name         : this.$store.state.tables.tableName,
+					tableColumns : this.$store.state.tables.tableColumns
+				};
 			}
 		},
 		methods:
 		{
+			resizeCol(col)
+			{
+				var self = this;
+				document.addEventListener('mousedown', function(event)
+				{
+					if (event.target.classList.value != 'drug-col')
+						return false;
+
+					self.column.isDrug = true;
+					self.column.posX = event.pageX;
+				}, false);
+
+				document.addEventListener('mousemove', function(event)
+				{
+					if (!self.column.isDrug)
+						return false;
+
+					// col.width = (self.column.posX - event.pageX);
+				}, false);
+				document.addEventListener('mouseup', function(event)
+				{
+					self.column.isDrug = false;
+				}, false);
+			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */
@@ -257,8 +318,15 @@
 					self.$cookie.set('drugPosition', self.points.posX, 111);
 				}, false);
 			},
+			/**
+			 * Эмит с пагинации. Задает текущую страницу
+			 */
+			selectPage(page)
+			{
+				this.$store.dispatch('selectPage', page);
+			}
 		},
-		created()
+		mounted()
 		{
 			this.initEventScale();
 		}
@@ -487,6 +555,20 @@
 			width: 100%;
 			height: 100%;
 			object-fit: contain;
+		}
+	}
+	.drug-col
+	{
+		width: 4px;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		right: -2px;
+		cursor: col-resize;
+		transition: all 0.3s;
+		&:hover
+		{
+			background-color: #e6e6e6;
 		}
 	}
 </style>

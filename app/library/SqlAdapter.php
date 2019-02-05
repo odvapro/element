@@ -265,6 +265,11 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
+		foreach ($res as &$value)
+		{
+			$value['width'] = 140;
+		}
+
 		return $res;
 	}
 }
