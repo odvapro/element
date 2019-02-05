@@ -1,13 +1,13 @@
 <template>
 	<div class="table-wrapper">
 		<div class="table-head">
-			<div class="table-head-name">
+			<div class="table-head-name" v-if="$store.state.tables.tableName.real">
 				<div class="table-icon-wrapper">
 					<img src="/images/tableicon.svg" alt="">
 				</div>
 				<div class="table-name-wrapper">
-					<div class="table-real-name">Products</div>
-					<div class="table-overide-name">Products</div>
+					<div class="table-overide-name">{{$store.state.tables.tableName.overide}}</div>
+					<div class="table-real-name">{{$store.state.tables.tableName.real}}</div>
 				</div>
 			</div>
 			<div class="table-head-options">
@@ -35,58 +35,13 @@
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
-					<div class="table-item">
+					<div class="table-item" v-for="item in $store.state.tables.tableColumns" :style="{width: '140px', 'min-width': '140px'}">
 						<div class="table-item-img">
 							<img src="/images/sharp.svg" alt="">
 						</div>
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Identifier</div>
-							<div class="table-item-real-name">id</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
-						</div>
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Product name</div>
-							<div class="table-item-real-name">name</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
-						</div>
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Picture</div>
-							<div class="table-item-real-name">pic</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
-						</div>
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Price</div>
-							<div class="table-item-real-name">Price</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
-						</div>
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Categories</div>
-							<div class="table-item-real-name">sections</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
-						</div>
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Active</div>
-							<div class="table-item-real-name">act</div>
+							<div class="table-item-overide-name">{{item.Field}}</div>
+							<div class="table-item-real-name">{{item.Field}}</div>
 						</div>
 					</div>
 					<div class="table-item">
@@ -98,17 +53,17 @@
 						</div>
 					</div>
 				</div>
-				<div class="table-row">
+				<div class="table-row" v-for="row in $store.state.tables.tableContent">
 					<div class="table-overlay-row">
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
-					<div class="table-item">
+					<div class="table-item" v-for="item in row" :style="{'min-width': '140px', width: '140px'}">
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">1sd sa dsa </div>
+							<div class="table-item-overide-name">{{item}}</div>
 						</div>
 					</div>
-					<div class="table-item">
+					<!-- <div class="table-item">
 						<div class="table-item-name-wrapper">
 							<div class="table-item-overide-name">Product name</div>
 						</div>
@@ -133,14 +88,14 @@
 						<div class="table-item-checkbox">
 							<Checkbox/>
 						</div>
-					</div>
+					</div> -->
 					<div class="table-item">
 						<div class="table-empty-col">
 
 						</div>
 					</div>
 				</div>
-				<div class="table-row">
+				<!-- <div class="table-row">
 					<div class="table-overlay-row">
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
@@ -236,7 +191,7 @@
 
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<Pagination/>
@@ -329,17 +284,17 @@
 	}
 	.table-real-name
 	{
+		color: rgba(103, 115, 135, 0.4);
+		font-size: 10px;
+		text-transform: lowercase;
+	}
+	.table-overide-name
+	{
 		font-family: $rBold;
 		font-size: 20px;
 		color: #191C21;
 		line-height: 22px;
 		text-transform: capitalize;
-	}
-	.table-overide-name
-	{
-		color: rgba(103, 115, 135, 0.4);
-		font-size: 10px;
-		text-transform: lowercase;
 	}
 	.table-icon-wrapper
 	{
@@ -407,8 +362,6 @@
 		align-items: center;
 		height: 49px;
 		padding-right: 10px;
-		min-width: 140px;
-		width: 140px;
 		overflow: hidden;
 		padding-left: 9px;
 		position: relative;

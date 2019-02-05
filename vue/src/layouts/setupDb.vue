@@ -45,11 +45,12 @@
 					</div>
 				</label>
 				<div class="setup-db-button-wrapper">
-					<div class="setup-db-button-light">Check</div>
-					<div class="setup-db-button-dark" @click="submitConfig">Install</div>
+					<div class="setup-db-button-light" @click="submitConfig(true)">Check</div>
+					<div class="setup-db-button-dark" @click="submitConfig(false)">Install</div>
 				</div>
 			</div>
 		</div>
+		{{errors}}
 	</div>
 </template>
 <script>
@@ -67,6 +68,7 @@ export default
 				adapter: 'Mysql',
 				password: 'Hi8R28XY|P',
 				baseUrl: '/',
+				isCheck: false
 			}
 		}
 	},
@@ -75,7 +77,7 @@ export default
 		/**
 		 * отправить конфигурацию БД на сервер
 		 */
-		async submitConfig()
+		async submitConfig(isCheck)
 		{
 			this.errors = '';
 
@@ -83,6 +85,7 @@ export default
 				data = new FormData();
 
 			this.config.password = this.config.password.replace(/[\`\~\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\\\|]/g, '\\' + '$&');
+			this.config.isCheck = isCheck;
 
 			for (var item in this.config)
 				data.append(item, this.config[item]);
@@ -92,6 +95,12 @@ export default
 			this.config.password = oldPass;
 
 			if (!result.data.success)
+			{
+				this.errors = result.data.message;
+				return false;
+			}
+
+			if (result.data.success && isCheck)
 			{
 				this.errors = result.data.message;
 				return false;

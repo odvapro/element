@@ -23,7 +23,7 @@
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
-		min-width: 191px;
+		min-width: 193px;
 		background-color: #fff;
 	}
 </style>

@@ -13,7 +13,7 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="item in tables">
+				<li v-for="item in $store.state.tables.tablesList" :class="{active: item.code == $store.state.tables.tableName.real}">
 					<div class="sidebar-points">
 						<img src="/images/points.svg" alt="">
 					</div>
@@ -23,7 +23,7 @@
 					<div class="sidebar-tableicon-wrapper">
 						<img src="/images/tableicon.svg" alt="">
 					</div>
-					<div class="sidebar-name-wrapper">
+					<div class="sidebar-name-wrapper" @click="getTableContent(item)">
 						<div class="sidebar-overide-table-name">{{item.code}}</div>
 						<div class="sidebar-real-table-name">{{item.code}}</div>
 					</div>
@@ -44,23 +44,24 @@
 <script>
 	export default
 	{
-		data()
+		methods:
 		{
-			return {
-				tables: []
+			/**
+			 * Достать содержимое таблицы
+			 */
+			async getTableContent(tableCol)
+			{
+				await this.$store.dispatch('getColumns', tableCol.code);
+				await this.$store.commit('setTableName', {overide: tableCol.code, real: tableCol.code});
+				await this.$store.dispatch('select', {select: { from: tableCol.code }});
 			}
 		},
 		async mounted()
 		{
-			var result = await this.$axios({
-				method: 'get',
-				url: '/api/el/getTables'
-			});
-
-			if (!result.data.success)
-				return false;
-
-			this.tables = result.data.tables;
+			await this.$store.dispatch('getTables');
+			await this.$store.dispatch('getColumns', this.$store.state.tables.tablesList[0].code);
+			await this.$store.dispatch('select', {select: { from: this.$store.state.tables.tablesList[0].code }});
+			await this.$store.commit('setTableName', {overide: this.$store.state.tables.tablesList[0].code, real: this.$store.state.tables.tablesList[0].code});
 		}
 	}
 </script>

@@ -248,6 +248,16 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'from' => 'testTable'
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
 	}
 
 	public function update(ApiTester $I)

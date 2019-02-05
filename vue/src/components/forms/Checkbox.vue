@@ -38,8 +38,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 11px;
-		height: 11px;
+		width: 13px;
+		height: 13px;
 		border: 1px solid rgba(103, 115, 135, 0.4);
 		border-radius: 2px;
 		position: absolute;

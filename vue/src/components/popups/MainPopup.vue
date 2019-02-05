@@ -2,7 +2,7 @@
 	<transition name="main-popup-fade">
 		<div class="main-popup-overlay" v-if="$store.state.openPopup">
 			<div v-click-outside="close" id="main-popup-wrapper"
-				:style="styles" @load="console.log('kokok')">
+				:style="styles">
 				<component v-bind:is="contentComponent" @width="setWidth"></component>
 			</div>
 		</div>
