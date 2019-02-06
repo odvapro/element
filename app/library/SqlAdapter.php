@@ -237,7 +237,9 @@ class SqlAdapter extends PdoAdapter
 		);
 		foreach ($dbTables as $table)
 		{
-			if(strpos($table['TABLE_NAME'], 'em_') === 0) continue;
+			if(strpos($table['TABLE_NAME'], 'em_') === 0)
+				continue;
+
 			$tables[] = [
 				'code'    => $table['TABLE_NAME'],
 				'name'    => false
@@ -265,11 +267,17 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
-		foreach ($res as &$value)
+		// достали из базы данных
+		$columns = [];
+		foreach ($res as &$fieldDbArray)
 		{
-			$value['width'] = 140;
+			if (is_array($fieldDbArray))
+				$fieldDbArray = array_change_key_case($fieldDbArray);
+
+			$fieldDbArray['width'] = 140;
+			$columns[$fieldDbArray['field']] = $fieldDbArray;
 		}
 
-		return $res;
+		return $columns;
 	}
 }

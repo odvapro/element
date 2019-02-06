@@ -1,5 +1,5 @@
 <template>
-	<div class="table-wrapper">
+	<div class="table-wrapper" @mousemove="resizeColumn($event, column.col)" @mouseup="endResize($event, column.col)">
 		<div class="table-head">
 			<div class="table-head-name" v-if="tableInfo">
 				<div class="table-icon-wrapper">
@@ -30,7 +30,7 @@
 		</div>
 		<div class="table-vertical-scroll">
 			<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
-				<div class="table-row no-hover" @mousemove="resizeColumn($event, column.col)" @mouseup="endResize($event, column.col)">
+				<div class="table-row no-hover">
 					<div class="table-overlay-row">
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
@@ -40,8 +40,8 @@
 							<img src="/images/sharp.svg" alt="">
 						</div>
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{item.Field}}</div>
-							<div class="table-item-real-name">{{item.Field}}</div>
+							<div class="table-item-overide-name">{{item.field}}</div>
+							<div class="table-item-real-name">{{item.field}}</div>
 						</div>
 						<div class="drug-col" @mousedown="reginsterEventResize($event, item)"></div>
 					</div>
@@ -61,7 +61,7 @@
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{row[item.Field]}}</div>
+							<div class="table-item-overide-name">{{row[item.field]}}</div>
 						</div>
 					</div>
 					<!-- <div class="table-item">

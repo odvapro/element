@@ -13,7 +13,10 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="item in tablesList" :class="{active: item.code == $store.state.tables.tableName.real}">
+				<li v-for="item in tablesList"
+					:class="{active: item.code == $store.state.tables.tableName.real}"
+					@click="getTableContent(item)"
+				>
 					<div class="sidebar-points">
 						<img src="/images/points.svg" alt="">
 					</div>
@@ -23,7 +26,7 @@
 					<div class="sidebar-tableicon-wrapper">
 						<img src="/images/tableicon.svg" alt="">
 					</div>
-					<div class="sidebar-name-wrapper" @click="getTableContent(item)">
+					<div class="sidebar-name-wrapper">
 						<div class="sidebar-overide-table-name">{{item.code}}</div>
 						<div class="sidebar-real-table-name">{{item.code}}</div>
 					</div>
@@ -143,6 +146,7 @@
 			height: 40px;
 			padding-left: 23px;
 			position: relative;
+			cursor: pointer;
 			.sidebar-points
 			{
 				display: none;
@@ -153,7 +157,6 @@
 				width: 19px;
 				padding: 0 17px;
 				align-items: center;
-				cursor: pointer;
 				img
 				{
 					width: 100%;

@@ -31,11 +31,15 @@ CREATE TABLE `em_types` (
   `field` varchar(200) NOT NULL DEFAULT '',
   `type` varchar(20) NOT NULL DEFAULT '',
   `required` int(5) NOT NULL DEFAULT '0',
-  `multiple` int(5) NOT NULL DEFAULT '0',
   `settings` text,
-  `hidden` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `em_types` WRITE;
+INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`)
+VALUES
+  (1, 'testTable', 'name', 'em_check', 0, NULL);
+UNLOCK TABLES;
 
 
 
@@ -90,8 +94,27 @@ CREATE TABLE `newTest` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `em_views`;
 
+CREATE TABLE `em_views` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `table` varchar(200) NOT NULL DEFAULT '',
+  `filter` text,
+  `sort` text,
+  `columns` text,
+  `default` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `em_views` WRITE;
+INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `columns`, `default`)
+VALUES
+  (1, 'Отображение 1', 'newTest', '[]', '[]', '[]', 1),
+  (2, 'Отображение 2', 'newTest', '[]', '[]', '[]', 0),
+  (3, 'Отображение 3', 'testTable', '[]', '[]', '[]', 0),
+  (4, 'Отображение 4', 'testTable', '[]', '[]', '[]', 1);
+UNLOCK TABLES;
 # Дамп таблицы testTable
 # ------------------------------------------------------------
 

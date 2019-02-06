@@ -33,6 +33,14 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.code');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.name');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.filter');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.sort');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.columns');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.id');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.table');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.name');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.default');
 	}
 
 	public function getColumns(ApiTester $I)
@@ -43,12 +51,17 @@ class TableWorkerCest
 		$I->sendPOST('/el/getColumns', ['tableName' => 'newTest']);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Field');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Null');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Key');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Default');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.Extra');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.field');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.type');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.null');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.key');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.default');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.extra');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.width');
+
+		$I->seeResponseJsonMatchesJsonPath('$.columns.em_type');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.em_settings');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.em_required');
 
 		$I->sendPOST('/el/getColumns', ['tableName' => 'asdsad']);
 		$I->seeResponseCodeIs(200);
