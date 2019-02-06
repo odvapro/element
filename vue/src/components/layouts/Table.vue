@@ -29,8 +29,8 @@
 			</div>
 		</div>
 		<div class="table-vertical-scroll">
-			<div class="table__min-width">
-				<div class="table-row no-hover">
+			<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
+				<div class="table-row no-hover" @mousemove="resizeColumn($event, column.col)" @mouseup="endResize($event, column.col)">
 					<div class="table-overlay-row">
 						<Checkbox/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
@@ -43,7 +43,7 @@
 							<div class="table-item-overide-name">{{item.Field}}</div>
 							<div class="table-item-real-name">{{item.Field}}</div>
 						</div>
-						<div class="drug-col" @mousedown="resizeCol(item)"></div>
+						<div class="drug-col" @mousedown="reginsterEventResize($event, item)"></div>
 					</div>
 					<div class="table-item">
 						<div class="table__add-column-item">
@@ -223,13 +223,29 @@
 				column:
 				{
 					isDrug: false,
-					posX: 0
+					posX: 0,
+					start: 0,
+					top: 0,
+					width: 0,
+					col: ''
 				},
 				openProperties: false
 			}
 		},
 		computed:
 		{
+			/**
+			 * Определить минимальную ширину таблицу
+			 */
+			getTableMinWidth()
+			{
+				var width = 0;
+
+				for (var item of this.tableInfo.tableColumns)
+					width += item.width;
+
+				return width + 300;
+			},
 			/**
 			 * Результат запроса на доставание содержимого таблицы
 			 */
@@ -256,29 +272,39 @@
 		},
 		methods:
 		{
-			resizeCol(col)
+			/**
+			 * Начальные значения для изменения ширины колонки
+			 */
+			reginsterEventResize(event, col)
 			{
-				var self = this;
-				document.addEventListener('mousedown', function(event)
-				{
-					if (event.target.classList.value != 'drug-col')
-						return false;
+				this.column.start = event.target.getBoundingClientRect().left;
+				this.column.width = col.width;
+				this.column.isDrug = true;
+				this.column.posX = event.pageX;
+				this.column.col = col;
+			},
+			/**
+			 * Убрать событие изменения ширины
+			 */
+			endResize(event, col)
+			{
+				this.column.isDrug = false;
+			},
+			/**
+			 * Изменять ширину колонки
+			 */
+			resizeColumn(event, col)
+			{
+				if (!this.column.isDrug)
+					return false;
 
-					self.column.isDrug = true;
-					self.column.posX = event.pageX;
-				}, false);
+				col.width = Math.abs(this.column.posX - event.pageX - this.column.width);
 
-				document.addEventListener('mousemove', function(event)
-				{
-					if (!self.column.isDrug)
-						return false;
+				if (col.width < 90)
+					col.width = 90;
 
-					// col.width = (self.column.posX - event.pageX);
-				}, false);
-				document.addEventListener('mouseup', function(event)
-				{
-					self.column.isDrug = false;
-				}, false);
+				if (col.width > 600)
+					col.width = 600;
 			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
@@ -531,10 +557,6 @@
 	.table-vertical-scroll
 	{
 		overflow: auto;
-	}
-	.table__min-width
-	{
-		min-width: 900px;
 	}
 	.table__add-column-item
 	{
