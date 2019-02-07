@@ -1,11 +1,27 @@
 <?php
-use Phalcon\Di;
 
-abstract class Element
+class Element
 {
-	private static function getColumnsType($tableName, $tableColumns)
+	protected $eldb;
+
+	public function __construct($eldb)
+	{
+		$this->eldb = $eldb;
+	}
+
+	/**
+	 * Достать колонки таблицы c типами
+	 * @param  [string] $tableName
+	 * @return Array
+	 */
+	public function getColumns($tableName)
 	{
 		if (empty($tableName))
+			return false;
+
+		$tableColumns = $this->eldb->getColumns($tableName);
+
+		if (empty($tableColumns))
 			return false;
 
 		// определить тип филда - переопределенный
@@ -41,22 +57,36 @@ abstract class Element
 			$tableColumn = array_merge($tableColumn, $emFieldArray);
 		}
 
-		return $tableColumn;
-	}
-	public static function getColumns($tableName)
-	{
-		$eldb = Di::getDefault()->get('eldb');
-
-		if (empty($tableName))
-			return false;
-
-		$tableColumns = $eldb->getColumns($tableName);
-
-		if (empty($tableColumns))
-			return false;
-
-		$tableColumns = Element::getColumnsType($tableName, $tableColumns);
-
 		return $tableColumns;
+	}
+
+	public function select($selectParams)
+	{
+		if (empty($selectParams))
+			return false;
+
+		if (empty($selectParams['from']))
+			return false;
+
+		$fieldsParam = $this->getColumns($selectParams['from']);
+		$selectResult = $this->eldb->select($selectParams);
+
+		if ($selectResult === false)
+			return false;
+
+		$selectResultWithFields = array_map(function ($selectItem) use ($fieldsParam)
+		{
+			$result = [];
+
+			foreach ($selectItem as $key => $columnValue)
+			{
+				$result[$key]['type']     = $fieldsParam[$key]['em_type'];
+				$result[$key]['settings'] = $fieldsParam[$key]['em_settings'];
+				$result[$key]['value']    = $columnValue;
+			}
+			return $result;
+		}, $selectResult);
+
+		return $selectResultWithFields;
 	}
 }

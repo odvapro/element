@@ -69,7 +69,7 @@ class ElController extends ControllerBase
 		if (empty($select))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultSelect = $this->eldb->select($select);
+		$resultSelect = $this->element->select($select);
 
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
@@ -116,7 +116,7 @@ class ElController extends ControllerBase
 		if (empty($tableName))
 			return $this->jsonResult(['success' => false, 'message' => 'need require param tableName']);
 
-		$tableColumns = Element::getColumns($tableName);
+		$tableColumns = $this->element->getColumns($tableName);
 		if ($tableColumns === false)
 			return $this->jsonResult(['success' => false, 'message' => 'table not found']);
 

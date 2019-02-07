@@ -61,7 +61,7 @@
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{row[item.field]}}</div>
+							<div class="table-item-overide-name">{{row[item.field].value}}</div>
 						</div>
 					</div>
 					<!-- <div class="table-item">
@@ -241,8 +241,11 @@
 			{
 				var width = 0;
 
-				for (var item of this.tableInfo.tableColumns)
+				for (var item in this.tableInfo.tableColumns)
+				{
+					item = this.tableInfo.tableColumns[item];
 					width += item.width;
+				}
 
 				return width + 300;
 			},

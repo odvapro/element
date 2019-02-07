@@ -51,17 +51,17 @@ class TableWorkerCest
 		$I->sendPOST('/el/getColumns', ['tableName' => 'newTest']);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.columns.field');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.null');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.key');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.default');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.extra');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.width');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.field');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.type');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.null');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.key');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.default');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.extra');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.width');
 
-		$I->seeResponseJsonMatchesJsonPath('$.columns.em_type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.em_settings');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.em_required');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_type');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_settings');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_required');
 
 		$I->sendPOST('/el/getColumns', ['tableName' => 'asdsad']);
 		$I->seeResponseCodeIs(200);
@@ -81,12 +81,28 @@ class TableWorkerCest
 		[
 			'select' =>
 			[
+				'from' => 'testTable'
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
 				'fields' => ['name', 'id', 'col'],
 				'from' => 'testTable'
 			]
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -171,6 +187,9 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -211,6 +230,9 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -234,6 +256,9 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select');
 		$I->seeResponseCodeIs(200);
@@ -261,6 +286,9 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -271,6 +299,9 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 	}
 
 	public function update(ApiTester $I)

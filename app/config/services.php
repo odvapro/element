@@ -17,7 +17,6 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
  */
 $di = new FactoryDefault();
-
 /**
  * Register events manager
  */
@@ -139,4 +138,10 @@ $di->set('session', function()
 	$session = new SessionAdapter();
 	$session->start();
 	return $session;
+});
+
+$di->set('element', function () use ($di)
+{
+	$element = new Element($di->get('eldb'));
+	return $element;
 });
