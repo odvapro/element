@@ -18,7 +18,7 @@
 	</div>
 </template>
 <script>
-	import Checkbox from '@/components/forms/Checkbox.vue';
+	import Checkbox from '@/components/fields/EmCheck.vue';
 	export default
 	{
 		props: ['icon'],

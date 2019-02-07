@@ -142,6 +142,11 @@ $di->set('session', function()
 
 $di->set('element', function () use ($di)
 {
-	$element = new Element($di->get('eldb'));
+	$element = new Element($di->get('eldb'), $di);
 	return $element;
 });
+
+$di->set('fields', function() use ($di)
+{
+	return new Fields($di);
+}, true);

@@ -134,9 +134,9 @@ LOCK TABLES `testTable` WRITE;
 
 INSERT INTO `testTable` (`id`, `name`, `email`, `col`, `avat`)
 VALUES
-  (1,'qqq','q',3,3),
-  (2,'ggg','rew',4,4),
-  (3,'45','4',4,4);
+  (1,'1','q',3,3),
+  (2,'0','rew',4,4),
+  (3,'1','4',4,4);
 
 /*!40000 ALTER TABLE `testTable` ENABLE KEYS */;
 UNLOCK TABLES;

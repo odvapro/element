@@ -1,7 +1,7 @@
-<template>
-	<div class="checkbox-wrapper">
-		<label class="checkbox-label">
-			<input type="checkbox" class="checkbox">
+<template class="asasassaassa">
+	<div class="em-check-wrapper">
+		<label class="em-check-label">
+			<input type="checkbox" class="em-check">
 			<span>
 				<img src="/images/check.svg" alt="">
 			</span>
@@ -11,14 +11,14 @@
 <script>
 	export default
 	{
-
+		props: ['fieldValue']
 	}
 </script>
 <style lang="scss">
-.checkbox-wrapper
+.em-check-wrapper
 {
 	display: inherit;
-	.checkbox-label
+	.em-check-label
 	{
 		display: inline-block;
 		position: relative;
@@ -28,12 +28,12 @@
 		color: #334D66;
 		cursor: pointer;
 	}
-	.checkbox
+	.em-check
 	{
 		visibility: hidden;
 		position: absolute;
 	}
-	.checkbox:not(checked) + span
+	.em-check:not(checked) + span
 	{
 		display: flex;
 		align-items: center;
@@ -47,7 +47,7 @@
 		transition: border 0.3s;
 		background-color: #fff;
 	}
-	.checkbox:checked + span
+	.em-check:checked + span
 	{
 		background: #7C7791;
 		border: 1px solid #7C7791;
@@ -62,12 +62,12 @@
 		}
 	}
 
-	.checkbox:checked:hover + span
+	.em-check:checked:hover + span
 	{
 		transition: background 0.3s;
 		border: 1px solid rgba(103, 115, 135, 0.5);
 	}
-	.checkbox:not(checked):hover + span
+	.em-check:not(checked):hover + span
 	{
 		border: 1px solid rgba(103, 115, 135, 0.8);
 		transition: border 0.3s;

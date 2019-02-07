@@ -1,6 +1,6 @@
 <?php
 
-class EmString extends FieldBase
+class EmCheck extends FieldBase
 {
 	protected $value = '';
 
@@ -15,7 +15,7 @@ class EmString extends FieldBase
 	}
 	public function getValue()
 	{
-		return strval($this->value);
+		return $this->value === '1' ? true : false;
 	}
 	public function saveValue()
 	{

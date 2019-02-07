@@ -1,12 +1,46 @@
 <?php
+use Phalcon\Di;
 
 class Element
 {
 	protected $eldb;
+	protected $di;
 
-	public function __construct($eldb)
+	public function __construct($eldb, $di)
 	{
 		$this->eldb = $eldb;
+		$this->di = $di;
+
+		global $loader;
+
+		$config = $this->di->get('config');
+
+		// проходимся по папкам типов полей
+		// регистрируем эти папки
+		// выносим в переменную содержимое info.json
+		if ($handle = opendir($config->application->fldDir))
+		{
+			while($fieldName = readdir($handle))
+			{
+				$field = [];
+				$fieldDirPath = $config->application->fldDir . $fieldName;
+				if(strpos($fieldName, '.') === false && is_dir($fieldDirPath))
+				{
+					$loader->registerDirs([$fieldDirPath], true)->register();
+
+					// подготовка имени класса (если есть нижнее подчеркивание)
+					$className = explode('_', $fieldName);
+
+					foreach ($className as  &$classNamePart)
+						$classNamePart = ucfirst($classNamePart);
+					// $className[] = 'Field';
+					$className   = implode('', $className);
+
+					$fieldInfo = $className;
+				}
+			}
+			closedir($handle);
+		}
 	}
 
 	/**
@@ -74,15 +108,22 @@ class Element
 		if ($selectResult === false)
 			return false;
 
+		// $fields = Di::getDefault()->get('fields');
 		$selectResultWithFields = array_map(function ($selectItem) use ($fieldsParam)
 		{
 			$result = [];
 
 			foreach ($selectItem as $key => $columnValue)
 			{
+				$fieldClass = explode('_', $fieldsParam[$key]['em_type']);
+				$fieldClass = array_map('ucfirst', $fieldClass);
+				$fieldClass = implode('', $fieldClass);
+				$field = new $fieldClass($columnValue);
+
 				$result[$key]['type']     = $fieldsParam[$key]['em_type'];
+				$result[$key]['class']    = $fieldClass;
 				$result[$key]['settings'] = $fieldsParam[$key]['em_settings'];
-				$result[$key]['value']    = $columnValue;
+				$result[$key]['value']    = $field->getValue();
 			}
 			return $result;
 		}, $selectResult);

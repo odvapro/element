@@ -32,7 +32,7 @@
 			<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 				<div class="table-row no-hover">
 					<div class="table-overlay-row">
-						<Checkbox/>
+						<EmCheck/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
@@ -56,13 +56,11 @@
 				</div>
 				<div class="table-row" v-for="(row, rowIndex) in result.items">
 					<div class="table-overlay-row">
-						<Checkbox/>
+						<EmCheck/>
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{row[item.field].value}}</div>
-						</div>
+						<MainField :fieldValue="row[item.field]"/>
 					</div>
 					<!-- <div class="table-item">
 						<div class="table-item-name-wrapper">
@@ -91,9 +89,7 @@
 						</div>
 					</div> -->
 					<div class="table-item">
-						<div class="table-empty-col">
-
-						</div>
+						<div class="table-empty-col"></div>
 					</div>
 				</div>
 				<!-- <div class="table-row">
@@ -204,14 +200,15 @@
 	</div>
 </template>
 <script>
-	import Checkbox from '@/components/forms/Checkbox.vue';
+	import EmCheck from '@/components/fields/EmCheck.vue';
+	import MainField from '@/components/fields/MainField.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
 	import Popup from '@/mixins/popup.js';
 	export default
 	{
 		mixins: [Popup],
-		components: {Checkbox, TagItem, Pagination},
+		components: {MainField, EmCheck, TagItem, Pagination},
 		data()
 		{
 			return {
@@ -520,7 +517,7 @@
 				}
 			}
 		}
-		.checkbox-label
+		.em-check-label
 		{
 			margin-right: 8px;
 			z-index: 2;
