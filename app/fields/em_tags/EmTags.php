@@ -2,21 +2,31 @@
 
 class EmTags extends FieldBase
 {
-	protected $value = '';
-
-	public function __construct($value = '')
+	protected $fieldValue = '';
+	/**
+	 * Конструктор принимает значение поля
+	 */
+	public function __construct($fieldValue = '')
 	{
-		$this->value = $value;
+		$this->fieldValue = $fieldValue;
 	}
-
+	/**
+	 * Добавить настройки для поля
+	 */
 	public function setSettings()
 	{
 
 	}
+	/**
+	 * Достать значение поля
+	 */
 	public function getValue()
 	{
-		return $this->value;
+		return $this->fieldValue;
 	}
+	/**
+	 * Сохранить значение
+	 */
 	public function saveValue()
 	{
 

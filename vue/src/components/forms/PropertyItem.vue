@@ -13,7 +13,7 @@
 			<div class="property-item-real-name">id</div>
 		</div>
 		<div class="property-item-checkbox-wrapper">
-			<Checkbox/>
+			<Checkbox :fieldValue="{value: false}"/>
 		</div>
 	</div>
 </template>

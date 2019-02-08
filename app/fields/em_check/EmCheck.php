@@ -2,21 +2,32 @@
 
 class EmCheck extends FieldBase
 {
-	protected $value = '';
+	protected $fieldValue = '';
 
-	public function __construct($value = '')
+	/**
+	 * Конструктор принимает значение поля
+	 */
+	public function __construct($fieldValue = '')
 	{
-		$this->value = $value;
+		$this->fieldValue = $fieldValue;
 	}
-
+	/**
+	 * Добавить настройки для поля
+	 */
 	public function setSettings()
 	{
 
 	}
+	/**
+	 * Достать значение поля
+	 */
 	public function getValue()
 	{
-		return $this->value === '1' ? true : false;
+		return $this->fieldValue === '1' ? true : false;
 	}
+	/**
+	 * Сохранить значение
+	 */
 	public function saveValue()
 	{
 

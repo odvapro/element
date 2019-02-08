@@ -29,6 +29,9 @@ $di->set('dispatcher', function() use ($di)
 
 	$eventsManager->attach(
 		"dispatch:beforeException",
+		/**
+		 * перед переходом на странциу проверять есть ли такая странца
+		 */
 		function($event, $dispatcher, $exception)
 		{
 			//если нет такой страницы - перекидывает на страницу notfound
@@ -61,6 +64,9 @@ $di->set('view', function () use ($config)
 	$view = new View();
 	$view->setViewsDir($config->application->viewsDir);
 	$view->registerEngines(array(
+		/**
+		 * Регистрация вольта
+		 */
 		'.volt' => function ($view, $di) use ($config)
 		{
 			$volt = new VoltEngine($view, $di);
@@ -145,8 +151,3 @@ $di->set('element', function () use ($di)
 	$element = new Element($di->get('eldb'), $di);
 	return $element;
 });
-
-$di->set('fields', function() use ($di)
-{
-	return new Fields($di);
-}, true);

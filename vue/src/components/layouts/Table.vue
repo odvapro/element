@@ -31,10 +31,6 @@
 		<div class="table-vertical-scroll">
 			<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 				<div class="table-row no-hover">
-					<div class="table-overlay-row">
-						<EmCheck/>
-						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
-					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-img">
 							<img src="/images/sharp.svg" alt="">
@@ -56,7 +52,7 @@
 				</div>
 				<div class="table-row" v-for="(row, rowIndex) in result.items">
 					<div class="table-overlay-row">
-						<EmCheck/>
+						<!-- <EmCheck/> -->
 						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
@@ -209,6 +205,9 @@
 	{
 		mixins: [Popup],
 		components: {MainField, EmCheck, TagItem, Pagination},
+		/**
+		 * Глобальные переменные страницы
+		 */
 		data()
 		{
 			return {
@@ -352,6 +351,9 @@
 				this.$store.dispatch('selectPage', page);
 			}
 		},
+		/**
+		 * Хук при загразке страницы
+		 */
 		mounted()
 		{
 			this.initEventScale();

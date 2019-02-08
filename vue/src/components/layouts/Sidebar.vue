@@ -1,13 +1,13 @@
 <template>
 	<div class="sidebar-wrapper">
-		<div class="sidebar-logo-wrapper">
+		<router-link to="/" class="sidebar-logo-wrapper">
 			<img src="/images/logo.svg" alt="">
-		</div>
+		</router-link>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
 				<li>Quiq Find</li>
 				<li>Update</li>
-				<li>Settings & Users</li>
+				<li><router-link to="/settings/">Settings & Users</router-link></li>
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
@@ -17,19 +17,21 @@
 					:class="{active: item.code == $store.state.tables.tableName.real}"
 					@click="getTableContent(item)"
 				>
-					<div class="sidebar-points">
-						<img src="/images/points.svg" alt="">
-					</div>
-					<div class="sidebar-arrow">
-						<img src="/images/arrow.svg" alt="">
-					</div>
-					<div class="sidebar-tableicon-wrapper">
-						<img src="/images/tableicon.svg" alt="">
-					</div>
-					<div class="sidebar-name-wrapper">
-						<div class="sidebar-overide-table-name">{{item.code}}</div>
-						<div class="sidebar-real-table-name">{{item.code}}</div>
-					</div>
+					<router-link :to="/table/ + item.code + '/1'">
+						<div class="sidebar-points">
+							<img src="/images/points.svg" alt="">
+						</div>
+						<div class="sidebar-arrow">
+							<img src="/images/arrow.svg" alt="">
+						</div>
+						<div class="sidebar-tableicon-wrapper">
+							<img src="/images/tableicon.svg" alt="">
+						</div>
+						<div class="sidebar-name-wrapper">
+							<div class="sidebar-overide-table-name">{{item.code}}</div>
+							<div class="sidebar-real-table-name">{{item.code}}</div>
+						</div>
+					</router-link>
 				</li>
 			</ul>
 		</div>
@@ -101,6 +103,7 @@
 	.sidebar-logo-wrapper
 	{
 		padding: 20px 20px 0;
+		display: block;
 	}
 	.sidebar-wrapper
 	{
@@ -118,6 +121,12 @@
 			color: #677387;
 			line-height: 16px;
 			cursor: pointer;
+			a
+			{
+				text-decoration: none;
+				color: inherit;
+				display: block;
+			}
 			&.active, &:hover
 			{
 				background-color: rgba(103, 115, 135, 0.1);
@@ -139,9 +148,10 @@
 	.sidebar-tables-list
 	{
 		padding: 11px 0;
-		li
+		li a
 		{
 			display: flex;
+			text-decoration: none;
 			align-items: center;
 			height: 40px;
 			padding-left: 23px;

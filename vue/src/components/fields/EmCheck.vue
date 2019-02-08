@@ -1,7 +1,7 @@
 <template class="asasassaassa">
 	<div class="em-check-wrapper">
 		<label class="em-check-label">
-			<input type="checkbox" class="em-check">
+			<input type="checkbox" v-model="fieldValue.value" class="em-check">
 			<span>
 				<img src="/images/check.svg" alt="">
 			</span>

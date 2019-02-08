@@ -6,6 +6,9 @@ class Element
 	protected $eldb;
 	protected $di;
 
+	/**
+	 * __construct достаем и регистрируем папки с полями таблиц
+	 */
 	public function __construct($eldb, $di)
 	{
 		$this->eldb = $eldb;
@@ -93,7 +96,11 @@ class Element
 
 		return $tableColumns;
 	}
-
+	/**
+	 * Селект запрос, достаем значения и типы полей для отображения
+	 * @param  array $selectParams
+	 * @return array
+	 */
 	public function select($selectParams)
 	{
 		if (empty($selectParams))
@@ -108,22 +115,25 @@ class Element
 		if ($selectResult === false)
 			return false;
 
-		// $fields = Di::getDefault()->get('fields');
+		/**
+		 * Добавляем в селект запрос, поля для отображения
+		 * @var array
+		 */
 		$selectResultWithFields = array_map(function ($selectItem) use ($fieldsParam)
 		{
 			$result = [];
 
-			foreach ($selectItem as $key => $columnValue)
+			foreach ($selectItem as $fieldName => $columnValue)
 			{
-				$fieldClass = explode('_', $fieldsParam[$key]['em_type']);
+				$fieldClass = explode('_', $fieldsParam[$fieldName]['em_type']);
 				$fieldClass = array_map('ucfirst', $fieldClass);
 				$fieldClass = implode('', $fieldClass);
 				$field = new $fieldClass($columnValue);
 
-				$result[$key]['type']     = $fieldsParam[$key]['em_type'];
-				$result[$key]['class']    = $fieldClass;
-				$result[$key]['settings'] = $fieldsParam[$key]['em_settings'];
-				$result[$key]['value']    = $field->getValue();
+				$result[$fieldName]['type']     = $fieldsParam[$fieldName]['em_type'];
+				$result[$fieldName]['class']    = $fieldClass;
+				$result[$fieldName]['settings'] = $fieldsParam[$fieldName]['em_settings'];
+				$result[$fieldName]['value']    = $field->getValue();
 			}
 			return $result;
 		}, $selectResult);
