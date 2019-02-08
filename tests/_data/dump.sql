@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-01-29 14:11:04 +0000
+# Время создания: 2019-02-07 21:29:59 +0000
 # ************************************************************
 
 
@@ -31,12 +31,22 @@ CREATE TABLE `em_types` (
   `field` varchar(200) NOT NULL DEFAULT '',
   `type` varchar(20) NOT NULL DEFAULT '',
   `required` int(5) NOT NULL DEFAULT '0',
-  `multiple` int(5) NOT NULL DEFAULT '0',
   `settings` text,
-  `hidden` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `em_types` WRITE;
+/*!40000 ALTER TABLE `em_types` DISABLE KEYS */;
+
+INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`)
+VALUES
+  (1,'testTable','name','em_check',0,NULL),
+  (2,'testTable','avat','em_image',0,NULL),
+  (4,'newTest','name','em_string',0,NULL),
+  (5,'testTable','col','em_tags',0,NULL);
+
+/*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Дамп таблицы em_users
@@ -79,6 +89,36 @@ VALUES
 UNLOCK TABLES;
 
 
+# Дамп таблицы em_views
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `em_views`;
+
+CREATE TABLE `em_views` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `table` varchar(200) NOT NULL DEFAULT '',
+  `filter` text,
+  `sort` text,
+  `columns` text,
+  `default` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `em_views` WRITE;
+/*!40000 ALTER TABLE `em_views` DISABLE KEYS */;
+
+INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `columns`, `default`)
+VALUES
+  (1,'Отображение 1','newTest','[]','[]','[]',1),
+  (2,'Отображение 2','newTest','[]','[]','[]',0),
+  (3,'Отображение 3','testTable','[]','[]','[]',0),
+  (4,'Отображение 4','testTable','[]','[]','[]',1);
+
+/*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 # Дамп таблицы newTest
 # ------------------------------------------------------------
 
@@ -90,6 +130,15 @@ CREATE TABLE `newTest` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `newTest` WRITE;
+/*!40000 ALTER TABLE `newTest` DISABLE KEYS */;
+
+INSERT INTO `newTest` (`id`, `name`)
+VALUES
+  (1,'GH');
+
+/*!40000 ALTER TABLE `newTest` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Дамп таблицы testTable
@@ -101,8 +150,8 @@ CREATE TABLE `testTable` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) DEFAULT NULL,
   `email` varchar(222) DEFAULT NULL,
-  `col` int(11) DEFAULT NULL,
-  `avat` int(11) DEFAULT NULL,
+  `col` text,
+  `avat` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -111,9 +160,9 @@ LOCK TABLES `testTable` WRITE;
 
 INSERT INTO `testTable` (`id`, `name`, `email`, `col`, `avat`)
 VALUES
-  (1,'qqq','q',3,3),
-  (2,'ggg','rew',4,4),
-  (3,'45','4',4,4);
+  (1,'1','q','что то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]'),
+  (2,'0','rew','где то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]'),
+  (3,'1','4','когда то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]');
 
 /*!40000 ALTER TABLE `testTable` ENABLE KEYS */;
 UNLOCK TABLES;

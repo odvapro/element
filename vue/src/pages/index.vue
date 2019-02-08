@@ -1,12 +1,12 @@
 <template>
 	<div>
-		<Sidebar/>
+		<Table/>
 	</div>
 </template>
 <script>
-	import Sidebar from '@/components/layouts/Sidebar.vue'
+	import Table from '@/components/layouts/Table.vue';
 	export default
 	{
-		components: { Sidebar }
+		components: { Table }
 	}
 </script>

@@ -7,11 +7,16 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 	 * @var Phalcon\Acl\Adapter\Memory
 	 */
 	protected $_acl;
+	/**
+	 * __construct принимает di
+	 */
 	public function __construct($dependencyInjector)
 	{
 		$this->_dependencyInjector = $dependencyInjector;
 	}
-
+	/**
+	 * Ограничить доступ для определенных контроллеров
+	 */
 	public function getAcl()
 	{
 		if(!$this->_acl)

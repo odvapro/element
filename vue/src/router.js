@@ -13,20 +13,15 @@ var router = new Router({
 			component: () => import(/* webpackChunkName: "about" */ './pages/index.vue')
 		},
 		{
-			path: '/configuration/',
-			name: 'config',
-			component: () => import(/* webpackChunkName: "about" */ './pages/configuration.vue')
+			path: '/table/:tableName/:page/',
+			name: 'table',
+			component: () => import(/* webpackChunkName: "about" */ './pages/index.vue')
 		},
 		{
-			path: '/table/:name',
-			name: 'tableDetail',
-			component: () => import(/* webpackChunkName: "about" */ './pages/table.vue')
+			path: '/settings/',
+			name: 'settings',
+			component: () => import(/* webpackChunkName: "about" */ './pages/settings.vue')
 		},
-		{
-			path: '/auth',
-			name: 'auth',
-			component: () => import(/* webpackChunkName: "about" */ './pages/auth.vue')
-		}
 	]
 });
 

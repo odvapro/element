@@ -22,6 +22,11 @@ if (!empty($_POST))
 				'dbname'   => $_POST['dbname']
 			));
 
+			if ($_POST['isCheck'] == 'true')
+			{
+				echo json_encode(['success' => true, 'message' => 'Успешно']);
+				exit();
+			}
 			exec("mysql --user={$_POST['username']} --password={$_POST['password']} {$_POST['dbname']} < ../dump.sql");
 
 			$config = file_get_contents(__DIR__ . "/../app/config/configSample.php");

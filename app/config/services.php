@@ -17,7 +17,6 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
  */
 $di = new FactoryDefault();
-
 /**
  * Register events manager
  */
@@ -30,6 +29,9 @@ $di->set('dispatcher', function() use ($di)
 
 	$eventsManager->attach(
 		"dispatch:beforeException",
+		/**
+		 * перед переходом на странциу проверять есть ли такая странца
+		 */
 		function($event, $dispatcher, $exception)
 		{
 			//если нет такой страницы - перекидывает на страницу notfound
@@ -62,6 +64,9 @@ $di->set('view', function () use ($config)
 	$view = new View();
 	$view->setViewsDir($config->application->viewsDir);
 	$view->registerEngines(array(
+		/**
+		 * Регистрация вольта
+		 */
 		'.volt' => function ($view, $di) use ($config)
 		{
 			$volt = new VoltEngine($view, $di);
@@ -139,4 +144,10 @@ $di->set('session', function()
 	$session = new SessionAdapter();
 	$session->start();
 	return $session;
+});
+
+$di->set('element', function () use ($di)
+{
+	$element = new Element($di->get('eldb'), $di);
+	return $element;
 });
