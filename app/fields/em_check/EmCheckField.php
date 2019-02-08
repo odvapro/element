@@ -1,6 +1,6 @@
 <?php
 
-class EmCheck extends FieldBase
+class EmCheckField extends FieldBase
 {
 	protected $fieldValue = '';
 

@@ -196,7 +196,7 @@
 	</div>
 </template>
 <script>
-	import EmCheck from '@/components/fields/EmCheck.vue';
+	import EmCheck from '@/components/fields/EmCheckField.vue';
 	import MainField from '@/components/fields/MainField.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';

@@ -1,6 +1,6 @@
 <?php
 
-class EmTags extends FieldBase
+class EmStringField extends FieldBase
 {
 	protected $fieldValue = '';
 	/**
@@ -22,7 +22,7 @@ class EmTags extends FieldBase
 	 */
 	public function getValue()
 	{
-		return $this->fieldValue;
+		return strval($this->fieldValue);
 	}
 	/**
 	 * Сохранить значение

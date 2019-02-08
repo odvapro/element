@@ -28,19 +28,7 @@ class Element
 				$field = [];
 				$fieldDirPath = $config->application->fldDir . $fieldName;
 				if(strpos($fieldName, '.') === false && is_dir($fieldDirPath))
-				{
 					$loader->registerDirs([$fieldDirPath], true)->register();
-
-					// подготовка имени класса (если есть нижнее подчеркивание)
-					$className = explode('_', $fieldName);
-
-					foreach ($className as  &$classNamePart)
-						$classNamePart = ucfirst($classNamePart);
-					// $className[] = 'Field';
-					$className   = implode('', $className);
-
-					$fieldInfo = $className;
-				}
 			}
 			closedir($handle);
 		}
@@ -125,10 +113,11 @@ class Element
 
 			foreach ($selectItem as $fieldName => $columnValue)
 			{
-				$fieldClass = explode('_', $fieldsParam[$fieldName]['em_type']);
-				$fieldClass = array_map('ucfirst', $fieldClass);
-				$fieldClass = implode('', $fieldClass);
-				$field = new $fieldClass($columnValue);
+				$fieldClass   = explode('_', $fieldsParam[$fieldName]['em_type']);
+				$fieldClass   = array_map('ucfirst', $fieldClass);
+				$fieldClass[] = 'Field';
+				$fieldClass   = implode('', $fieldClass);
+				$field        = new $fieldClass($columnValue);
 
 				$result[$fieldName]['type']     = $fieldsParam[$fieldName]['em_type'];
 				$result[$fieldName]['class']    = $fieldClass;

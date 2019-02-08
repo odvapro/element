@@ -1,4 +1,4 @@
-<template class="asasassaassa">
+<template>
 	<div class="em-check-wrapper">
 		<label class="em-check-label">
 			<input type="checkbox" v-model="fieldValue.value" class="em-check">

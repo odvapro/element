@@ -1,6 +1,6 @@
 <?php
 
-class EmImage extends FieldBase
+class EmImageField extends FieldBase
 {
 	protected $fieldValue = '';
 	/**
