@@ -1,6 +1,6 @@
 <template>
 	<div class="tag-item-wrapper">
-		<div class="tag-item" @click="showTagPopup($event)">
+		<div class="tag-item" @click.stop.prevent="showTagPopup($event)">
 			{{name}}
 		</div>
 	</div>
