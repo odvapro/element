@@ -1,7 +1,9 @@
 <template>
 	<div class="property-item-list-item" @click.stop>
 		<div class="property-item-small-icon">
-			<img src="/images/lines.svg" alt="">
+			<svg width="6" height="5">
+				<use xlink:href="#lines"></use>
+			</svg>
 		</div>
 		<div>
 			<div class="property-item-big-icon">
@@ -29,6 +31,8 @@
 	.property-item-small-icon,
 	.property-item-big-icon
 	{
+		display: flex;
+		align-items: center;
 		img
 		{
 			width: 100%;

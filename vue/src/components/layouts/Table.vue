@@ -3,7 +3,9 @@
 		<div class="table-head">
 			<div class="table-head-name" v-if="tableInfo">
 				<div class="table-icon-wrapper">
-					<img src="/images/tableicon.svg" alt="">
+					<svg width="14" height="13">
+						<use xlink:href="#tableicon"></use>
+					</svg>
 				</div>
 				<div class="table-name-wrapper">
 					<div class="table-overide-name">{{tableInfo.name.overide}}</div>
@@ -13,19 +15,25 @@
 			<div class="table-head-options">
 				<ul class="table-head-options-list">
 					<li>Views</li>
-					<li @click="showPopup($event.target, 'Properties', 'center-bottom')">Properties</li>
+					<li @click.stop.prevent="showPopup($event.target, 'Properties', 'center-bottom')">Properties</li>
 					<li>Sort</li>
 					<li>Filter</li>
-					<li>...</li>
+					<li class="points">
+						<svg width="19" height="2">
+							<use xlink:href="#points"></use>
+						</svg>
+					</li>
 				</ul>
-				<div class="table-head-add-btn">
+				<button class="table-head-add-btn">
 					<div class="table-head-btn-wrapper">
-						<img src="/images/plus.svg" alt="">
+						<svg width="12" height="12">
+							<use xlink:href="#plus"></use>
+						</svg>
 					</div>
 					<span class="table-head-add-btn-name">
 						Add Element
 					</span>
-				</div>
+				</button>
 			</div>
 		</div>
 		<div class="table-vertical-scroll">
@@ -33,7 +41,9 @@
 				<div class="table-row no-hover">
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-img">
-							<img src="/images/sharp.svg" alt="">
+							<svg width="14" height="14">
+								<use xlink:href="#sharp"></use>
+							</svg>
 						</div>
 						<div class="table-item-name-wrapper">
 							<div class="table-item-overide-name">{{item.field}}</div>
@@ -44,7 +54,9 @@
 					<div class="table-item">
 						<div class="table__add-column-item">
 							<div class="table__add-col-img">
-								<img src="/images/plus-white.svg" alt="">
+								<svg width="12" height="12">
+									<use xlink:href="#plus-white"></use>
+								</svg>
 							</div>
 							<span class="table__add-col-label">Add field</span>
 						</div>
@@ -52,139 +64,17 @@
 				</div>
 				<div class="table-row" v-for="(row, rowIndex) in result.items">
 					<div class="table-overlay-row">
-						<!-- <EmCheck/> -->
-						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
+						<svg width="19" height="2" class="table-overlay-row-option-icon">
+							<use xlink:href="#points"></use>
+						</svg>
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<MainField :fieldValue="row[item.field]"/>
 					</div>
-					<!-- <div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Product name</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-image-col">
-							<div class="table-item-img-wrapper" v-for="item in 10" @click="showPopup($event.target.closest('.table-item'), 'Upload', 'left-top')">
-								<img src="/images/image.png" alt="">
-							</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Price</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<TagItem name="shirt"/>
-						<TagItem name="shirt"/>
-					</div>
-					<div class="table-item">
-						<div class="table-item-checkbox">
-							<Checkbox/>
-						</div>
-					</div> -->
 					<div class="table-item">
 						<div class="table-empty-col"></div>
 					</div>
 				</div>
-				<!-- <div class="table-row">
-					<div class="table-overlay-row">
-						<Checkbox/>
-						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">1</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Product name</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-image-col">
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Price</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<TagItem name="shirt"/>
-					</div>
-					<div class="table-item">
-						<div class="table-item-checkbox">
-							<Checkbox/>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-empty-col">
-
-						</div>
-					</div>
-				</div>
-				<div class="table-row">
-					<div class="table-overlay-row">
-						<Checkbox/>
-						<img class="table-overlay-row-option-icon" src="/images/points.svg" alt="">
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">1</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Product name</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-image-col">
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-							<a href="#" class="table-item-img-wrapper">
-								<img src="/images/image.png" alt="">
-							</a>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">Price</div>
-						</div>
-					</div>
-					<div class="table-item">
-						<TagItem name="Pans"/>
-					</div>
-					<div class="table-item">
-						<div class="table-item-checkbox">
-							<Checkbox/>
-						</div>
-					</div>
-					<div class="table-item">
-						<div class="table-empty-col">
-
-						</div>
-					</div>
-				</div> -->
 			</div>
 		</div>
 		<Pagination
@@ -367,11 +257,10 @@
 		justify-content: space-between;
 		align-items: flex-end;
 		margin-bottom: 16px;
-		padding-right: 95px;
 	}
 	.table-wrapper
 	{
-		padding: 23px 0 23px 21px;
+		padding: 23px 95px 23px 21px;
 	}
 	.table-head-name
 	{
@@ -405,12 +294,28 @@
 	{
 		padding-right: 6px;
 		display: flex;
+		align-items: center;
 		li
 		{
 			color: rgba(25, 28, 33, 0.7);
 			font-size: 12px;
 			margin-right: 21px;
 			cursor: pointer;
+			display: flex;
+			align-items: center;
+			&.points
+			{
+				position: relative;
+				padding: 0 7px;
+				width: 35px;
+				height: 25px;
+				img
+				{
+					width: 100%;
+					height: 100%;
+					object-fit: contain;
+				}
+			}
 		}
 	}
 	.table-head-add-btn
@@ -425,6 +330,13 @@
 		height: 30px;
 		align-items: center;
 		color: #fff;
+		outline: none;
+		border: none;
+		cursor: pointer;
+		&:active
+		{
+			border: none;
+		}
 	}
 	.table-head-btn-wrapper
 	{
@@ -490,6 +402,10 @@
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		position: relative;
+		&:last-child
+		{
+			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
+		}
 		&.no-hover:hover .table-overlay-row
 		{
 			display: none;

@@ -1,31 +1,40 @@
 <template>
 	<div class="sidebar-wrapper">
 		<router-link to="/" class="sidebar-logo-wrapper">
-			<img src="/images/logo.svg" alt="">
+			<svg width="125" height="25">
+				<use xlink:href="#logo"></use>
+			</svg>
 		</router-link>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
-				<li>Quiq Find</li>
-				<li>Update</li>
-				<li><router-link to="/settings/">Settings & Users</router-link></li>
+				<li><a href="javascript:void(0)">Quiq Find</a></li>
+				<li><a href="javascript:void(0)">Update</a></li>
+				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">Settings & Users</router-link></li>
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="item in tablesList"
-					:class="{active: item.code == $store.state.tables.tableName.real}"
 					@click="getTableContent(item)"
 				>
-					<router-link :to="/table/ + item.code + '/1'">
+					<router-link :to="/table/ + item.code + '/1'"
+						:class="{active: item.code == getActiveTable}"
+					>
 						<div class="sidebar-points">
-							<img src="/images/points.svg" alt="">
+							<svg>
+								<use xlink:href="#points"></use>
+							</svg>
 						</div>
 						<div class="sidebar-arrow">
-							<img src="/images/arrow.svg" alt="">
+							<svg width="7" height="13">
+								<use xlink:href="#arrow"></use>
+							</svg>
 						</div>
 						<div class="sidebar-tableicon-wrapper">
-							<img src="/images/tableicon.svg" alt="">
+							<svg width="14" height="13">
+								<use xlink:href="#tableicon"></use>
+							</svg>
 						</div>
 						<div class="sidebar-name-wrapper">
 							<div class="sidebar-overide-table-name">{{item.code}}</div>
@@ -36,10 +45,12 @@
 			</ul>
 		</div>
 		<div class="sidebar-footer">
-			<a href="#" class="sidebar-develop-wrapper">
+			<a href="https://odva.pro" target="_blank" class="sidebar-develop-wrapper">
 				<span class="sidebar-develop-label">Developed by</span>
 				<div class="sidebar-develop-img">
-					<img src="/images/logo-dev.svg" alt="">
+					<svg width="38" height="31" fill="none">
+						<use xlink:href="#logo-dev"></use>
+					</svg>
 				</div>
 			</a>
 		</div>
@@ -51,6 +62,20 @@
 	{
 		computed:
 		{
+			/**
+			 * Достать из урла активную страницу
+			 */
+			getActiveMenuItem()
+			{
+				return this.$route.name;
+			},
+			/**
+			 * Достать из урла активную таблицу
+			 */
+			getActiveTable()
+			{
+				return this.$route.params.tableName;
+			},
 			/**
 			 * Достать список таблиц
 			 */
@@ -78,6 +103,9 @@
 				await this.$store.dispatch('select', {select: { from: tableCol.code }});
 			}
 		},
+		/**
+		 * Хук при загрузке страницы
+		 */
 		async mounted()
 		{
 			await this.$store.dispatch('getTables');
@@ -115,7 +143,6 @@
 	{
 		li
 		{
-			padding: 9px 0 9px 20px;
 			font-family: $rMedium;
 			font-size: 14px;
 			color: #677387;
@@ -123,6 +150,7 @@
 			cursor: pointer;
 			a
 			{
+				padding: 9px 0 9px 20px;
 				text-decoration: none;
 				color: inherit;
 				display: block;
@@ -173,7 +201,7 @@
 					height: 2px;
 				}
 			}
-			&:hover
+			&:hover, &.active
 			{
 				background-color: rgba(103, 115, 135, 0.1);
 				.sidebar-points
