@@ -14,6 +14,10 @@
 	{
 		name: 'Content',
 		components: { Sidebar, MainPopup },
+		async mounted()
+		{
+			await this.$store.dispatch('getTables');
+		}
 	}
 </script>
 <style lang="scss">
