@@ -154,6 +154,13 @@
 					name         : this.$store.state.tables.tableName,
 					tableColumns : this.$store.state.tables.tableColumns
 				};
+			},
+			/**
+			 * Достать название таблицы из урла
+			 */
+			getUrlTableName()
+			{
+				this.$route.params.tableName;
 			}
 		},
 		methods:
@@ -236,7 +243,7 @@
 			selectPage(page)
 			{
 				this.$store.dispatch('selectPage', page);
-				this.$router.push(`/table/${this.$route.params.tableName}/${page}`);
+				this.$router.push(`/table/${typeof this.getUrlTableName == 'undefined' ? this.tableInfo.name.real : this.getUrlTableName}/${page}`);
 			}
 		},
 		/**

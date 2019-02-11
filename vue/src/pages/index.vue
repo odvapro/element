@@ -11,6 +11,13 @@
 		computed:
 		{
 			/**
+			 * Достать все таблицы
+			 */
+			getTableList()
+			{
+				return this.$store.state.tables.tablesList;
+			},
+			/**
 			 * Достать из урла активную таблицу
 			 */
 			getActiveTable()
@@ -32,9 +39,21 @@
 			 */
 			async getTableContent()
 			{
-				await this.$store.dispatch('getColumns', this.getActiveTable);
-				await this.$store.commit('setTableInfo', {code: this.getActiveTable});
-				await this.$store.dispatch('select', {select: { from: this.getActiveTable, page: this.getPage}});
+				await this.$store.dispatch('getColumns', typeof this.getActiveTable == 'undefined' ? this.getTableList[0].code : this.getActiveTable);
+				await this.$store.commit('setTableInfo',
+				{
+					code: typeof this.getActiveTable == 'undefined' ?
+					this.getTableList[0].code :
+					this.getActiveTable
+				});
+				await this.$store.dispatch('select',
+				{
+					select:
+					{
+						from: typeof this.getActiveTable == 'undefined' ? this.getTableList[0].code : this.getActiveTable,
+						page: typeof this.getPage == 'undefined' ? 1 : this.getPage
+					}
+				});
 			}
 		},
 		/**
