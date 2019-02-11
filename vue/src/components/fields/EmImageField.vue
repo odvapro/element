@@ -1,6 +1,6 @@
 <template>
 	<div class="em-image-item-col">
-		<div class="em-image-item-wrapper" v-for="item in fieldValue.value" @click="showPopup($event.target.closest('.table-item'), 'Upload', 'left-top')">
+		<div class="em-image-item-wrapper" v-for="item in fieldValue.value" @click.stop.prevent="showPopup($event.target.closest('.table-item'), 'Upload', 'left-top')">
 			<img :src="item.path" alt="">
 		</div>
 	</div>

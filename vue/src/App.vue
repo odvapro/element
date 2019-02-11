@@ -1,6 +1,7 @@
 <template>
 	<div class="app-layouts-wrapper">
-		<component v-bind:is="layout"></component>
+		<component :is="layout"></component>
+		<Sprite/>
 	</div>
 </template>
 
@@ -8,10 +9,10 @@
 	import Auth from './layouts/auth';
 	import Content from './layouts/content';
 	import SetupDb from './layouts/setupDb';
-
+	import Sprite from './components/layouts/Sprite.vue';
 	export default
 	{
-		components: { SetupDb, Content, Auth },
+		components: { Sprite, SetupDb, Content, Auth },
 		computed:
 		{
 			/**
@@ -19,10 +20,10 @@
 			 */
 			layout()
 			{
-				if (!this.$store.state.isIntallDb)
+				if (this.$store.state.isIntallDb == false)
 					return 'SetupDb';
 
-				if (!this.$store.state.isAuth)
+				if (this.$store.state.isAuth == false)
 					return 'Auth';
 
 				return 'Content';

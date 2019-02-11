@@ -9,8 +9,9 @@ axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 Vue.use(Vuex)
 export default new Vuex.Store({
-	modules: {
-		tables: tables,
+	modules:
+	{
+		tables: tables
 	},
 	state:
 	{
@@ -18,8 +19,8 @@ export default new Vuex.Store({
 		openPopupName:false,
 		popupCoords: '',
 		openPopup: false,
-		isAuth: false,
-		isIntallDb: false
+		isAuth: true,
+		isIntallDb: true
 	},
 	mutations:
 	{

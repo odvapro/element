@@ -7,7 +7,9 @@
 		</div>
 		<div class="tag-search-popup-item">
 			<div class="tag-search-icon">
-				<img src="/images/lines.svg" alt="">
+				<svg width="6" height="5">
+					<use xlink:href="#lines"></use>
+				</svg>
 			</div>
 			<div class="tag-search-item">
 				shirt
@@ -15,7 +17,9 @@
 		</div>
 		<div class="tag-search-popup-item">
 			<div class="tag-search-icon">
-				<img src="/images/lines.svg" alt="">
+				<svg width="6" height="5">
+					<use xlink:href="#lines"></use>
+				</svg>
 			</div>
 			<div class="tag-search-item">
 				shirt
@@ -23,7 +27,9 @@
 		</div>
 		<div class="tag-search-popup-item">
 			<div class="tag-search-icon">
-				<img src="/images/lines.svg" alt="">
+				<svg width="6" height="5">
+					<use xlink:href="#lines"></use>
+				</svg>
 			</div>
 			<div class="tag-search-item">
 				shirt
@@ -62,6 +68,8 @@
 	{
 		width: 6px;
 		height: 14px;
+		display: flex;
+		align-items: center;
 		margin-right: 8px;
 		img
 		{

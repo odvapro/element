@@ -3,7 +3,9 @@
 		<label class="em-check-label">
 			<input type="checkbox" v-model="fieldValue.value" class="em-check">
 			<span>
-				<img src="/images/check.svg" alt="">
+				<svg width="7" height="7">
+					<use xlink:href="#check"></use>
+				</svg>
 			</span>
 		</label>
 	</div>

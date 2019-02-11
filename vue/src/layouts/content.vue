@@ -13,7 +13,7 @@
 	export default
 	{
 		name: 'Content',
-		components: { Sidebar, MainPopup }
+		components: { Sidebar, MainPopup },
 	}
 </script>
 <style lang="scss">
