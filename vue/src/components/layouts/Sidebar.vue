@@ -18,7 +18,7 @@
 				<li v-for="item in tablesList"
 					@click="getTableContent(item)"
 				>
-					<router-link :to="/table/ + item.code + '/1'"
+					<router-link :to="`/table/${item.code}/1`"
 						:class="{active: item.code == getActiveTable}"
 					>
 						<div class="sidebar-points">
