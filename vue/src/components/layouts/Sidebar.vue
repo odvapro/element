@@ -102,14 +102,6 @@
 				await this.$store.commit('setTableInfo', tableCol);
 				await this.$store.dispatch('select', {select: { from: tableCol.code }});
 			}
-		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		async mounted()
-		{
-			await this.$store.dispatch('getTables');
-			await this.getTableContent(this.tablesList[0]);
 		}
 	}
 </script>

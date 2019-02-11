@@ -41,9 +41,7 @@
 				<div class="table-row no-hover">
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<div class="table-item-img">
-							<svg width="14" height="14">
-								<use xlink:href="#sharp"></use>
-							</svg>
+							<img :src="item.em_info.iconPath" alt="">
 						</div>
 						<div class="table-item-name-wrapper">
 							<div class="table-item-overide-name">{{item.field}}</div>
@@ -64,9 +62,8 @@
 				</div>
 				<div class="table-row" v-for="(row, rowIndex) in result.items">
 					<div class="table-overlay-row">
-						<svg width="19" height="2" class="table-overlay-row-option-icon">
-							<use xlink:href="#points"></use>
-						</svg>
+						<button class="table-row-btn">edit</button>
+						<button class="table-row-btn">remove</button>
 					</div>
 					<div class="table-item" v-for="item in tableInfo.tableColumns" :style="{width: item.width + 'px', 'min-width': item.width + 'px'}">
 						<MainField :fieldValue="row[item.field]"/>
@@ -189,8 +186,8 @@
 
 				col.width = Math.abs(this.column.posX - event.pageX - this.column.width);
 
-				if (col.width < 90)
-					col.width = 90;
+				if (col.width < 110)
+					col.width = 110;
 
 				if (col.width > 600)
 					col.width = 600;
@@ -239,6 +236,7 @@
 			selectPage(page)
 			{
 				this.$store.dispatch('selectPage', page);
+				this.$router.push(`/table/${this.$route.params.tableName}/${page}`);
 			}
 		},
 		/**
@@ -362,6 +360,23 @@
 		height: 2px;
 		position: relative;
 		z-index: 2;
+	}
+	.table-row-btn
+	{
+		position: relative;
+		z-index: 2;
+		color: rgba(103, 115, 135, 0.4);
+		font-size: 12px;
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		margin-right: 10px;
+		&:hover
+		{
+			color: rgba(25, 28, 33, 0.7);
+			text-decoration: underline;
+		}
 	}
 	.table-item
 	{

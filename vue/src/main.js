@@ -1,11 +1,11 @@
+import Vue from 'vue'
+import router from './router'
 import scssVars from './assets/variables.scss'
 import scssNorm from './assets/normalize.scss'
 import scsssStyle from './assets/style.scss'
 import './plugins/axios.js'
 import fonts from './assets/fonts.scss'
-import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
 import store from './store/index.js'
 
 var VueCookie = require('vue-cookie');
@@ -14,7 +14,8 @@ Vue.use(VueCookie);
 
 Vue.config.productionTip = false;
 
-router.beforeEach(async function(to, from, next) {
+router.beforeEach(async function(to, from, next)
+{
 	var valid = await router.app.$axios({url: '/api/' });
 
 	if (!valid.data.success)
@@ -26,7 +27,8 @@ router.beforeEach(async function(to, from, next) {
 	next();
 });
 
-router.beforeEach(async function(to, from, next) {
+router.beforeEach(async function(to, from, next)
+{
 	var valid = await router.app.$axios({url: '/api/auth/isLogged/' });
 
 	if (!valid.data.success)
@@ -39,7 +41,8 @@ router.beforeEach(async function(to, from, next) {
 	next();
 });
 
-Vue.directive('click-outside',{
+Vue.directive('click-outside',
+{
 	bind: function (el, binding, vnode)
 	{
 		el.clickOutsideEvent = function (event)

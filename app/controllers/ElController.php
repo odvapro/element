@@ -77,7 +77,7 @@ class ElController extends ControllerBase
 		$paginator = new PaginatorArray(
 		[
 			'data'  => $resultSelect,
-			'limit' => 20,
+			'limit' => 1,
 			'page'  => $page,
 		]);
 

@@ -15,7 +15,7 @@ var router = new Router({
 		{
 			path: '/table/:tableName/:page/',
 			name: 'table',
-			component: () => import(/* webpackChunkName: "about" */ './pages/index.vue')
+			component: () => import(/* webpackChunkName: "about" */ './pages/_tableName/_page.vue')
 		},
 		{
 			path: '/settings/',

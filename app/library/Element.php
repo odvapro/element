@@ -5,6 +5,7 @@ class Element
 {
 	protected $eldb;
 	protected $di;
+	protected $fieldInfo = [];
 
 	/**
 	 * __construct достаем и регистрируем папки с полями таблиц
@@ -25,8 +26,13 @@ class Element
 		{
 			while($fieldName = readdir($handle))
 			{
-				$field = [];
 				$fieldDirPath = $config->application->fldDir . $fieldName;
+
+				$infoFilePath = $fieldDirPath . '/info.json';
+
+				if(file_exists($infoFilePath))
+					$this->fieldInfo[$fieldName] = json_decode(file_get_contents($infoFilePath), true);
+
 				if(strpos($fieldName, '.') === false && is_dir($fieldDirPath))
 					$loader->registerDirs([$fieldDirPath], true)->register();
 			}
@@ -65,7 +71,8 @@ class Element
 			$emFieldArray = [
 				'em_type'     => $emFieldInfoObject->type,
 				'em_settings' => $emFieldInfoObject->getSettings(),
-				'em_required' => $emFieldInfoObject->getRequired()
+				'em_required' => $emFieldInfoObject->getRequired(),
+				'em_info'     => $this->fieldInfo[$emFieldInfoObject->type]
 			];
 			$tableColumns[$emFieldInfoObject->field] = array_merge($tableColumns[$emFieldInfoObject->field],$emFieldArray);
 		}
@@ -77,7 +84,8 @@ class Element
 			$emFieldArray = [
 				'em_type'     => "em_string",
 				'em_settings' => [],
-				'em_required' => false
+				'em_required' => false,
+				'em_info'     => $this->fieldInfo['em_string']
 			];
 			$tableColumn = array_merge($tableColumn, $emFieldArray);
 		}
@@ -113,6 +121,7 @@ class Element
 
 			foreach ($selectItem as $fieldName => $columnValue)
 			{
+				$fildInfo     = $this->fieldInfo[$fieldsParam[$fieldName]['em_type']];
 				$fieldClass   = explode('_', $fieldsParam[$fieldName]['em_type']);
 				$fieldClass   = array_map('ucfirst', $fieldClass);
 				$fieldClass[] = 'Field';
@@ -123,6 +132,7 @@ class Element
 				$result[$fieldName]['class']    = $fieldClass;
 				$result[$fieldName]['settings'] = $fieldsParam[$fieldName]['em_settings'];
 				$result[$fieldName]['value']    = $field->getValue();
+				$result[$fieldName]['info']     = $fildInfo;
 			}
 			return $result;
 		}, $selectResult);
