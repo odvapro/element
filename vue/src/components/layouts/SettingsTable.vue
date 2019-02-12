@@ -13,65 +13,37 @@
 				</div>
 				<div class="settings-table-item"></div>
 			</div>
-			<div class="settings-table-row" v-for="item in settings">
+			<div class="settings-table-row" v-for="item in getTables">
 				<div class="settings-table-row-data">
 					<div class="settings-table-item">
 						<svg width="7" height="13" class="settings-table-item-img" :class="{active: item.isShow}" @click="setRowSetting(item)">
 							<use xlink:href="#arrow"></use>
 						</svg>
-						<div class="settings-table-item-code">Code</div>
+						<div class="settings-table-item-code">{{item.code}}</div>
 					</div>
 					<div class="settings-table-item">
-						<div class="settings-table-item-name">Name</div>
+						<div class="settings-table-item-name">{{item.name}}</div>
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-flag">
-							<EmCheckField :fieldValue="{value: true}"/>
+							<MainField :fieldValue="{class: 'EmCheckField'}"/>
 						</div>
 					</div>
 					<div class="settings-table-item"></div>
 				</div>
 				<div class="settings-table-row-setting">
-					<div class="settings-table-row-setting-item" :class="{active: item.isShow}">
+					<div class="settings-table-row-setting-item" v-for="column in item.columns" :class="{active: item.isShow}">
 						<div class="settings-table-item">
-							id
+							{{column.field}}
 						</div>
 						<div class="settings-table-item category-font">
-							Identifier
+							<input class="settings-table-input-name" type="text" v-model="column.em.name">
+						</div>
+						<div class="settings-table-item table-item centered" @click="showPopup($event.target, 'TagSearch', 'left-top')">
+							<MainField :fieldValue="{class: 'EmTagsField', value: 'string'}"/>
 						</div>
 						<div class="settings-table-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-table-item centered">
-							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
-						</div>
-					</div>
-					<div class="settings-table-row-setting-item" :class="{active: item.isShow}">
-						<div class="settings-table-item">
-							id
-						</div>
-						<div class="settings-table-item category-font">
-							Identifier
-						</div>
-						<div class="settings-table-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-table-item centered">
-							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
-						</div>
-					</div>
-					<div class="settings-table-row-setting-item" :class="{active: item.isShow}">
-						<div class="settings-table-item">
-							id
-						</div>
-						<div class="settings-table-item category-font">
-							Identifier
-						</div>
-						<div class="settings-table-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-table-item centered">
-							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
+							<button @click="$store.commit('setActivePopup', true)">settings</button>
 						</div>
 					</div>
 				</div>
@@ -80,11 +52,12 @@
 	</div>
 </template>
 <script>
-	import EmTagsField from '@/components/fields/EmTagsField.vue';
-	import EmCheckField from '@/components/fields/EmCheckField.vue';
+	import MainField from '@/components/fields/MainField.vue';
+	import Popup from '@/mixins/popup.js';
 	export default
 	{
-		components: { EmCheckField, EmTagsField },
+		mixins: [Popup],
+		components: { MainField },
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -97,7 +70,8 @@
 					{isShow: false},
 					{isShow: false},
 					{isShow: false}
-				]
+				],
+				tableColumns: {}
 			}
 		},
 		methods:
@@ -105,14 +79,46 @@
 			/**
 			 * Открыть/закрыть настройки колонок
 			 */
-			setRowSetting(settingItem)
+			async setRowSetting(settingItem)
 			{
 				settingItem.isShow = !settingItem.isShow;
+
+				await this.$store.dispatch('getColumns', settingItem.code);
 			}
+		},
+		computed:
+		{
+			/**
+			 * Достать колонки столбца
+			 */
+			getColumns()
+			{
+				return this.$store.state.tables.tableColumns;
+			},
+			/**
+			 * Достать таблицы со стора
+			 */
+			getTables()
+			{
+				return this.$store.state.tables.tablesList;
+			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		async mounted()
+		{
+			await this.$store.dispatch('getTables');
 		}
 	}
 </script>
 <style lang="scss">
+	.settings-table-input-name
+	{
+		border: none;
+		background-color: transparent;
+		width: 100%;
+	}
 	.settings-table-item-img
 	{
 		margin-right: 11px;
@@ -204,6 +210,10 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
+		&.table-item
+		{
+			height: 39px;
+		}
 		&:last-child
 		{
 			border-right: none;
