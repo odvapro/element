@@ -5,7 +5,7 @@
 				<div class="settings-users-item">
 					<div class="settings-users-item-title">Login</div>
 				</div>
-				<div class="settings-users-item">
+				<div class="settings-users-item item-width__210">
 					<div class="settings-users-item-title">Name</div>
 				</div>
 				<div class="settings-users-item"></div>
@@ -18,7 +18,7 @@
 						</svg>
 						<div class="settings-users-item-code">Code</div>
 					</div>
-					<div class="settings-users-item">
+					<div class="settings-users-item item-width__210">
 						<div class="settings-users-item-flag">
 							<EmCheckField :fieldValue="{value: true}"/>
 						</div>
@@ -30,38 +30,40 @@
 						<div class="settings-users-item">
 							id
 						</div>
-						<div class="settings-users-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-users-item centered">
-							<button>settings</button>
+						<div class="settings-users-item centered item-width__210">
+							1
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: item.isShow}">
 						<div class="settings-users-item">
-							id
+							name
 						</div>
-						<div class="settings-users-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-users-item centered">
-							<button>settings</button>
+						<div class="settings-users-item centered item-width__210">
+							Valeron
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: item.isShow}">
 						<div class="settings-users-item">
-							id
+							password
 						</div>
-						<div class="settings-users-item centered">
-							<EmTagsField :fieldValue="{value: 'String'}"/>
-						</div>
-						<div class="settings-users-item centered">
-							<button>settings</button>
+						<div class="settings-users-item centered item-width__210">
+							<input type="password" class="settings-users-input" placeholder="Set password">
+							<button class="settings-users-btn">change</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<button class="settings-users-add-btn">
+			<div class="settings-users-btn-icon">
+				<svg width="12" height="12">
+					<use xlink:href="#plus-white"></use>
+				</svg>
+			</div>
+			<span class="settings-users-btn-name">
+				Add User
+			</span>
+		</button>
 	</div>
 </template>
 <script>
@@ -98,6 +100,53 @@
 	}
 </script>
 <style lang="scss">
+	.settings-users-head
+	{
+		margin-bottom: 10px;
+	}
+	.settings-users-btn-name
+	{
+		line-height: 10px;
+	}
+	.settings-users-btn-icon
+	{
+		height: 12px;
+		width: 12px;
+		margin-right: 10px;
+	}
+	.settings-users-add-btn
+	{
+		background: rgba(25, 28, 33, 0.1);
+		border-radius: 2px;
+		border: none;
+		padding: 0 10px;
+		display: flex;
+		width: 105px;
+		height: 30px;
+		align-items: center;
+		font-size: 12px;
+		color: rgba(25, 28, 33, 0.7);
+	}
+	.settings-users-btn
+	{
+		width: 53px;
+		min-width: 53px;
+		height: 20px;
+		font-size: 10px;
+		background-color: rgba(124, 119, 145, 0.1);
+		border-radius: 2px;
+		color: #7C7791;
+		border: none;
+		cursor: pointer;
+	}
+	.settings-users-input
+	{
+		border: none;
+		background-color: transparent;
+		width: 100%;
+		height: 100%;
+		font-size: 12px;
+	}
 	.settings-users-item-img
 	{
 		margin-right: 11px;
@@ -201,12 +250,10 @@
 		{
 			color: #191C21;
 		}
-		button
+		&.item-width__210
 		{
-			color: rgba(25, 28, 33, 0.7);
-			background-color: transparent;
-			border: none;
-			cursor: pointer;
+			min-width: 210px;
+			width: 210px;
 		}
 	}
 </style>

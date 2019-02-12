@@ -43,7 +43,7 @@
 							<EmTagsField :fieldValue="{value: 'String'}"/>
 						</div>
 						<div class="settings-table-item centered">
-							<button>settings</button>
+							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
 						</div>
 					</div>
 					<div class="settings-table-row-setting-item" :class="{active: item.isShow}">
@@ -57,7 +57,7 @@
 							<EmTagsField :fieldValue="{value: 'String'}"/>
 						</div>
 						<div class="settings-table-item centered">
-							<button>settings</button>
+							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
 						</div>
 					</div>
 					<div class="settings-table-row-setting-item" :class="{active: item.isShow}">
@@ -71,7 +71,7 @@
 							<EmTagsField :fieldValue="{value: 'String'}"/>
 						</div>
 						<div class="settings-table-item centered">
-							<button>settings</button>
+							<button @click.prevent.stop="$store.commit('setActivePopup', true)">settings</button>
 						</div>
 					</div>
 				</div>
@@ -96,7 +96,7 @@
 					{isShow: false},
 					{isShow: false},
 					{isShow: false},
-					{isShow: false},
+					{isShow: false}
 				]
 			}
 		},
