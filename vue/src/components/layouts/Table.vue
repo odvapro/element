@@ -44,7 +44,7 @@
 							<img :src="item.em_info.iconPath" alt="">
 						</div>
 						<div class="table-item-name-wrapper">
-							<div class="table-item-overide-name">{{item.field}}</div>
+							<div class="table-item-overide-name">{{!item.em.name ? item.field : item.em.name}}</div>
 							<div class="table-item-real-name">{{item.field}}</div>
 						</div>
 						<div class="drug-col" @mousedown="reginsterEventResize($event, item)"></div>

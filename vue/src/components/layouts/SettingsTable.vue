@@ -37,10 +37,10 @@
 							{{column.field}}
 						</div>
 						<div class="settings-table-item category-font">
-							<input class="settings-table-input-name" type="text" v-model="column.em.name">
+							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(item.code, column)">
 						</div>
 						<div class="settings-table-item table-item centered" @click="showPopup($event.target, 'TagSearch', 'left-top')">
-							<MainField :fieldValue="{class: 'EmTagsField', value: 'string'}"/>
+							<MainField :fieldValue="{class: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"/>
 						</div>
 						<div class="settings-table-item centered">
 							<button @click="$store.commit('setActivePopup', true)">settings</button>
@@ -84,6 +84,28 @@
 				settingItem.isShow = !settingItem.isShow;
 
 				await this.$store.dispatch('getColumns', settingItem.code);
+			},
+			/**
+			 * Переопределить имя колонки
+			 */
+			async changeColumnName(tableName, column)
+			{
+				var qs   = require('qs'),
+					data = qs.stringify({
+						tableName : tableName,
+						field     : column.field,
+						name      : column.em.name,
+						type      : typeof column.em.type == 'undefined' ? '' : column.em.type
+					});
+
+				var result = await this.$axios({
+					method: 'POST',
+					url: '/api/settings/changeName/',
+					data: data
+				});
+
+				if (!result.data.success)
+					return false;
 			}
 		},
 		computed:

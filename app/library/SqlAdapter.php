@@ -1,5 +1,7 @@
 <?php
 
+use Phalcon\Mvc\Model\Resultset;
+
 class SqlAdapter extends PdoAdapter
 {
 	private $db = false;
@@ -275,13 +277,14 @@ class SqlAdapter extends PdoAdapter
 
 		$emTypes = EmTypes::find([
 			'conditions' => "table = ?0",
-			'bind' => [ $tableName ]
+			'bind' => [ $tableName ],
+			'hydration' => Resultset::HYDRATE_ARRAYS
 		]);
 
 		$overides = [];
 
 		foreach ($emTypes as $column)
-			$overides[$column->field] = ['name' => $column->name];
+			$overides[$column['field']] = $column;
 
 		// достали из базы данных
 		$columns = [];
@@ -292,10 +295,10 @@ class SqlAdapter extends PdoAdapter
 
 			$fieldDbArray['width'] = 140;
 
-			if (empty($overides[$fieldDbArray['field']]))
-				$fieldDbArray['em'] = ['name' => $fieldDbArray['field']];
-			else
+			if (array_key_exists($fieldDbArray['field'], $overides))
 				$fieldDbArray['em'] = $overides[$fieldDbArray['field']];
+			else
+				$fieldDbArray['em'] = [];
 
 			$columns[$fieldDbArray['field']] = $fieldDbArray;
 		}
