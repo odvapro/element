@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import tables from './tables.js'
+import settings from './settings.js'
 import axios from 'axios'
 
 var qs = require('qs');
@@ -11,7 +12,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	modules:
 	{
-		tables: tables
+		tables: tables,
+		settings: settings
 	},
 	state:
 	{

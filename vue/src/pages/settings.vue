@@ -17,21 +17,21 @@
 			</div>
 			<div class="settings-tabs-content-wrapper">
 				<div class="settings-tab-content" v-if="activeTab == 'Tables'">
-
+					<SettingsTable/>
 				</div>
 				<div class="settings-tab-content" v-if="activeTab == 'Users'">
-
-				</div>
-				<div class="settings-tab-content" v-if="activeTab == 'My Settings'">
-
+					<SettingsUser/>
 				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
+	import SettingsTable from '@/components/layouts/SettingsTable.vue';
+	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	export default
 	{
+		components: { SettingsTable, SettingsUser},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -41,8 +41,7 @@
 				tabs:
 				[
 					{ name: 'Tables', active: true },
-					{ name: 'Users', active: false },
-					{ name: 'My Settings', active: false },
+					{ name: 'Users', active: false }
 				],
 				activeTab: 'Tables'
 			}
@@ -107,7 +106,8 @@
 	{
 		display: flex;
 		height: 38px;
-		width: 295px;
+		width: 152px;
+		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
 	}
@@ -133,9 +133,7 @@
 	}
 	.settings-tabs-content-wrapper
 	{
-		height: 68px;
 		display: flex;
 		align-items: center;
-		justify-content: center;
 	}
 </style>

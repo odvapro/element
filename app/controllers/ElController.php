@@ -65,7 +65,7 @@ class ElController extends ControllerBase
 	{
 		$select = $this->request->get('select');
 		$page   = (!empty($select['page'])) ? $select['page'] : 1;
-		$limit  = empty($this->request->get('limit')) ? 1 : $this->request->get('limit');
+		$limit  = empty($this->request->get('limit')) ? 20 : $this->request->get('limit');
 
 		if (empty($select))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
