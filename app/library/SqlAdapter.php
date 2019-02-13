@@ -1,5 +1,7 @@
 <?php
 
+use Phalcon\Mvc\Model\Resultset;
+
 class SqlAdapter extends PdoAdapter
 {
 	private $db = false;
@@ -83,6 +85,9 @@ class SqlAdapter extends PdoAdapter
 		return $fieldsSqls;
 	}
 
+	/**
+	 * конструктор
+	 */
 	public function __construct($db)
 	{
 		$this->db = $db;
@@ -235,6 +240,7 @@ class SqlAdapter extends PdoAdapter
 			Phalcon\Db::FETCH_ASSOC,
 			[ 'database' => $this->db->getDescriptor()['dbname'] ]
 		);
+
 		foreach ($dbTables as $table)
 		{
 			if(strpos($table['TABLE_NAME'], 'em_') === 0)
@@ -242,7 +248,9 @@ class SqlAdapter extends PdoAdapter
 
 			$tables[] = [
 				'code'    => $table['TABLE_NAME'],
-				'name'    => false
+				'name'    => $table['TABLE_NAME'],
+				'isShow'  => false,
+				'columns' => $this->getColumns($table['TABLE_NAME'])
 			];
 		}
 
@@ -267,6 +275,17 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
+		$emTypes = EmTypes::find([
+			'conditions' => "table = ?0",
+			'bind' => [ $tableName ],
+			'hydration' => Resultset::HYDRATE_ARRAYS
+		]);
+
+		$overides = [];
+
+		foreach ($emTypes as $column)
+			$overides[$column['field']] = $column;
+
 		// достали из базы данных
 		$columns = [];
 		foreach ($res as &$fieldDbArray)
@@ -275,6 +294,12 @@ class SqlAdapter extends PdoAdapter
 				$fieldDbArray = array_change_key_case($fieldDbArray);
 
 			$fieldDbArray['width'] = 140;
+
+			if (array_key_exists($fieldDbArray['field'], $overides))
+				$fieldDbArray['em'] = $overides[$fieldDbArray['field']];
+			else
+				$fieldDbArray['em'] = [];
+
 			$columns[$fieldDbArray['field']] = $fieldDbArray;
 		}
 

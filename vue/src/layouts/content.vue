@@ -26,6 +26,7 @@
 	.app-wrapper
 	{
 		min-height: 100vh;
+		user-select: none;
 	}
 	.app-wrapper
 	{

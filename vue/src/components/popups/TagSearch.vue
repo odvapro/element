@@ -1,6 +1,6 @@
 <template>
 	<div class="tag-search">
-		<div class="tag-search-popup-head">
+		<div class="tag-search-popup-head" :style="{height: styles.height + 'px'}">
 			<div class="tag-search-item">
 				shirt
 			</div>
@@ -41,6 +41,7 @@
 	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
+		props: ['styles'],
 		mixins: [PopupParams]
 	}
 </script>
