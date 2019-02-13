@@ -7,6 +7,7 @@ class AuthController extends ControllerBase
 	 */
 	public function indexAction()
 	{
+		$this->session->remove('auth');
 		$login    = $this->request->getPost('login');
 		$password = $this->request->getPost('password');
 		if(empty($login) || empty($password))

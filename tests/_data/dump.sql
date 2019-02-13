@@ -32,6 +32,7 @@ CREATE TABLE `em_types` (
   `type` varchar(20) NOT NULL DEFAULT '',
   `required` int(5) NOT NULL DEFAULT '0',
   `settings` text,
+  `name` varchar(200) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

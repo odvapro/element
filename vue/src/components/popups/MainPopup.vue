@@ -3,7 +3,7 @@
 		<div class="main-popup-overlay" v-if="$store.state.openPopup">
 			<div v-click-outside="close" id="main-popup-wrapper"
 				:style="styles">
-				<component v-bind:is="contentComponent" @width="setWidth"></component>
+				<component v-bind:is="contentComponent" :styles="getStyles" @width="setWidth"></component>
 			</div>
 		</div>
 	</transition>
@@ -11,6 +11,9 @@
 <script>
 	export default
 	{
+		/**
+		 * Глобальные переменные страницы
+		 */
 		data()
 		{
 			return {
@@ -29,10 +32,20 @@
 				return () => import(`@/components/popups/${this.$store.state.openPopupName}`);
 			},
 			/**
+			 * Достать все стили попапа
+			 */
+			getStyles()
+			{
+				return this.$store.state.popupCoords;
+			},
+			/**
 			 * Задать стили попапа
 			 */
 			styles()
 			{
+				/**
+				 * параметры отображения попапа
+				 */
 				switch(this.$store.state.popupCoords.positionType)
 				{
 					case 'center-bottom':
@@ -143,6 +156,6 @@
 	}
 	.main.popup-fade-enter, .popup-fade-leave-to
 	{
-	  transform: translateY(-5px);
+		transform: translateY(-5px);
 	}
 </style>

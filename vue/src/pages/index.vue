@@ -61,6 +61,7 @@
 		 */
 		async mounted()
 		{
+			await this.$store.dispatch('getTables');
 			await this.getTableContent();
 		}
 	}

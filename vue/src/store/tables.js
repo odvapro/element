@@ -114,6 +114,9 @@ const table =
 				method: 'get',
 				url: '/api/el/select/',
 				params: data,
+				/**
+				 * сериализовать отправляемые данные
+				 */
 				paramsSerializer: function(params)
 				{
 					return data;
@@ -126,7 +129,7 @@ const table =
 			store.commit('setTableContent', result.data.result);
 		},
 		/**
-		 * задать
+		 * задать страницу
 		 */
 		async selectPage(store, page)
 		{
