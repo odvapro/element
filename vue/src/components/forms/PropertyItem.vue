@@ -7,12 +7,12 @@
 		</div>
 		<div>
 			<div class="property-item-big-icon">
-				<img :src="icon" alt="">
+				<img :src="column.em.type_info.iconPath" alt="">
 			</div>
 		</div>
 		<div class="property-item-names-wrapper">
-			<div class="property-item-overide-name">Identifier</div>
-			<div class="property-item-real-name">id</div>
+			<div class="property-item-overide-name">{{column.field}}</div>
+			<div class="property-item-real-name">{{column.field}}</div>
 		</div>
 		<div class="property-item-checkbox-wrapper">
 			<Checkbox :fieldValue="{value: false}"/>
@@ -23,7 +23,7 @@
 	import Checkbox from '@/components/fields/EmCheckField.vue';
 	export default
 	{
-		props: ['icon'],
+		props: ['column'],
 		components: { Checkbox },
 	}
 </script>

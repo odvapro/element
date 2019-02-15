@@ -1,10 +1,7 @@
 <template>
 	<div class="properties-popup" v-click-outside="closePropertiesPopup">
 		<div class="properties-list">
-			<PropertyItem icon="/images/sharp.svg"/>
-			<PropertyItem icon="/images/price.svg"/>
-			<PropertyItem icon="/images/category.svg"/>
-			<PropertyItem icon="/images/sharp.svg"/>
+			<PropertyItem v-for="column in columns" :column="column"/>
 		</div>
 	</div>
 </template>
@@ -12,6 +9,7 @@
 	import PropertyItem from '@/components/forms/PropertyItem.vue';
 	export default
 	{
+		props: ['columns'],
 		components: { PropertyItem },
 		methods:
 		{

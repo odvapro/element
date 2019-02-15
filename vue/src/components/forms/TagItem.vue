@@ -1,6 +1,6 @@
 <template>
 	<div class="tag-item-wrapper">
-		<div class="tag-item" @click.stop.prevent="showTagPopup($event)">
+		<div class="tag-item">
 			{{name}}
 		</div>
 	</div>
@@ -9,18 +9,7 @@
 	import Popup from '@/mixins/popup.js';
 	export default
 	{
-		props: ['name'],
-		mixins: [Popup],
-		methods:
-		{
-			/**
-			 * Отобразить попап тегов
-			 */
-			showTagPopup(event)
-			{
-				this.showPopup(event.target.closest('.table-item'), 'TagSearch', 'left-top');
-			}
-		}
+		props: ['name']
 	}
 </script>
 <style lang="scss">

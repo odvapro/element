@@ -17,7 +17,7 @@
 					<li>Views</li>
 					<li @click="togglePropertiesPopup()">
 						Properties
-						<Properties v-if="isPropertiesPopupShow" @closePropertiesPopup="togglePropertiesPopup" />
+						<Properties v-if="isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" @closePropertiesPopup="togglePropertiesPopup" />
 					</li>
 					<!-- #TODO popups -->
 					<li>Sort</li>
@@ -56,7 +56,8 @@
 		{
 			return {
 				table: false,
-				isPropertiesPopupShow: false
+				isPropertiesPopupShow: false,
+				propertiesPopupData: {}
 			}
 		},
 		computed:
@@ -88,6 +89,7 @@
 					if(table.code == this.$route.params.tableCode)
 					{
 						this.table = table;
+						this.propertiesPopupData = table.columns;
 						break;
 					}
 				}
