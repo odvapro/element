@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
-		<div class="app-wrapper">
-			<Sidebar/>
+		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
+			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
 			<router-view class="content-wrapper"/>
 		</div>
 		<MainPopup/>
@@ -16,9 +16,26 @@
 	{
 		name: 'Content',
 		components: { Sidebar, MainPopup, SettingsPopup },
+		/**
+		 * Глобальные переменные страницы
+		 */
+		data()
+		{
+			return {
+				sidebar: {}
+			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
 		async mounted()
 		{
 			await this.$store.dispatch('getTables');
+
+			if (this.$cookie.get('drugPosition') >= 200)
+				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
+			else
+				this.sidebar['gridTemplateColumns'] = '400px auto';
 		}
 	}
 </script>

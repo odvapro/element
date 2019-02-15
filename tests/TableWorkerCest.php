@@ -36,7 +36,7 @@ class TableWorkerCest
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.filter');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.sort');
-		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.columns');
+		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.settings');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.id');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.table');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.name');
@@ -57,11 +57,11 @@ class TableWorkerCest
 		$I->seeResponseJsonMatchesJsonPath('$.columns.*.key');
 		$I->seeResponseJsonMatchesJsonPath('$.columns.*.default');
 		$I->seeResponseJsonMatchesJsonPath('$.columns.*.extra');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.width');
 
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_settings');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em_required');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.type');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.settings');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.required');
+		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.type_info');
 
 		$I->sendPOST('/el/getColumns', ['tableName' => 'asdsad']);
 		$I->seeResponseCodeIs(200);
@@ -79,10 +79,7 @@ class TableWorkerCest
 
 		$I->sendGET('/el/select',
 		[
-			'select' =>
-			[
-				'from' => 'testTable'
-			]
+			'select' => ['from' => 'testTable']
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -607,6 +604,33 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/delete/');
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => false]);
+	}
+
+	public function setTviewSettings(ApiTester $I)
+	{
+		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/setTviewSettings/',
+		[
+			'tviewId' => '3',
+			'params' =>
+			[
+				'columns' =>
+				[
+					'id' => [ 'width' => 300 ],
+					'name' => [ 'width' => 600 ]
+				]
+			]
+		]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/setTviewSettings/', []);
 
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);

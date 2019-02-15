@@ -106,7 +106,6 @@ class SqlAdapter extends PdoAdapter
 		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
-
 		if (empty($fromTable))
 			return false;
 
@@ -249,8 +248,6 @@ class SqlAdapter extends PdoAdapter
 			$tables[] = [
 				'code'    => $table['TABLE_NAME'],
 				'name'    => $table['TABLE_NAME'],
-				'isShow'  => false,
-				'columns' => $this->getColumns($table['TABLE_NAME'])
 			];
 		}
 
@@ -275,30 +272,12 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
-		$emTypes = EmTypes::find([
-			'conditions' => "table = ?0",
-			'bind' => [ $tableName ],
-			'hydration' => Resultset::HYDRATE_ARRAYS
-		]);
 
-		$overides = [];
-
-		foreach ($emTypes as $column)
-			$overides[$column['field']] = $column;
-
-		// достали из базы данных
 		$columns = [];
 		foreach ($res as &$fieldDbArray)
 		{
 			if (is_array($fieldDbArray))
 				$fieldDbArray = array_change_key_case($fieldDbArray);
-
-			$fieldDbArray['width'] = 140;
-
-			if (array_key_exists($fieldDbArray['field'], $overides))
-				$fieldDbArray['em'] = $overides[$fieldDbArray['field']];
-			else
-				$fieldDbArray['em'] = [];
 
 			$columns[$fieldDbArray['field']] = $fieldDbArray;
 		}

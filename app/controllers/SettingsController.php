@@ -36,4 +36,14 @@ class SettingsController extends ControllerBase
 
 		return $this->jsonResult(['success' => true]);
 	}
+	/**
+	 * Достать все типы полей
+	 * @return json
+	 */
+	public function getFiledTypesAction()
+	{
+		$fieldsTypes = $this->element->getEmTypes();
+
+		return $this->jsonResult(['success' => true, 'types' => $fieldsTypes]);
+	}
 }

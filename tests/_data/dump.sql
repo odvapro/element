@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-02-07 21:29:59 +0000
+# Время создания: 2019-02-13 13:26:22 +0000
 # ************************************************************
 
 
@@ -39,12 +39,12 @@ CREATE TABLE `em_types` (
 LOCK TABLES `em_types` WRITE;
 /*!40000 ALTER TABLE `em_types` DISABLE KEYS */;
 
-INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`)
+INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
-  (1,'testTable','name','em_check',0,NULL),
-  (2,'testTable','avat','em_image',0,NULL),
-  (4,'newTest','name','em_string',0,NULL),
-  (5,'testTable','col','em_tags',0,NULL);
+  (1,'testTable','name','em_check',0,NULL,''),
+  (2,'testTable','avat','em_image',0,NULL,''),
+  (4,'newTest','name','em_string',0,NULL,''),
+  (5,'testTable','col','em_tags',0,NULL,'');
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -70,8 +70,8 @@ LOCK TABLES `em_users` WRITE;
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
   (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com'),
-  (2,'gaga','asd','safg','asdfds'),
-  (3,'gaga','asd','safg','asdfds'),
+  (2,'dsfdsfsdf','asd','bda9643ac6601722a28f238714274da4','asdfds'),
+  (3,'dsfdsfsdf','asd','bda9643ac6601722a28f238714274da4','asdfds'),
   (4,'gaga','asd','safg','asdfds'),
   (5,'gaga','asd','safg','asdfds'),
   (6,'gaga','asd','safg','asdfds'),
@@ -101,20 +101,20 @@ CREATE TABLE `em_views` (
   `table` varchar(200) NOT NULL DEFAULT '',
   `filter` text,
   `sort` text,
-  `columns` text,
   `default` int(11) DEFAULT NULL,
+  `settings` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `em_views` WRITE;
 /*!40000 ALTER TABLE `em_views` DISABLE KEYS */;
 
-INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `columns`, `default`)
+INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `default`, `settings`)
 VALUES
-  (1,'Отображение 1','newTest','[]','[]','[]',1),
-  (2,'Отображение 2','newTest','[]','[]','[]',0),
-  (3,'Отображение 3','testTable','[]','[]','[]',0),
-  (4,'Отображение 4','testTable','[]','[]','[]',1);
+  (1,'Отображение 1','newTest','[]','[]',1,'{\"columns\":{\"name\":{\"width\":200}}}'),
+  (2,'Отображение 2','newTest','[]','[]',0,NULL),
+  (3,'Отображение 3','testTable','[]','[]',0,NULL),
+  (4,'Отображение 4','testTable','[]','[]',1,'{\"columns\":{\"name\":{\"width\":200}}}');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;

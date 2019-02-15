@@ -1,68 +1,49 @@
 <template>
 	<div>
-		<Table/>
 	</div>
 </template>
 <script>
-	import Table from '@/components/layouts/Table.vue';
 	export default
 	{
-		components: { Table },
-		computed:
-		{
-			/**
-			 * Достать все таблицы
-			 */
-			getTableList()
-			{
-				return this.$store.state.tables.tablesList;
-			},
-			/**
-			 * Достать из урла активную таблицу
-			 */
-			getActiveTable()
-			{
-				return this.$route.params.tableName;
-			},
-			/**
-			 * Достать из урла номер страницы
-			 */
-			getPage()
-			{
-				return this.$route.params.page;
-			}
-		},
 		methods:
 		{
 			/**
-			 * Достать содержимое таблицы
+			 * Отобразить первую талцицу
 			 */
-			async getTableContent()
+			viewFirstTable()
 			{
-				await this.$store.dispatch('getColumns', typeof this.getActiveTable == 'undefined' ? this.getTableList[0].code : this.getActiveTable);
-				await this.$store.commit('setTableInfo',
+				if (typeof this.$store.state.tables.tables[0] == 'undefined')
+					return false;
+
+				let table = this.$store.state.tables.tables[0],
+					tviews = this.$store.state.tables.tables[0].tviews,
+					url = '',
+					activeTview = [];
+
+				if (tviews.length > 0)
 				{
-					code: typeof this.getActiveTable == 'undefined' ?
-					this.getTableList[0].code :
-					this.getActiveTable
-				});
-				await this.$store.dispatch('select',
-				{
-					select:
+					for (var tview of tviews)
 					{
-						from: typeof this.getActiveTable == 'undefined' ? this.getTableList[0].code : this.getActiveTable,
-						page: typeof this.getPage == 'undefined' ? 1 : this.getPage
+						if (tview.default != 1)
+							continue;
+
+						activeTview = tview;
+						break;
 					}
-				});
+
+					if (typeof activeTview.id == 'undefined')
+						activeTview = tviews[0];
+				}
+
+				url = `/table/${table.code}/tview/${activeTview.id}/page/1/`;
+
+				this.$router.push(url);
 			}
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
 		async mounted()
 		{
-			await this.$store.dispatch('getTables');
-			await this.getTableContent();
+			// определяем первую таблицу - делаем ее активной
+			this.viewFirstTable();
 		}
 	}
 </script>

@@ -5,7 +5,7 @@ class Element
 {
 	protected $eldb;
 	protected $di;
-	protected $fieldInfo = [];
+	protected $fieldsTypes = [];
 
 	/**
 	 * __construct достаем и регистрируем папки с полями таблиц
@@ -14,30 +14,39 @@ class Element
 	{
 		$this->eldb = $eldb;
 		$this->di = $di;
+	}
 
+	/**
+	 * Достать параметры филда
+	 * @return array
+	 */
+	public function getEmTypes()
+	{
 		global $loader;
-
 		$config = $this->di->get('config');
+		static $emTypes = [];
+		if(!empty($emTypes)) return $emTypes;
 
-		// проходимся по папкам типов полей
-		// регистрируем эти папки
-		// выносим в переменную содержимое info.json
 		if ($handle = opendir($config->application->fldDir))
 		{
-			while($fieldName = readdir($handle))
+			while($fieldCode = readdir($handle))
 			{
-				$fieldDirPath = $config->application->fldDir . $fieldName;
+				$fieldDirPath = $config->application->fldDir . $fieldCode;
 
 				$infoFilePath = $fieldDirPath . '/info.json';
 
 				if(file_exists($infoFilePath))
-					$this->fieldInfo[$fieldName] = json_decode(file_get_contents($infoFilePath), true);
+				{
+					$emTypes[$fieldCode]         = json_decode(file_get_contents($infoFilePath), true);
+					$emTypes[$fieldCode]['code'] = $fieldCode;
+				}
 
-				if(strpos($fieldName, '.') === false && is_dir($fieldDirPath))
+				if(strpos($fieldCode, '.') === false && is_dir($fieldDirPath))
 					$loader->registerDirs([$fieldDirPath], true)->register();
 			}
 			closedir($handle);
 		}
+		return $emTypes;
 	}
 
 	/**
@@ -51,6 +60,7 @@ class Element
 			return false;
 
 		$tableColumns = $this->eldb->getColumns($tableName);
+		$emTypes      = $this->getEmTypes();
 
 		if (empty($tableColumns))
 			return false;
@@ -62,32 +72,32 @@ class Element
 			'conditions' => 'table = ?0',
 			'bind'       => [$tableName]
 		]);
-		foreach ($emFields as $emFieldInfoObject)
+		foreach ($emFields as $emFieldsTypes)
 		{
-			if(!array_key_exists($emFieldInfoObject->field, $tableColumns))
+			if(!array_key_exists($emFieldsTypes->field, $tableColumns))
 				#TODO добавление доп полей которых нет в бд и тд
 				continue;
 
 			$emFieldArray = [
-				'em_type'     => $emFieldInfoObject->type,
-				'em_settings' => $emFieldInfoObject->getSettings(),
-				'em_required' => $emFieldInfoObject->getRequired(),
-				'em_info'     => $this->fieldInfo[$emFieldInfoObject->type]
+				'type'      => $emFieldsTypes->type,
+				'type_info' => $emTypes[$emFieldsTypes->type],
+				'settings'  => $emFieldsTypes->getSettings(),
+				'required'  => $emFieldsTypes->getRequired()
 			];
-			$tableColumns[$emFieldInfoObject->field] = array_merge($tableColumns[$emFieldInfoObject->field],$emFieldArray);
+			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;
 		}
 
 		foreach ($tableColumns as &$tableColumn)
 		{
-			if(array_key_exists('em_type', $tableColumn))
+			if(array_key_exists('em', $tableColumn))
 				continue;
 			$emFieldArray = [
-				'em_type'     => "em_string",
-				'em_settings' => [],
-				'em_required' => false,
-				'em_info'     => $this->fieldInfo['em_string']
+				'type'      => "em_string",
+				'type_info' => $emTypes['em_string'],
+				'settings'  => [],
+				'required'  => false,
 			];
-			$tableColumn = array_merge($tableColumn, $emFieldArray);
+			$tableColumn['em'] = $emFieldArray;
 		}
 
 		return $tableColumns;
@@ -105,7 +115,7 @@ class Element
 		if (empty($selectParams['from']))
 			return false;
 
-		$fieldsParam = $this->getColumns($selectParams['from']);
+		$tableColumns = $this->getColumns($selectParams['from']);
 		$selectResult = $this->eldb->select($selectParams);
 
 		if ($selectResult === false)
@@ -115,24 +125,19 @@ class Element
 		 * Добавляем в селект запрос, поля для отображения
 		 * @var array
 		 */
-		$selectResultWithFields = array_map(function ($selectItem) use ($fieldsParam)
+		$selectResultWithFields = array_map(function ($selectItem) use ($tableColumns)
 		{
 			$result = [];
-
-			foreach ($selectItem as $fieldName => $columnValue)
+			foreach ($selectItem as $fieldCode => $columnValue)
 			{
-				$fildInfo     = $this->fieldInfo[$fieldsParam[$fieldName]['em_type']];
-				$fieldClass   = explode('_', $fieldsParam[$fieldName]['em_type']);
+				$fieldClass   = explode('_', $tableColumns[$fieldCode]['em']['type']);
 				$fieldClass   = array_map('ucfirst', $fieldClass);
 				$fieldClass[] = 'Field';
 				$fieldClass   = implode('', $fieldClass);
-				$field        = new $fieldClass($columnValue);
 
-				$result[$fieldName]['type']     = $fieldsParam[$fieldName]['em_type'];
-				$result[$fieldName]['class']    = $fieldClass;
-				$result[$fieldName]['settings'] = $fieldsParam[$fieldName]['em_settings'];
-				$result[$fieldName]['value']    = $field->getValue();
-				$result[$fieldName]['info']     = $fildInfo;
+				$field        = new $fieldClass($columnValue);
+				$result[$fieldCode]['value']     = $field->getValue();
+				$result[$fieldCode]['fieldName'] = $fieldClass;
 			}
 			return $result;
 		}, $selectResult);

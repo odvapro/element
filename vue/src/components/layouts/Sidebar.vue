@@ -15,11 +15,9 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="item in tablesList"
-					@click="getTableContent(item)"
-				>
-					<router-link :to="`/table/${item.code}/1`"
-						:class="{active: item.code == getActiveTable}"
+				<li v-for="table in tables">
+					<a @click="selectTable(table)" href="#"
+						:class="{active: table.code == getActiveTable}"
 					>
 						<div class="sidebar-points">
 							<svg>
@@ -37,10 +35,10 @@
 							</svg>
 						</div>
 						<div class="sidebar-name-wrapper">
-							<div class="sidebar-overide-table-name">{{item.code}}</div>
-							<div class="sidebar-real-table-name">{{item.code}}</div>
+							<div class="sidebar-overide-table-name">{{table.code}}</div>
+							<div class="sidebar-real-table-name">{{table.code}}</div>
 						</div>
-					</router-link>
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -79,9 +77,9 @@
 			/**
 			 * Достать список таблиц
 			 */
-			tablesList()
+			tables()
 			{
-				return this.$store.state.tables.tablesList;
+				return this.$store.state.tables.tables;
 			},
 			/**
 			 * Достать название таблицы
@@ -96,11 +94,23 @@
 			/**
 			 * Достать содержимое таблицы
 			 */
-			async getTableContent(tableCol)
+			async selectTable(table)
 			{
-				await this.$store.dispatch('getColumns', tableCol.code);
-				await this.$store.commit('setTableInfo', tableCol);
-				await this.$store.dispatch('select', {select: { from: tableCol.code }});
+				// определить основное отображение
+				// сормировать url
+				// перейти на этот url
+				let tview = false;
+				for (let cTview of table.tviews)
+				{
+					if(cTview.default != 1)
+						continue;
+
+					tview = cTview;
+					break;
+				}
+				// table/<table code>/tview/<tview id>/page/<page num>/
+				let url = `/table/${table.code}/tview/${tview.id}/page/1/`;
+				this.$router.push(url);
 			}
 		}
 	}

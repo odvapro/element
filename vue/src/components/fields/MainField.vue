@@ -17,7 +17,7 @@
 				if (typeof this.fieldValue == 'undefined')
 					return false;
 
-				return () => import(`@/components/fields/${this.fieldValue.class}.vue`);
+				return () => import(`@/components/fields/${this.fieldValue.fieldName}.vue`);
 			}
 		}
 	}

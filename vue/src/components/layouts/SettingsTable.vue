@@ -16,7 +16,13 @@
 			<div class="settings-table-row" v-for="item in getTables">
 				<div class="settings-table-row-data">
 					<div class="settings-table-item">
-						<svg width="7" height="13" class="settings-table-item-img" :class="{active: item.isShow}" @click="setRowSetting(item)">
+						<svg
+							width="7"
+							height="13"
+							class="settings-table-item-img"
+							:class="{active: item.isShow}"
+							@click="setRowSetting(item)"
+						>
 							<use xlink:href="#arrow"></use>
 						</svg>
 						<div class="settings-table-item-code">{{item.code}}</div>
@@ -39,8 +45,12 @@
 						<div class="settings-table-item category-font">
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(item.code, column)">
 						</div>
-						<div class="settings-table-item table-item centered" @click="showPopup($event.target, 'TagSearch', 'left-top')">
-							<MainField :fieldValue="{class: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"/>
+						<div class="settings-table-item table-item centered"
+							@click="showPopup($event.target, 'TagSearch', 'left-top')"
+							>
+							<MainField
+								:fieldValue="{class: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"
+							/>
 						</div>
 						<div class="settings-table-item centered">
 							<button @click="$store.commit('setActivePopup', true)">settings</button>
@@ -71,7 +81,8 @@
 					{isShow: false},
 					{isShow: false}
 				],
-				tableColumns: {}
+				tableColumns: {},
+				fieldTypes:[]
 			}
 		},
 		methods:
@@ -131,6 +142,9 @@
 		async mounted()
 		{
 			await this.$store.dispatch('getTables');
+			let result = await this.$axios.get('/api/settings/getFiledTypes/');
+			if(result.data.success)
+				this.fieldTypes = result.data.types;
 		}
 	}
 </script>
