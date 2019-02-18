@@ -1,16 +1,43 @@
 <template>
-	<div class="em-image-item-col">
-		<div class="em-image-item-wrapper" v-for="item in fieldValue.value" @click.stop.prevent="showPopup($event.target.closest('.table-item'), 'Upload', 'left-top')">
+	<div class="em-image-item-col" @click="togglePopup()">
+		<div class="em-image-item-wrapper" v-for="item in fieldValue.value">
 			<img :src="item.path" alt="">
 		</div>
+		<Upload v-if="showPopup" v-click-outside="closePopup"/>
 	</div>
 </template>
 <script>
-	import Popup from '@/mixins/popup.js';
+	import Upload from '@/components/popups/Upload.vue';
 	export default
 	{
-		mixins: [Popup],
-		props: ['fieldValue']
+		props: ['fieldValue'],
+		components: {Upload},
+		/**
+		 * Глобальные переменные странциы
+		 */
+		data()
+		{
+			return {
+				showPopup: false
+			}
+		},
+		methods:
+		{
+			/**
+			 * Закрыть/Открыть попап
+			 */
+			togglePopup()
+			{
+				this.showPopup = !this.showPopup;
+			},
+			/**
+			 * Закрыть попап
+			 */
+			closePopup()
+			{
+				this.showPopup = false;
+			}
+		}
 	}
 </script>
 <style lang="scss">

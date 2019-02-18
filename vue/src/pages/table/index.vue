@@ -82,7 +82,10 @@
 			{
 				this.isPropertiesPopupShow = !this.isPropertiesPopupShow;
 			},
-			async tableTransform()
+			/**
+			 * Определить активную таблицу
+			 */
+			activeTable()
 			{
 				for (let table of this.$store.state.tables.tables)
 				{
@@ -100,7 +103,7 @@
 		 */
 		mounted()
 		{
-			this.tableTransform();
+			this.activeTable();
 		},
 		watch:
 		{
@@ -109,7 +112,7 @@
 			 */
 			'$route.fullPath'()
 			{
-				this.tableTransform();
+				this.activeTable();
 			}
 		}
 	}

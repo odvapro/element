@@ -13,43 +13,44 @@
 				</div>
 				<div class="settings-table-item"></div>
 			</div>
-			<div class="settings-table-row" v-for="item in getTables">
+			<div class="settings-table-row" v-for="table in tables">
 				<div class="settings-table-row-data">
-					<div class="settings-table-item">
+					<div class="settings-table-item"
+						@click="setRowSetting(table)"
+						>
 						<svg
 							width="7"
 							height="13"
 							class="settings-table-item-img"
-							:class="{active: item.isShow}"
-							@click="setRowSetting(item)"
+							:class="{active: table.isShow}"
 						>
 							<use xlink:href="#arrow"></use>
 						</svg>
-						<div class="settings-table-item-code">{{item.code}}</div>
+						<div class="settings-table-item-code">{{table.code}}</div>
 					</div>
 					<div class="settings-table-item">
-						<div class="settings-table-item-name">{{item.name}}</div>
+						<div class="settings-table-item-name">{{table.name}}</div>
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-flag">
-							<MainField :fieldValue="{class: 'EmCheckField'}"/>
+							<!-- <MainField :fieldValue="{class: 'EmCheckField'}"/> -->
 						</div>
 					</div>
 					<div class="settings-table-item"></div>
 				</div>
 				<div class="settings-table-row-setting">
-					<div class="settings-table-row-setting-item" v-for="column in item.columns" :class="{active: item.isShow}">
+					<div class="settings-table-row-setting-item" v-for="column in table.columns" :class="{active: table.showSettings}">
 						<div class="settings-table-item">
 							{{column.field}}
 						</div>
 						<div class="settings-table-item category-font">
-							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(item.code, column)">
+							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)">
 						</div>
 						<div class="settings-table-item table-item centered"
 							@click="showPopup($event.target, 'TagSearch', 'left-top')"
 							>
 							<MainField
-								:fieldValue="{class: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"
+								:fieldValue="{fieldName: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"
 							/>
 						</div>
 						<div class="settings-table-item centered">
@@ -74,15 +75,9 @@
 		data()
 		{
 			return {
-				settings:
-				[
-					{isShow: false},
-					{isShow: false},
-					{isShow: false},
-					{isShow: false}
-				],
 				tableColumns: {},
-				fieldTypes:[]
+				fieldTypes:[],
+				tables: []
 			}
 		},
 		methods:
@@ -90,11 +85,9 @@
 			/**
 			 * Открыть/закрыть настройки колонок
 			 */
-			async setRowSetting(settingItem)
+			async setRowSetting(table)
 			{
-				settingItem.isShow = !settingItem.isShow;
-
-				await this.$store.dispatch('getColumns', settingItem.code);
+				table.showSettings = !table.showSettings;
 			},
 			/**
 			 * Переопределить имя колонки
@@ -127,13 +120,6 @@
 			getColumns()
 			{
 				return this.$store.state.tables.tableColumns;
-			},
-			/**
-			 * Достать таблицы со стора
-			 */
-			getTables()
-			{
-				return this.$store.state.tables.tablesList;
 			}
 		},
 		/**
@@ -141,10 +127,15 @@
 		 */
 		async mounted()
 		{
-			await this.$store.dispatch('getTables');
 			let result = await this.$axios.get('/api/settings/getFiledTypes/');
+
 			if(result.data.success)
 				this.fieldTypes = result.data.types;
+
+			this.tables = JSON.parse(JSON.stringify(this.$store.state.tables.tables));
+
+			for (let table of this.tables)
+				this.$set(table, 'showSettings', false);
 		}
 	}
 </script>

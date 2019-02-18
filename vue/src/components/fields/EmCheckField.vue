@@ -1,7 +1,7 @@
 <template>
-	<div class="em-check-wrapper">
+	<div class="em-check-wrapper" v-if="column">
 		<label class="em-check-label">
-			<input type="checkbox" v-model="fieldValue.value" class="em-check">
+			<input type="checkbox" v-model="column.visible" class="em-check">
 			<span>
 				<svg width="7" height="7">
 					<use xlink:href="#check"></use>
@@ -13,7 +13,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue']
+		props: ['column']
 	}
 </script>
 <style lang="scss">

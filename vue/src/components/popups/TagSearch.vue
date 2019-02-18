@@ -1,6 +1,6 @@
 <template>
-	<div class="tag-search">
-		<div class="tag-search-popup-head" :style="{height: styles.height + 'px'}">
+	<div class="tag-search" @click.stop>
+		<div class="tag-search-popup-head">
 			<div class="tag-search-item">
 				shirt
 			</div>
@@ -64,6 +64,11 @@
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		background: white;
+		position: absolute;
+		top: -1px;
+		background: white;
+		z-index: 2;
+		left: -1px;
 	}
 	.tag-search-icon
 	{

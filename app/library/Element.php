@@ -79,6 +79,7 @@ class Element
 				continue;
 
 			$emFieldArray = [
+				'name'      => $emFieldsTypes->name,
 				'type'      => $emFieldsTypes->type,
 				'type_info' => $emTypes[$emFieldsTypes->type],
 				'settings'  => $emFieldsTypes->getSettings(),
@@ -92,6 +93,7 @@ class Element
 			if(array_key_exists('em', $tableColumn))
 				continue;
 			$emFieldArray = [
+				'name'      => '',
 				'type'      => "em_string",
 				'type_info' => $emTypes['em_string'],
 				'settings'  => [],

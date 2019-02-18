@@ -16,8 +16,8 @@ class EmViews extends ModelBase
 	 */
 	public function beforeSave()
 	{
-		$this->settings = $this->settings ? json_encode($this->settings) : '[]';
-		$this->filter   = $this->filter ? json_encode($this->filter) : '[]';
-		$this->sort     = $this->sort ? json_encode($this->sort) : '[]';
+		$this->settings = isset($this->settings) ? json_encode($this->settings) : '[]';
+		$this->filter   = isset($this->filter) ? json_encode($this->filter) : '[]';
+		$this->sort     = isset($this->sort) ? json_encode($this->sort) : '[]';
 	}
 }

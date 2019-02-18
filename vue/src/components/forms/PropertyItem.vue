@@ -15,7 +15,7 @@
 			<div class="property-item-real-name">{{column.field}}</div>
 		</div>
 		<div class="property-item-checkbox-wrapper">
-			<Checkbox :fieldValue="{value: false}"/>
+			<Checkbox :column="column"/>
 		</div>
 	</div>
 </template>
@@ -24,7 +24,7 @@
 	export default
 	{
 		props: ['column'],
-		components: { Checkbox },
+		components: { Checkbox }
 	}
 </script>
 <style lang="scss">

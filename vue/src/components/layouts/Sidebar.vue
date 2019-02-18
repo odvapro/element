@@ -16,7 +16,7 @@
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables">
-					<a @click="selectTable(table)" href="#"
+					<a @click="selectTable(table)" href="javascript:void(0)"
 						:class="{active: table.code == getActiveTable}"
 					>
 						<div class="sidebar-points">
@@ -72,7 +72,7 @@
 			 */
 			getActiveTable()
 			{
-				return this.$route.params.tableName;
+				return this.$route.params.tableCode;
 			},
 			/**
 			 * Достать список таблиц
@@ -81,13 +81,6 @@
 			{
 				return this.$store.state.tables.tables;
 			},
-			/**
-			 * Достать название таблицы
-			 */
-			tableName()
-			{
-				return this.$store.state.tables.tableName;
-			}
 		},
 		methods:
 		{

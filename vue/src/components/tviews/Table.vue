@@ -4,7 +4,7 @@
 		@mouseup="endResize($event, columnDrug.col)">
 		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 			<div class="table-row no-hover">
-				<div class="table-item" v-for="column in table.columns" :style="{ width: column.width + 'px', 'min-width': column.width + 'px' }">
+				<div class="table-item" v-for="column in table.columns" v-if="column.visible" :style="{ width: column.width + 'px', 'min-width': column.width + 'px' }">
 					<div class="table-item-img">
 						<img :src="column.em.type_info.iconPath" alt="">
 					</div>
@@ -32,7 +32,8 @@
 				</div>
 				<div
 					class="table-item"
-					v-for="column in table.columns"
+					v-for="column, index in table.columns"
+					v-if="column.visible"
 					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
 				>
 					<MainField :fieldValue="row[column.field]"/>
@@ -116,20 +117,71 @@
 		watch:
 		{
 			/**
+			 * отслеживать изменение колонки
+			 */
+			'table.columns':
+			{
+				/**
+				 * Следить за изменением всего объекта
+				 */
+				handler: function (val, oldVal)
+				{
+					if (this.columnDrug.isDrug == false)
+						this.saveColumnsParams();
+				},
+				deep: true
+			},
+			/**
 			 * Если меняется урл то выполнять
 			 */
 			'$route.fullPath'()
 			{
-				this.setDefaultWidth();
+				this.setDefaulParams();
 				this.getTableContent();
 			}
 		},
 		methods:
 		{
 			/**
+			 * Сохранить параметры колонки
+			 */
+			saveColumnsParams()
+			{
+				let tableColumns = this.table.columns,
+					request      = {};
+
+				request['tviewId'] = this.tview.id;
+				request['params'] = {};
+				request['params']['columns'] = {};
+
+				for (let column in tableColumns)
+				{
+					if (typeof tableColumns[column].width == 'undefined')
+						return false;
+
+					request['params']['columns'][column] = {};
+					request['params']['columns'][column] = {
+						width: tableColumns[column].width,
+						visible: tableColumns[column].visible
+					};
+
+					if (typeof this.tview.settings.columns == 'undefined')
+					{
+						this.$set(this.tview, 'settings', {});
+						this.$set(this.tview.settings, 'columns', {});
+					}
+
+					this.$set(this.tview.settings.columns, column, {});
+					this.$set(this.tview.settings.columns[column], 'width', tableColumns[column].width);
+					this.$set(this.tview.settings.columns[column], 'visible', tableColumns[column].visible ? 'true' : 'false');
+				}
+
+				this.$store.dispatch('saveColumnsWith', request);
+			},
+			/**
 			 * Задать колонкам ширину
 			 */
-			setDefaultWidth()
+			setDefaulParams()
 			{
 				let colObject = {};
 
@@ -138,11 +190,24 @@
 					colObject = this.table.columns[colIndex];
 
 					if (typeof this.tview.settings.columns == 'undefined')
+					{
 						this.$set(colObject, 'width', 140);
+						this.$set(colObject, 'visible', true);
+					}
 					else if (typeof this.tview.settings.columns[colIndex] == 'undefined')
+					{
 						this.$set(colObject, 'width', 140);
+						this.$set(colObject, 'visible', true);
+					}
 					else
+					{
 						this.$set(colObject, 'width', this.tview.settings.columns[colIndex].width);
+
+						if (typeof this.tview.settings.columns[colIndex].visible == 'undefined')
+							this.$set(colObject, 'visible', true);
+						else
+							this.$set(colObject, 'visible', this.tview.settings.columns[colIndex].visible === 'true' ? true : false);
+					}
 				}
 			},
 			/**
@@ -162,26 +227,6 @@
 				await this.$store.dispatch('select', {select: select});
 			},
 			/**
-			 * Сохранить ширину колонок
-			 */
-			async saveColumnsWidth()
-			{
-				let tableColumns = this.table.columns,
-					request      = {};
-
-				request['tviewId'] = this.tview.id;
-				request['params'] = {};
-				request['params']['columns'] = {};
-
-				for (let column in tableColumns)
-				{
-					request['params']['columns'][column] = {};
-					request['params']['columns'][column] = { width: tableColumns[column].width };
-				}
-
-				this.$store.dispatch('saveColumnsWith', request);
-			},
-			/**
 			 * Начальные значения для изменения ширины колонки
 			 */
 			reginsterEventResize(event, col)
@@ -198,7 +243,7 @@
 			endResize(event, col)
 			{
 				if (this.columnDrug.isDrug)
-					this.saveColumnsWidth();
+					this.saveColumnsParams();
 
 				this.columnDrug.isDrug = false;
 			},
@@ -265,7 +310,7 @@
 		 */
 		mounted()
 		{
-			this.setDefaultWidth();
+			this.setDefaulParams();
 			this.getTableContent();
 			this.initEventScale();
 		}
@@ -310,7 +355,6 @@
 		align-items: center;
 		height: 49px;
 		padding-right: 10px;
-		overflow: hidden;
 		padding-left: 9px;
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
@@ -415,6 +459,7 @@
 	.table-vertical-scroll
 	{
 		overflow: auto;
+		padding-bottom: 120px;
 	}
 	.table__add-column-item
 	{
