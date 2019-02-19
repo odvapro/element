@@ -16,13 +16,12 @@
 			<div class="settings-table-row" v-for="table in tables">
 				<div class="settings-table-row-data">
 					<div class="settings-table-item"
-						@click="setRowSetting(table)"
-						>
+						@click="toggleSettingsRow(table)">
 						<svg
 							width="7"
 							height="13"
 							class="settings-table-item-img"
-							:class="{active: table.isShow}"
+							:class="{active: table.showSettings.overflow == 'visible' || table.showSettings.overflow == 'auto'}"
 						>
 							<use xlink:href="#arrow"></use>
 						</svg>
@@ -38,17 +37,15 @@
 					</div>
 					<div class="settings-table-item"></div>
 				</div>
-				<div class="settings-table-row-setting">
-					<div class="settings-table-row-setting-item" v-for="column in table.columns" :class="{active: table.showSettings}">
+				<div class="settings-table-row-setting" id="settings-table-row" :style="table.showSettings">
+					<div class="settings-table-row-setting-item active" v-for="column in table.columns">
 						<div class="settings-table-item">
 							{{column.field}}
 						</div>
 						<div class="settings-table-item category-font">
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)">
 						</div>
-						<div class="settings-table-item table-item centered"
-							@click="showPopup($event.target, 'TagSearch', 'left-top')"
-							>
+						<div class="settings-table-item table-item centered">
 							<MainField
 								:fieldValue="{fieldName: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"
 							/>
@@ -77,11 +74,41 @@
 			return {
 				tableColumns: {},
 				fieldTypes:[],
-				tables: []
+				tables: [],
+				tableStyle:
+				{
+					height: '0px',
+					overflow: 'hidden'
+				}
 			}
 		},
 		methods:
 		{
+			/**
+			 * Анимация для открытия и закрытия аккордеона
+			 */
+			toggleSettingsRow(table)
+			{
+				if (table.showSettings.overflow == 'visible')
+				{
+					table.showSettings.overflow = 'hidden';
+					table.showSettings.height = '0';
+					return false;
+				}
+
+				var height = 0;
+
+				for (var col in table.columns)
+					height += 49;
+
+				table.showSettings.height = height + 'px';
+				table.showSettings.overflow = 'auto';
+
+				setTimeout(function ()
+				{
+					table.showSettings.overflow = 'visible';
+				}, 300);
+			},
 			/**
 			 * Открыть/закрыть настройки колонок
 			 */
@@ -110,6 +137,23 @@
 
 				if (!result.data.success)
 					return false;
+			},
+			/**
+			 * Инициализация и преобразование массива таблицы
+			 */
+			async initTables()
+			{
+				let result = await this.$axios.get('/api/settings/getFiledTypes/');
+
+				if(result.data.success)
+					this.fieldTypes = result.data.types;
+
+				this.tables = JSON.parse(JSON.stringify(this.$store.state.tables.tables));
+
+				for (let table of this.tables)
+				{
+					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
+				}
 			}
 		},
 		computed:
@@ -125,21 +169,17 @@
 		/**
 		 * Хук при загрузке страницы
 		 */
-		async mounted()
+		mounted()
 		{
-			let result = await this.$axios.get('/api/settings/getFiledTypes/');
-
-			if(result.data.success)
-				this.fieldTypes = result.data.types;
-
-			this.tables = JSON.parse(JSON.stringify(this.$store.state.tables.tables));
-
-			for (let table of this.tables)
-				this.$set(table, 'showSettings', false);
+			this.initTables();
 		}
 	}
 </script>
 <style lang="scss">
+	.settings-table-wrapper
+	{
+		padding-bottom: 100px;
+	}
 	.settings-table-input-name
 	{
 		border: none;
@@ -177,10 +217,13 @@
 		color: #677387;
 		font-size: 12px;
 	}
+	.settings-table-row-setting
+	{
+		transition: all 0.3s;
+	}
 	.settings-table-row-setting-item
 	{
 		display: flex;
-		overflow: hidden;
 		background: rgba(103, 115, 135, 0.1);
 		transition: all 0.3s;
 		height: 0;
@@ -195,7 +238,7 @@
 		}
 		&.active
 		{
-			height: 39px;
+			height: 49px;
 			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 		}
 	}
@@ -228,8 +271,7 @@
 		display: flex;
 		word-break: break-word;
 		align-items: center;
-		height: 39px;
-		overflow: hidden;
+		height: 49px;
 		padding: 0 11px;
 		position: relative;
 		min-width: 140px;
@@ -239,7 +281,7 @@
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&.table-item
 		{
-			height: 39px;
+			height: 49px;
 		}
 		&:last-child
 		{

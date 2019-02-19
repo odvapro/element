@@ -1,6 +1,6 @@
 <template>
-	<div class="settings-popup-overlay" @click="$store.commit('setActivePopup', false)">
-		<div class="settings-popup-wrapper" @click.stop>
+	<div class="settings-popup-overlay">
+		<div class="settings-popup-wrapper" v-click-outside="closePopup">
 			<div class="settings-popup-title">Name field settings</div>
 			<div class="settings-popup-row-params">
 				<div class="settings-popup-item-wrapper">
@@ -31,7 +31,7 @@
 				</div>
 				<div class="settings-popup-item-wrapper">
 					<div class="settings-popup-table-select-btn">
-						Sections
+						<MainField :fieldValue="{fieldName: 'EmTagsField', value: 'section'}"/>
 					</div>
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 				</div>
 				<div class="settings-popup-item-wrapper">
 					<div class="setting-popup-item-table-search">
-						Set Link
+						<input type="text" placeholder="set title">
 					</div>
 				</div>
 			</div>
@@ -63,6 +63,23 @@
 		</div>
 	</div>
 </template>
+<script>
+	import MainField from '@/components/fields/MainField.vue';
+	export default
+	{
+		components: {MainField},
+		methods:
+		{
+			/**
+			 * Закрыть попап
+			 */
+			closePopup()
+			{
+				this.$store.commit('setActivePopup', false);
+			}
+		}
+	}
+</script>
 <style lang="scss">
 	.settings-popup-close-icon
 	{
@@ -125,11 +142,15 @@
 	{
 		font-size: 10px;
 		color: rgba(25, 28, 33, 0.4);
+		input
+		{
+			border: none;
+		}
 	}
 	.settings-popup-table-select-btn
 	{
 		padding: 4px 8px;
-		background: rgba(124, 119, 145, 0.1);
+		position: relative;
 		border-radius: 2px;
 		display: inline-block;
 		font-size: 10px;

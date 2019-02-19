@@ -5,6 +5,16 @@
 <script>
 	export default
 	{
+		watch:
+		{
+			/**
+			 * Если есть таблицы в сторе то открыть первую
+			 */
+			'$store.state.tables.tables'()
+			{
+				this.viewFirstTable();
+			}
+		},
 		methods:
 		{
 			/**
@@ -40,6 +50,9 @@
 				this.$router.push(url);
 			}
 		},
+		/**
+		 * Хук при загрузке страницы
+		 */
 		async mounted()
 		{
 			// определяем первую таблицу - делаем ее активной
