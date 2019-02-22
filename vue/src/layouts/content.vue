@@ -22,8 +22,49 @@
 		data()
 		{
 			return {
-				sidebar: {}
+				sidebar: {},
+				points:
+				{
+					isDrug: false,
+					posX: this.$cookie.get('drugPosition')
+				},
 			}
+		},
+		methods:
+		{
+			/**
+			 * Инициализация событий для уменьшения/увеливения сайдбара
+			 */
+			initEventScale()
+			{
+				var app = document.getElementsByClassName('app-wrapper')[0],
+					self = this;
+
+				document.addEventListener('mousedown', function(event)
+				{
+					if (event.target.classList.value != 'drug')
+						return false;
+
+					self.points.isDrug = true;
+				}, false);
+
+				document.addEventListener('mousemove', function(event)
+				{
+					if (!self.points.isDrug)
+						return false;
+
+					if (event.pageX < 200 || event.pageX > 480)
+						return false;
+
+					self.points.posX = event.pageX;
+					app.style.gridTemplateColumns = event.pageX + 'px auto'
+				}, false);
+				document.addEventListener('mouseup', function(event)
+				{
+					self.points.isDrug = false;
+					self.$cookie.set('drugPosition', self.points.posX, 111);
+				}, false);
+			},
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -36,6 +77,8 @@
 				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
 			else
 				this.sidebar['gridTemplateColumns'] = '400px auto';
+
+			this.initEventScale();
 		}
 	}
 </script>

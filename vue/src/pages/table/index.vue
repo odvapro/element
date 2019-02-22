@@ -189,7 +189,7 @@
 		position: relative;
 		font-size: 12px;
 		color: #fff;
-		height: 30px;
+		height: 31px;
 		align-items: center;
 		color: #fff;
 		outline: none;

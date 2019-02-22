@@ -33,10 +33,16 @@
 				<div
 					class="table-item"
 					v-for="column, index in table.columns"
-					v-if="column.visible"
+					v-if="column.visible && row[column.field]"
 					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
 				>
-					<MainField :fieldValue="row[column.field]"/>
+					<MainField
+						:params="{
+							fieldName : row[column.field].fieldName,
+							value     : row[column.field].value,
+							settings  : getFieldSettings(column, row)
+						}"
+					/>
 				</div>
 				<div class="table-item">
 					<div class="table-empty-col"></div>
@@ -68,11 +74,6 @@
 		data()
 		{
 			return {
-				points:
-				{
-					isDrug: false,
-					posX: this.$cookie.get('drugPosition')
-				},
 				columnDrug:
 				{
 					isDrug: false,
@@ -142,6 +143,35 @@
 		},
 		methods:
 		{
+			/**
+			 * Задать настройки для одного филда
+			 */
+			getFieldSettings(column, row)
+			{
+				let primaryFieldCode = false;
+
+				for(let columnCode in this.table.columns)
+				{
+					let column = this.table.columns[columnCode];
+					if(column.key == 'PRI')
+					{
+						primaryFieldCode = columnCode;
+						break;
+					}
+				}
+
+				let primaryKey = {
+					value: row[primaryFieldCode].value,
+					fieldCode: primaryFieldCode
+				};
+
+				let settings        = column.em.settings;
+				settings.fieldCode  = column.field;
+				settings.tableCode  = this.table.code;
+				settings.primaryKey = primaryKey;
+
+				return settings;
+			},
 			/**
 			 * Сохранить параметры колонки
 			 */
@@ -264,39 +294,6 @@
 					col.width = 600;
 			},
 			/**
-			 * Инициализация событий для уменьшения/увеливения сайдбара
-			 */
-			initEventScale()
-			{
-				var app = document.getElementsByClassName('app-wrapper')[0],
-					self = this;
-
-				document.addEventListener('mousedown', function(event)
-				{
-					if (event.target.classList.value != 'drug')
-						return false;
-
-					self.points.isDrug = true;
-				}, false);
-
-				document.addEventListener('mousemove', function(event)
-				{
-					if (!self.points.isDrug)
-						return false;
-
-					if (event.pageX < 200 || event.pageX > 480)
-						return false;
-
-					self.points.posX = event.pageX;
-					app.style.gridTemplateColumns = event.pageX + 'px auto'
-				}, false);
-				document.addEventListener('mouseup', function(event)
-				{
-					self.points.isDrug = false;
-					self.$cookie.set('drugPosition', self.points.posX, 111);
-				}, false);
-			},
-			/**
 			 * Эмит с пагинации. Задает текущую страницу
 			 */
 			selectPage(page)
@@ -312,7 +309,6 @@
 		{
 			this.setDefaulParams();
 			this.getTableContent();
-			this.initEventScale();
 		}
 	}
 </script>

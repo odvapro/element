@@ -90,7 +90,6 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		{
 			echo json_encode(['success' => false, 'message' => 'you need to auth']);
 			exit();
-			return false;
 		}
 	}
 }

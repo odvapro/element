@@ -42,7 +42,7 @@ LOCK TABLES `em_types` WRITE;
 INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
   (1,'testTable','name','em_check',0,NULL,''),
-  (2,'testTable','avat','em_image',0,NULL,''),
+  (2,'testTable','avat','em_file',0,NULL,''),
   (4,'newTest','name','em_string',0,NULL,''),
   (5,'testTable','col','em_tags',0,NULL,'');
 

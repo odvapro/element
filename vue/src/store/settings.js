@@ -7,7 +7,8 @@ const settings =
 {
 	state:
 	{
-		popupActive: false
+		popupActive: false,
+		popupParams: {}
 	},
 	mutations:
 	{
@@ -17,6 +18,13 @@ const settings =
 		setActivePopup(state, status)
 		{
 			state.popupActive = status
+		},
+		/**
+		 * Передать параметры для попапа
+		 */
+		setPopupParams(state, params)
+		{
+			state.popupParams = params;
 		}
 	},
 	actions:

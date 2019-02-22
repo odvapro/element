@@ -31,9 +31,18 @@
 						<div class="settings-table-item-name">{{table.name}}</div>
 					</div>
 					<div class="settings-table-item">
-						<div class="settings-table-item-flag">
-							<!-- <MainField :fieldValue="{class: 'EmCheckField'}"/> -->
-						</div>
+						<!-- <div class="settings-table-item-flag">
+							<div class="settings-table__check-wrapper" v-if="table.visible">
+								<label class="settings-table__check-label">
+									<input type="checkbox" v-model="table.visible" class="settings-table__check">
+									<span>
+										<svg width="7" height="7">
+											<use xlink:href="#check"></use>
+										</svg>
+									</span>
+								</label>
+							</div>
+						</div> -->
 					</div>
 					<div class="settings-table-item"></div>
 				</div>
@@ -47,11 +56,16 @@
 						</div>
 						<div class="settings-table-item table-item centered">
 							<MainField
-								:fieldValue="{fieldName: 'EmTagsField', value: !column.em.type ? column.type : column.em.type}"
+								:params="{
+									fieldName : 'EmTagsField',
+									value     : column.em.type_info.name,
+									settings  : getFieldSettings(table, column)
+								}"
+								@onChange="changeType"
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="$store.commit('setActivePopup', true)">settings</button>
+							<button @click="setSettingsPopupParams({fieldName: column.em.type_info.fieldComponent, required: column.em.required, settings: column.em.settings})">settings</button>
 						</div>
 					</div>
 				</div>
@@ -84,6 +98,78 @@
 		},
 		methods:
 		{
+			/**
+			 * Передать параметры филда в попап и открыть
+			 */
+			setSettingsPopupParams(params)
+			{
+				this.$store.commit('setPopupParams', params);
+				this.$store.commit('setActivePopup', true);
+			},
+			/**
+			 * Достать данные колонки
+			 */
+			getFieldSettings(table, column)
+			{
+				let columns = table.columns;
+				let primaryFieldCode = false;
+
+				for(let columnCode in columns)
+				{
+					let column = columns[columnCode];
+					if(column.key == 'PRI')
+					{
+						primaryFieldCode = columnCode;
+						break;
+					}
+				}
+
+				let primaryKey = {
+					value: '',
+					fieldCode: primaryFieldCode
+				};
+
+				let settings        = column.em.settings;
+				settings.fieldCode  = column.field;
+				settings.tableCode  = table.code;
+				settings.fieldType  = column.em.type_info.code;
+				settings.primaryKey = primaryKey;
+				settings.values     = this.fieldTypes;
+
+				return settings;
+			},
+			/**
+			 * Изменение типа поля
+			 */
+			async changeType(values)
+			{
+				let qs = require('qs');
+
+				let requestChangeType = qs.stringify({
+					tableName: values.table,
+					columnName: values.column,
+					fieldType: values.data.code
+				});
+
+				let result = await this.$axios({
+					method: 'post',
+					url: '/api/settings/changeFieldType/',
+					data: requestChangeType
+				});
+
+				if (!result.data.success)
+					return false;
+
+				for (let table of this.tables)
+				{
+					if (table.code != values.table)
+						continue;
+
+					table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
+					table.columns[values.column].em.type = values.data.code;
+					break;
+				}
+			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона
 			 */
@@ -126,7 +212,7 @@
 						tableName : tableName,
 						field     : column.field,
 						name      : column.em.name,
-						type      : typeof column.em.type == 'undefined' ? '' : column.em.type
+						type      : column.em.type_info.code
 					});
 
 				var result = await this.$axios({
@@ -148,7 +234,7 @@
 				if(result.data.success)
 					this.fieldTypes = result.data.types;
 
-				this.tables = JSON.parse(JSON.stringify(this.$store.state.tables.tables));
+				this.tables = this.$store.state.tables.tables;
 
 				for (let table of this.tables)
 				{
@@ -176,9 +262,9 @@
 	}
 </script>
 <style lang="scss">
-	.settings-table-wrapper
+	.settings-tab-wrapper
 	{
-		padding-bottom: 100px;
+		height: 100%;
 	}
 	.settings-table-input-name
 	{
@@ -303,4 +389,62 @@
 			cursor: pointer;
 		}
 	}
+.settings-table__check-wrapper
+{
+	display: inherit;
+	.settings-table__check-label
+	{
+		display: inline-block;
+		position: relative;
+		padding-left: 13px;
+		font-size: 14px;
+		height: 12px;
+		color: #334D66;
+		cursor: pointer;
+	}
+	.settings-table__check
+	{
+		visibility: hidden;
+		position: absolute;
+	}
+	.settings-table__check:not(checked) + span
+	{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 13px;
+		height: 13px;
+		border: 1px solid rgba(103, 115, 135, 0.4);
+		border-radius: 2px;
+		position: absolute;
+		left: 0;
+		transition: border 0.3s;
+		background-color: #fff;
+	}
+	.settings-table__check:checked + span
+	{
+		background: #7C7791;
+		border: 1px solid #7C7791;
+		background-repeat: no-repeat;
+		background-size: contain;
+		transition: background 0.3s;
+		img
+		{
+			width: 7px;
+			height: 7px;
+			object-fit: contain;
+		}
+	}
+
+	.settings-table__check:checked:hover + span
+	{
+		transition: background 0.3s;
+		border: 1px solid rgba(103, 115, 135, 0.5);
+	}
+	.settings-table__check:not(checked):hover + span
+	{
+		border: 1px solid rgba(103, 115, 135, 0.8);
+		transition: border 0.3s;
+	}
+}
 </style>

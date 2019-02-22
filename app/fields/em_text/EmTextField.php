@@ -1,6 +1,6 @@
 <?php
 
-class EmImageField extends FieldBase
+class EmTextField extends FieldBase
 {
 	protected $fieldValue = '';
 	/**
@@ -19,11 +19,10 @@ class EmImageField extends FieldBase
 	}
 	/**
 	 * Достать значение поля
-
 	 */
 	public function getValue()
 	{
-		return json_decode($this->fieldValue, true);
+		return strval($this->fieldValue);
 	}
 	/**
 	 * Сохранить значение

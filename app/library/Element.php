@@ -37,8 +37,15 @@ class Element
 
 				if(file_exists($infoFilePath))
 				{
-					$emTypes[$fieldCode]         = json_decode(file_get_contents($infoFilePath), true);
-					$emTypes[$fieldCode]['code'] = $fieldCode;
+					$emTypes[$fieldCode]                   = json_decode(file_get_contents($infoFilePath), true);
+					$emTypes[$fieldCode]['code']           = $fieldCode;
+
+					$fieldComponent                        = $emTypes[$fieldCode]['code'];
+					$fieldComponent                        = explode('_', $fieldComponent);
+					$fieldComponent                        = array_map('ucfirst', $fieldComponent);
+					$fieldComponent[]                      = 'Field';
+					$fieldComponent                        = implode('', $fieldComponent);
+					$emTypes[$fieldCode]['fieldComponent'] = $fieldComponent;
 				}
 
 				if(strpos($fieldCode, '.') === false && is_dir($fieldDirPath))
@@ -46,6 +53,7 @@ class Element
 			}
 			closedir($handle);
 		}
+
 		return $emTypes;
 	}
 
@@ -72,6 +80,7 @@ class Element
 			'conditions' => 'table = ?0',
 			'bind'       => [$tableName]
 		]);
+
 		foreach ($emFields as $emFieldsTypes)
 		{
 			if(!array_key_exists($emFieldsTypes->field, $tableColumns))
@@ -82,7 +91,7 @@ class Element
 				'name'      => $emFieldsTypes->name,
 				'type'      => $emFieldsTypes->type,
 				'type_info' => $emTypes[$emFieldsTypes->type],
-				'settings'  => $emFieldsTypes->getSettings(),
+				'settings'  => $emFieldsTypes->settings,
 				'required'  => $emFieldsTypes->getRequired()
 			];
 			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;
@@ -92,9 +101,10 @@ class Element
 		{
 			if(array_key_exists('em', $tableColumn))
 				continue;
+
 			$emFieldArray = [
 				'name'      => '',
-				'type'      => "em_string",
+				'type'      => $tableColumn['type'],
 				'type_info' => $emTypes['em_string'],
 				'settings'  => [],
 				'required'  => false,
@@ -132,14 +142,15 @@ class Element
 			$result = [];
 			foreach ($selectItem as $fieldCode => $columnValue)
 			{
-				$fieldClass   = explode('_', $tableColumns[$fieldCode]['em']['type']);
-				$fieldClass   = array_map('ucfirst', $fieldClass);
-				$fieldClass[] = 'Field';
-				$fieldClass   = implode('', $fieldClass);
+				$fieldClass   = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
 
-				$field        = new $fieldClass($columnValue);
+				if (class_exists($fieldClass))
+					$field = new $fieldClass($columnValue);
+				else
+					$field = new EmStringField($columnValue);
+
 				$result[$fieldCode]['value']     = $field->getValue();
-				$result[$fieldCode]['fieldName'] = $fieldClass;
+				$result[$fieldCode]['fieldName'] = get_class($field);
 			}
 			return $result;
 		}, $selectResult);

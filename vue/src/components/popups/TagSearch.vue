@@ -2,37 +2,17 @@
 	<div class="tag-search" @click.stop>
 		<div class="tag-search-popup-head">
 			<div class="tag-search-item">
-				shirt
+				{{defaultTagValue}}
 			</div>
 		</div>
-		<div class="tag-search-popup-item">
+		<div class="tag-search-popup-item" v-for="type in types">
 			<div class="tag-search-icon">
 				<svg width="6" height="5">
 					<use xlink:href="#lines"></use>
 				</svg>
 			</div>
-			<div class="tag-search-item">
-				shirt
-			</div>
-		</div>
-		<div class="tag-search-popup-item">
-			<div class="tag-search-icon">
-				<svg width="6" height="5">
-					<use xlink:href="#lines"></use>
-				</svg>
-			</div>
-			<div class="tag-search-item">
-				shirt
-			</div>
-		</div>
-		<div class="tag-search-popup-item">
-			<div class="tag-search-icon">
-				<svg width="6" height="5">
-					<use xlink:href="#lines"></use>
-				</svg>
-			</div>
-			<div class="tag-search-item">
-				shirt
+			<div class="tag-search-item" @click="changeFieldType(type)">
+				{{type.name}}
 			</div>
 		</div>
 	</div>
@@ -41,8 +21,28 @@
 	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
-		props: ['styles'],
-		mixins: [PopupParams]
+		props: ['types', 'defaultValue'],
+		mixins: [PopupParams],
+		/**
+		 * Глобальные переменные страницы
+		 */
+		data()
+		{
+			return {
+				defaultTagValue: ''
+			}
+		},
+		methods:
+		{
+
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.defaultTagValue = this.defaultValue;
+		}
 	}
 </script>
 <style lang="scss">
