@@ -30,6 +30,8 @@ class EmTypes extends ModelBase
 	{
 		if (!empty($this->settings))
 			$this->settings = json_encode($this->settings);
+		else
+			$this->settings = NULL;
 
 		return true;
 	}

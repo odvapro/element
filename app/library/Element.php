@@ -137,7 +137,7 @@ class Element
 		 * Добавляем в селект запрос, поля для отображения
 		 * @var array
 		 */
-		$selectResultWithFields = array_map(function ($selectItem) use ($tableColumns)
+		$selectResultWithFields = array_map(function ($selectItem) use ($tableColumns, $selectParams)
 		{
 			$result = [];
 			foreach ($selectItem as $fieldCode => $columnValue)
@@ -145,9 +145,9 @@ class Element
 				$fieldClass   = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
 
 				if (class_exists($fieldClass))
-					$field = new $fieldClass($columnValue);
+					$field = new $fieldClass($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
 				else
-					$field = new EmStringField($columnValue);
+					$field = new EmStringField($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
 
 				$result[$fieldCode]['value']     = $field->getValue();
 				$result[$fieldCode]['fieldName'] = get_class($field);

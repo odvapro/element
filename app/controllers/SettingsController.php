@@ -66,13 +66,13 @@ class SettingsController extends ControllerBase
 				$tableName, $columnName
 			]
 		]);
-
 		if (!$field)
 			$field = new EmTypes();
 
-		$field->field = $columnName;
-		$field->table = $tableName;
-		$field->type  = $fieldType;
+		$field->field    = $columnName;
+		$field->table    = $tableName;
+		$field->type     = $fieldType;
+
 		$field->save();
 
 		return $this->jsonResult(['success' => true]);

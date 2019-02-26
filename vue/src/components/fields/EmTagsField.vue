@@ -75,7 +75,7 @@
 		}
 	}
 </script>
-<style>
+<style lang="scss">
 	.em-tags-item
 	{
 		padding: 4px 8px;
