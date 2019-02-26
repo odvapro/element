@@ -1,5 +1,6 @@
 <?php
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
+use Phalcon\Mvc\Model\Resultset;
 
 class ElController extends ControllerBase
 {
@@ -97,8 +98,26 @@ class ElController extends ControllerBase
 		foreach ($tables as &$table)
 		{
 			$emViewsTable = EmViews::findByTable($table['code']);
+			$table['columns'] = $this->element->getColumns($table['code']);
 
-			$table['tviews'] = $emViewsTable->toArray();
+			if (!count($emViewsTable))
+			{
+				$tableEmView = new EmViews();
+				$tableEmView->name = "Отображение{$table['code']}";
+				$tableEmView->table = $table['code'];
+				$tableEmView->default = '1';
+				$tableEmView->save();
+
+				$table['tviews'][] = $tableEmView->toArray();
+
+				continue;
+			}
+
+			$table['tviews'] = [];
+			$tviews = [];
+
+			foreach ($emViewsTable as $tview)
+				$table['tviews'][] = $tview->toArray();
 		}
 
 		$this->jsonResult([
@@ -122,5 +141,26 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'table not found']);
 
 		return $this->jsonResult(['success' => true, 'columns' => $tableColumns]);
+	}
+
+	/**
+	 * Set settings for tView
+	 */
+	public function setTviewSettingsAction()
+	{
+		$tviewId = $this->request->getPost('tviewId');
+		$params  = $this->request->getPost('params');
+
+		if (empty($tviewId))
+			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
+
+		$tview = EmViews::findFirstById($tviewId);
+
+		$tview->settings = $params;
+
+		if ($tview->save() == false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		return $this->jsonResult(['success' => true]);
 	}
 }

@@ -134,6 +134,8 @@
 	.settings-tabs-content-wrapper
 	{
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
+		overflow: auto;
+		height: 100%;
 	}
 </style>

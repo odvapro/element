@@ -1,19 +1,13 @@
 <template>
-	<div class="settings-popup-overlay" @click="$store.commit('setActivePopup', false)">
-		<div class="settings-popup-wrapper" @click.stop>
+	<div class="settings-popup-overlay">
+		<div class="settings-popup-wrapper" v-click-outside="closePopup">
 			<div class="settings-popup-title">Name field settings</div>
-			<div class="settings-popup-row-params">
-				<div class="settings-popup-item-wrapper">
-					Required
-				</div>
-				<div class="settings-popup-item-wrapper">
-					<div class="settings-popup-radio-wrapper">
-						<div class="settings-popup-radio-btn active">Yes</div>
-						<div class="settings-popup-radio-btn">No</div>
-					</div>
-				</div>
-			</div>
-			<div class="settings-popup-row-params">
+			<MainSettings
+				v-if="popupParams.fieldName"
+				:params="{fieldName: popupParams.fieldName, required: popupParams.required, settings: popupParams.settings}"
+				@changeSettings="setSettingsForField"
+			/>
+			<!-- <div class="settings-popup-row-params">
 				<div class="settings-popup-item-wrapper">
 					Choose redactor
 				</div>
@@ -31,7 +25,13 @@
 				</div>
 				<div class="settings-popup-item-wrapper">
 					<div class="settings-popup-table-select-btn">
-						Sections
+						<MainField
+							:params="{
+								fieldName : row[column.field].fieldName,
+								value     : row[column.field].value,
+								settings  : getFieldSettings(column, row)
+							}"
+						/>
 					</div>
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 				</div>
 				<div class="settings-popup-item-wrapper">
 					<div class="setting-popup-item-table-search">
-						Set Link
+						<input type="text" placeholder="set title">
 					</div>
 				</div>
 			</div>
@@ -54,15 +54,94 @@
 						12/12/1991 12:30
 					</div>
 				</div>
-			</div>
+			</div> -->
 			<div class="settings-popup-bottom-btns">
-				<button class="settings-popup-bottom-btn-cancel">Cancel</button>
-				<button class="settings-popup-bottom-btn-save">Save</button>
+				<button class="settings-popup-bottom-btn-cancel" @click="$store.commit('setActivePopup', false)">Cancel</button>
+				<button class="settings-popup-bottom-btn-save" @click="submitSettings()">Save</button>
 			</div>
 			<div class="settings-popup-close-icon" @click="$store.commit('setActivePopup', false)"></div>
 		</div>
 	</div>
 </template>
+<script>
+	import MainField from '@/components/fields/MainField.vue';
+	import MainSettings from '@/components/fields/settings/MainSettings.vue';
+	export default
+	{
+		components: { MainField, MainSettings },
+		/**
+		 * Глобальные переменные страницы
+		 */
+		data()
+		{
+			return {
+				popupParams: {},
+				newSettings: {},
+				tables: []
+			}
+		},
+		methods:
+		{
+			/**
+			 * Закрыть попап
+			 */
+			closePopup()
+			{
+				this.$store.commit('setActivePopup', false);
+			},
+			/**
+			 * Записать измененные настройки филда
+			 */
+			setSettingsForField(value)
+			{
+				this.newSettings = value;
+			},
+			/**
+			 * Отправить настройки филда
+			 */
+			async submitSettings()
+			{
+				let qs = require('qs');
+
+				let data = {
+					tableName  : this.popupParams.settings.tableCode,
+					columnName : this.popupParams.settings.fieldCode,
+					fieldType  : this.popupParams.settings.fieldType,
+					settings   : this.newSettings
+				};
+
+				let dataStr = qs.stringify(data);
+
+				let result =  await this.$axios({
+					method: 'POST',
+					url: '/api/settings/setFieldSettings/',
+					data: dataStr
+				});
+
+				if (!result.data.success)
+					return false;
+
+				for (let table of this.tables)
+					if (table.code == data.tableName)
+						for (let paramKey in this.newSettings)
+						{
+							table.columns[data.columnName].em[paramKey] = this.newSettings[paramKey];
+							table.columns[data.columnName].em.settings[paramKey] = this.newSettings[paramKey];
+						}
+
+				this.closePopup();
+			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.popupParams = this.$store.state.settings.popupParams;
+			this.tables      = this.$store.state.tables.tables;
+		}
+	}
+</script>
 <style lang="scss">
 	.settings-popup-close-icon
 	{
@@ -104,6 +183,7 @@
 		color: rgba(103, 115, 135, 0.7);
 		padding: 7px 11px;
 		border: none;
+		cursor: pointer;
 		color: #fff;
 	}
 	.settings-popup-bottom-btn-cancel
@@ -115,6 +195,7 @@
 		padding: 7px 11px;
 		border: none;
 		margin-right: 15px;
+		cursor: pointer;
 	}
 	.setting-popup-item-input-wrapper
 	{
@@ -125,11 +206,15 @@
 	{
 		font-size: 10px;
 		color: rgba(25, 28, 33, 0.4);
+		input
+		{
+			border: none;
+		}
 	}
 	.settings-popup-table-select-btn
 	{
 		padding: 4px 8px;
-		background: rgba(124, 119, 145, 0.1);
+		position: relative;
 		border-radius: 2px;
 		display: inline-block;
 		font-size: 10px;

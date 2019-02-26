@@ -8,14 +8,10 @@ const table =
 	state:
 	{
 		selectRequest: {},
-		tablesList   : [],
+		tables   : [],
+
 		tableColumns : [],
 		tableContent : {},
-		tableName    :
-		{
-			overide  : '',
-			real     : ''
-		}
 	},
 	mutations:
 	{
@@ -38,19 +34,7 @@ const table =
 		 */
 		setTables(state, tables)
 		{
-			state.tablesList = tables;
-			this.commit('setTableInfo', tables[0]);
-		},
-		/**
-		 * Установить информацию о выбранной таблице
-		 */
-		setTableInfo(state, info)
-		{
-			var names = {
-					overide : info.code,
-					real    : info.code
-				};
-			this.commit('setTableName', names)
+			state.tables = tables;
 		},
 		/**
 		 * Записать названия столбцов таблицы
@@ -136,6 +120,25 @@ const table =
 			var newParams = Object.assign(store.state.selectRequest, {});
 			newParams.select.page = page;
 			await store.dispatch('select', newParams);
+		},
+
+		/**
+		 * Сохранить ширину колонок
+		 */
+		async saveColumnsWith(store, params)
+		{
+			var data = qs.stringify(params);
+
+			var result = await axios({
+				method: 'post',
+				url: '/api/el/setTviewSettings/',
+				data: data
+			});
+
+			if (!result.data.success)
+				return false;
+
+			return true;
 		}
 	}
 }

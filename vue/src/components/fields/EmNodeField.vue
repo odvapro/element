@@ -1,19 +1,18 @@
 <template>
-	<div class="tag-item-wrapper">
-		<div class="tag-item">
-			{{name}}
+	<div class="em-node__item-wrapper">
+		<div class="em-node__item">
+			{{fieldValue.name}}
 		</div>
 	</div>
 </template>
 <script>
-	import Popup from '@/mixins/popup.js';
 	export default
 	{
-		props: ['name']
+		props: ['fieldValue']
 	}
 </script>
 <style lang="scss">
-	.tag-item
+	.em-node__item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);

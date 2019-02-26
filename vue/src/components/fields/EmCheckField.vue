@@ -1,7 +1,7 @@
 <template>
 	<div class="em-check-wrapper">
 		<label class="em-check-label">
-			<input type="checkbox" v-model="fieldValue.value" class="em-check">
+			<input type="checkbox" v-model="isChecked" class="em-check">
 			<span>
 				<svg width="7" height="7">
 					<use xlink:href="#check"></use>
@@ -13,7 +13,30 @@
 <script>
 	export default
 	{
-		props: ['fieldValue']
+		props: ['fieldValue', 'fieldSettings'],
+		/**
+		 * Глобальные переменные страницы
+		 */
+		data()
+		{
+			return {
+				isChecked: false
+			}
+		},
+		watch:
+		{
+			// isChecked()
+			// {
+			// 	this.$emit('onChange', {data: isChecked, column})
+			// }
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.isChecked = this.fieldValue;
+		}
 	}
 </script>
 <style lang="scss">

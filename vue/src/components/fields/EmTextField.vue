@@ -1,6 +1,6 @@
 <template>
-	<div class="em-string-item-name-wrapper">
-		<div class="em-string-item-overide-name">{{ fieldValue }}</div>
+	<div class="em-text__item-name-wrapper">
+		<div class="em-text__item-overide-name">{{ fieldValue }}</div>
 	</div>
 </template>
 <script>
@@ -10,7 +10,7 @@
 	}
 </script>
 <style>
-	.em-string-item-overide-name
+	.em-text__item-overide-name
 	{
 		line-height: 12px;
 		font-size: 12px;

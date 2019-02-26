@@ -5,7 +5,6 @@ import settings from './settings.js'
 import axios from 'axios'
 
 var qs = require('qs');
-
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 Vue.use(Vuex)

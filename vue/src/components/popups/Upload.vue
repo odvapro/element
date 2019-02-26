@@ -1,5 +1,5 @@
 <template>
-	<div class="upload-popup">
+	<div class="upload-popup" @click.stop>
 		<div class="upload-popup-head">
 			Add file
 		</div>
@@ -29,6 +29,9 @@
 	{
 		mixins: [PopupParams],
 		components: { InputFile },
+		/**
+		 * Глоабальные переменные странциы
+		 */
 		data()
 		{
 			return {
@@ -63,6 +66,10 @@
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		width: 326px;
+		position: absolute;
+		z-index: 2;
+		top: -1px;
+		left: -1px;
 	}
 	.upload-popup-head
 	{

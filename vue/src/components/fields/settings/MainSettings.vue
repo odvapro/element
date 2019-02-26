@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<component
-			v-bind:is="columnContent"
-			:fieldValue="params.value"
+			:is="columnContent"
+			:isRequired="params.required"
 			:fieldSettings="params.settings"
-			@onChange="changeValue"
+			@changeSettings="changeSettings"
 		></component>
 	</div>
 </template>
@@ -15,14 +15,14 @@
 		computed:
 		{
 			/**
-			 * Динамически отображаемая ячейка таблицы
+			 * Динамически отображаемый попап
 			 */
 			columnContent()
 			{
 				if (typeof this.params == 'undefined')
 					return false;
 
-				return () => import(`@/components/fields/${this.params.fieldName}.vue`);
+				return () => import(`@/components/fields/settings/${this.params.fieldName}.vue`);
 			}
 		},
 		methods:
@@ -30,9 +30,9 @@
 			/**
 			 * Отслеживать изменения в филде
 			 */
-			changeValue(value)
+			changeSettings(value)
 			{
-				this.$emit('onChange', value);
+				this.$emit('changeSettings', value);
 			}
 		}
 	}

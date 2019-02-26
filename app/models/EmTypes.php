@@ -5,11 +5,12 @@ class EmTypes extends ModelBase
 	/**
 	 * Достать настройки поля таблицы в виде json
 	 */
-	public function getSettings()
+	public function afterFetch()
 	{
 		if(empty($this->settings))
-			return [];
-		return json_decode($this->settings, true);
+			$this->settings = [];
+		else
+			$this->settings = json_decode($this->settings, true);
 	}
 	/**
 	 * Обязательное поле
@@ -21,5 +22,17 @@ class EmTypes extends ModelBase
 			return true;
 		return false;
 	}
+	/**
+	 * Перед сохранением
+	 * @return [type] [description]
+	 */
+	public function beforeSave()
+	{
+		if (!empty($this->settings))
+			$this->settings = json_encode($this->settings);
+		else
+			$this->settings = NULL;
 
+		return true;
+	}
 }
