@@ -121,7 +121,6 @@ class SqlAdapter extends PdoAdapter
 
 		if (!empty($order))
 			$sql .= ' ORDER BY ' . implode(', ', $order);
-
 		try
 		{
 			$select = $this->db->fetchAll(

@@ -40,6 +40,7 @@ class EmNodeField extends FieldBase
 			"SELECT * FROM " . $this->settings['bindTable'] . " WHERE  $whereSql ",
 			Phalcon\Db::FETCH_ASSOC
 		);
+
 		foreach ($tableResult as $tableValue)
 		{
 			$nodeElement         = [];

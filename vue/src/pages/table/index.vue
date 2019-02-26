@@ -46,8 +46,10 @@
 <script>
 	import Table from '@/components/tviews/Table.vue';
 	import Properties from '@/components/popups/Properties.vue';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
+		mixins: [TableWork],
 		components: { Table, Properties },
 		/**
 		 * Глобальные пересенные странциы
@@ -104,6 +106,12 @@
 		mounted()
 		{
 			this.activeTable();
+
+			for (let table of this.$store.state.tables.tables)
+			{
+				let tview = this.getDefaultTview(table);
+				this.$set(table, 'visible', typeof tview.settings.table == 'undefined' ? false : tview.settings.table.visible === 'true' ? true : false);
+			}
 		},
 		watch:
 		{
@@ -118,13 +126,14 @@
 	}
 </script>
 <style lang="scss">
-	.index__wrapper { padding: 23px 95px 23px 21px; }
+	.index__wrapper { padding: 23px 20px 23px 21px; }
 	.index__head
 	{
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
 		margin-bottom: 16px;
+		padding-right: 75px;
 	}
 	.index__head-name
 	{

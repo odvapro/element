@@ -28,13 +28,15 @@
 						<div class="settings-table-item-code">{{table.code}}</div>
 					</div>
 					<div class="settings-table-item">
-						<div class="settings-table-item-name">{{table.name}}</div>
+						<div class="settings-table-item-name">
+							<input type="text" @change="setTviewSetting(table, 'table', {name: table.name})" v-model="table.name">
+						</div>
 					</div>
 					<div class="settings-table-item">
-						<!-- <div class="settings-table-item-flag">
-							<div class="settings-table__check-wrapper" v-if="table.visible">
+						<div class="settings-table-item-flag">
+							<div class="settings-table__check-wrapper">
 								<label class="settings-table__check-label">
-									<input type="checkbox" v-model="table.visible" class="settings-table__check">
+									<input type="checkbox" v-model="table.visible" @change="setTviewSetting(table, 'table', {visible: String(table.visible)})" class="settings-table__check">
 									<span>
 										<svg width="7" height="7">
 											<use xlink:href="#check"></use>
@@ -42,7 +44,7 @@
 									</span>
 								</label>
 							</div>
-						</div> -->
+						</div>
 					</div>
 					<div class="settings-table-item"></div>
 				</div>
@@ -76,9 +78,10 @@
 <script>
 	import MainField from '@/components/fields/MainField.vue';
 	import Popup from '@/mixins/popup.js';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		mixins: [Popup],
+		mixins: [Popup, TableWork],
 		components: { MainField },
 		/**
 		 * Глобальные переменные страницы
@@ -238,7 +241,10 @@
 
 				for (let table of this.tables)
 				{
+					let tview = this.getDefaultTview(table);
+
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
+					this.$set(table, 'visible', typeof tview.settings.table == 'undefined' ? false : tview.settings.table.visible === 'true' ? true : false);
 				}
 			}
 		},
@@ -292,6 +298,13 @@
 	{
 		font-size: 12px;
 		color: rgba(25, 28, 33, 0.7);
+		input
+		{
+			height: 100%;
+			box-sizing: border-box;
+			width: 100%;
+			border: none;
+		}
 	}
 	.settings-table-item-code
 	{

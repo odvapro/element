@@ -15,7 +15,7 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="table in tables">
+				<li v-for="table in tables" v-if="table.visible">
 					<a @click="selectTable(table)" href="javascript:void(0)"
 						:class="{active: table.code == getActiveTable}"
 					>
@@ -35,7 +35,7 @@
 							</svg>
 						</div>
 						<div class="sidebar-name-wrapper">
-							<div class="sidebar-overide-table-name">{{table.code}}</div>
+							<div class="sidebar-overide-table-name">{{table.name}}</div>
 							<div class="sidebar-real-table-name">{{table.code}}</div>
 						</div>
 					</a>

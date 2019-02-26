@@ -72,7 +72,6 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
 		$resultSelect = $this->element->select($select);
-
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
@@ -117,7 +116,12 @@ class ElController extends ControllerBase
 			$tviews = [];
 
 			foreach ($emViewsTable as $tview)
+			{
 				$table['tviews'][] = $tview->toArray();
+				if ($tview->default == '1')
+					if (isset($tview->settings['table']['name']))
+						$table['name'] = $tview->settings['table']['name'];
+			}
 		}
 
 		$this->jsonResult([
@@ -155,9 +159,12 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
 
 		$tview = EmViews::findFirstById($tviewId);
+		$tviewSettings = $tview->settings;
 
-		$tview->settings = $params;
+		foreach ($params as $keySetting => $setting)
+			$tviewSettings[$keySetting] = $setting;
 
+		$tview->settings = $tviewSettings;
 		if ($tview->save() == false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 

@@ -196,10 +196,7 @@
 					};
 
 					if (typeof this.tview.settings.columns == 'undefined')
-					{
-						this.$set(this.tview, 'settings', {});
 						this.$set(this.tview.settings, 'columns', {});
-					}
 
 					this.$set(this.tview.settings.columns, column, {});
 					this.$set(this.tview.settings.columns[column], 'width', tableColumns[column].width);
