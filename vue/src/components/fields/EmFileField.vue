@@ -159,7 +159,7 @@
 		border-radius: 2px;
 		width: 326px;
 		position: absolute;
-		z-index: 2;
+		z-index: 5;
 		top: -1px;
 		left: -1px;
 	}

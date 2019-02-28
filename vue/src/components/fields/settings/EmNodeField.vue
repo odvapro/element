@@ -214,6 +214,8 @@
 
 			if (typeof this.settings.required == 'undefined')
 				this.$set(this.settings, 'required', this.isRequired);
+
+			this.$emit('changeSettings', this.settings);
 		}
 	}
 </script>

@@ -7,6 +7,7 @@
 		</router-link>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
+				<li class="sidebar__user active"><a href="javascript:void(0)"><img src="/images/user.png" alt=""><span>Valeron</span></a></li>
 				<li><a href="javascript:void(0)">Quiq Find</a></li>
 				<li><a href="javascript:void(0)">Update</a></li>
 				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">Settings & Users</router-link></li>
@@ -153,6 +154,24 @@
 			&.active, &:hover
 			{
 				background-color: rgba(103, 115, 135, 0.1);
+			}
+		}
+		.sidebar__user
+		{
+			a
+			{
+				display: flex;
+				align-items: center;
+			}
+			img
+			{
+				width: 15px;
+				height: 15px;
+				margin-right: 10px;
+			}
+			span
+			{
+				display: block;
 			}
 		}
 	}

@@ -56,7 +56,7 @@
 				this.$set(
 					this.settings,
 					'path',
-					typeof this.fieldSettings.path == 'undefined' ? 'public/images/uplaod' : this.fieldSettings.path
+					typeof this.fieldSettings.path == 'undefined' ? 'public/images/upload' : this.fieldSettings.path
 				);
 
 			if (typeof this.settings.required == 'undefined')

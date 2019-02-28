@@ -176,12 +176,12 @@
 					fieldCode: primaryFieldCode
 				};
 
-				let settings        = column.em.settings;
+				var settings        = column.em.settings;
 				settings.fieldCode  = column.field;
 				settings.tableCode  = this.table.code;
 				settings.primaryKey = primaryKey;
 
-				return JSON.parse(JSON.stringify(settings));
+				return Object.assign({}, settings);
 			},
 			/**
 			 * Сохранить параметры колонки

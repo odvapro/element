@@ -25,10 +25,30 @@
 		},
 		watch:
 		{
-			// isChecked()
-			// {
-			// 	this.$emit('onChange', {data: isChecked, column})
-			// }
+			/**
+			 * Мониторить статус чекбокса
+			 */
+			async isChecked()
+			{
+				let qs = require('qs');
+
+				let data = qs.stringify({
+					tableCode       : this.fieldSettings.tableCode,
+					fieldCode       : this.fieldSettings.fieldCode,
+					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
+					primaryKeyValue : this.fieldSettings.primaryKey.value,
+					status          : this.isChecked
+				});
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : data,
+					url    : '/api/field/em_check/index/changeStatus/'
+				});
+
+				if (!result.data.success)
+					return false;
+			}
 		},
 		/**
 		 * Хук при загрузке страницы
