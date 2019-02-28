@@ -89,7 +89,7 @@ class UsersCest
 
 		$I->sendPOST('/users/updateUser',
 		[
-			'id' => 2,
+			'id' => 1,
 			'login' => 'dsfdsfsdf',
 			'email' => 'kisiev@mail.ru',
 			'password' => 'red'
@@ -99,7 +99,7 @@ class UsersCest
 
 		$I->sendPOST('/users/updateUser',
 		[
-			'id' => 3,
+			'id' => 1,
 			'login' => 'dsfdsfsdf',
 			'email' => 'kisiev@mail.ru',
 			'password' => 'red'

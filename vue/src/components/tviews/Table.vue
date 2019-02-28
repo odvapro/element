@@ -9,7 +9,7 @@
 						<img :src="column.em.type_info.iconPath" alt="">
 					</div>
 					<div class="table-item-name-wrapper">
-						<div class="table-item-overide-name">{{column.field}}</div>
+						<div class="table-item-overide-name">{{getOverideName(column)}}</div>
 						<div class="table-item-real-name">{{column.field}}</div>
 					</div>
 					<div class="drug-col" @mousedown="reginsterEventResize($event, column)"></div>
@@ -31,6 +31,7 @@
 					<button class="table-row-btn">remove</button>
 				</div>
 				<div
+
 					class="table-item"
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
@@ -49,13 +50,13 @@
 				</div>
 			</div>
 		</div>
+		<Pagination
+			v-if="tableContent.total_pages > 1"
+			:maxPage="tableContent.total_pages"
+			:current="tableContent.current"
+			@change="selectPage"
+		/>
 	</div>
-	<!-- <Pagination
-		v-if="tableContent.total_pages > 1"
-		:maxPage="tableContent.total_pages"
-		:current="tableContent.current"
-		@change="selectPage"
-	/> -->
 </template>
 <script>
 	import EmCheck from '@/components/fields/EmCheckField.vue';
@@ -112,7 +113,7 @@
 			 */
 			getUrlTableName()
 			{
-				this.$route.params.tableName;
+				return this.$route.params.tableCode;
 			}
 		},
 		watch:
@@ -144,6 +145,16 @@
 		methods:
 		{
 			/**
+			 * Достать имя колонки
+			 */
+			getOverideName(column)
+			{
+				if (typeof column.em.name == 'undefined' || column.em.name == '')
+					return column.field;
+
+				return column.em.name;
+			},
+			/**
 			 * Задать настройки для одного филда
 			 */
 			getFieldSettings(column, row)
@@ -170,7 +181,7 @@
 				settings.tableCode  = this.table.code;
 				settings.primaryKey = primaryKey;
 
-				return settings;
+				return JSON.parse(JSON.stringify(settings));
 			},
 			/**
 			 * Сохранить параметры колонки
@@ -296,7 +307,7 @@
 			selectPage(page)
 			{
 				this.$store.dispatch('selectPage', page);
-				this.$router.push(`/table/${typeof this.getUrlTableName == 'undefined' ? this.tableInfo.name.real : this.getUrlTableName}/${page}`);
+				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${page}`);
 			}
 		},
 		/**

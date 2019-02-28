@@ -66,8 +66,10 @@
 <script>
 	import MainField from '@/components/fields/MainField.vue';
 	import MainSettings from '@/components/fields/settings/MainSettings.vue';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
+		mixins: [TableWork],
 		components: { MainField, MainSettings },
 		/**
 		 * Глобальные переменные страницы
@@ -77,7 +79,7 @@
 			return {
 				popupParams: {},
 				newSettings: {},
-				tables: []
+				curTable: {}
 			}
 		},
 		methods:
@@ -121,13 +123,11 @@
 				if (!result.data.success)
 					return false;
 
-				for (let table of this.tables)
-					if (table.code == data.tableName)
-						for (let paramKey in this.newSettings)
-						{
-							table.columns[data.columnName].em[paramKey] = this.newSettings[paramKey];
-							table.columns[data.columnName].em.settings[paramKey] = this.newSettings[paramKey];
-						}
+				for (let paramKey in this.newSettings)
+				{
+					this.curTable.columns[data.columnName].em[paramKey] = this.newSettings[paramKey];
+					this.curTable.columns[data.columnName].em.settings[paramKey] = this.newSettings[paramKey];
+				}
 
 				this.closePopup();
 			}
@@ -138,7 +138,7 @@
 		mounted()
 		{
 			this.popupParams = this.$store.state.settings.popupParams;
-			this.tables      = this.$store.state.tables.tables;
+			this.curTable = this.getTableByCode(this.popupParams.settings.tableCode, this.$store.state.tables.tables);
 		}
 	}
 </script>
@@ -181,7 +181,7 @@
 		border-radius: 2px;
 		font-size: 12px;
 		color: rgba(103, 115, 135, 0.7);
-		padding: 7px 11px;
+		padding: 8px 11px;
 		border: none;
 		cursor: pointer;
 		color: #fff;
@@ -192,7 +192,7 @@
 		border-radius: 2px;
 		font-size: 12px;
 		color: rgba(103, 115, 135, 0.7);
-		padding: 7px 11px;
+		padding: 8px 11px;
 		border: none;
 		margin-right: 15px;
 		cursor: pointer;

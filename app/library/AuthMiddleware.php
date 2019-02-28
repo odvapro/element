@@ -86,10 +86,10 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 
 		$acl = $this->getAcl();
 		$allowed = $acl->isAllowed($role, $controller, $action);
-		if($allowed != Phalcon\Acl::ALLOW)
-		{
-			echo json_encode(['success' => false, 'message' => 'you need to auth']);
-			exit();
-		}
+		// if($allowed != Phalcon\Acl::ALLOW)
+		// {
+		// 	echo json_encode(['success' => false, 'message' => 'you need to auth']);
+		// 	exit();
+		// }
 	}
 }

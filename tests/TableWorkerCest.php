@@ -48,7 +48,7 @@ class TableWorkerCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/getColumns', ['tableName' => 'newTest']);
+		$I->sendPOST('/el/getColumns', ['tableName' => 'products']);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.columns.*.field');

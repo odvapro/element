@@ -75,7 +75,7 @@ class SettingsController extends ControllerBase
 
 		$field->save();
 
-		return $this->jsonResult(['success' => true]);
+		return $this->jsonResult(['success' => true, 'settings' => $field->settings]);
 	}
 
 	/**
@@ -117,6 +117,6 @@ class SettingsController extends ControllerBase
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true]);
+		return $this->jsonResult(['success' => true, 'settings' => $field->settings]);
 	}
 }

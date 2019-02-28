@@ -7,7 +7,7 @@
 #
 # Адрес: 127.0.0.1 (MySQL 5.5.5-10.1.26-MariaDB-0+deb9u1)
 # Схема: element
-# Время создания: 2019-02-26 07:29:59 +0000
+# Время создания: 2019-02-27 08:22:21 +0000
 # ************************************************************
 
 
@@ -253,11 +253,7 @@ LOCK TABLES `em_types` WRITE;
 
 INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
-  (1,'field_types','type','em_string',0,NULL,NULL),
-  (2,'blocks','images','em_file',1,'{\"path\":\"public\",\"required\":\"true\"}',NULL),
-  (3,'blocks','page_id','em_node',0,'{\"bindTable\":\"pages\",\"bindField\":\"id\",\"searchField\":\"code\",\"required\":\"false\"}',NULL),
-  (4,'blocks','block_type','em_node',0,'{\"bindTable\":\"block_type\",\"bindField\":\"id\",\"searchField\":\"name\",\"required\":\"false\"}',NULL),
-  (5,'menu','code','em_node',0,'{\"bindTable\":\"pages\",\"bindField\":\"id\",\"searchField\":\"code\",\"required\":\"false\"}',NULL);
+  (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -309,21 +305,21 @@ LOCK TABLES `em_views` WRITE;
 
 INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `default`, `settings`)
 VALUES
-  (32,'Отображениеblock_type','block_type','[]','[]',1,'{\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"value\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (33,'Отображениеblocks','blocks','[]','[]',1,'{\"columns\":{\"id\":{\"width\":\"437\",\"visible\":\"true\"},\"page_id\":{\"width\":\"235\",\"visible\":\"true\"},\"content\":{\"width\":\"140\",\"visible\":\"true\"},\"position\":{\"width\":\"140\",\"visible\":\"true\"},\"block_type\":{\"width\":\"140\",\"visible\":\"true\"},\"images\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"140\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (34,'Отображениеcallbacks','callbacks','[]','[]',1,'{\"columns\":{\"id\":{\"width\":\"281\",\"visible\":\"true\"},\"phone\":{\"width\":\"350\",\"visible\":\"true\"},\"date\":{\"width\":\"286\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"status\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (35,'Отображениеfeedback','feedback','[]','[]',1,'[]'),
-  (36,'Отображениеfield_types','field_types','[]','[]',1,'[]'),
-  (37,'Отображениеform_relations','form_relations','[]','[]',1,'[]'),
-  (38,'Отображениеforms','forms','[]','[]',1,'{\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"page_id\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"comment\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (39,'Отображениеmenu','menu','[]','[]',1,'{\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"false\"},\"title\":{\"width\":\"234\",\"visible\":\"true\"},\"code\":{\"width\":\"140\",\"visible\":\"true\"},\"type\":{\"width\":\"140\",\"visible\":\"true\"},\"submenu\":{\"width\":\"140\",\"visible\":\"true\"},\"position\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (40,'Отображениеnews','news','[]','[]',1,'[]'),
-  (41,'Отображениеorders','orders','[]','[]',1,'[]'),
-  (42,'Отображениеpages','pages','[]','[]',1,'[]'),
-  (43,'Отображениеproducts','products','[]','[]',1,'[]'),
-  (44,'Отображениеreviews','reviews','[]','[]',1,'[]'),
-  (45,'Отображениеstatic','static','[]','[]',1,'[]'),
-  (46,'ОтображениеtestTable','testTable','[]','[]',1,'[]');
+  (1,'Отображениеblock_type','block_type','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"value\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
+  (2,'Отображениеblocks','blocks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"false\"},\"page_id\":{\"width\":\"140\",\"visible\":\"false\"},\"content\":{\"width\":\"140\",\"visible\":\"false\"},\"position\":{\"width\":\"200\",\"visible\":\"false\"},\"block_type\":{\"width\":\"140\",\"visible\":\"false\"},\"images\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"140\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
+  (3,'Отображениеcallbacks','callbacks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"phone\":{\"width\":\"140\",\"visible\":\"true\"},\"date\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"status\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
+  (4,'Отображениеfeedback','feedback','[]','[]',1,'[]'),
+  (5,'Отображениеfield_types','field_types','[]','[]',1,'[]'),
+  (6,'Отображениеform_relations','form_relations','[]','[]',1,'[]'),
+  (7,'Отображениеforms','forms','[]','[]',1,'[]'),
+  (8,'Отображениеmenu','menu','[]','[]',1,'[]'),
+  (9,'Отображениеnews','news','[]','[]',1,'[]'),
+  (10,'Отображениеorders','orders','[]','[]',1,'[]'),
+  (11,'Отображениеpages','pages','[]','[]',1,'[]'),
+  (12,'Отображениеproducts','products','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"386\",\"visible\":\"true\"},\"images\":{\"width\":\"600\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"},\"special\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
+  (13,'Отображениеreviews','reviews','[]','[]',1,'[]'),
+  (14,'Отображениеstatic','static','[]','[]',1,'[]'),
+  (15,'ОтображениеtestTable','testTable','[]','[]',1,'[]');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -438,10 +434,10 @@ LOCK TABLES `form_relations` WRITE;
 
 INSERT INTO `form_relations` (`id`, `form_id`, `field_id`, `max_value`, `position`, `name`, `required`, `data`, `image`)
 VALUES
-  (1,3,2,NULL,'1','Телефон','0',NULL,NULL),
-  (2,3,1,NULL,'2','Почта','0',NULL,NULL),
-  (3,4,6,NULL,'3','Новость 1','1',NULL,NULL),
-  (4,6,9,NULL,'1','Текстовое поле',NULL,NULL,NULL),
+  (1,7,2,NULL,'1','Телефон','0',NULL,NULL),
+  (2,7,1,NULL,'2','Почта','0',NULL,NULL),
+  (3,7,6,NULL,'3','Новость 1','1',NULL,NULL),
+  (4,7,9,NULL,'1','Текстовое поле',NULL,NULL,NULL),
   (7,7,15,NULL,'3','Выберите','1','Список 1, список 2, список 3','[{\"upName\":\"icon-1.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/..\\/public\\/images\\/20181020\\/small_el5bcb240e988e4.jpg\"},\"path\":\"\\/element\\/..\\/public\\/images\\/20181020\\/o_el5bcb240e988e4.png\"},{\"upName\":\"icon-2.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/..\\/public\\/images\\/20181020\\/small_el5bcb2420eb72e.jpg\"},\"path\":\"\\/element\\/..\\/public\\/images\\/20181020\\/o_el5bcb2420eb72e.png\"}]'),
   (10,7,9,NULL,'6','дата и время','1',NULL,NULL),
   (13,8,1,NULL,'1','Ваше имя','1',NULL,NULL),
@@ -548,8 +544,8 @@ VALUES
   (147,35,12,5000,NULL,'Укажите количество (1.0 м.пог )',NULL,NULL,NULL),
   (148,35,2,NULL,NULL,'Прикрепите файл макета',NULL,NULL,NULL),
   (149,35,9,NULL,NULL,'Выберите дату изготовления',NULL,NULL,NULL),
-  (153,NULL,12,5000,NULL,NULL,NULL,NULL,NULL),
-  (154,NULL,12,NULL,NULL,NULL,NULL,NULL,NULL),
+  (153,7,12,5000,NULL,NULL,NULL,NULL,NULL),
+  (154,7,12,NULL,NULL,NULL,NULL,NULL,NULL),
   (155,36,12,5000,'2','Количество',NULL,NULL,NULL),
   (156,37,15,NULL,'1','Выберете модель тарелки','1','Тарелка Ø=15см, Тарелка Ø=18см, Тарелка Ø=20см, Тарелка Ø=25см, Тарелка \"волнистая\" Ø=16см, Тарелка \"волнистая\" Ø=21см, Тарелка \"с золотым ободком\" Ø=26см, Тарелка с орнаментом \"Ягоды\", Тарелка с орнаментом \"Лотос\", Тарелка с орнаментом \"Зеленая\", Тарелка с орнаментом \"Бутон\", Тарелка с орнаментом \"Геометрия\", Тарелка с орнаментом \"Кленовый лист\", Тарелка с орнаментом \"Удача\"',NULL),
   (157,37,12,5000,'2','Укажите количество тарелок*','1',NULL,NULL),

@@ -47,7 +47,7 @@
 	{
 		display: inline-block;
 		position: relative;
-		padding-left: 13px;
+		padding-left: 12px;
 		font-size: 14px;
 		height: 12px;
 		color: #334D66;

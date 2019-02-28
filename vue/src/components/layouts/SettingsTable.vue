@@ -163,15 +163,10 @@
 				if (!result.data.success)
 					return false;
 
-				for (let table of this.tables)
-				{
-					if (table.code != values.table)
-						continue;
+				let table = this.getTableByCode(values.table, this.tables);
 
-					table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-					table.columns[values.column].em.type = values.data.code;
-					break;
-				}
+				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
+				table.columns[values.column].em.type = values.data.code;
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона
@@ -373,8 +368,8 @@
 		height: 49px;
 		padding: 0 11px;
 		position: relative;
-		min-width: 140px;
-		width: 140px;
+		min-width: 200px;
+		width: 200px;
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
@@ -409,7 +404,7 @@
 	{
 		display: inline-block;
 		position: relative;
-		padding-left: 13px;
+		padding-left: 12px;
 		font-size: 14px;
 		height: 12px;
 		color: #334D66;

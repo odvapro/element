@@ -106,6 +106,8 @@ class SqlAdapter extends PdoAdapter
 		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
+		$limit         = isset($requestParams['limit']) ? $requestParams['limit'] : '';
+
 		if (empty($fromTable))
 			return false;
 
@@ -121,6 +123,10 @@ class SqlAdapter extends PdoAdapter
 
 		if (!empty($order))
 			$sql .= ' ORDER BY ' . implode(', ', $order);
+
+		if (!empty($limit))
+			$sql .= ' LIMIT ' . $limit;
+
 		try
 		{
 			$select = $this->db->fetchAll(
