@@ -57,9 +57,8 @@
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)">
 						</div>
 						<div class="settings-table-item table-item centered">
-							<MainField
+							<List
 								:params="{
-									fieldName : 'EmTagsField',
 									value     : column.em.type_info.name,
 									settings  : getFieldSettings(table, column)
 								}"
@@ -76,13 +75,14 @@
 	</div>
 </template>
 <script>
+	import List from '@/components/layouts/List.vue';
 	import MainField from '@/components/fields/MainField.vue';
 	import Popup from '@/mixins/popup.js';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [Popup, TableWork],
-		components: { MainField },
+		components: { MainField, List},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -92,6 +92,7 @@
 				tableColumns: {},
 				fieldTypes:[],
 				tables: [],
+				typePopupShow: false,
 				tableStyle:
 				{
 					height: '0px',
@@ -117,9 +118,10 @@
 				let columns = table.columns;
 				let primaryFieldCode = false;
 
-				for(let columnCode in columns)
+				for (let columnCode in columns)
 				{
 					let column = columns[columnCode];
+
 					if(column.key == 'PRI')
 					{
 						primaryFieldCode = columnCode;
@@ -149,9 +151,9 @@
 				let qs = require('qs');
 
 				let requestChangeType = qs.stringify({
-					tableName: values.table,
-					columnName: values.column,
-					fieldType: values.data.code
+					tableName  : values.table,
+					columnName : values.column,
+					fieldType  : values.data.code
 				});
 
 				let result = await this.$axios({
@@ -166,7 +168,7 @@
 				let table = this.getTableByCode(values.table, this.tables);
 
 				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-				table.columns[values.column].em.type = values.data.code;
+				table.columns[values.column].em.type      = values.data.code;
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона

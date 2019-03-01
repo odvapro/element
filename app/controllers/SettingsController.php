@@ -12,7 +12,7 @@ class SettingsController extends ControllerBase
 		$name  = $this->request->getPost('name');
 		$type  = $this->request->getPost('type');
 
-		if (empty($table) || empty($field) || empty($name))
+		if (empty($table) || empty($field))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
 
 		if (empty($type))

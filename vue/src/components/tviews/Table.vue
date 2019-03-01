@@ -43,6 +43,7 @@
 							value     : row[column.field].value,
 							settings  : getFieldSettings(column, row)
 						}"
+						@onChange="changeTableValue"
 					/>
 				</div>
 				<div class="table-item">
@@ -64,10 +65,11 @@
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
 	import Popup from '@/mixins/popup.js';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
-		mixins: [Popup],
+		mixins: [Popup, TableWork],
 		components: {MainField, EmCheck, TagItem, Pagination},
 		/**
 		 * Глобальные переменные страницы
@@ -144,6 +146,19 @@
 		},
 		methods:
 		{
+			/**
+			 * Сохранить локально измененные данные в таблице
+			 */
+			changeTableValue(tableValues)
+			{
+				this.setTableValue(
+					tableValues.settings.primaryKey.fieldCode,
+					tableValues.settings.primaryKey.value,
+					this.tableContent.items,
+					tableValues.settings.fieldCode,
+					tableValues.value,
+				);
+			},
 			/**
 			 * Достать имя колонки
 			 */

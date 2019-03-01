@@ -88,7 +88,8 @@
 				if (!result.data.success)
 					return false;
 
-				this.dataField = result.data.value;
+				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
+
 				this.closePopup();
 			},
 			/**

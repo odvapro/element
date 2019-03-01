@@ -1,7 +1,7 @@
 <template>
 	<div class="em-check-wrapper">
 		<label class="em-check-label">
-			<input type="checkbox" v-model="isChecked" class="em-check">
+			<input type="checkbox" v-model="isChecked" @change="changeStatus()" class="em-check">
 			<span>
 				<svg width="7" height="7">
 					<use xlink:href="#check"></use>
@@ -23,12 +23,12 @@
 				isChecked: false
 			}
 		},
-		watch:
+		methods:
 		{
 			/**
-			 * Мониторить статус чекбокса
+			 * Изменить статус
 			 */
-			async isChecked()
+			async changeStatus()
 			{
 				let qs = require('qs');
 
@@ -48,6 +48,8 @@
 
 				if (!result.data.success)
 					return false;
+
+				this.$emit('onChange', {value: this.isChecked, settings: this.fieldSettings});
 			}
 		},
 		/**
@@ -62,7 +64,9 @@
 <style lang="scss">
 .em-check-wrapper
 {
-	display: inherit;
+	display: block;
+	width: 100%;
+	text-align: center;
 	.em-check-label
 	{
 		display: inline-block;

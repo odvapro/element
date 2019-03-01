@@ -1,35 +1,32 @@
 <template>
-	<div class="em-tags-wrapper" @click="togglePopup()">
-		<div class="em-tags-item-wrapper">
-			<div class="em-tags-item">
+	<div class="em-list__wrapper" @click="togglePopup()">
+		<div class="em-list__item-wrapper">
+			<div class="em-list__item">
 				{{selectedItem}}
 			</div>
 		</div>
-		<div class="em-tags-search" @click.stop v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-tags-search-popup-head">
-				<div class="em-tags-search-item">
+		<div class="em-list__search" v-if="showPopup" v-click-outside="closePopup">
+			<div class="em-list__search-popup-head">
+				<div class="em-list__search-item">
 					{{selectedItem}}
 				</div>
 			</div>
-			<div class="em-tags-search-popup-item" v-for="type in fieldSettings.values">
-				<div class="em-tags-search-icon">
+			<div class="em-list__search-popup-item" v-for="listItem in settings.list">
+				<div class="em-list__search-icon">
 					<svg width="6" height="5">
 						<use xlink:href="#lines"></use>
 					</svg>
 				</div>
-				<div class="em-tags-search-item" @click="changeData(type)">
-					{{type.name}}
+				<div class="em-list__search-item" @click="changeData(listItem)">
+					{{listItem.value}}
 				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-	import TagSearch from '@/components/popups/TagSearch.vue';
-	import TagItem from '@/components/forms/TagItem.vue';
 	export default
 	{
-		components: {TagItem, TagSearch},
 		props: ['fieldValue', 'fieldSettings'],
 		/**
 		 * Глобальные переменные страницы
@@ -38,7 +35,8 @@
 		{
 			return {
 				showPopup: false,
-				selectedItem: ''
+				selectedItem: '',
+				settings: {}
 			}
 		},
 		methods:
@@ -60,10 +58,29 @@
 			/**
 			 * Изменить тип поля
 			 */
-			changeData(data)
+			async changeData(data)
 			{
-				this.selectedItem = data.name;
-				this.$emit('onChange', {data: data, column: this.fieldSettings.fieldCode, table: this.fieldSettings.tableCode});
+				let qs = require('qs');
+
+				let request = qs.stringify({
+					tableCode       : this.fieldSettings.tableCode,
+					fieldCode       : this.fieldSettings.fieldCode,
+					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
+					primaryKeyValue : this.fieldSettings.primaryKey.value,
+					selectedValue   : data.key
+				});
+
+				let result = await this.$axios({
+					method: 'POST',
+					url: '/api/field/em_list/index/saveSelectedItem/',
+					data: request
+				});
+
+				if (!result.data.success)
+					return false;
+
+				this.$emit('onChange', {value: data.value, settings: this.settings});
+				this.selectedItem = data.value;
 			}
 		},
 		/**
@@ -71,12 +88,13 @@
 		 */
 		mounted()
 		{
+			this.settings = this.fieldSettings;
 			this.selectedItem = this.fieldValue;
 		}
 	}
 </script>
 <style lang="scss">
-	.em-tags-item
+	.em-list__item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -87,7 +105,7 @@
 		position: relative;
 		cursor: pointer;
 	}
-	.em-tags-search-popup-head
+	.em-list__search-popup-head
 	{
 		height: 49px;
 		display: flex;
@@ -98,7 +116,7 @@
 		color: rgba(25, 28, 33, 0.4);
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.em-tags-search
+	.em-list__search
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		width: 193px;
@@ -111,7 +129,7 @@
 		z-index: 2;
 		left: -1px;
 	}
-	.em-tags-search-icon
+	.em-list__search-icon
 	{
 		width: 6px;
 		height: 14px;
@@ -125,7 +143,7 @@
 			object-fit: contain;
 		}
 	}
-	.em-tags-search-item
+	.em-list__search-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -135,7 +153,7 @@
 		color: #7C7791;
 		position: relative;
 	}
-	.em-tags-search-popup-item
+	.em-list__search-popup-item
 	{
 		display: flex;
 		padding: 0 9px;

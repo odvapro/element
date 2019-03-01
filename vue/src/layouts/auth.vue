@@ -65,6 +65,8 @@ export default
 			if (!result.data.success)
 				return false;
 
+			this.$cookie.set('user', JSON.stringify(result.data.user), 12);
+
 			this.$router.push('/');
 		}
 	}

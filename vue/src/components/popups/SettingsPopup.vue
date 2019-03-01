@@ -105,6 +105,14 @@
 			{
 				let qs = require('qs');
 
+				if (typeof this.newSettings.list != 'undefined')
+					for (let index = 0; index < this.newSettings.list.length; index ++)
+						if (this.newSettings.list[index].key == '' || this.newSettings.list[index].value == '')
+						{
+							this.newSettings.list.splice(index, 1);
+							index --;
+						}
+
 				let data = {
 					tableName  : this.popupParams.settings.tableCode,
 					columnName : this.popupParams.settings.fieldCode,
@@ -143,6 +151,10 @@
 	}
 </script>
 <style lang="scss">
+	.settings-popup__list-wrapper
+	{
+		display: flex;
+	}
 	.settings-popup-close-icon
 	{
 		width: 20px;
@@ -241,7 +253,7 @@
 		display: flex;
 		align-items: center;
 		margin-bottom: 20px;
-		height: 31px;
+		min-height: 31px;
 	}
 	.settings-popup-item-wrapper
 	{

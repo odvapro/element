@@ -3,6 +3,15 @@ export default
 	methods:
 	{
 		/**
+		 * Обновить данные таблицы
+		 */
+		setTableValue(primaryKey, primaryVal, tableContent, field, value)
+		{
+			for (let tableValue of tableContent)
+				if (tableValue[primaryKey].value === primaryVal)
+					tableValue[field].value = value;
+		},
+		/**
 		 * Достать таблицу по коду
 		 */
 		getTableByCode(code, tables)

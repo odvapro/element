@@ -66,7 +66,7 @@
 			</div>
 		</div>
 		<div class="settings-popup-row-params" v-if="selectedTable.code">
-			<div class="settings-popup-item-wrapper">Bind field</div>
+			<div class="settings-popup-item-wrapper">search field</div>
 			<div class="em-node__table-select em-node-field__position__revative">
 				<div class="em-node-item-wrapper">
 					<div class="em-node-item" @click.stop="togglePopup('showSearchPopup')">
