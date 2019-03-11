@@ -1,5 +1,8 @@
 <template>
 	<div class="auth-content-wrapper">
+		<div class="auth-content__logo">
+			<img src="/images/logo.svg" alt="">
+		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<label class="auth-label">
 				<div class="auth-label-title">login</div>
@@ -73,6 +76,10 @@ export default
 }
 </script>
 <style lang="scss">
+	.auth-content__logo
+	{
+		margin-bottom: 30px;
+	}
 	.auth-transpar-btn
 	{
 		font-size: 12px;
@@ -126,6 +133,7 @@ export default
 	{
 		display: flex;
 		position: fixed;
+		flex-direction: column;
 		z-index: 2;
 		top: 0;
 		left: 0;

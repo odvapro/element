@@ -165,6 +165,22 @@
 		padding-right: 6px;
 		display: flex;
 		align-items: center;
+		li
+		{
+			color: rgba(25, 28, 33, 0.7);
+			font-size: 12px;
+			margin-right: 5px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			position: relative;
+			padding: 5px 8px;
+			&.active, &:hover
+			{
+				background: rgba(103, 115, 135, 0.1);
+				border-radius: 2px;
+			}
+		}
 		&__points
 		{
 			position: relative;
@@ -177,16 +193,14 @@
 				height: 100%;
 				object-fit: contain;
 			}
-		}
-		li
-		{
-			color: rgba(25, 28, 33, 0.7);
-			font-size: 12px;
-			margin-right: 21px;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			position: relative;
+			li
+			{
+				pointer-events: none;
+				&:hover
+				{
+					background-color: none;
+				}
+			}
 		}
 	}
 	.index__head-add-btn
