@@ -102,7 +102,7 @@ class ElController extends ControllerBase
 			if (!count($emViewsTable))
 			{
 				$tableEmView = new EmViews();
-				$tableEmView->name = "Отображение{$table['code']}";
+				$tableEmView->name = 'Default view';
 				$tableEmView->table = $table['code'];
 				$tableEmView->default = '1';
 				$tableEmView->save();

@@ -269,13 +269,15 @@
 			async getTableContent()
 			{
 				var select = [];
+				var where = [];
 
-				if (typeof this.tview.filter.select != 'undefined')
-					select = this.tview.filter.select;
+				if (typeof this.tview.filter.operation != 'undefined')
+					where = this.tview.filter;
 
 				select.from = this.$route.params.tableCode;
 				select.page = this.$route.params.page;
 				select.tview = this.$route.params.tview;
+				select.where = where;
 
 				await this.$store.dispatch('select', {select: select});
 			},

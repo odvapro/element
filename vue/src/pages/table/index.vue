@@ -15,13 +15,16 @@
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
 					<li>Views</li>
-					<li @click="togglePropertiesPopup()">
+					<li @click="togglePopup('isPropertiesPopupShow')">
 						Properties
-						<Properties v-if="isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" @closePropertiesPopup="togglePropertiesPopup" />
+						<Properties v-if="popups.isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" v-click-outside="closePopups"/>
 					</li>
 					<!-- #TODO popups -->
 					<li>Sort</li>
-					<li>Filter</li>
+					<li @click="togglePopup('isFiltersPopupShow')">
+						Filter
+						<FiltersPopup v-if="popups.isFiltersPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+					</li>
 					<li class="index__points">
 						<svg width="19" height="2">
 							<use xlink:href="#points"></use>
@@ -45,12 +48,13 @@
 </template>
 <script>
 	import Table from '@/components/tviews/Table.vue';
+	import FiltersPopup from '@/components/popups/FiltersPopup.vue';
 	import Properties from '@/components/popups/Properties.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: { Table, Properties },
+		components: { Table, Properties, FiltersPopup },
 		/**
 		 * Глобальные пересенные странциы
 		 */
@@ -58,7 +62,11 @@
 		{
 			return {
 				table: false,
-				isPropertiesPopupShow: false,
+				popups:
+				{
+					isPropertiesPopupShow: false,
+					isFiltersPopupShow: false
+				},
 				propertiesPopupData: {}
 			}
 		},
@@ -78,11 +86,19 @@
 		methods:
 		{
 			/**
-			 * Отобразить попап настроек полей
+			 * Отобразить/Закрыть попап
 			 */
-			togglePropertiesPopup()
+			togglePopup(popupName)
 			{
-				this.isPropertiesPopupShow = !this.isPropertiesPopupShow;
+				this.popups[popupName] = !this.popups[popupName];
+			},
+			/**
+			 * Закрыть все попапы
+			 */
+			closePopups()
+			{
+				for (let popup in this.popups)
+					this.popups[popup] = false;
 			},
 			/**
 			 * Определить активную таблицу
@@ -171,35 +187,28 @@
 			font-size: 12px;
 			margin-right: 5px;
 			cursor: pointer;
-			display: flex;
-			align-items: center;
 			position: relative;
 			padding: 5px 8px;
 			&.active, &:hover
 			{
-				background: rgba(103, 115, 135, 0.1);
+				background-color: rgba(103, 115, 135, 0.1);
 				border-radius: 2px;
 			}
 		}
-		&__points
+		.index__points
 		{
 			position: relative;
-			padding: 0 7px;
+			padding: 0 8px;
 			width: 35px;
 			height: 25px;
+			display: flex;
+			align-items: center;
+			pointer-events: none;
 			img
 			{
 				width: 100%;
 				height: 100%;
 				object-fit: contain;
-			}
-			li
-			{
-				pointer-events: none;
-				&:hover
-				{
-					background-color: none;
-				}
 			}
 		}
 	}

@@ -79,30 +79,6 @@ class TableWorkerCest
 
 		$I->sendGET('/el/select',
 		[
-			'select' => ['from' => 'testTable']
-		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-
-		$I->sendGET('/el/select',
-		[
-			'select' =>
-			[
-				'fields' => ['name', 'id', 'col'],
-				'from' => 'testTable'
-			]
-		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-
-		$I->sendGET('/el/select',
-		[
 			'select' =>
 			[
 				'fields' => ['n? +ame', 'id', 'col'],
@@ -145,6 +121,30 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' => ['from' => 'testTable']
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['name', 'id', 'col'],
+				'from' => 'testTable'
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -396,6 +396,17 @@ class TableWorkerCest
 							'code' => 'name',
 							'operation' => 'CONTAINS',
 							'value' => 'ggg'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
+							[
+								[
+									'code' => 'avat',
+									'operation' => 'IS',
+									'value' => '3'
+								]
+							]
 						]
 					]
 				]

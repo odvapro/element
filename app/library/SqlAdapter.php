@@ -118,7 +118,7 @@ class SqlAdapter extends PdoAdapter
 
 		$sql .= "FROM {$fromTable} ";
 
-		if (!empty($where))
+		if (!empty($where) && !empty($where['fields']))
 			$sql .= 'WHERE ' . $this->buildWhere($where);
 
 		if (!empty($order))
