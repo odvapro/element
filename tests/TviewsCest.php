@@ -39,4 +39,34 @@ class TviewsCest
 		]);
 		$I->seeResponseContainsJson(['success' => true]);
 	}
+	public function saveSort(ApiTester $I)
+	{
+		$I->sendGET('/tview/saveSort/');
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/tview/saveSort/', [
+			'tviewId' => 1,
+			'sort' => [
+				'name DESC', 'id ASC'
+			]
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/tview/saveSort/', [
+			'tviewId' => 1
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/tview/saveSort/');
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendGET('/tview/saveSort/', [
+			'tviewId' => 1,
+			'sort' => []
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
+	}
 }

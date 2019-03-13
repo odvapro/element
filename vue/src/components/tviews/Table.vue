@@ -269,15 +269,20 @@
 			async getTableContent()
 			{
 				var select = [];
-				var where = [];
+				var where  = [];
+				var sort   = [];
 
 				if (typeof this.tview.filter.operation != 'undefined')
 					where = this.tview.filter;
+
+				if (typeof this.tview.sort != 'undefined')
+					sort = this.tview.sort;
 
 				select.from = this.$route.params.tableCode;
 				select.page = this.$route.params.page;
 				select.tview = this.$route.params.tview;
 				select.where = where;
+				select.order = sort;
 
 				await this.$store.dispatch('select', {select: select});
 			},

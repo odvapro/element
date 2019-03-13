@@ -1,36 +1,36 @@
 <template>
-	<div class="filters__wrapper" @click.stop>
-		<div class="filters__rows">
-			<div class="filters__row" v-for="filterItem, index in filter">
-				<div class="filters__operators-wrapper">
-					<div class="filters__select-item" @click="openSelect(filterItem, 'binSelect')" v-if="index > 0">
+	<div class="filters-popup__wrapper" @click.stop>
+		<div class="filters-popup__rows">
+			<div class="filters-popup__row" v-for="filterItem, index in filter">
+				<div class="filters-popup__operators-wrapper">
+					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'binSelect')" v-if="index > 0">
 						{{defaultOper}}
-						<div class="filters__select-column-name" v-if="filterItem.select.binSelect">
+						<div class="filters-popup__select-column-name" v-if="filterItem.select.binSelect">
 							<ul>
 								<li v-for="oper in binOperations" @click="defaultOper = oper">{{oper}}</li>
 							</ul>
 						</div>
 					</div>
-					<div class="filters__select-item" @click="openSelect(filterItem, 'columnSelect')">
+					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'columnSelect')">
 						{{filterItem.name ? filterItem.name : filterItem.code}}
-						<div class="filters__select-column-name" v-if="filterItem.select.columnSelect">
+						<div class="filters-popup__select-column-name" v-if="filterItem.select.columnSelect">
 							<ul>
 								<li v-for="column in columns" @click="filterItem.code = column.field; filterItem.name = column.em.name;">{{column.em.name ? column.em.name : column.field}}</li>
 							</ul>
 						</div>
 					</div>
-					<div class="filters__select-item" @click="openSelect(filterItem, 'operationSelect')">
+					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'operationSelect')">
 						{{filterItem.operation}}
-						<div class="filters__select-column-name" v-if="filterItem.select.operationSelect">
+						<div class="filters-popup__select-column-name" v-if="filterItem.select.operationSelect">
 							<ul>
 								<li v-for="operationValue in operations" @click="filterItem.operation = operationValue">{{operationValue}}</li>
 							</ul>
 						</div>
 					</div>
-					<input type="text" v-model="filterItem.value" class="filters__select-item-input" placeholder="value">
+					<input type="text" v-model="filterItem.value" class="filters-popup__select-item-input" placeholder="value">
 				</div>
-				<div class="filters__delete-row-icon-wrapper" @click.stop="deleteRowFilter(index)">
-					<div class="filters__delete-row-icon">
+				<div class="filters-popup__delete-row-icon-wrapper" @click.stop="deleteRowFilter(index)">
+					<div class="filters-popup__delete-row-icon">
 						<svg width="12" height="12">
 							<use xlink:href="#plus-white"></use>
 						</svg>
@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-		<button class="filters__add-filter" @click="addFilterRow">Add filter</button>
+		<button class="filters-popup__add-filter" @click="addFilterRow">Add filter</button>
 	</div>
 </template>
 <script>
@@ -82,7 +82,7 @@
 				{
 					this.newFilters = [];
 					this.buildNewFilter(this.newFilters, JSON.parse(JSON.stringify(this.filter)));
-					this.tview.filter = typeof this.newFilters[0].fields == 'undefined' ? [] : this.newFilters[0];
+					this.tview.filter = this.newFilters[0].fields.length == 0 ? [] : this.newFilters[0];
 
 					var self = this;
 
@@ -112,7 +112,7 @@
 				let self = this;
 				let qs = require('qs');
 				let data = qs.stringify({
-					filters: typeof this.newFilters[0].fields == 'undefined' ? '' : this.newFilters[0],
+					filters: this.newFilters[0].fields.length == 0 ? [] : this.newFilters[0],
 					tviewId: this.tview.id
 				});
 
@@ -121,7 +121,8 @@
 					from: self.tview.table,
 					page: 1,
 					tview: self.tview.id,
-					where: typeof self.newFilters[0].fields == 'undefined' ? '' : self.newFilters[0],
+					where: this.newFilters[0].fields.length == 0 ? '' : self.newFilters[0],
+					order: self.tview.sort
 				}});
 
 				let resultSaveFilters = await this.$axios({
@@ -231,12 +232,12 @@
 	}
 </script>
 <style lang="scss">
-	.filters__operators-wrapper
+	.filters-popup__operators-wrapper
 	{
 		display: flex;
 		align-items: center;
 	}
-	.filters__delete-row-icon-wrapper
+	.filters-popup__delete-row-icon-wrapper
 	{
 		width: 24px;
 		height: 24px;
@@ -249,20 +250,20 @@
 			background-color: rgba(103, 115, 135, 0.1);
 		}
 	}
-	.filters__delete-row-icon
+	.filters-popup__delete-row-icon
 	{
 		width: 12px;
 		height: 12px;
 		transform: rotate(45deg);
 	}
-	.filters__row
+	.filters-popup__row
 	{
 		margin-bottom: 15px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.filters__wrapper
+	.filters-popup__wrapper
 	{
 		position: absolute;
 		top: calc(100% + 5px);
@@ -275,7 +276,7 @@
 		border-radius: 2px;
 		background-color: #fff;
 	}
-	.filters__add-filter
+	.filters-popup__add-filter
 	{
 		background-color: rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
@@ -285,7 +286,7 @@
 		color: #677387;
 		cursor: pointer;
 	}
-	.filters__select-item
+	.filters-popup__select-item
 	{
 		white-space: nowrap;
 		padding: 6px 30px 6px 10px;
@@ -306,7 +307,7 @@
 			top: calc(50% - 7px);
 		}
 	}
-	.filters__select-item-input
+	.filters-popup__select-item-input
 	{
 		width: 80px;
 		border: 1px solid rgba(103, 115, 135, 0.4);
@@ -319,7 +320,7 @@
 			color: rgba(103, 115, 135, 0.4);
 		}
 	}
-	.filters__select-column-name
+	.filters-popup__select-column-name
 	{
 		position: absolute;
 		top: calc(100% + 5px);

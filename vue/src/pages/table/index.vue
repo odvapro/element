@@ -15,13 +15,16 @@
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
 					<li>Views</li>
-					<li @click="togglePopup('isPropertiesPopupShow')">
+					<li :class="{active: popups.isPropertiesPopupShow}" @click="togglePopup('isPropertiesPopupShow')">
 						Properties
 						<Properties v-if="popups.isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" v-click-outside="closePopups"/>
 					</li>
 					<!-- #TODO popups -->
-					<li>Sort</li>
-					<li @click="togglePopup('isFiltersPopupShow')">
+					<li :class="{active: popups.isSortPopupShow}" @click="togglePopup('isSortPopupShow')">
+						Sort
+						<SortPopup v-if="popups.isSortPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+					</li>
+					<li :class="{active: popups.isFiltersPopupShow}" @click="togglePopup('isFiltersPopupShow')">
 						Filter
 						<FiltersPopup v-if="popups.isFiltersPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
 					</li>
@@ -49,12 +52,13 @@
 <script>
 	import Table from '@/components/tviews/Table.vue';
 	import FiltersPopup from '@/components/popups/FiltersPopup.vue';
+	import SortPopup from '@/components/popups/SortPopup.vue';
 	import Properties from '@/components/popups/Properties.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: { Table, Properties, FiltersPopup },
+		components: { Table, Properties, FiltersPopup, SortPopup },
 		/**
 		 * Глобальные пересенные странциы
 		 */
@@ -64,8 +68,9 @@
 				table: false,
 				popups:
 				{
-					isPropertiesPopupShow: false,
-					isFiltersPopupShow: false
+					isPropertiesPopupShow : false,
+					isFiltersPopupShow    : false,
+					isSortPopupShow       : false
 				},
 				propertiesPopupData: {}
 			}
