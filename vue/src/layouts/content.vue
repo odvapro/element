@@ -78,6 +78,9 @@
 			else
 				this.sidebar['gridTemplateColumns'] = '400px auto';
 
+
+			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
+
 			this.initEventScale();
 		}
 	}

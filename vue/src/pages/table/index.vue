@@ -15,13 +15,19 @@
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
 					<li>Views</li>
-					<li @click="togglePropertiesPopup()">
+					<li :class="{active: popups.isPropertiesPopupShow}" @click="togglePopup('isPropertiesPopupShow')">
 						Properties
-						<Properties v-if="isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" @closePropertiesPopup="togglePropertiesPopup" />
+						<Properties v-if="popups.isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" v-click-outside="closePopups"/>
 					</li>
 					<!-- #TODO popups -->
-					<li>Sort</li>
-					<li>Filter</li>
+					<li :class="{active: popups.isSortPopupShow}" @click="togglePopup('isSortPopupShow')">
+						Sort
+						<SortPopup v-if="popups.isSortPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+					</li>
+					<li :class="{active: popups.isFiltersPopupShow}" @click="togglePopup('isFiltersPopupShow')">
+						Filter
+						<FiltersPopup v-if="popups.isFiltersPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+					</li>
 					<li class="index__points">
 						<svg width="19" height="2">
 							<use xlink:href="#points"></use>
@@ -45,10 +51,14 @@
 </template>
 <script>
 	import Table from '@/components/tviews/Table.vue';
+	import FiltersPopup from '@/components/popups/FiltersPopup.vue';
+	import SortPopup from '@/components/popups/SortPopup.vue';
 	import Properties from '@/components/popups/Properties.vue';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		components: { Table, Properties },
+		mixins: [TableWork],
+		components: { Table, Properties, FiltersPopup, SortPopup },
 		/**
 		 * Глобальные пересенные странциы
 		 */
@@ -56,7 +66,12 @@
 		{
 			return {
 				table: false,
-				isPropertiesPopupShow: false,
+				popups:
+				{
+					isPropertiesPopupShow : false,
+					isFiltersPopupShow    : false,
+					isSortPopupShow       : false
+				},
 				propertiesPopupData: {}
 			}
 		},
@@ -76,11 +91,19 @@
 		methods:
 		{
 			/**
-			 * Отобразить попап настроек полей
+			 * Отобразить/Закрыть попап
 			 */
-			togglePropertiesPopup()
+			togglePopup(popupName)
 			{
-				this.isPropertiesPopupShow = !this.isPropertiesPopupShow;
+				this.popups[popupName] = !this.popups[popupName];
+			},
+			/**
+			 * Закрыть все попапы
+			 */
+			closePopups()
+			{
+				for (let popup in this.popups)
+					this.popups[popup] = false;
 			},
 			/**
 			 * Определить активную таблицу
@@ -104,6 +127,12 @@
 		mounted()
 		{
 			this.activeTable();
+
+			for (let table of this.$store.state.tables.tables)
+			{
+				let tview = this.getDefaultTview(table);
+				this.$set(table, 'visible', typeof tview.settings.table == 'undefined' ? false : tview.settings.table.visible === 'true' ? true : false);
+			}
 		},
 		watch:
 		{
@@ -118,13 +147,14 @@
 	}
 </script>
 <style lang="scss">
-	.index__wrapper { padding: 23px 95px 23px 21px; }
+	.index__wrapper { padding: 23px 20px 23px 21px; }
 	.index__head
 	{
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
 		margin-bottom: 16px;
+		padding-right: 75px;
 	}
 	.index__head-name
 	{
@@ -156,28 +186,35 @@
 		padding-right: 6px;
 		display: flex;
 		align-items: center;
-		&__points
+		li
+		{
+			color: rgba(25, 28, 33, 0.7);
+			font-size: 12px;
+			margin-right: 5px;
+			cursor: pointer;
+			position: relative;
+			padding: 5px 8px;
+			&.active, &:hover
+			{
+				background-color: rgba(103, 115, 135, 0.1);
+				border-radius: 2px;
+			}
+		}
+		.index__points
 		{
 			position: relative;
-			padding: 0 7px;
+			padding: 0 8px;
 			width: 35px;
 			height: 25px;
+			display: flex;
+			align-items: center;
+			pointer-events: none;
 			img
 			{
 				width: 100%;
 				height: 100%;
 				object-fit: contain;
 			}
-		}
-		li
-		{
-			color: rgba(25, 28, 33, 0.7);
-			font-size: 12px;
-			margin-right: 21px;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			position: relative;
 		}
 	}
 	.index__head-add-btn

@@ -9,7 +9,7 @@
 						<img :src="column.em.type_info.iconPath" alt="">
 					</div>
 					<div class="table-item-name-wrapper">
-						<div class="table-item-overide-name">{{column.field}}</div>
+						<div class="table-item-overide-name">{{getOverideName(column)}}</div>
 						<div class="table-item-real-name">{{column.field}}</div>
 					</div>
 					<div class="drug-col" @mousedown="reginsterEventResize($event, column)"></div>
@@ -31,6 +31,7 @@
 					<button class="table-row-btn">remove</button>
 				</div>
 				<div
+
 					class="table-item"
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
@@ -42,6 +43,7 @@
 							value     : row[column.field].value,
 							settings  : getFieldSettings(column, row)
 						}"
+						@onChange="changeTableValue"
 					/>
 				</div>
 				<div class="table-item">
@@ -49,13 +51,13 @@
 				</div>
 			</div>
 		</div>
+		<Pagination
+			v-if="tableContent.total_pages > 1"
+			:maxPage="tableContent.total_pages"
+			:current="tableContent.current"
+			@change="selectPage"
+		/>
 	</div>
-	<!-- <Pagination
-		v-if="tableContent.total_pages > 1"
-		:maxPage="tableContent.total_pages"
-		:current="tableContent.current"
-		@change="selectPage"
-	/> -->
 </template>
 <script>
 	import EmCheck from '@/components/fields/EmCheckField.vue';
@@ -63,10 +65,11 @@
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
 	import Popup from '@/mixins/popup.js';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
-		mixins: [Popup],
+		mixins: [Popup, TableWork],
 		components: {MainField, EmCheck, TagItem, Pagination},
 		/**
 		 * Глобальные переменные страницы
@@ -112,7 +115,7 @@
 			 */
 			getUrlTableName()
 			{
-				this.$route.params.tableName;
+				return this.$route.params.tableCode;
 			}
 		},
 		watch:
@@ -144,6 +147,29 @@
 		methods:
 		{
 			/**
+			 * Сохранить локально измененные данные в таблице
+			 */
+			changeTableValue(tableValues)
+			{
+				this.setTableValue(
+					tableValues.settings.primaryKey.fieldCode,
+					tableValues.settings.primaryKey.value,
+					this.tableContent.items,
+					tableValues.settings.fieldCode,
+					tableValues.value,
+				);
+			},
+			/**
+			 * Достать имя колонки
+			 */
+			getOverideName(column)
+			{
+				if (typeof column.em.name == 'undefined' || column.em.name == '')
+					return column.field;
+
+				return column.em.name;
+			},
+			/**
 			 * Задать настройки для одного филда
 			 */
 			getFieldSettings(column, row)
@@ -165,12 +191,12 @@
 					fieldCode: primaryFieldCode
 				};
 
-				let settings        = column.em.settings;
+				var settings        = column.em.settings;
 				settings.fieldCode  = column.field;
 				settings.tableCode  = this.table.code;
 				settings.primaryKey = primaryKey;
 
-				return settings;
+				return Object.assign({}, settings);
 			},
 			/**
 			 * Сохранить параметры колонки
@@ -196,10 +222,7 @@
 					};
 
 					if (typeof this.tview.settings.columns == 'undefined')
-					{
-						this.$set(this.tview, 'settings', {});
 						this.$set(this.tview.settings, 'columns', {});
-					}
 
 					this.$set(this.tview.settings.columns, column, {});
 					this.$set(this.tview.settings.columns[column], 'width', tableColumns[column].width);
@@ -246,13 +269,20 @@
 			async getTableContent()
 			{
 				var select = [];
+				var where  = [];
+				var sort   = [];
 
-				if (typeof this.tview.filter.select != 'undefined')
-					select = this.tview.filter.select;
+				if (typeof this.tview.filter.operation != 'undefined')
+					where = this.tview.filter;
+
+				if (typeof this.tview.sort != 'undefined')
+					sort = this.tview.sort;
 
 				select.from = this.$route.params.tableCode;
 				select.page = this.$route.params.page;
 				select.tview = this.$route.params.tview;
+				select.where = where;
+				select.order = sort;
 
 				await this.$store.dispatch('select', {select: select});
 			},
@@ -299,7 +329,7 @@
 			selectPage(page)
 			{
 				this.$store.dispatch('selectPage', page);
-				this.$router.push(`/table/${typeof this.getUrlTableName == 'undefined' ? this.tableInfo.name.real : this.getUrlTableName}/${page}`);
+				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${page}`);
 			}
 		},
 		/**

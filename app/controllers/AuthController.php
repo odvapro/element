@@ -27,7 +27,12 @@ class AuthController extends ControllerBase
 
 			return $this->jsonResult([
 				'success' => true,
-				'user'    => $user->id
+				'user'    => [
+					'name'  => $user->name,
+					'id'    => $user->id,
+					'email' => $user->email,
+					'avatar' => 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '?d=' . urlencode( 'https://www.somewhere.com/homestar.jpg' ) . '&s=40'
+				]
 			]);
 		}
 

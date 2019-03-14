@@ -7,6 +7,15 @@
 		</router-link>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
+				<li class="sidebar__user active">
+					<a href="javascript:void(0)">
+						<div class="sidebar__user-img-wrapper">
+							<img :src="$store.state.users.authUser.avatar" alt="">
+						</div>
+						<span>{{$store.state.users.authUser.name}}</span>
+					</a>
+					<div class="sidebar__user-logout" @click="logOut()">log out</div>
+				</li>
 				<li><a href="javascript:void(0)">Quiq Find</a></li>
 				<li><a href="javascript:void(0)">Update</a></li>
 				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">Settings & Users</router-link></li>
@@ -15,7 +24,7 @@
 		<div class="sidebar-tables-wrapper">
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
-				<li v-for="table in tables">
+				<li v-for="table in tables" v-if="table.visible">
 					<a @click="selectTable(table)" href="javascript:void(0)"
 						:class="{active: table.code == getActiveTable}"
 					>
@@ -35,7 +44,7 @@
 							</svg>
 						</div>
 						<div class="sidebar-name-wrapper">
-							<div class="sidebar-overide-table-name">{{table.code}}</div>
+							<div class="sidebar-overide-table-name">{{table.name}}</div>
 							<div class="sidebar-real-table-name">{{table.code}}</div>
 						</div>
 					</a>
@@ -85,6 +94,18 @@
 		methods:
 		{
 			/**
+			 * Выход из учетной записи
+			 */
+			async logOut()
+			{
+				let result = await this.$axios.post('/api/auth/logOut/');
+
+				if (!result.data.success)
+					return false;
+
+				this.$router.push('/');
+			},
+			/**
 			 * Достать содержимое таблицы
 			 */
 			async selectTable(table)
@@ -109,6 +130,12 @@
 	}
 </script>
 <style lang="scss">
+	.sidebar__user-logout
+	{
+		font-size: 10px;
+		color: rgba(25, 28, 33, 0.7);
+		display: none;
+	}
 	.drug
 	{
 		width: 4px;
@@ -143,9 +170,10 @@
 			color: #677387;
 			line-height: 16px;
 			cursor: pointer;
+			padding-right: 15px;
 			a
 			{
-				padding: 9px 0 9px 20px;
+				padding: 10px 0 10px 20px;
 				text-decoration: none;
 				color: inherit;
 				display: block;
@@ -155,6 +183,42 @@
 				background-color: rgba(103, 115, 135, 0.1);
 			}
 		}
+		.sidebar__user
+		{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			a
+			{
+				display: flex;
+				align-items: center;
+			}
+			img
+			{
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+			span
+			{
+				display: block;
+			}
+			&:hover
+			{
+				.sidebar__user-logout
+				{
+					display: block;
+				}
+			}
+		}
+	}
+	.sidebar__user-img-wrapper
+	{
+		width: 15px;
+		height: 15px;
+		margin-right: 7px;
+		border-radius: 50%;
+		overflow: hidden;
 	}
 	.sidebar-options
 	{

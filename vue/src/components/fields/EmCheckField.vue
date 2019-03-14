@@ -1,7 +1,7 @@
 <template>
 	<div class="em-check-wrapper">
 		<label class="em-check-label">
-			<input type="checkbox" v-model="isChecked" class="em-check">
+			<input type="checkbox" v-model="isChecked" @change="changeStatus()" class="em-check">
 			<span>
 				<svg width="7" height="7">
 					<use xlink:href="#check"></use>
@@ -23,12 +23,34 @@
 				isChecked: false
 			}
 		},
-		watch:
+		methods:
 		{
-			// isChecked()
-			// {
-			// 	this.$emit('onChange', {data: isChecked, column})
-			// }
+			/**
+			 * Изменить статус
+			 */
+			async changeStatus()
+			{
+				let qs = require('qs');
+
+				let data = qs.stringify({
+					tableCode       : this.fieldSettings.tableCode,
+					fieldCode       : this.fieldSettings.fieldCode,
+					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
+					primaryKeyValue : this.fieldSettings.primaryKey.value,
+					status          : this.isChecked
+				});
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : data,
+					url    : '/api/field/em_check/index/changeStatus/'
+				});
+
+				if (!result.data.success)
+					return false;
+
+				this.$emit('onChange', {value: this.isChecked, settings: this.fieldSettings});
+			}
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -42,12 +64,14 @@
 <style lang="scss">
 .em-check-wrapper
 {
-	display: inherit;
+	display: block;
+	width: 100%;
+	text-align: center;
 	.em-check-label
 	{
 		display: inline-block;
 		position: relative;
-		padding-left: 13px;
+		padding-left: 12px;
 		font-size: 14px;
 		height: 12px;
 		color: #334D66;

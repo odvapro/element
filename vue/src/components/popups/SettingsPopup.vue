@@ -66,8 +66,10 @@
 <script>
 	import MainField from '@/components/fields/MainField.vue';
 	import MainSettings from '@/components/fields/settings/MainSettings.vue';
+	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
+		mixins: [TableWork],
 		components: { MainField, MainSettings },
 		/**
 		 * Глобальные переменные страницы
@@ -77,7 +79,7 @@
 			return {
 				popupParams: {},
 				newSettings: {},
-				tables: []
+				curTable: {}
 			}
 		},
 		methods:
@@ -103,6 +105,14 @@
 			{
 				let qs = require('qs');
 
+				if (typeof this.newSettings.list != 'undefined')
+					for (let index = 0; index < this.newSettings.list.length; index ++)
+						if (this.newSettings.list[index].key == '' || this.newSettings.list[index].value == '')
+						{
+							this.newSettings.list.splice(index, 1);
+							index --;
+						}
+
 				let data = {
 					tableName  : this.popupParams.settings.tableCode,
 					columnName : this.popupParams.settings.fieldCode,
@@ -121,13 +131,11 @@
 				if (!result.data.success)
 					return false;
 
-				for (let table of this.tables)
-					if (table.code == data.tableName)
-						for (let paramKey in this.newSettings)
-						{
-							table.columns[data.columnName].em[paramKey] = this.newSettings[paramKey];
-							table.columns[data.columnName].em.settings[paramKey] = this.newSettings[paramKey];
-						}
+				for (let paramKey in this.newSettings)
+				{
+					this.curTable.columns[data.columnName].em[paramKey] = this.newSettings[paramKey];
+					this.curTable.columns[data.columnName].em.settings[paramKey] = this.newSettings[paramKey];
+				}
 
 				this.closePopup();
 			}
@@ -138,11 +146,15 @@
 		mounted()
 		{
 			this.popupParams = this.$store.state.settings.popupParams;
-			this.tables      = this.$store.state.tables.tables;
+			this.curTable = this.getTableByCode(this.popupParams.settings.tableCode, this.$store.state.tables.tables);
 		}
 	}
 </script>
 <style lang="scss">
+	.settings-popup__list-wrapper
+	{
+		display: flex;
+	}
 	.settings-popup-close-icon
 	{
 		width: 20px;
@@ -181,7 +193,7 @@
 		border-radius: 2px;
 		font-size: 12px;
 		color: rgba(103, 115, 135, 0.7);
-		padding: 7px 11px;
+		padding: 8px 11px;
 		border: none;
 		cursor: pointer;
 		color: #fff;
@@ -192,7 +204,7 @@
 		border-radius: 2px;
 		font-size: 12px;
 		color: rgba(103, 115, 135, 0.7);
-		padding: 7px 11px;
+		padding: 8px 11px;
 		border: none;
 		margin-right: 15px;
 		cursor: pointer;
@@ -241,7 +253,7 @@
 		display: flex;
 		align-items: center;
 		margin-bottom: 20px;
-		height: 31px;
+		min-height: 31px;
 	}
 	.settings-popup-item-wrapper
 	{

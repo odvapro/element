@@ -41,6 +41,7 @@
 		mounted()
 		{
 			this.required = this.isRequired;
+			this.setStatus(this.required);
 		}
 	}
 </script>

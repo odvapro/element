@@ -13,14 +13,14 @@
 		</div>
 		<div class="settings-popup-row-params">
 			<div class="settings-popup-item-wrapper">
-				Choose redactor
+				List
 			</div>
 			<div class="settings-popup-item-wrapper">
-				<div class="settings-popup-radio-wrapper">
-					<div class="settings-popup-radio-btn" @click="settings.textType = 'Text'" :class="{active: settings.textType == 'Text'}">Text</div>
-					<div class="settings-popup-radio-btn" @click="settings.textType = 'Code'" :class="{active: settings.textType == 'Code'}">Code</div>
-					<div class="settings-popup-radio-btn" @click="settings.textType = 'Visual'" :class="{active: settings.textType == 'Visual'}">Visual</div>
+				<div class="settings-popup__list-wrapper" v-for="itemList in settings.list">
+					<input type="text" v-model="itemList.key" placeholder="key">
+					<input type="text" v-model="itemList.value" placeholder="value">
 				</div>
+				<button @click="addListItem()">добавить</button>
 			</div>
 		</div>
 	</div>
@@ -43,13 +43,23 @@
 			'settings':
 			{
 				/**
-				 * Мониторить изменения полей
+				 * Мониторить изменения настроек
 				 */
-				handler: function (val, oldVal)
+				handler: function (argument)
 				{
 					this.$emit('changeSettings', this.settings);
 				},
 				deep: true
+			}
+		},
+		methods:
+		{
+			/**
+			 * Добавить поле в список
+			 */
+			addListItem()
+			{
+				this.settings.list.push({key: '', value: ''});
 			}
 		},
 		/**
@@ -57,13 +67,11 @@
 		 */
 		mounted()
 		{
-			if (typeof this.settings.textType == 'undefined')
-				this.$set(this.settings, 'textType',
-				typeof this.fieldSettings.textType == 'undefined' ? 'Text' : this.fieldSettings.textType );
+			if (typeof this.settings.list == 'undefined')
+				this.$set(this.settings, 'list', typeof this.fieldSettings.list == 'undefined' ? [{key: '', value: ''}] : this.fieldSettings.list);
 
 			if (typeof this.settings.required == 'undefined')
 				this.$set(this.settings, 'required', this.isRequired);
-
 			this.$emit('changeSettings', this.settings);
 		}
 	}

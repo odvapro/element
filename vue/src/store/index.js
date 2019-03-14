@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import tables from './tables.js'
+import users from './users.js'
 import settings from './settings.js'
 import axios from 'axios'
 
@@ -12,7 +13,8 @@ export default new Vuex.Store({
 	modules:
 	{
 		tables: tables,
-		settings: settings
+		settings: settings,
+		users: users
 	},
 	state:
 	{

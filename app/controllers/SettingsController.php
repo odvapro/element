@@ -12,7 +12,7 @@ class SettingsController extends ControllerBase
 		$name  = $this->request->getPost('name');
 		$type  = $this->request->getPost('type');
 
-		if (empty($table) || empty($field) || empty($name))
+		if (empty($table) || empty($field))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
 
 		if (empty($type))
@@ -75,7 +75,7 @@ class SettingsController extends ControllerBase
 
 		$field->save();
 
-		return $this->jsonResult(['success' => true]);
+		return $this->jsonResult(['success' => true, 'settings' => $field]);
 	}
 
 	/**
@@ -117,6 +117,6 @@ class SettingsController extends ControllerBase
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true]);
+		return $this->jsonResult(['success' => true, 'settings' => $field]);
 	}
 }

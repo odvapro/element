@@ -67,11 +67,10 @@
 	</div>
 </template>
 <script>
-	import EmTagsField from '@/components/fields/EmTagsField.vue';
 	import EmCheckField from '@/components/fields/EmCheckField.vue';
 	export default
 	{
-		components: { EmCheckField, EmTagsField },
+		components: { EmCheckField },
 		/**
 		 * Глобальные переменные страницы
 		 */

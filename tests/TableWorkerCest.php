@@ -48,7 +48,7 @@ class TableWorkerCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/getColumns', ['tableName' => 'newTest']);
+		$I->sendPOST('/el/getColumns', ['tableName' => 'products']);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.columns.*.field');
@@ -76,30 +76,6 @@ class TableWorkerCest
 	{
 		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
-
-		$I->sendGET('/el/select',
-		[
-			'select' => ['from' => 'testTable']
-		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-
-		$I->sendGET('/el/select',
-		[
-			'select' =>
-			[
-				'fields' => ['name', 'id', 'col'],
-				'from' => 'testTable'
-			]
-		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -145,6 +121,30 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' => ['from' => 'testTable']
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'fields' => ['name', 'id', 'col'],
+				'from' => 'testTable'
+			]
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		$I->sendGET('/el/select',
 		[
@@ -396,6 +396,17 @@ class TableWorkerCest
 							'code' => 'name',
 							'operation' => 'CONTAINS',
 							'value' => 'ggg'
+						],
+						[
+							'operation' => 'or',
+							'fields' =>
+							[
+								[
+									'code' => 'avat',
+									'operation' => 'IS',
+									'value' => '3'
+								]
+							]
 						]
 					]
 				]

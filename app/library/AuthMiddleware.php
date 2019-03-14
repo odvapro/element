@@ -36,7 +36,9 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 			$privateResources = [
 				'el'  => ['*'],
 				'users' => ['*'],
-				'settings' => ['*']
+				'settings' => ['*'],
+				'field' => ['*'],
+				'tview' => ['*']
 			];
 
 			foreach($privateResources as $resource => $actions)

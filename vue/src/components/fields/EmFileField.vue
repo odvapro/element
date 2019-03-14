@@ -1,12 +1,18 @@
 <template>
-	<div class="em-file-item-col" @click="togglePopup()">
-		<div class="em-file-item-wrapper" v-for="item in fieldValue">
-			<img :src="item.path" alt="">
+	<div class="em-file-item-col">
+		<div class="em-file-item-wrapper" v-for="item in dataField" v-if="dataField">
+			<img :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
+		</div>
+		<div class="em-file__add-button" @click.stop="togglePopup()">
+			<svg width="17" height="17">
+				<use xlink:href="#add-button"></use>
+			</svg>
 		</div>
 		<div class="em-file__upload-popup" @click.stop v-if="showPopup" v-click-outside="closePopup">
 			<div class="em-file__upload-popup-head">
 				Add file
 			</div>
+			<form id="ww">
 			<div class="em-file__upload-tab-wrapper">
 				<div class="em-file__upload-tabs-head">
 					<div class="em-file__upload-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
@@ -15,25 +21,26 @@
 					<div class="ulpoad-tab-content" v-if="activeTab == 'Upload'">
 						<div class="upload-em-file-wrapper">
 							<div class="em-file-wrapper">
-								<input type="file" name="file" id="file" class="em-file" />
+								<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
 								<label for="file">Choose File</label>
 							</div>
 						</div>
 					</div>
 					<div class="em-file__upload-tab-content" v-if="activeTab == 'Upload by link'">
 						<div class="em-file__upload-tab-input-wrapper">
-							<input type="text" placeholder="Paste link">
+							<input type="text" placeholder="Paste link" v-model="link" @change="uploadFile('link')">
 						</div>
 					</div>
 				</div>
 			</div>
+			</form>
 		</div>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings'],
+		props: ['fieldValue', 'fieldSettings'],
 		/**
 		 * Глобальные переменные странциы
 		 */
@@ -41,16 +48,50 @@
 		{
 			return {
 				showPopup: false,
+				dataField: false,
 				tabs:
 				[
 					{ name: 'Upload', active: true },
 					{ name: 'Upload by link', active: false },
 				],
-				activeTab: 'Upload'
+				activeTab: 'Upload',
+				link: ''
 			}
 		},
 		methods:
 		{
+			/**
+			 * Загрузить изображение
+			 */
+			async uploadFile(type)
+			{
+				let formData = new FormData();
+
+				formData.append('tableCode', this.fieldSettings.tableCode);
+				formData.append('fieldCode', this.fieldSettings.fieldCode);
+				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
+				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
+				formData.append('typeUpload', type);
+				formData.append('link', this.link);
+
+				if (typeof this.$refs.emFile != 'undefined')
+					for (var file of this.$refs.emFile.files)
+						formData.append('files' + file.name, file);
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : formData,
+					headers: { 'Content-Type': 'multipart/form-data' },
+					url    : '/api/field/em_file/index/upload/'
+				});
+
+				if (!result.data.success)
+					return false;
+
+				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
+
+				this.closePopup();
+			},
 			/**
 			 * Задать активность табу
 			 */
@@ -76,14 +117,28 @@
 			{
 				this.showPopup = false;
 			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.dataField = this.fieldValue;
 		}
 	}
 </script>
 <style lang="scss">
+	.em-file__add-button
+	{
+		width: 17px;
+		height: 17px;
+		cursor: pointer;
+	}
 	.em-file-item-col
 	{
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 	}
 	.em-file-item-wrapper
 	{
@@ -91,7 +146,6 @@
 		height: 14px;
 		margin-right: 3px;
 		cursor: pointer;
-		margin-bottom: 3px;
 		img
 		{
 			width: 100%;
@@ -106,7 +160,7 @@
 		border-radius: 2px;
 		width: 326px;
 		position: absolute;
-		z-index: 2;
+		z-index: 5;
 		top: -1px;
 		left: -1px;
 	}
@@ -163,13 +217,12 @@
 	.em-file__upload-tab-input-wrapper
 	{
 		background: #FFFFFF;
-		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		height: 30px;
 		min-width: 255px;
 		input
 		{
-			border: none;
+			border: 1px solid rgba(103, 115, 135, 0.1);
 			font-size: 10px;
 			padding: 0 11px;
 			width: 100%;
