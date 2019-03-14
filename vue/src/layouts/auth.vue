@@ -5,7 +5,7 @@
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<label class="auth-label">
-				<div class="auth-label-title">login</div>
+				<div class="auth-label-title">Login</div>
 				<input type="text" placeholder="Enter your login" v-model="user.login" class="auth-form-input">
 			</label>
 			<label class="auth-label">
