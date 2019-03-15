@@ -58,6 +58,7 @@
 						</div>
 						<div class="settings-table-item table-item centered">
 							<List
+								@click.prevent
 								:params="{
 									value     : column.em.type_info.name,
 									settings  : getFieldSettings(table, column)
