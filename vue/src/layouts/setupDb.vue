@@ -8,37 +8,37 @@
 				<label class="setup-db-label">
 					Host
 					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.host" placeholder="Enter hostname">
+						<input type="text" v-model="config.host.value" placeholder="Enter hostname">
 					</div>
 				</label>
 				<label class="setup-db-label">
 					Database username
 					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.username" placeholder="Enter username">
+						<input type="text" v-model="config.username.value" placeholder="Enter username">
 					</div>
 				</label>
 				<label class="setup-db-label">
 					Database Password
 					<div class="setup-db-input-wrapper">
-						<input type="password" v-model="config.password" placeholder="Enter password">
+						<input type="password" v-model="config.password.value" placeholder="Enter password">
 					</div>
 				</label>
 				<label class="setup-db-label">
 					Database name
 					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.dbname" placeholder="Enter database name">
+						<input type="text" v-model="config.dbname.value" placeholder="Enter database name">
 					</div>
 				</label>
 				<label class="setup-db-label">
 					BaseUrl
 					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.baseUrl" placeholder="Enter BaseUrl">
+						<input type="text" v-model="config.baseUrl.value" placeholder="Enter BaseUrl">
 					</div>
 				</label>
 				<label class="setup-db-label">
 					Select Database
 					<div class="setup-db-input-wrapper">
-						<select v-model="config.adapter">
+						<select v-model="config.adapter.value">
 							<option value="Postgres">Postgres</option>
 							<option value="Mysql">MySql</option>
 						</select>
@@ -57,19 +57,23 @@
 export default
 {
 	name: 'SetupDb',
-	data() {
+	/**
+	 * Глобальные переменные страницы
+	 */
+	data()
+	{
 		return {
 			errors: '',
 			config:
 			{
-				host: 'localhost',
-				dbname: '',
-				username: '',
-				adapter: 'Mysql',
-				password: 'Hi8R28XY|P',
-				baseUrl: '/',
-				isCheck: false
-			}
+				host: {value: 'localhost', error: ''},
+				dbname: {value: '', error: ''},
+				username: {value: '', error: ''},
+				adapter: {value: 'Mysql', error: ''},
+				password: {value: 'Hi8R28XY|P', error: ''},
+				baseUrl: {value: '/', error: ''},
+			},
+			isCheck: false
 		}
 	},
 	methods:
@@ -158,6 +162,7 @@ export default
 			padding: 0 11px;
 			width: 100%;
 			height: 100%;
+			border: 1px solid rgba(103, 115, 135, 0.4);
 			box-sizing: border-box;
 		}
 	}

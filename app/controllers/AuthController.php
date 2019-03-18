@@ -19,7 +19,7 @@ class AuthController extends ControllerBase
 		]);
 
 		if(!count($user))
-			return $this->jsonResult(['success' => false, 'message' => 'Bad credentials']);
+			return $this->jsonResult(['success' => false, 'message' => 'User is not found']);
 		else
 		{
 			$user = $user[0];
