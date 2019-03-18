@@ -1,5 +1,5 @@
 <template>
-	<div class="list__table-select" @click="togglePopup()">
+	<div class="list__table-select" @click.stop="togglePopup()">
 		<div class="list__item-wrapper">
 			<div class="list__head-item">
 				{{fieldValue}}
@@ -11,13 +11,13 @@
 					{{fieldValue}}
 				</div>
 			</div>
-			<div class="list__search-popup-item" v-for="listItem in fieldSettings.values">
+			<div class="list__search-popup-item" v-for="listItem in fieldSettings.values" @click="selectItem(listItem)">
 				<div class="list__search-icon">
 					<svg width="6" height="5">
 						<use xlink:href="#lines"></use>
 					</svg>
 				</div>
-				<div class="list__search-item" @click="selectItem(listItem)">
+				<div class="list__search-item">
 					{{listItem.name}}
 				</div>
 			</div>

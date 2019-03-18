@@ -25,13 +25,13 @@
 							{{settings.bindTable}}
 						</div>
 					</div>
-					<div class="em-node-search-popup-item" v-for="table in tables">
+					<div class="em-node-search-popup-item" v-for="table in tables" @click.stop="selectTable(table)">
 						<div class="em-node-search-icon">
 							<svg width="6" height="5">
 								<use xlink:href="#lines"></use>
 							</svg>
 						</div>
-						<div class="em-node-search-item" @click="selectTable(table)">
+						<div class="em-node-search-item">
 							{{table.code}}
 						</div>
 					</div>
@@ -52,13 +52,13 @@
 							{{settings.bindField}}
 						</div>
 					</div>
-					<div class="em-node-search-popup-item" v-for="column in tableColumns">
+					<div class="em-node-search-popup-item" v-for="column in tableColumns" @click.stop="selectBindField(column)">
 						<div class="em-node-search-icon">
 							<svg width="6" height="5">
 								<use xlink:href="#lines"></use>
 							</svg>
 						</div>
-						<div class="em-node-search-item" @click="selectBindField(column)">
+						<div class="em-node-search-item">
 							{{column.field}}
 						</div>
 					</div>
@@ -79,13 +79,13 @@
 							{{settings.searchField}}
 						</div>
 					</div>
-					<div class="em-node-search-popup-item" v-for="column in tableColumns">
+					<div class="em-node-search-popup-item" v-for="column in tableColumns" @click.stop="selectSearchField(column)">
 						<div class="em-node-search-icon">
 							<svg width="6" height="5">
 								<use xlink:href="#lines"></use>
 							</svg>
 						</div>
-						<div class="em-node-search-item" @click="selectSearchField(column)">
+						<div class="em-node-search-item">
 							{{column.field}}
 						</div>
 					</div>
@@ -156,6 +156,7 @@
 				this.settings.bindField   = table.columns['id'].field;
 				this.settings.searchField = table.columns['id'].field;
 				this.selectedTable        = table;
+				this.closePopups();
 			},
 			/**
 			 * Открыть/Закрыть попап
@@ -171,6 +172,7 @@
 			selectBindField(column)
 			{
 				this.settings.bindField = column.field;
+				this.closePopups();
 			},
 			/**
 			 * Выбрать поле поиска
@@ -178,6 +180,7 @@
 			selectSearchField(column)
 			{
 				this.settings.searchField = column.field;
+				this.closePopups();
 			},
 			/**
 			 * Закрыть попап

@@ -192,6 +192,7 @@
 			{
 				display: flex;
 				align-items: center;
+				width: 75%;
 			}
 			img
 			{
@@ -202,6 +203,8 @@
 			span
 			{
 				display: block;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 			&:hover
 			{
@@ -216,6 +219,7 @@
 	{
 		width: 15px;
 		height: 15px;
+		min-width: 15px;
 		margin-right: 7px;
 		border-radius: 50%;
 		overflow: hidden;
