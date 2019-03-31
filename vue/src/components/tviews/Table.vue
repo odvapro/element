@@ -391,17 +391,25 @@
 	}
 	.table-item-overide-name
 	{
-		line-height: 12px;
+		line-height: 14px;
 		font-size: 12px;
 		color: #677387;
 		text-transform: capitalize;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
 	}
 	.table-item-real-name
 	{
-		line-height: 12px;
+		line-height: 14px;
 		font-size: 10px;
 		color: rgba(103, 115, 135, 0.4);
 		text-transform: lowercase;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
 	}
 	.table-row
 	{

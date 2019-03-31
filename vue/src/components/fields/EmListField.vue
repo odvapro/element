@@ -1,5 +1,5 @@
 <template>
-	<div class="em-list__wrapper" @click="togglePopup()">
+	<div class="em-list__wrapper" @click.stop="togglePopup()">
 		<div class="em-list__item-wrapper">
 			<div class="em-list__item">
 				{{selectedItem}}
@@ -11,13 +11,13 @@
 					{{selectedItem}}
 				</div>
 			</div>
-			<div class="em-list__search-popup-item" v-for="listItem in settings.list">
+			<div class="em-list__search-popup-item" v-for="listItem in settings.list" @click="changeData(listItem)">
 				<div class="em-list__search-icon">
 					<svg width="6" height="5">
 						<use xlink:href="#lines"></use>
 					</svg>
 				</div>
-				<div class="em-list__search-item" @click="changeData(listItem)">
+				<div class="em-list__search-item">
 					{{listItem.value}}
 				</div>
 			</div>

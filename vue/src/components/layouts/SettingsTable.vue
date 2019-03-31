@@ -66,7 +66,7 @@
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="setSettingsPopupParams({fieldName: column.em.type_info.fieldComponent, required: column.em.required, settings: column.em.settings})">settings</button>
+							<button @click.stop="setSettingsPopupParams({fieldName: column.em.type_info.fieldComponent, required: column.em.required, settings: column.em.settings})">settings</button>
 						</div>
 					</div>
 				</div>

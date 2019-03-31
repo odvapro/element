@@ -15,16 +15,16 @@
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
 					<li>Views</li>
-					<li :class="{active: popups.isPropertiesPopupShow}" @click="togglePopup('isPropertiesPopupShow')">
+					<li :class="{active: popups.isPropertiesPopupShow}" @click.stop="togglePopup('isPropertiesPopupShow')">
 						Properties
 						<Properties v-if="popups.isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" v-click-outside="closePopups"/>
 					</li>
 					<!-- #TODO popups -->
-					<li :class="{active: popups.isSortPopupShow}" @click="togglePopup('isSortPopupShow')">
+					<li :class="{active: popups.isSortPopupShow}" @click.stop="togglePopup('isSortPopupShow')">
 						Sort
 						<SortPopup v-if="popups.isSortPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
 					</li>
-					<li :class="{active: popups.isFiltersPopupShow}" @click="togglePopup('isFiltersPopupShow')">
+					<li :class="{active: popups.isFiltersPopupShow}" @click.stop="togglePopup('isFiltersPopupShow')">
 						Filter
 						<FiltersPopup v-if="popups.isFiltersPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
 					</li>
@@ -105,6 +105,10 @@
 			 */
 			togglePopup(popupName)
 			{
+				for (let popup in this.popups)
+					if (this.popups[popup] != this.popups[popupName])
+						this.popups[popup] = false;
+
 				this.popups[popupName] = !this.popups[popupName];
 			},
 			/**

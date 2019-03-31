@@ -5,12 +5,14 @@
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<label class="auth-label">
-				<div class="auth-label-title">login</div>
-				<input type="text" placeholder="Enter your login" v-model="user.login" class="auth-form-input">
+				<div class="auth-label-title">Login</div>
+				<input type="text" placeholder="Enter your login" v-model="user.login.value" :class="{error: user.login.error}" class="auth-form-input">
+				<span class="auth__error-text">{{user.login.error}}</span>
 			</label>
 			<label class="auth-label">
 				<div class="auth-label-title">Password</div>
-				<input type="password" placeholder="Enter your password" v-model="user.password" class="auth-form-input">
+				<input type="password" placeholder="Enter your password" v-model="user.password.value" :class="{error: user.password.error}" class="auth-form-input">
+				<span class="auth__error-text">{{user.password.error}}</span>
 			</label>
 			<div class="auth-bottom-btns">
 				<button class="auth-fill-btn" @click="authUser()">Log In</button>
@@ -44,8 +46,8 @@ export default
 		return {
 			user:
 			{
-				login: '',
-				password: ''
+				login: {value: '', error: ''},
+				password: {value: '', error: ''}
 			},
 			errors: '',
 			activeForm: 'login'
@@ -54,14 +56,41 @@ export default
 	methods:
 	{
 		/**
+		 * Проверка на валидность полей
+		 */
+		isValid()
+		{
+			var isValid = true;
+
+			this.user.login.error = '';
+			this.user.password.error = '';
+
+			if (this.user.login.value == '')
+			{
+				this.user.login.error = 'Incorrect username';
+				isValid = false;
+			}
+
+			if (this.user.password.value == '')
+			{
+				this.user.password.error = 'Incorrect password';
+				isValid = false;
+			}
+
+			return isValid;
+		},
+		/**
 		 * Авторизоваться
 		 */
 		async authUser()
 		{
+			if (!this.isValid())
+				return false;
+
 			var data = new FormData();
 
-			data.append('login', this.user.login);
-			data.append('password', this.user.password);
+			data.append('login', this.user.login.value);
+			data.append('password', this.user.password.value);
 
 			var result = await this.$axios.post('/api/auth/index/', data);
 
@@ -109,6 +138,7 @@ export default
 	{
 		margin-bottom: 15px;
 		display: block;
+		position: relative;
 	}
 	.auth-label-title
 	{
@@ -127,6 +157,11 @@ export default
 		&::placeholder
 		{
 			color: rgba(103, 115, 135, 0.7);
+		}
+		&.error
+		{
+			border: 1px solid rgba(208, 18, 70, 0.4);
+			border-radius: 2px;
 		}
 	}
 	.auth-content-wrapper
@@ -157,5 +192,13 @@ export default
 			font-size: 12px;
 			justify-content: center;
 		}
+	}
+	.auth__error-text
+	{
+		position: absolute;
+		bottom: -13px;
+		color: rgba(208, 18, 70, 0.4);
+		font-size: 10px;
+		right: 0;
 	}
 </style>

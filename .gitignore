@@ -43,3 +43,4 @@ codeception.yml
 /docs/
 composer.lock
 package-lock.json
+vue/dist
