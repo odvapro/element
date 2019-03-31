@@ -60,6 +60,16 @@
 		mixins: [TableWork],
 		components: { Table, Properties, FiltersPopup, SortPopup },
 		/**
+		 * Head параметры страницы
+		 */
+		metaInfo()
+		{
+			const tableName = (!this.table) ? '' : this.table.name;
+			return {
+				title: `Table: ${tableName}`
+			}
+		},
+		/**
 		 * Глобальные пересенные странциы
 		 */
 		data()

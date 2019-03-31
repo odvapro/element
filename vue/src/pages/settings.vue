@@ -32,6 +32,9 @@
 	export default
 	{
 		components: { SettingsTable, SettingsUser},
+		metaInfo:{
+			title: 'Settings'
+		},
 		/**
 		 * Глобальные переменные страницы
 		 */

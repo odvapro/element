@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import router from './router'
+import Meta from 'vue-meta'
 import scssVars from './assets/variables.scss'
 import scssNorm from './assets/normalize.scss'
 import scsssStyle from './assets/style.scss'
@@ -11,6 +12,7 @@ import store from './store/index.js'
 var VueCookie = require('vue-cookie');
 
 Vue.use(VueCookie);
+Vue.use(Meta)
 
 Vue.config.productionTip = false;
 

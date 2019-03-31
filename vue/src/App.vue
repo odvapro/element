@@ -13,6 +13,9 @@
 	export default
 	{
 		components: { Sprite, SetupDb, Content, Auth },
+		metaInfo:{
+			title: 'Element'
+		},
 		computed:
 		{
 			/**
