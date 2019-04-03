@@ -4,7 +4,12 @@
 		@mouseup="endResize($event, columnDrug.col)">
 		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 			<div class="table-row no-hover">
-				<div class="table-item" v-for="column in table.columns" v-if="column.visible" :style="{ width: column.width + 'px', 'min-width': column.width + 'px' }">
+				<div
+					class="table-item"
+					v-for="column in table.columns"
+					v-if="column.visible"
+					:style="{ width: column.width + 'px', 'min-width': column.width + 'px' }"
+				>
 					<div class="table-item-img">
 						<img :src="column.em.type_info.iconPath" alt="">
 					</div>
@@ -343,7 +348,6 @@
 	}
 </script>
 <style lang="scss">
-
 	.table-item-img
 	{
 		width: 14px;
@@ -516,6 +520,7 @@
 			object-fit: contain;
 		}
 	}
+	// TODO убрать
 	.drug-col
 	{
 		width: 4px;
@@ -529,5 +534,14 @@
 		{
 			background-color: #e6e6e6;
 		}
+	}
+	.table__empty-field
+	{
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		line-height: normal;
+		color: rgba(103, 115, 135, 0.4);
+		cursor: pointer;
 	}
 </style>

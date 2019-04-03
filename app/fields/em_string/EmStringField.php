@@ -22,7 +22,7 @@ class EmStringField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval($this->fieldValue);
+		return strval(strip_tags($this->fieldValue));
 	}
 	/**
 	 * Сохранить значение

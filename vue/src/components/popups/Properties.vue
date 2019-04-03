@@ -1,5 +1,5 @@
 <template>
-	<div class="properties-popup" v-click-outside="closePropertiesPopup">
+	<div class="properties-popup">
 		<div class="properties-list">
 			<PropertyItem v-for="column in columns" :column="column"/>
 		</div>
@@ -10,17 +10,7 @@
 	export default
 	{
 		props: ['columns'],
-		components: { PropertyItem },
-		methods:
-		{
-			/**
-			 * Закрыть попап
-			 */
-			closePropertiesPopup()
-			{
-				this.$emit('closePropertiesPopup');
-			}
-		}
+		components: { PropertyItem }
 	}
 </script>
 <style lang="scss">

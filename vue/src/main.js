@@ -47,18 +47,26 @@ Vue.directive('click-outside',
 {
 	bind: function (el, binding, vnode)
 	{
-		el.clickOutsideEvent = function (event)
+		el.fisrtClick = true;
+		el.clickOutsideEvent = function(event)
 		{
-			if (!(el == event.target || el.contains(event.target)))
+			if(el.fisrtClick === true)
 			{
-				vnode.context[binding.expression](event);
+				el.fisrtClick = false;
+				return false;
+			}
+			if(!(el == event.target || el.contains(event.target)))
+			{
+				vnode.context[binding.expression](event,binding.arg);
+				event.stopPropagation();
 			}
 		};
-		document.body.addEventListener('click', el.clickOutsideEvent)
+		document.body.addEventListener('click', el.clickOutsideEvent);
 	},
-	unbind:function (el)
+	unbind:function(el)
 	{
-		document.body.removeEventListener('click', el.clickOutsideEvent)
+		document.body.removeEventListener('click', el.clickOutsideEvent);
+		el.clickOutsideEvent = null;
 	},
 });
 

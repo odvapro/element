@@ -15,18 +15,41 @@
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
 					<li>Views</li>
-					<li :class="{active: popups.isPropertiesPopupShow}" @click.stop="togglePopup('isPropertiesPopupShow')">
+					<li
+						:class="{active: popups.isPropertiesPopupShow}"
+						@click="openPopup('isPropertiesPopupShow')"
+					>
 						Properties
-						<Properties v-if="popups.isPropertiesPopupShow && propertiesPopupData" :columns="propertiesPopupData" v-click-outside="closePopups"/>
+						<Properties
+							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
+							:columns="propertiesPopupData"
+							v-click-outside:isPropertiesPopupShow="closePopup"
+						/>
 					</li>
 					<!-- #TODO popups -->
-					<li :class="{active: popups.isSortPopupShow}" @click.stop="togglePopup('isSortPopupShow')">
+					<li
+						:class="{active: popups.isSortPopupShow}"
+						@click="openPopup('isSortPopupShow')"
+					>
 						Sort
-						<SortPopup v-if="popups.isSortPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+						<SortPopup
+							v-if="popups.isSortPopupShow"
+							:columns="table.columns"
+							:tview="activeTview"
+							v-click-outside:isSortPopupShow="closePopup"
+						/>
 					</li>
-					<li :class="{active: popups.isFiltersPopupShow}" @click.stop="togglePopup('isFiltersPopupShow')">
+					<li
+						:class="{active: popups.isFiltersPopupShow}"
+						@click="openPopup('isFiltersPopupShow')"
+					>
 						Filter
-						<FiltersPopup v-if="popups.isFiltersPopupShow" :columns="table.columns" :tview="activeTview" v-click-outside="closePopups"/>
+						<FiltersPopup
+							v-if="popups.isFiltersPopupShow"
+							:columns="table.columns"
+							:tview="activeTview"
+							v-click-outside:isFiltersPopupShow="closePopup"
+						/>
 					</li>
 					<li class="index__points">
 						<svg width="19" height="2">
@@ -103,21 +126,17 @@
 			/**
 			 * Отобразить/Закрыть попап
 			 */
-			togglePopup(popupName)
+			openPopup(popupName)
 			{
-				for (let popup in this.popups)
-					if (this.popups[popup] != this.popups[popupName])
-						this.popups[popup] = false;
-
-				this.popups[popupName] = !this.popups[popupName];
+				this.popups[popupName] = true;
 			},
 			/**
 			 * Закрыть все попапы
 			 */
-			closePopups()
+			closePopup(event,popupName)
 			{
-				for (let popup in this.popups)
-					this.popups[popup] = false;
+				console.log(popupName)
+				this.popups[popupName] = false;
 			},
 			/**
 			 * Определить активную таблицу

@@ -1,5 +1,5 @@
 <template>
-	<div class="sort-popup__wrapper" @click.stop>
+	<div class="sort-popup__wrapper">
 		<div class="sort-popup__rows">
 			<div class="sort-popup__row" v-for="param, index in sortArray">
 				<div class="sort-popup__operators-wrapper">

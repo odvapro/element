@@ -23,6 +23,7 @@ class EmFileField extends FieldBase
 	 */
 	public function getValue()
 	{
+		$resArray = json_decode($this->fieldValue, true);
 		return json_decode($this->fieldValue, true);
 	}
 	/**

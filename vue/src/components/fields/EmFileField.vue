@@ -1,38 +1,37 @@
 <template>
-	<div class="em-file-item-col">
-		<div class="em-file-item-wrapper" v-for="item in dataField" v-if="dataField">
+	<div class="em-file-item-col" @click="openPopup()">
+		<div class="em-file-item-wrapper" v-for="item in dataField">
 			<img :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
 		</div>
-		<div class="em-file__add-button" @click.stop="togglePopup()">
-			<svg width="17" height="17">
-				<use xlink:href="#add-button"></use>
-			</svg>
-		</div>
-		<div class="em-file__upload-popup" @click.stop v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-file__upload-popup-head">
-				Add file
-			</div>
+		<template v-if="!dataField">
+			<span class="table__empty-field">Empty</span>
+		</template>
+		<div class="em-file__upload-popup"
+			@click v-if="showPopup"
+			v-click-outside="closePopup"
+		>
+			<div class="em-file__upload-popup-head">Add file</div>
 			<form id="ww">
-			<div class="em-file__upload-tab-wrapper">
-				<div class="em-file__upload-tabs-head">
-					<div class="em-file__upload-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
-				</div>
-				<div class="em-file__upload-tabs-content-wrapper">
-					<div class="ulpoad-tab-content" v-if="activeTab == 'Upload'">
-						<div class="upload-em-file-wrapper">
-							<div class="em-file-wrapper">
-								<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
-								<label for="file">Choose File</label>
+				<div class="em-file__upload-tab-wrapper">
+					<div class="em-file__upload-tabs-head">
+						<div class="em-file__upload-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
+					</div>
+					<div class="em-file__upload-tabs-content-wrapper">
+						<div class="ulpoad-tab-content" v-if="activeTab == 'Upload'">
+							<div class="upload-em-file-wrapper">
+								<div class="em-file-wrapper">
+									<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
+									<label for="file">Choose File</label>
+								</div>
+							</div>
+						</div>
+						<div class="em-file__upload-tab-content" v-if="activeTab == 'Upload by link'">
+							<div class="em-file__upload-tab-input-wrapper">
+								<input type="text" placeholder="Paste link" v-model="link" @change="uploadFile('link')">
 							</div>
 						</div>
 					</div>
-					<div class="em-file__upload-tab-content" v-if="activeTab == 'Upload by link'">
-						<div class="em-file__upload-tab-input-wrapper">
-							<input type="text" placeholder="Paste link" v-model="link" @change="uploadFile('link')">
-						</div>
-					</div>
 				</div>
-			</div>
 			</form>
 		</div>
 	</div>
@@ -106,9 +105,9 @@
 			/**
 			 * Закрыть/Открыть попап
 			 */
-			togglePopup()
+			openPopup()
 			{
-				this.showPopup = !this.showPopup;
+				this.showPopup = true;
 			},
 			/**
 			 * Закрыть попап
@@ -128,17 +127,18 @@
 	}
 </script>
 <style lang="scss">
-	.em-file__add-button
-	{
-		width: 17px;
-		height: 17px;
-		cursor: pointer;
-	}
 	.em-file-item-col
 	{
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
+		position: absolute;
+		left:0px;
+		top:0px;
+		height: 100%;
+		width:100%;
+		padding-left:10px;
+		cursor: pointer;
 	}
 	.em-file-item-wrapper
 	{

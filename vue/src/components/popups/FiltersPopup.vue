@@ -1,5 +1,5 @@
 <template>
-	<div class="filters-popup__wrapper" @click.stop>
+	<div class="filters-popup__wrapper">
 		<div class="filters-popup__rows">
 			<div class="filters-popup__row" v-for="filterItem, index in filter">
 				<div class="filters-popup__operators-wrapper">

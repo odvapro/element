@@ -1,5 +1,5 @@
 <template>
-	<div class="main-field__wrapper">
+	<div>
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
@@ -37,13 +37,3 @@
 		}
 	}
 </script>
-<style>
-	.main-field__wrapper
-	{
-		overflow: hidden;
-		display: flex;
-		align-items: center;
-		height: 100%;
-		width: 100%;
-	}
-</style>
