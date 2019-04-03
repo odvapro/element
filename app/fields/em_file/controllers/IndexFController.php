@@ -115,7 +115,7 @@ class IndexFController extends ControllerBase
 				[
 					"upName"    => $fileName . '.' . $exten,
 					"type"      => "image",
-					"path"      => "{$this->config->application->domain}{$this->config->application->baseUri}/{$shortPath}/",
+					"path"      => "{$this->config->application->baseUri}/{$shortPath}/",
 					"sizes"     =>
 					[
 						"small" => $smallImage,
@@ -177,7 +177,7 @@ class IndexFController extends ControllerBase
 
 				if (!empty($imageTypes[$fileType]))
 				{
-					$curFile = $this->config->application->domain . $this->config->application->baseUri . '/' . $localPath . $fileName . $imageTypes[$fileType];
+					$curFile = $this->config->application->baseUri . '/' . $localPath . $fileName . $imageTypes[$fileType];
 					$smallImage = $this->_resizeImage($fullPath, [ 'width' => 50, 'height' => 50, 'name' => 'small' ], $fileName . '50', $localPath, $imageTypes[$fileType]);
 					$thumbImage = $this->_resizeImage($fullPath, [ 'width' => 100, 'height' => 100, 'name' => 'thumb' ], $fileName . '100', $localPath, $imageTypes[$fileType]);
 
@@ -195,7 +195,7 @@ class IndexFController extends ControllerBase
 				}
 				else if (!empty($fileTypes[$fileType]))
 				{
-					$curFile = $this->config->application->domain . $this->config->application->baseUri . '/' . $localPath . $fileName . $fileTypes[$fileType];
+					$curFile = $this->config->application->baseUri . '/' . $localPath . $fileName . $fileTypes[$fileType];
 					$selectedItem[$fieldCode]['value'][] =
 					[
 						"upName"    => $fileName . $fileTypes[$fileType],
@@ -240,6 +240,6 @@ class IndexFController extends ControllerBase
 
 		$publicPath = "{$savePath}{$imageSize['name']}_{$newName}{$extension}";
 		$image->save(ROOT . $publicPath);
-		return "{$this->config->application->domain}{$this->config->application->baseUri}/{$publicPath}";
+		return "{$this->config->application->baseUri}/{$publicPath}";
 	}
 }

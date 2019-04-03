@@ -6,26 +6,26 @@
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<label class="auth-label">
 				<div class="auth-label-title">Login</div>
-				<input type="text" placeholder="Enter your login" v-model="user.login.value" :class="{error: user.login.error}" class="auth-form-input">
+				<input class="auth-form-input el-inp" type="text" placeholder="Enter your login" v-model="user.login.value" :class="{'el-inp--error': user.login.error}">
 				<span class="auth__error-text">{{user.login.error}}</span>
 			</label>
 			<label class="auth-label">
 				<div class="auth-label-title">Password</div>
-				<input type="password" placeholder="Enter your password" v-model="user.password.value" :class="{error: user.password.error}" class="auth-form-input">
+				<input class="auth-form-input el-inp" type="password" placeholder="Enter your password" v-model="user.password.value" :class="{'el-inp--error': user.password.error}">
 				<span class="auth__error-text">{{user.password.error}}</span>
 			</label>
 			<div class="auth-bottom-btns">
-				<button class="auth-fill-btn" @click="authUser()">Log In</button>
+				<button class="auth-fill-btn el-btn" @click="authUser()">Log In</button>
 				<button class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</button>
 			</div>
 		</div>
 		<div class="auth-form" v-if="activeForm == 'forgot'">
 			<label class="auth-label">
-				<div class="auth-label-title">login</div>
-				<input type="text" placeholder="Enter your login" class="auth-form-input">
+				<div class="auth-label-title">Login</div>
+				<input type="text" placeholder="Enter your login" class="auth-form-input el-inp">
 			</label>
 			<div class="auth-bottom-btns">
-				<button class="auth-fill-btn" @click="activeForm = 'sended'">Reset Password</button>
+				<button class="auth-fill-btn el-btn" @click="activeForm = 'sended'">Reset Password</button>
 				<button class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</button>
 			</div>
 		</div>
@@ -123,17 +123,7 @@ export default
 		justify-content: center;
 		align-items: center;
 	}
-	.auth-fill-btn
-	{
-		background: rgba(25, 28, 33, 0.7);
-		border-radius: 2px;
-		color: #fff;
-		font-size: 12px;
-		padding: 7px 11px;
-		border: none;
-		margin-bottom: 11px;
-		cursor: pointer;
-	}
+	.auth-fill-btn {margin-bottom: 11px; }
 	.auth-label
 	{
 		margin-bottom: 15px;
@@ -146,24 +136,7 @@ export default
 		margin-bottom: 7px;
 		font-size: 12px;
 	}
-	.auth-form-input
-	{
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		width: 100%;
-		height: 30px;
-		font-size: 10px;
-		padding: 0 10px;
-		&::placeholder
-		{
-			color: rgba(103, 115, 135, 0.7);
-		}
-		&.error
-		{
-			border: 1px solid rgba(208, 18, 70, 0.4);
-			border-radius: 2px;
-		}
-	}
+	.auth-form-input.el-inp {width: 100%; }
 	.auth-content-wrapper
 	{
 		display: flex;

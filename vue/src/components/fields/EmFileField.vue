@@ -6,33 +6,51 @@
 		<template v-if="!dataField">
 			<span class="table__empty-field">Empty</span>
 		</template>
-		<div class="em-file__upload-popup"
-			@click v-if="showPopup"
-			v-click-outside="closePopup"
-		>
-			<div class="em-file__upload-popup-head">Add file</div>
-			<form id="ww">
+		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
+			<div class="em-file__edit-item" v-for="item in dataField">
+				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
+				<a href="#">remove</a>
+			</div>
+			<template v-if="!dataField">
+				<div class="em-file__empty-pop">
+					<span class="table__empty-field">No files</span>
+				</div>
+			</template>
+			<button class="el-gbtn" @click="openSubPopup()">Add file</button>
+			<div class="em-file__upload-popup"
+				v-if="showSubPopup"
+				v-click-outside="closeSubPopup"
+			>
 				<div class="em-file__upload-tab-wrapper">
 					<div class="em-file__upload-tabs-head">
-						<div class="em-file__upload-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
+						<div
+							class="em-file__upload-tab-item"
+							@click="setActiveTab(item)"
+							v-for="item in tabs"
+							:class="{active: item.active}"
+						>{{item.name}}</div>
 					</div>
 					<div class="em-file__upload-tabs-content-wrapper">
-						<div class="ulpoad-tab-content" v-if="activeTab == 'Upload'">
-							<div class="upload-em-file-wrapper">
-								<div class="em-file-wrapper">
-									<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
-									<label for="file">Choose File</label>
-								</div>
-							</div>
+						<div class="em-file__file-tab" v-if="activeTab == 'Upload'">
+							<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
+							<label class="el-btn" for="file">Choose File</label>
 						</div>
-						<div class="em-file__upload-tab-content" v-if="activeTab == 'Upload by link'">
-							<div class="em-file__upload-tab-input-wrapper">
-								<input type="text" placeholder="Paste link" v-model="link" @change="uploadFile('link')">
-							</div>
+						<div
+							class="em-file__link-tab"
+							v-if="activeTab == 'Upload by link'"
+						>
+							<input
+								class="el-inp em-file__embed-input"
+								type="text"
+								placeholder="Paste link"
+								v-model="link"
+								@change="uploadFile('link')"
+							/>
+							<button class="el-btn">Embed Link</button>
 						</div>
 					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 </template>
@@ -47,6 +65,7 @@
 		{
 			return {
 				showPopup: false,
+				showSubPopup: false,
 				dataField: false,
 				tabs:
 				[
@@ -110,11 +129,25 @@
 				this.showPopup = true;
 			},
 			/**
+			 * Закрыть/Открыть попап
+			 */
+			openSubPopup()
+			{
+				this.showSubPopup = true;
+			},
+			/**
 			 * Закрыть попап
 			 */
 			closePopup()
 			{
 				this.showPopup = false;
+			},
+			/**
+			 * Закрыть попап
+			 */
+			closeSubPopup()
+			{
+				this.showSubPopup = false;
 			}
 		},
 		/**
@@ -157,24 +190,15 @@
 	{
 		background: #FFFFFF;
 		border: 1px solid rgba(103, 115, 135, 0.1);
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border-radius: 2px;
 		width: 326px;
 		position: absolute;
+		padding-top:5px;
 		z-index: 5;
-		top: -1px;
-		left: -1px;
-	}
-	.em-file__upload-popup-head
-	{
-		height: 49px;
-		background: rgba(103, 115, 135, 0.1);
-		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		padding: 0 9px;
-		color: rgba(25, 28, 33, 0.4);
-		font-size: 10px;
-		display: flex;
-		align-items: center;
-		margin-bottom: 5px;
+	    top:calc(100% + 5px);
+	    left: 50%;
+	    margin-left:-163px;
 	}
 	.em-file__upload-tab-item
 	{
@@ -186,15 +210,8 @@
 		margin-right: 8px;
 		border-bottom: 2px solid transparent;
 		cursor: pointer;
-		&:last-child
-		{
-			margin-right: unset;
-		}
-		&.active
-		{
-			border-bottom: 2px solid #191C21;
-			color: #191C21;
-		}
+		&:last-child {margin-right: unset; }
+		&.active {border-bottom: 2px solid #191C21; color: #191C21; }
 	}
 	.em-file__upload-tabs-head
 	{
@@ -203,33 +220,15 @@
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
 	}
-	.em-file__upload-tab-wrapper
-	{
-		padding: 0 9px;
-	}
+	.em-file__upload-tab-wrapper {padding: 0 9px; }
 	.em-file__upload-tabs-content-wrapper
 	{
-		height: 68px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
-	.em-file__upload-tab-input-wrapper
-	{
-		background: #FFFFFF;
-		border-radius: 2px;
-		height: 30px;
-		min-width: 255px;
-		input
-		{
-			border: 1px solid rgba(103, 115, 135, 0.1);
-			font-size: 10px;
-			padding: 0 11px;
-			width: 100%;
-			height: 100%;
-			box-sizing: border-box;
-		}
-	}
+	.em-file__link-tab{width:255px;margin:0 auto; text-align: right; padding:22px 0;}
+	.em-file__embed-input {width:255px; margin-bottom: 10px;}
 	.em-file
 	{
 		width: 0.1px;
@@ -239,21 +238,42 @@
 		position: absolute;
 		z-index: -1;
 	}
-	.em-file + label
-	{
-		font-size: 12px;
-		padding: 7px 11px;
-		line-height: 14px;
-		color: white;
-		background: rgba(25, 28, 33, 0.7);
-		border-radius: 2px;
-		display: inline-block;
-		cursor: pointer;
-	}
+	.em-file__file-tab{padding:22px 0; }
 
-	.em-file:focus + label,
-	.em-file + label:hover
+	.em-file__edit
 	{
-		background: rgba(25, 28, 33, 0.5);
+		position: absolute;
+		top:-5px;
+		left:-5px;
+		width:calc(100% + 10px);
+		min-height: 60px;
+		background: #fff;
+		padding-left:10px;
+		z-index: 1;
+		border-radius: 2px;
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		padding-bottom:10px;
+	}
+	.em-file__empty-pop{height: 50px;line-height: 50px;}
+	.em-file__edit-item
+	{
+		padding:7px 0;
+		display: flex;
+		word-break: break-word;
+		align-items: center;
+		a{
+		    color: rgba(25, 28, 33, 0.4);
+		    text-decoration: none;
+		    font-size: 12px;
+		    &:hover{text-decoration: underline;}
+		}
+	}
+	.em-file__edit-attach
+	{
+		width:25px;
+		margin-right: 10px;
+		border:1px solid rgba(103, 115, 135, 0.3);
+		border-radius: 2px;
 	}
 </style>

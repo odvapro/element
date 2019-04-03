@@ -23,8 +23,17 @@ class EmFileField extends FieldBase
 	 */
 	public function getValue()
 	{
+		$domain = $this->di->get('config')->application->domain;
 		$resArray = json_decode($this->fieldValue, true);
-		return json_decode($this->fieldValue, true);
+		if(empty($resArray)) return false;
+
+		foreach ($resArray as &$image)
+		{
+			$image['path'] = $domain.$image['path'];
+			foreach ($image['sizes'] as &$imageSize)
+				$imageSize = $domain.$imageSize;
+		}
+		return $resArray;
 	}
 	/**
 	 * Сохранить значение
