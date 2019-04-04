@@ -77,6 +77,7 @@ class TableWorkerCest
 		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -122,6 +123,8 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
+
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' => ['from' => 'testTable']
@@ -129,9 +132,8 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -143,9 +145,8 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -185,9 +186,8 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -228,9 +228,8 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -254,13 +253,13 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select');
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
+		// тест
 		$I->sendGET('/el/select',
 		[
 			'select' =>
@@ -284,21 +283,28 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
+		// тест
 		$I->sendGET('/el/select',
 		[
-			'select' =>
-			[
-				'from' => 'testTable'
-			]
+			'select' => ['from' => 'testTable']
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+
+		// тест на лимит
+		$I->sendGET('/el/select',
+		[
+			'select' => ['from' => 'products'],
+			'limit'=>10
+		]);
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
-		$I->seeResponseJsonMatchesJsonPath('$.result.items');
+		$resultResp = $I->grabResponse();
+		$resultResp = json_decode($resultResp,true);
+		$I->assertEquals(($resultResp['result']['total_pages'] > 1), true);
 	}
 
 	public function update(ApiTester $I)

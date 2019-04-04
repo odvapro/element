@@ -115,10 +115,11 @@ const table =
 		/**
 		 * задать страницу
 		 */
-		async selectPage(store, page)
+		async selectPage(store, pageParams)
 		{
 			var newParams = Object.assign(store.state.selectRequest, {});
-			newParams.select.page = page;
+			newParams.select.page = pageParams.page;
+			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
 

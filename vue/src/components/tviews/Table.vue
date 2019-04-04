@@ -331,11 +331,11 @@
 			/**
 			 * Эмит с пагинации. Задает текущую страницу
 			 */
-			selectPage(page)
+			selectPage(pageParams)
 			{
-				this.$store.dispatch('selectPage', page);
-				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${page}`);
-			}
+				this.$store.dispatch('selectPage', pageParams);
+				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${pageParams.page}`);
+			},
 		},
 		/**
 		 * Хук при загразке страницы

@@ -3,6 +3,9 @@
 		<ul>
 			<li v-for="item in getPaginatorArr" :class="{active: current == item, points: item == '...'}" @click="setPage(item)">{{(item != '...') ? item : ''}}</li>
 		</ul>
+		<div class="pagination__text">
+			Elements per page - <span contenteditable="true" @input="setLimit">20</span>*
+		</div>
 	</div>
 </template>
 <script>
@@ -12,7 +15,9 @@
 		data()
 		{
 			return {
-				range: 4,
+				range : 4,
+				limit : 20,
+				page  : 1
 			}
 		},
 		computed:
@@ -78,7 +83,14 @@
 				if(page == '...' || page == this.current)
 					return false;
 
-				this.$emit('change', page);
+				this.page = page;
+				this.$emit('change', {page:page,limit:this.limit});
+			},
+			setLimit(event)
+			{
+				this.page  = 1;
+				this.limit = event.target.innerText;
+				this.$emit('change', {page :1,limit:this.limit});
 			}
 		},
 	}
@@ -87,6 +99,8 @@
 	.pagination-wrapper
 	{
 		padding: 14px 0;
+		display: flex;
+		align-items: center;
 		ul
 		{
 			display: flex;
@@ -123,5 +137,13 @@
 				}
 			}
 		}
+	}
+	.pagination__text
+	{
+		font-style: normal;
+		font-weight: 500;
+		font-size: 12px;
+		color: rgba(25, 28, 33, 0.7);
+		margin-left: 16px;
 	}
 </style>
