@@ -10,17 +10,22 @@ var router = new Router({
 		{
 			path: '/',
 			name: 'index',
-			component: () => import(/* webpackChunkName: "about" */ './pages/index.vue')
+			component: () => import('./pages/index.vue')
 		},
 		{
 			path: '/table/:tableCode/tview/:tview/page/:page/',
 			name: 'table',
-			component: () => import(/* webpackChunkName: "about" */ './pages/table/index.vue')
+			component: () => import('./pages/table/index.vue')
+		},
+		{
+			path: '/table/:tableCode/tview/:tview/page/:page/limit/:limit/',
+			name: 'table',
+			component: () => import('./pages/table/index.vue')
 		},
 		{
 			path: '/settings/',
 			name: 'settings',
-			component: () => import(/* webpackChunkName: "about" */ './pages/settings.vue')
+			component: () => import('./pages/settings.vue')
 		},
 	]
 });

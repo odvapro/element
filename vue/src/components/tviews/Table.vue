@@ -60,6 +60,7 @@
 			v-if="tableContent.total_pages > 1"
 			:maxPage="tableContent.total_pages"
 			:current="tableContent.current"
+			:currentLimit="tableContent.limit"
 			@change="selectPage"
 		/>
 	</div>
@@ -273,23 +274,26 @@
 			 */
 			async getTableContent()
 			{
-				var select = [];
-				var where  = [];
-				var sort   = [];
+				var requestParams = {
+					select : {},
+					where  : [],
+					order  : [],
+				};
 
 				if (typeof this.tview.filter.operation != 'undefined')
-					where = this.tview.filter;
+					requestParams.where = this.tview.filter;
 
 				if (typeof this.tview.sort != 'undefined')
-					sort = this.tview.sort;
+					requestParams.order = this.tview.sort;
 
-				select.from = this.$route.params.tableCode;
-				select.page = this.$route.params.page;
-				select.tview = this.$route.params.tview;
-				select.where = where;
-				select.order = sort;
+				requestParams.select.from = this.$route.params.tableCode;
+				requestParams.select.page = this.$route.params.page;
+				requestParams.select.tview = this.$route.params.tview;
 
-				await this.$store.dispatch('select', {select: select});
+				if(this.$route.params.limit)
+					requestParams.limit = this.$route.params.limit
+
+				await this.$store.dispatch('select', requestParams);
 			},
 			/**
 			 * Начальные значения для изменения ширины колонки
@@ -334,7 +338,7 @@
 			selectPage(pageParams)
 			{
 				this.$store.dispatch('selectPage', pageParams);
-				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${pageParams.page}`);
+				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${pageParams.page}/limit/${pageParams.limit}`);
 			},
 		},
 		/**

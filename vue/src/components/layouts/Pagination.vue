@@ -4,19 +4,19 @@
 			<li v-for="item in getPaginatorArr" :class="{active: current == item, points: item == '...'}" @click="setPage(item)">{{(item != '...') ? item : ''}}</li>
 		</ul>
 		<div class="pagination__text">
-			Elements per page - <span contenteditable="true" @input="setLimit">20</span>*
+			Elements per page - <span contenteditable="true" @input="setLimit">{{currentLimit}}</span>*
 		</div>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['current', 'maxPage'],
+		props: ['current', 'maxPage', 'currentLimit'],
 		data()
 		{
 			return {
-				range : 4,
-				limit : 20,
+				range : 2,
+				limit : (this.currentLimit) ? this.currentLimit : 20,
 				page  : 1
 			}
 		},
@@ -89,7 +89,11 @@
 			setLimit(event)
 			{
 				this.page  = 1;
-				this.limit = event.target.innerText;
+
+				if(+event.target.innerText <= 0)
+					return false;
+
+				this.limit = +event.target.innerText;
 				this.$emit('change', {page :1,limit:this.limit});
 			}
 		},
