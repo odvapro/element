@@ -42,7 +42,7 @@
 
 				document.addEventListener('mousedown', function(event)
 				{
-					if (event.target.classList.value != 'drug')
+					if (event.target.classList.value != 'sidebar_drug')
 						return false;
 
 					self.points.isDrug = true;

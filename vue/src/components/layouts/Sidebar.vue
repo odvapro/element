@@ -61,7 +61,7 @@
 				</div>
 			</a>
 		</div>
-		<div class="drug"></div>
+		<div class="sidebar_drug"></div>
 	</div>
 </template>
 <script>
@@ -136,13 +136,13 @@
 		color: rgba(25, 28, 33, 0.7);
 		display: none;
 	}
-	.drug
+	.sidebar_drug
 	{
 		width: 4px;
 		height: 100%;
 		position: absolute;
 		top: 0;
-		right: -2px;
+		right: 0px;
 		cursor: col-resize;
 		transition: all 0.3s;
 		&:hover
@@ -158,8 +158,12 @@
 	.sidebar-wrapper
 	{
 		background: rgba(103, 115, 135, 0.1);
-		position: relative;
-		padding-bottom: 112px;
+		height: 100vh;
+		position: sticky;
+		top: 0px;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
 	}
 	.sidebar-options-list
 	{
@@ -337,8 +341,10 @@
 	.sidebar-footer
 	{
 		padding: 40px 0;
-		position: absolute;
-		bottom: 0;
+		position: sticky;
+		bottom: 0px;
 		width: 100%;
+		background:#F0F1F3;
 	}
+	.sidebar-tables-wrapper{flex-grow: 1;}
 </style>
