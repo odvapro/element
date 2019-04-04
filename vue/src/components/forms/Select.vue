@@ -80,6 +80,7 @@
 		line-height:14px;
 		letter-spacing:0em;
 		color:rgba(103,115,135,1);
+		white-space: nowrap;
 	}
 	.select__trigger
 	{

@@ -3,31 +3,35 @@
 		<div class="filters-popup__rows">
 			<div class="filters-popup__row" v-for="filterItem, index in filter">
 				<div class="filters-popup__operators-wrapper">
-					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'binSelect')" v-if="index > 0">
-						{{defaultOper}}
-						<div class="filters-popup__select-column-name" v-if="filterItem.select.binSelect">
-							<ul>
-								<li v-for="oper in binOperations" @click="defaultOper = oper">{{oper}}</li>
-							</ul>
-						</div>
-					</div>
-					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'columnSelect')">
-						{{filterItem.name ? filterItem.name : filterItem.code}}
-						<div class="filters-popup__select-column-name" v-if="filterItem.select.columnSelect">
-							<ul>
-								<li v-for="column in columns" @click="filterItem.code = column.field; filterItem.name = column.em.name;">{{column.em.name ? column.em.name : column.field}}</li>
-							</ul>
-						</div>
-					</div>
-					<div class="filters-popup__select-item" @click="openSelect(filterItem, 'operationSelect')">
-						{{filterItem.operation}}
-						<div class="filters-popup__select-column-name" v-if="filterItem.select.operationSelect">
-							<ul>
-								<li v-for="operationValue in operations" @click="filterItem.operation = operationValue">{{operationValue}}</li>
-							</ul>
-						</div>
-					</div>
-					<input type="text" v-model="filterItem.value" class="filters-popup__select-item-input" placeholder="value">
+					<Select
+						class="filters-popup__select"
+						:defaultText="defaultOper"
+						v-if="index > 0"
+					>
+						<SelectOption
+							v-for="oper in binOperations"
+							@click.native="selectLogic(oper)"
+							:key="oper"
+							:class="{active:defaultOper == oper}"
+						>{{ oper }}</SelectOption>
+					</Select>
+					<Select class="filters-popup__select" :defaultText="filterItem.name ? filterItem.name : filterItem.code">
+						<SelectOption
+							v-for="column in columns"
+							@click.native="selectField(filterItem,column)"
+							:key="column.field"
+							:class="{active:filterItem.code == column.field}"
+						>{{column.em.name ? column.em.name : column.field}}</SelectOption>
+					</Select>
+					<Select class="filters-popup__select" :defaultText="filterItem.operation">
+						<SelectOption
+							v-for="operationValue in operations"
+							@click.native="selectOperation(filterItem,operationValue)"
+							:key="operationValue"
+							:class="{active:filterItem.operation == operationValue}"
+						>{{ operationValue }}</SelectOption>
+					</Select>
+					<input type="text" v-model="filterItem.value" class="filters-popup__filter-input el-inp" placeholder="Value">
 				</div>
 				<div class="filters-popup__delete-row-icon-wrapper" @click.stop="deleteRowFilter(index)">
 					<div class="filters-popup__delete-row-icon">
@@ -42,9 +46,12 @@
 	</div>
 </template>
 <script>
+	import Select from '@/components/forms/Select.vue';
+	import SelectOption from '@/components/forms/SelectOption.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
+		components: { Select, SelectOption },
 		mixins: [TableWork],
 		props: ['columns', 'tview'],
 		/**
@@ -86,7 +93,6 @@
 
 					var self = this;
 
-
 					if (!this.sendRequest)
 						return false;
 
@@ -104,6 +110,25 @@
 		},
 		methods:
 		{
+			/**
+			 * Выбор филда для фильтрации
+			 */
+			selectField(filterItem,column)
+			{
+				filterItem.code = column.field;
+				filterItem.name = column.em.name;
+			},
+			/**
+			 * Выбор операции
+			 */
+			selectOperation(filterItem,operationValue)
+			{
+				filterItem.operation = operationValue
+			},
+			selectLogic(oper)
+			{
+				this.defaultOper = oper;
+			},
 			/**
 			 * Сохранить фильтры
 			 */
@@ -175,13 +200,6 @@
 			deleteRowFilter(indexRow)
 			{
 				this.filter.splice(indexRow, 1);
-			},
-			/**
-			 * Открыть селект
-			 */
-			openSelect(filterItem, select)
-			{
-				filterItem.select[select] = !filterItem.select[select];
 			},
 			/**
 			 * Достать название колонки по коду
@@ -277,57 +295,6 @@
 		background-color: #fff;
 		transform: translate(calc(50% - 30px));
 	}
-	.filters-popup__select-item
-	{
-		white-space: nowrap;
-		padding: 6px 30px 6px 10px;
-		position: relative;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		margin-right: 10px;
-		&:after
-		{
-			content: '';
-			width: 7px;
-			height: 7px;
-			position: absolute;
-			border-bottom: 1px solid #677387;
-			border-right: 1px solid #677387;
-			transform: rotate(45deg);
-			right: 10px;
-			top: calc(50% - 7px);
-		}
-	}
-	.filters-popup__select-item-input
-	{
-		width: 80px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		padding: 6px 10px;
-		margin-right: 10px;
-		color: #677387;
-		&::placeholder
-		{
-			color: rgba(103, 115, 135, 0.4);
-		}
-	}
-	.filters-popup__select-column-name
-	{
-		position: absolute;
-		top: calc(100% + 5px);
-		left: 0;
-		padding: 5px 0;
-		min-width: 120px;
-		z-index: 5;
-		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-		border: 1px solid rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		background-color: #fff;
-		ul li
-		{
-			margin: 0;
-			line-height: 18px;
-			white-space: nowrap;
-		}
-	}
+	.filters-popup__filter-input {width: 80px; margin-right: 10px; }
+	.filters-popup__select{margin-right: 10px;}
 </style>

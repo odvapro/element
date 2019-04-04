@@ -18,19 +18,11 @@
 					<Select :defaultText="sortLine.default" class="sort-popup__select">
 						<SelectOption
 							v-for="sortItem, sortKey in sortValues"
+							:key="sortKey"
 							:class="{active:sortLine.default == sortItem}"
 							@click.native="selectSorting(sortLine,sortKey,sortItem)"
 						>{{sortItem}}</SelectOption>
 					</Select>
-					<!-- <div class="" @click="param.popups.isOpenSelectSort = !param.popups.isOpenSelectSort">
-						{{param.default}}
-						<div class="" v-if="param.popups.isOpenSelectSort">
-							<ul>
-								<li v-for="sortItem, sortKey in sortValues"
-									@click="param.selectedSort = sortKey; param.default = sortItem;">{{sortItem}}</li>
-							</ul>
-						</div>
-					</div> -->
 				</div>
 				<div class="sort-popup__delete-row-icon-wrapper" @click.stop="deleteRowSort(sortLineIndex)">
 					<div class="sort-popup__delete-row-icon">
@@ -50,7 +42,7 @@
 	export default
 	{
 		props: ['tview', 'columns'],
-		components: { Select, SelectOption},
+		components: { Select, SelectOption },
 		/**
 		 * Глобальные переменные страницы
 		 */
