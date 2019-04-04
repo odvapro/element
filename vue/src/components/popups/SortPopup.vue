@@ -1,26 +1,38 @@
 <template>
 	<div class="sort-popup__wrapper">
 		<div class="sort-popup__rows">
-			<div class="sort-popup__row" v-for="param, index in sortArray">
+			<div class="sort-popup__row" v-for="sortLine, sortLineIndex in sortArray">
 				<div class="sort-popup__operators-wrapper">
-					<div class="sort-popup__select-item" @click="param.popups.isOpenSelectColumn = !param.popups.isOpenSelectColumn">
-						{{param.selectedColumn.name ? param.selectedColumn.name : param.selectedColumn.code}}
-						<div class="sort-popup__select-column-name" v-if="param.popups.isOpenSelectColumn">
-							<ul>
-								<li v-for="column in columns" @click="param.selectedColumn.code = column.field; param.selectedColumn.name = column.em.name">{{!column.em.name ? column.field : column.em.name}}</li>
-							</ul>
-						</div>
-					</div>
-					<div class="sort-popup__select-item" @click="param.popups.isOpenSelectSort = !param.popups.isOpenSelectSort">
+					<Select
+						class="sort-popup__select"
+						:defaultText="sortLine.selectedColumn.name ? sortLine.selectedColumn.name : sortLine.selectedColumn.code"
+					>
+						<SelectOption
+							v-for="column in columns"
+							:value="column.field"
+							:key="column.field"
+							@click.native="selectCol(sortLine,column)"
+							:class="{active:column.field == sortLine.selectedColumn.code }"
+						>{{!column.em.name ? column.field : column.em.name}}</SelectOption>
+					</Select>
+					<Select :defaultText="sortLine.default" class="sort-popup__select">
+						<SelectOption
+							v-for="sortItem, sortKey in sortValues"
+							:class="{active:sortLine.default == sortItem}"
+							@click.native="selectSorting(sortLine,sortKey,sortItem)"
+						>{{sortItem}}</SelectOption>
+					</Select>
+					<!-- <div class="" @click="param.popups.isOpenSelectSort = !param.popups.isOpenSelectSort">
 						{{param.default}}
-						<div class="sort-popup__select-column-name" v-if="param.popups.isOpenSelectSort">
+						<div class="" v-if="param.popups.isOpenSelectSort">
 							<ul>
-								<li v-for="sortItem, sortKey in sortValues" @click="param.selectedSort = sortKey; param.default = sortItem;">{{sortItem}}</li>
+								<li v-for="sortItem, sortKey in sortValues"
+									@click="param.selectedSort = sortKey; param.default = sortItem;">{{sortItem}}</li>
 							</ul>
 						</div>
-					</div>
+					</div> -->
 				</div>
-				<div class="sort-popup__delete-row-icon-wrapper" @click.stop="deleteRowSort(index)">
+				<div class="sort-popup__delete-row-icon-wrapper" @click.stop="deleteRowSort(sortLineIndex)">
 					<div class="sort-popup__delete-row-icon">
 						<svg width="12" height="12">
 							<use xlink:href="#plus-white"></use>
@@ -29,13 +41,16 @@
 				</div>
 			</div>
 		</div>
-		<button class="sort-popup__add-view" @click="addSortRow">Add view</button>
+		<button class="el-gbtn" @click="addSortRow">Add sort</button>
 	</div>
 </template>
 <script>
+	import Select from '@/components/forms/Select.vue';
+	import SelectOption from '@/components/forms/SelectOption.vue';
 	export default
 	{
 		props: ['tview', 'columns'],
+		components: { Select, SelectOption},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -81,6 +96,22 @@
 		},
 		methods:
 		{
+			/**
+			 * Выбор колонки
+			 */
+			selectCol(sortLine,column)
+			{
+				sortLine.selectedColumn.code = column.field;
+				sortLine.selectedColumn.name = column.em.name;
+			},
+			/**
+			 * Выбор сортировки
+			 */
+			selectSorting(sortLine,sortKey,sortItem)
+			{
+				sortLine.selectedSort = sortKey;
+				sortLine.default      = sortItem;
+			},
 			/**
 			 * Создать строку сортировки для отправки в бд
 			 */
@@ -243,87 +274,14 @@
 		top: calc(100% + 5px);
 		right: 0;
 		padding: 15px;
-		min-width: 320px;
 		z-index: 2;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		background-color: #fff;
+		width:auto;
+		min-width: 200px;
+		transform: translate(calc(50% - 11px));
 	}
-	.sort-popup__add-view
-	{
-		background-color: rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		border: none;
-		padding: 6px 10px;
-		font-size: 12px;
-		color: #677387;
-		cursor: pointer;
-	}
-	.sort-popup__select-item-input
-	{
-		width: 80px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		padding: 6px 10px;
-		margin-right: 10px;
-		color: #677387;
-		&::placeholder
-		{
-			color: rgba(103, 115, 135, 0.4);
-		}
-	}
-	.sort-popup__select-item
-	{
-		white-space: nowrap;
-		padding: 6px 30px 6px 10px;
-		position: relative;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		margin-right: 10px;
-		&:after
-		{
-			content: '';
-			width: 7px;
-			height: 7px;
-			position: absolute;
-			border-bottom: 1px solid #677387;
-			border-right: 1px solid #677387;
-			transform: rotate(45deg);
-			right: 10px;
-			top: calc(50% - 7px);
-		}
-	}
-	.sort-popup__select-item-input
-	{
-		width: 80px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		padding: 6px 10px;
-		margin-right: 10px;
-		color: #677387;
-		&::placeholder
-		{
-			color: rgba(103, 115, 135, 0.4);
-		}
-	}
-	.sort-popup__select-column-name
-	{
-		position: absolute;
-		top: calc(100% + 5px);
-		left: 0;
-		padding: 5px 0;
-		min-width: 120px;
-		z-index: 5;
-		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-		border: 1px solid rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		background-color: #fff;
-		ul li
-		{
-			margin: 0;
-			line-height: 18px;
-			white-space: nowrap;
-		}
-	}
+	.sort-popup__select{margin-right: 10px;}
 </style>

@@ -14,8 +14,9 @@
 			</div>
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
-					<li>Views</li>
+					<li class="index__menu-item">Views</li>
 					<li
+						class="index__menu-item"
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
@@ -29,6 +30,7 @@
 					<!-- #TODO popups -->
 					<li
 						:class="{active: popups.isSortPopupShow}"
+						class="index__menu-item"
 						@click="openPopup('isSortPopupShow')"
 					>
 						Sort
@@ -42,6 +44,7 @@
 					<li
 						:class="{active: popups.isFiltersPopupShow}"
 						@click="openPopup('isFiltersPopupShow')"
+						class="index__menu-item"
 					>
 						Filter
 						<FiltersPopup
@@ -51,7 +54,7 @@
 							v-click-outside:isFiltersPopupShow="closePopup"
 						/>
 					</li>
-					<li class="index__points">
+					<li class="index__points index__menu-item">
 						<svg width="19" height="2">
 							<use xlink:href="#points"></use>
 						</svg>
@@ -135,7 +138,6 @@
 			 */
 			closePopup(event,popupName)
 			{
-				console.log(popupName)
 				this.popups[popupName] = false;
 			},
 			/**
@@ -219,20 +221,6 @@
 		padding-right: 6px;
 		display: flex;
 		align-items: center;
-		li
-		{
-			color: rgba(25, 28, 33, 0.7);
-			font-size: 12px;
-			margin-right: 5px;
-			cursor: pointer;
-			position: relative;
-			padding: 5px 8px;
-			&.active, &:hover
-			{
-				background-color: rgba(103, 115, 135, 0.1);
-				border-radius: 2px;
-			}
-		}
 		.index__points
 		{
 			position: relative;
@@ -248,6 +236,20 @@
 				height: 100%;
 				object-fit: contain;
 			}
+		}
+	}
+	.index__menu-item
+	{
+		color: rgba(25, 28, 33, 0.7);
+		font-size: 12px;
+		margin-right: 5px;
+		cursor: pointer;
+		position: relative;
+		padding: 5px 8px;
+		&.active, &:hover
+		{
+			background-color: rgba(103, 115, 135, 0.1);
+			border-radius: 2px;
 		}
 	}
 	.index__head-add-btn

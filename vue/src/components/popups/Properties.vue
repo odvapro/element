@@ -18,12 +18,13 @@
 	{
 		position: absolute;
 		top: calc(100% + 5px);
-		left: 0;
+		right: 0;
 		z-index: 2;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
-		min-width: 193px;
+		min-width: 200px;
 		background-color: #fff;
+		transform: translate(calc(50% - 40px));
 	}
 </style>

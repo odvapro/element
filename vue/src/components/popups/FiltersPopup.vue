@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-		<button class="filters-popup__add-filter" @click="addFilterRow">Add filter</button>
+		<button class="el-gbtn" @click="addFilterRow">Add filter</button>
 	</div>
 </template>
 <script>
@@ -269,22 +269,13 @@
 		top: calc(100% + 5px);
 		right: 0;
 		padding: 15px;
-		min-width: 320px;
+		min-width: 200px;
 		z-index: 2;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		background-color: #fff;
-	}
-	.filters-popup__add-filter
-	{
-		background-color: rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		border: none;
-		padding: 6px 10px;
-		font-size: 12px;
-		color: #677387;
-		cursor: pointer;
+		transform: translate(calc(50% - 30px));
 	}
 	.filters-popup__select-item
 	{
