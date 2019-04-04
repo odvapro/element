@@ -1,7 +1,7 @@
 <template>
 	<div class="properties-popup">
 		<div class="properties-list">
-			<PropertyItem v-for="column in columns" :column="column"/>
+			<PropertyItem v-for="column in columns" :key="column.field" :column="column"/>
 		</div>
 	</div>
 </template>
