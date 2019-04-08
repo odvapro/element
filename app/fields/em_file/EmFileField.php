@@ -35,11 +35,12 @@ class EmFileField extends FieldBase
 		}
 		return $resArray;
 	}
+
 	/**
 	 * Сохранить значение
 	 */
 	public function saveValue()
 	{
-
+		return $this->fieldValue;
 	}
 }

@@ -4,6 +4,31 @@ include ROOT . '/app/library/Image.php';
 
 class IndexFController extends ControllerBase
 {
+	public $imageTypes = [
+		'image/jpeg'  => '.jpeg',
+		'image/png'   => '.png',
+		'image/gif'   => '.gif',
+		'image/pjpeg' => '.jpeg',
+	];
+
+	public $fileTypes = [
+		'application/msword'            => '.doc',
+		'text/plain'                    => '.txt',
+		'application/pdf'               => '.pdf',
+		'application/mspowerpoint'      => '.ppt',
+		'application/xml'               => '.xml',
+		'text/xml'                      => '.xml',
+		'application/powerpoint'        => '.ppt',
+		'application/vnd.ms-powerpoint' => '.ppt',
+		'application/x-mspowerpoint'    => '.ppt',
+		'application/plain'             => '.txt',
+		'application/zip'               => '.zip',
+		'multipart/x-zip'               => '.zip',
+		'application/x-zip-compressed'  => '.zip',
+		'application/x-compressed'      => '.zip',
+		'application/x-compress'        => '.zip'
+	];
+
 	/**
 	 * Загрузить файл на сервер
 	 * @return json
@@ -34,13 +59,14 @@ class IndexFController extends ControllerBase
 				]
 			]
 		];
-		$selectedItem = $this->element->select($select)[0];
+		$selectedItem = $this->eldb->select($select)[0];
 
 		if (empty($selectedItem))
 			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
 
 		if(!isset($selectedItem[$fieldCode]))
 			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
+		$fieldDBValue = json_decode($selectedItem[$fieldCode],true);
 
 		$emField = EmTypes::findFirst([
 			'field = ?0 and table = ?1',
@@ -55,44 +81,7 @@ class IndexFController extends ControllerBase
 		if (empty($emField->settings['path']))
 			return $this->jsonResult(['success' => false, 'message' => 'field settings not found']);
 
-		$imageTypes = [
-			'image/jpeg'                    => '.jpeg',
-			'image/png'                     => '.png',
-			'image/gif'                     => '.gif',
-			'image/pjpeg'                   => '.jpeg',
-		];
-
-		$fileTypes = [
-			'application/msword'            => '.doc',
-			'text/plain'                    => '.txt',
-			'application/pdf'               => '.pdf',
-			'application/mspowerpoint'      => '.ppt',
-			'application/xml'               => '.xml',
-			'text/xml'                      => '.xml',
-			'application/powerpoint'        => '.ppt',
-			'application/vnd.ms-powerpoint' => '.ppt',
-			'application/x-mspowerpoint'    => '.ppt',
-			'application/plain'             => '.txt',
-			'application/zip'               => '.zip',
-			'multipart/x-zip'               => '.zip',
-			'application/x-zip-compressed'  => '.zip',
-			'application/x-compressed'      => '.zip',
-			'application/x-compress'        => '.zip'
-		];
-
-		$imageSizes = [
-			[
-				'width'  => 50,
-				'height' => 50,
-				'name'   => 'small'
-			],
-			[
-				'width'  => 100,
-				'height' => 100,
-				'name'   => 'thumb'
-			]
-		];
-
+		$imageSizes = [['width'  => 50, 'height' => 50, 'name'   => 'small']];
 		if($typeUpload == 'link')
 		{
 			if (!filter_var($link, FILTER_VALIDATE_URL))
@@ -113,9 +102,7 @@ class IndexFController extends ControllerBase
 				'size'     => strlen($imgRawData)
 			];
 
-			$files = [
-				new Phalcon\Http\Request\File($fileParams)
-			];
+			$files = [new Phalcon\Http\Request\File($fileParams) ];
 		}
 		else if ($typeUpload == 'file')
 		{
@@ -129,16 +116,16 @@ class IndexFController extends ControllerBase
 
 		foreach ($files as $indexFile => $file)
 		{
-			$fileType       = $file->getRealType();
+			$fileType = $file->getRealType();
 
-			if(!empty($imageTypes[$fileType]))
+			if(!empty($this->imageTypes[$fileType]))
 			{
-				$extension = $imageTypes[$fileType];
+				$extension = $this->imageTypes[$fileType];
 				$type      = 'image';
 			}
-			else if(!empty($fileTypes[$fileType]))
+			else if(!empty($this->fileTypes[$fileType]))
 			{
-				$extension = $fileTypes[$fileType];
+				$extension = $this->fileTypes[$fileType];
 				$type      = 'file';
 			}
 			else
@@ -183,15 +170,15 @@ class IndexFController extends ControllerBase
 				}
 			}
 
-			$selectedItem[$fieldCode]['value'][] = $fileValue;
+			$fieldDBValue[] = $fileValue;
 		}
 
-		$selectedItem[$fieldCode]['value'] = json_encode($selectedItem[$fieldCode]['value']);
-		$updateValue = [
+		$fieldDBValue    = json_encode($fieldDBValue);
+		$set             = [];
+		$set[$fieldCode] = $fieldDBValue;
+		$updateResult = $this->element->update([
 			'table' => $tableCode,
-			'set'   => [
-				$fieldCode . " = '" . $selectedItem[$fieldCode]['value'] . "'"
-			],
+			'set'   => $set,
 			'where' => [
 				'operation' => 'and',
 				'fields'    =>
@@ -203,20 +190,13 @@ class IndexFController extends ControllerBase
 					],
 				]
 			]
-		];
-		$updateResult = $this->eldb->update($updateValue);
+		]);
 
 		if(!$updateResult)
 			return $this->jsonResult(['success' => false, 'message' => 'error on save']);
 
 		$columnsInfo = $this->element->getColumns($tableCode);
-
-
-		$fieldClass = new EmFileField(
-			$selectedItem[$fieldCode]['value'],
-			$tableCode,
-			$columnsInfo[$fieldCode]
-		);
+		$fieldClass  = new EmFileField($fieldDBValue, $tableCode, $columnsInfo[$fieldCode]);
 		return $this->jsonResult(['success' => true, 'value' => $fieldClass->getValue()]);
 	}
 
@@ -235,7 +215,7 @@ class IndexFController extends ControllerBase
 		if(empty($fieldCode) || empty($tableCode) || empty($fileName) || empty($primaryKey) || empty($primaryKeyValue))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields in not found']);
 
-		$select = [
+		$selectedItem = $this->eldb->select([
 			'from' => $tableCode,
 			'where' => [
 				'operation' => 'and',
@@ -248,8 +228,7 @@ class IndexFController extends ControllerBase
 					],
 				]
 			]
-		];
-		$selectedItem = $this->element->select($select)[0];
+		])[0];
 
 		if (empty($selectedItem))
 			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
@@ -257,31 +236,39 @@ class IndexFController extends ControllerBase
 		if(!isset($selectedItem[$fieldCode]))
 			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
 
-		$curField = $selectedItem[$fieldCode];
+		$fieldDBValue = json_decode($selectedItem[$fieldCode],true);
 		$deleted  = false;
 
-		foreach($curField['value'] as $index => $value)
+		foreach($fieldDBValue as $fileIndex => $file)
 		{
-			if($value['upName'] !== $fileName)
+			if($file['upName'] !== $fileName)
 				continue;
+			unset($fieldDBValue[$fileIndex]);
+			break;
 		}
 
-		echo "<pre>";
-		print_r($curField);
-		exit();
-
-		$emField = EmTypes::findFirst([
-			'field = ?0 and table = ?1',
-			'bind' => [
-				$fieldCode, $tableCode
+		$fieldDBValue    = json_encode($fieldDBValue);
+		$set             = [];
+		$set[$fieldCode] = $fieldDBValue;
+		$updateResult = $this->element->update([
+			'table' => $tableCode,
+			'set'   => $set,
+			'where' => [
+				'operation' => 'and',
+				'fields'    =>
+				[
+					[
+						'code'      => $primaryKey,
+						'operation' => 'IS',
+						'value'     => $primaryKeyValue
+					],
+				]
 			]
 		]);
 
-		if (empty($emField))
-			return $this->jsonResult(['success' => false, 'message' => 'field not found']);
-
-		if (empty($emField->settings['path']))
-			return $this->jsonResult(['success' => false, 'message' => 'field settings not found']);
+		$columnsInfo = $this->element->getColumns($tableCode);
+		$fieldClass  = new EmFileField($fieldDBValue, $tableCode, $columnsInfo[$fieldCode]);
+		return $this->jsonResult(['success' => true, 'value' => $fieldClass->getValue()]);
 	}
 	/**
 	 * Изменить размер изображения

@@ -121,10 +121,7 @@ class Element
 	 */
 	public function select($selectParams)
 	{
-		if (empty($selectParams))
-			return false;
-
-		if (empty($selectParams['from']))
+		if (empty($selectParams) || empty($selectParams['from']))
 			return false;
 
 		$tableColumns = $this->getColumns($selectParams['from']);
@@ -135,7 +132,6 @@ class Element
 
 		/**
 		 * Добавляем в селект запрос, поля для отображения
-		 * @var array
 		 */
 		$selectResultWithFields = array_map(function ($selectItem) use ($tableColumns, $selectParams)
 		{
@@ -156,5 +152,34 @@ class Element
 		}, $selectResult);
 
 		return $selectResultWithFields;
+	}
+
+	/**
+	 * Update request
+	 * @return array
+	 */
+	public function update($updateParams)
+	{
+		if (empty($updateParams) || empty($updateParams['set']))
+			return false;
+
+		$tableColumns = $this->getColumns($updateParams['table']);
+
+		$set = [];
+		foreach ($updateParams['set'] as $fieldCode => $fieldValue)
+		{
+			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+
+			if (class_exists($fieldClass))
+				$field = new $fieldClass($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+			else
+				$field = new EmStringField($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+
+			$fieldSaveValue = $field->saveValue();
+			$set[]          = "{$fieldCode} = '{$fieldSaveValue}'";
+		}
+		$updateParams['set'] = $set;
+
+		return $this->eldb->update($updateParams);
 	}
 }

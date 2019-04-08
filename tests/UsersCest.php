@@ -106,5 +106,15 @@ class UsersCest
 		]);
 
 		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/users/updateUser',
+		[
+			'id' => 1,
+			'login' => 'admin',
+			'email' => 'axel0726@gmail.com',
+			'password' => 'adminpass'
+		]);
+
+		$I->seeResponseContainsJson(['success' => true]);
 	}
 }
