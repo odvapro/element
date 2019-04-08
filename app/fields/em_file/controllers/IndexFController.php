@@ -16,21 +16,20 @@ class IndexFController extends ControllerBase
 		$primaryKey      = $this->request->getPost('primaryKey');
 		$primaryKeyValue = $this->request->getPost('primaryKeyValue');
 		$link            = $this->request->getPost('link');
-		$files           = $this->request->getUploadedFiles();
 
-		if (empty($fieldCode) || empty($tableCode) || empty($typeUpload) || empty($primaryKey) || empty($primaryKeyValue))
+		if(empty($fieldCode) || empty($tableCode) || empty($typeUpload) || empty($primaryKey) || empty($primaryKeyValue))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields in not found']);
 
 		$select = [
 			'from' => $tableCode,
 			'where' => [
 				'operation' => 'and',
-				'fields' =>
+				'fields'    =>
 				[
 					[
-						'code' => $primaryKey,
+						'code'      => $primaryKey,
 						'operation' => 'IS',
-						'value' => $primaryKeyValue
+						'value'     => $primaryKeyValue
 					],
 				]
 			]
@@ -39,6 +38,9 @@ class IndexFController extends ControllerBase
 
 		if (empty($selectedItem))
 			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
+
+		if(!isset($selectedItem[$fieldCode]))
+			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
 
 		$emField = EmTypes::findFirst([
 			'field = ?0 and table = ?1',
@@ -78,7 +80,20 @@ class IndexFController extends ControllerBase
 			'application/x-compress'        => '.zip'
 		];
 
-		if ($typeUpload == 'link')
+		$imageSizes = [
+			[
+				'width'  => 50,
+				'height' => 50,
+				'name'   => 'small'
+			],
+			[
+				'width'  => 100,
+				'height' => 100,
+				'name'   => 'thumb'
+			]
+		];
+
+		if($typeUpload == 'link')
 		{
 			if (!filter_var($link, FILTER_VALIDATE_URL))
 				return $this->jsonResult(['success' => false, 'message' => 'invalid url']);
@@ -89,143 +104,184 @@ class IndexFController extends ControllerBase
 			if ($imgRawData === false)
 				return $this->jsonResult(['success' => false, 'message' => 'invalid url']);
 
-			file_put_contents($tempName, $imgRawData);
-			$fileSize = strlen($imgRawData);
-			$fileType =  mime_content_type($tempName);
-
-			$exten = $imageTypes[$fileType];
-			$fileName = hash('md5', $tempName . date('Y.m.d H:i:s')) . $exten;
-			$shortName = hash('md5', $tempName . date('Y.m.d H:i:s'));
-			$pathFile = ROOT . $emField->settings['path'] . $fileName;
-			$shortPath = $emField->settings['path'] . $fileName;
-
-			if (file_exists($pathFile))
-				unlink($pathFile);
-
-			$fp = fopen($pathFile, "w+");
-			fwrite($fp, $imgRawData);
-			fclose($fp);
-
-			if (!empty($imageTypes[$fileType]))
-			{
-				$smallImage = $this->_resizeImage($pathFile, [ 'width' => 50, 'height' => 50, 'name' => 'small' ], $shortName . '50', $emField->settings['path'], $exten);
-				$thumbImage = $this->_resizeImage($pathFile, [ 'width' => 100, 'height' => 100, 'name' => 'thumb' ], $shortName . '100', $emField->settings['path'], $exten);
-
-				$images =
-				[
-					"upName"    => $fileName . '.' . $exten,
-					"type"      => "image",
-					"path"      => "{$this->config->application->baseUri}/{$shortPath}/",
-					"sizes"     =>
-					[
-						"small" => $smallImage,
-						"thumb" => $thumbImage,
-					]
-				];
-
-				$selectedItem[$fieldCode]['value'][] = $images;
-			}
-			else if (!empty($fileTypes[$fileType]))
-			{
-				$files =
-				[
-					"upName"    => $fileName . '.' . $exten,
-					"type"      => "file",
-					"path"      => $pathFile,
-				];
-
-				$selectedItem[$fieldCode]['value'][] = $files;
-			}
-
-			$updateValue = [
-				'table' => $tableCode,
-				'set' => [
-					$fieldCode . " = '" . json_encode($selectedItem[$fieldCode]['value']) . "'"
-				],
-				'where' => [
-					'operation' => 'and',
-					'fields' =>
-					[
-						[
-							'code' => $primaryKey,
-							'operation' => 'IS',
-							'value' => $primaryKeyValue
-						],
-					]
-				]
+			$size       = file_put_contents($tempName, $imgRawData);
+			$fileParams = [
+				'name'     => 'linkFile',
+				'type'     => mime_content_type($tempName),
+				'tmp_name' => $tempName,
+				'error'    => 0,
+				'size'     => strlen($imgRawData)
 			];
 
-			$updateResult = $this->eldb->update($updateValue);
-			return $this->jsonResult(['success' => true, 'value' => $selectedItem[$fieldCode]['value']]);
+			$files = [
+				new Phalcon\Http\Request\File($fileParams)
+			];
 		}
 		else if ($typeUpload == 'file')
 		{
 			if ($this->request->hasFiles() == false)
 				return $this->jsonResult(['success' => false, 'message' => 'empty upload']);
 
-			foreach ($files as $indexFile => $file)
+			$files = $this->request->getUploadedFiles();
+		}
+		else
+			return $this->jsonResult(['success' => false, 'message' => 'unidentified upload type']);
+
+		foreach ($files as $indexFile => $file)
+		{
+			$fileType       = $file->getRealType();
+
+			if(!empty($imageTypes[$fileType]))
 			{
-				$fileSourceName = $file->getName();
-				$fileType = $file->getRealType();
+				$extension = $imageTypes[$fileType];
+				$type      = 'image';
+			}
+			else if(!empty($fileTypes[$fileType]))
+			{
+				$extension = $fileTypes[$fileType];
+				$type      = 'file';
+			}
+			else
+				continue;
 
-				$filePath = ROOT . $emField->settings['path'] . '/';
-				$localPath = $emField->settings['path'] . '/';
-				$fileName = hash('md5', $fileSourceName . date('Y.m.d H:i:s') . $indexFile);
-				$file->moveTo($filePath . $fileName . '.' . $file->getExtension());
+			$fileName     = hash('md5', $file->getName() . date('Y.m.d H:i:s') . $indexFile);
+			$fullFileName = $fileName . $extension;
+			$localPath    = rtrim($emField->settings['path'], '/') . '/';
+			$fullPath     = ROOT . $localPath . $fullFileName;
 
-				$fullPath = $filePath . $fileName . '.' . $file->getExtension();
+			if($typeUpload == 'link')
+				$error = !rename($file->getTempName(), $fullPath);
+			else
+				$error = !$file->moveTo($fullPath);
 
-				if (!empty($imageTypes[$fileType]))
+			if($error)
+				continue;
+
+			$fileValue = [
+				'upName' => $fullFileName,
+				'type'   => $type,
+				'path'   => $localPath . $fullFileName
+			];
+
+			if($type == 'image')
+			{
+				$fileValue['sizes'] = [];
+				foreach($imageSizes as $size)
 				{
-					$curFile = $this->config->application->baseUri . '/' . $localPath . $fileName . $imageTypes[$fileType];
-					$smallImage = $this->_resizeImage($fullPath, [ 'width' => 50, 'height' => 50, 'name' => 'small' ], $fileName . '50', $localPath, $imageTypes[$fileType]);
-					$thumbImage = $this->_resizeImage($fullPath, [ 'width' => 100, 'height' => 100, 'name' => 'thumb' ], $fileName . '100', $localPath, $imageTypes[$fileType]);
+					$resizeImage = $this->_resizeImage(
+						$fullPath,
+						$size,
+						"{$fileName}{$size['width']}x{$size['height']}",
+						$localPath,
+						$extension
+					);
 
-					$selectedItem[$fieldCode]['value'][] =
-					[
-						"upName"    => $fileName . $imageTypes[$fileType],
-						"type"      => "image",
-						"path"      => $curFile,
-						"sizes"     =>
-						[
-							"small" => $smallImage,
-							"thumb" => $thumbImage
-						]
-					];
-				}
-				else if (!empty($fileTypes[$fileType]))
-				{
-					$curFile = $this->config->application->baseUri . '/' . $localPath . $fileName . $fileTypes[$fileType];
-					$selectedItem[$fieldCode]['value'][] =
-					[
-						"upName"    => $fileName . $fileTypes[$fileType],
-						"type"      => "file",
-						"path"      => $curFile
-					];
+					if(!$resizeImage)
+						continue;
+
+					$fileValue['sizes'][$size['name']] = $resizeImage;
 				}
 			}
 
-			$updateValue = [
-				'table' => $tableCode,
-				'set' => [
-					$fieldCode . " = '" . json_encode($selectedItem[$fieldCode]['value']) . "'"
-				],
-				'where' => [
-					'operation' => 'and',
-					'fields' =>
-					[
-						[
-							'code' => $primaryKey,
-							'operation' => 'IS',
-							'value' => $primaryKeyValue
-						],
-					]
-				]
-			];
-
-			$updateResult = $this->eldb->update($updateValue);
-			return $this->jsonResult(['success' => true, 'value' => $selectedItem[$fieldCode]['value']]);
+			$selectedItem[$fieldCode]['value'][] = $fileValue;
 		}
+
+		$selectedItem[$fieldCode]['value'] = json_encode($selectedItem[$fieldCode]['value']);
+		$updateValue = [
+			'table' => $tableCode,
+			'set'   => [
+				$fieldCode . " = '" . $selectedItem[$fieldCode]['value'] . "'"
+			],
+			'where' => [
+				'operation' => 'and',
+				'fields'    =>
+				[
+					[
+						'code'      => $primaryKey,
+						'operation' => 'IS',
+						'value'     => $primaryKeyValue
+					],
+				]
+			]
+		];
+		$updateResult = $this->eldb->update($updateValue);
+
+		if(!$updateResult)
+			return $this->jsonResult(['success' => false, 'message' => 'error on save']);
+
+		$columnsInfo = $this->element->getColumns($tableCode);
+
+
+		$fieldClass = new EmFileField(
+			$selectedItem[$fieldCode]['value'],
+			$tableCode,
+			$columnsInfo[$fieldCode]
+		);
+		return $this->jsonResult(['success' => true, 'value' => $fieldClass->getValue()]);
+	}
+
+	/**
+	 * Удалить файл с сервера
+	 * @return json
+	 */
+	public function deleteAction()
+	{
+		$fieldCode       = $this->request->getPost('fieldCode');
+		$tableCode       = $this->request->getPost('tableCode');
+		$primaryKey      = $this->request->getPost('primaryKey');
+		$primaryKeyValue = $this->request->getPost('primaryKeyValue');
+		$fileName        = $this->request->getPost('fileName');
+
+		if(empty($fieldCode) || empty($tableCode) || empty($fileName) || empty($primaryKey) || empty($primaryKeyValue))
+			return $this->jsonResult(['success' => false, 'message' => 'required fields in not found']);
+
+		$select = [
+			'from' => $tableCode,
+			'where' => [
+				'operation' => 'and',
+				'fields'    =>
+				[
+					[
+						'code'      => $primaryKey,
+						'operation' => 'IS',
+						'value'     => $primaryKeyValue
+					],
+				]
+			]
+		];
+		$selectedItem = $this->element->select($select)[0];
+
+		if (empty($selectedItem))
+			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
+
+		if(!isset($selectedItem[$fieldCode]))
+			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
+
+		$curField = $selectedItem[$fieldCode];
+		$deleted  = false;
+
+		foreach($curField['value'] as $index => $value)
+		{
+			if($value['upName'] !== $fileName)
+				continue;
+		}
+
+		echo "<pre>";
+		print_r($curField);
+		exit();
+
+		$emField = EmTypes::findFirst([
+			'field = ?0 and table = ?1',
+			'bind' => [
+				$fieldCode, $tableCode
+			]
+		]);
+
+		if (empty($emField))
+			return $this->jsonResult(['success' => false, 'message' => 'field not found']);
+
+		if (empty($emField->settings['path']))
+			return $this->jsonResult(['success' => false, 'message' => 'field settings not found']);
 	}
 	/**
 	 * Изменить размер изображения

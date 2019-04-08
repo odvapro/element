@@ -7,9 +7,9 @@
 			<span class="table__empty-field">Empty</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-file__edit-item" v-for="item in dataField">
+			<div class="em-file__edit-item" v-for="(item, index) in dataField">
 				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
-				<a href="#">remove</a>
+				<a href="javascript:void(0);" @click="removeFile(`${item.upName}`)">remove</a>
 			</div>
 			<template v-if="!dataField">
 				<div class="em-file__empty-pop">
@@ -109,6 +109,30 @@
 				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
 
 				this.closePopup();
+			},
+			/**
+			 * Удалить файл
+			 */
+			async removeFile(fileName)
+			{
+				let formData = new FormData();
+				formData.append('tableCode', this.fieldSettings.tableCode);
+				formData.append('fieldCode', this.fieldSettings.fieldCode);
+				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
+				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
+				formData.append('fileName', fileName);
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : formData,
+					headers: { 'Content-Type': 'multipart/form-data' },
+					url    : '/api/field/em_file/index/delete/'
+				});
+
+				if (!result.data.success)
+					return false;
+
+				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
 			},
 			/**
 			 * Задать активность табу
