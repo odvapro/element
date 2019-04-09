@@ -19,7 +19,7 @@ var router = new Router({
 		},
 		{
 			path: '/table/:tableCode/tview/:tview/page/:page/limit/:limit/',
-			name: 'table',
+			name: 'tableWithLimit',
 			component: () => import('./pages/table/index.vue')
 		},
 		{

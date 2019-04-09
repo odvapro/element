@@ -22,6 +22,7 @@ const table =
 		{
 			state.selectRequest = select;
 		},
+
 		/**
 		 * Записать название таблицы
 		 */
@@ -29,6 +30,7 @@ const table =
 		{
 			state.tableName = names;
 		},
+
 		/**
 		 * Добавить список таблиц
 		 */
@@ -36,6 +38,7 @@ const table =
 		{
 			state.tables = tables;
 		},
+
 		/**
 		 * Записать названия столбцов таблицы
 		 */
@@ -43,12 +46,40 @@ const table =
 		{
 			state.tableColumns = columns;
 		},
+
 		/**
 		 * Записать содержимое таблицы
 		 */
 		setTableContent(state, tableContent)
 		{
 			state.tableContent = tableContent;
+		},
+	},
+	getters:
+	{
+		/**
+		 * Достает ключ таблицы
+		 */
+		getPrimaryKeyCode: store=> tableCode =>
+		{
+			let primaryFieldCode = false;
+			let tableColumns     = false;
+			for(let table of store.tables)
+			{
+				if(table.code != tableCode)
+					continue;
+
+				for(let columnCode in table.columns)
+				{
+					let column = table.columns[columnCode];
+					if(column.key != 'PRI')
+						continue;
+
+					primaryFieldCode = columnCode;
+					break;
+				}
+			}
+			return primaryFieldCode;
 		},
 	},
 	actions:
@@ -68,6 +99,7 @@ const table =
 
 			store.commit('setTables', result.data.tables);
 		},
+
 		/**
 		 * Достать колонки таблицы
 		 */
@@ -86,6 +118,7 @@ const table =
 
 			store.commit('setTableColumns', result.data.columns);
 		},
+
 		/**
 		 * Достать содержимое таблицы
 		 */
@@ -112,6 +145,7 @@ const table =
 
 			store.commit('setTableContent', result.data.result);
 		},
+
 		/**
 		 * задать страницу
 		 */
@@ -121,6 +155,22 @@ const table =
 			newParams.select.page = pageParams.page;
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
+		},
+
+		/**
+		 * Удалить запись
+		 */
+		async removeRecord(store, recordPrams)
+		{
+			store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+			var result = await axios({
+				method: 'post',
+				url: '/api/el/delete/',
+				data: qs.stringify({delete:recordPrams.delete}),
+			});
+
+			// if (!result.data.success)
+			// 	return false;
 		},
 
 		/**

@@ -33,7 +33,7 @@
 			<div class="table-row" v-for="(row, rowIndex) in tableContent.items">
 				<div class="table-overlay-row">
 					<button class="table-row-btn">edit</button>
-					<button class="table-row-btn">remove</button>
+					<button @click="remove(row,rowIndex)" class="table-row-btn">remove</button>
 				</div>
 				<div
 
@@ -165,6 +165,7 @@
 					tableValues.value,
 				);
 			},
+
 			/**
 			 * Достать имя колонки
 			 */
@@ -175,6 +176,7 @@
 
 				return column.em.name;
 			},
+
 			/**
 			 * Задать настройки для одного филда
 			 */
@@ -204,6 +206,7 @@
 
 				return Object.assign({}, settings);
 			},
+
 			/**
 			 * Сохранить параметры колонки
 			 */
@@ -237,6 +240,7 @@
 
 				this.$store.dispatch('saveColumnsWith', request);
 			},
+
 			/**
 			 * Задать колонкам ширину
 			 */
@@ -269,6 +273,7 @@
 					}
 				}
 			},
+
 			/**
 			 * Достать содержимое таблицы
 			 */
@@ -295,6 +300,7 @@
 
 				await this.$store.dispatch('select', requestParams);
 			},
+
 			/**
 			 * Начальные значения для изменения ширины колонки
 			 */
@@ -306,6 +312,7 @@
 				this.columnDrug.posX = event.pageX;
 				this.columnDrug.col = col;
 			},
+
 			/**
 			 * Убрать событие изменения ширины
 			 */
@@ -316,6 +323,7 @@
 
 				this.columnDrug.isDrug = false;
 			},
+
 			/**
 			 * Изменять ширину колонки
 			 */
@@ -332,6 +340,7 @@
 				if (col.width > 600)
 					col.width = 600;
 			},
+
 			/**
 			 * Эмит с пагинации. Задает текущую страницу
 			 */
@@ -340,6 +349,31 @@
 				this.$store.dispatch('selectPage', pageParams);
 				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${pageParams.page}/limit/${pageParams.limit}`);
 			},
+
+			/**
+			 * Удаляет запись
+			 */
+			async remove(row,rowIndex)
+			{
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
+				await this.$store.dispatch('removeRecord', {
+					rowIndex:rowIndex,
+					delete:
+					{
+						table: this.table.code,
+						where:{
+							operation:'and',
+							fields:[
+								{
+									code      : primaryKeyCode,
+									operation : 'IS',
+									value     : row[primaryKeyCode].value
+								}
+							]
+						}
+					}
+				});
+			}
 		},
 		/**
 		 * Хук при загразке страницы
