@@ -1,9 +1,7 @@
 <template>
-	<div class="list__table-select" @click.stop="togglePopup()">
+	<div class="list__table-select" @click="togglePopup()">
 		<div class="list__item-wrapper">
-			<div class="list__head-item">
-				{{fieldValue}}
-			</div>
+			<div class="list__head-item">{{fieldValue}}</div>
 		</div>
 		<div class="list__search" v-if="showPopup" v-click-outside="closePopup">
 			<div class="list__search-popup-head">
@@ -61,7 +59,11 @@
 			selectItem(data)
 			{
 				this.fieldValue = data.name;
-				this.$emit('onChange', {data: data, column: this.fieldSettings.fieldCode, table: this.fieldSettings.tableCode});
+				this.$emit('onChange', {
+					data   : data,
+					column : this.fieldSettings.fieldCode,
+					table  : this.fieldSettings.tableCode
+				});
 			}
 		},
 		/**

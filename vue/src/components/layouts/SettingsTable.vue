@@ -29,7 +29,7 @@
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-name">
-							<input type="text" @change="setTviewSetting(table, 'table', {name: table.name})" v-model="table.name">
+							<input type="text" @change="setTviewSetting(table, 'table', {name: table.name})" v-model="table.name" placeholder="Set Name">
 						</div>
 					</div>
 					<div class="settings-table-item">
@@ -50,11 +50,9 @@
 				</div>
 				<div class="settings-table-row-setting" id="settings-table-row" :style="table.showSettings">
 					<div class="settings-table-row-setting-item active" v-for="column in table.columns">
-						<div class="settings-table-item">
-							{{column.field}}
-						</div>
+						<div class="settings-table-item"> {{column.field}} </div>
 						<div class="settings-table-item category-font">
-							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)">
+							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" placeholder="Set Name">
 						</div>
 						<div class="settings-table-item table-item centered">
 							<List
@@ -66,7 +64,11 @@
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click.stop="setSettingsPopupParams({fieldName: column.em.type_info.fieldComponent, required: column.em.required, settings: column.em.settings})">settings</button>
+							<button @click.stop="setSettingsPopupParams({
+								fieldName: column.em.type_info.fieldComponent,
+								required: column.em.required,
+								settings: column.em.settings
+							})">settings</button>
 						</div>
 					</div>
 				</div>
@@ -274,6 +276,8 @@
 		border: none;
 		background-color: transparent;
 		width: 100%;
+		color: #191C21;
+		&::placeholder{color: rgba(103, 115, 135, 0.4); }
 	}
 	.settings-table-item-img
 	{
@@ -301,12 +305,15 @@
 			box-sizing: border-box;
 			width: 100%;
 			border: none;
+			color: #191C21;
+			&::placeholder{color: rgba(103, 115, 135, 0.4); }
 		}
 	}
 	.settings-table-item-code
 	{
 		font-size: 12px;
 		color: rgba(25, 28, 33, 0.7);
+		cursor: pointer;
 	}
 	.settings-table-item-title
 	{
