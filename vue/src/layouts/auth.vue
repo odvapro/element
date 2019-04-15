@@ -6,12 +6,24 @@
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<label class="auth-label">
 				<div class="auth-label-title">Login</div>
-				<input class="auth-form-input el-inp" type="text" placeholder="Enter your login" v-model="user.login.value" :class="{'el-inp--error': user.login.error}">
+				<input
+					class="auth-form-input el-inp"
+					type="text"
+					placeholder="Enter your login or email"
+					v-model="user.login.value"
+					:class="{'el-inp--error': user.login.error}"
+				>
 				<span class="auth__error-text">{{user.login.error}}</span>
 			</label>
 			<label class="auth-label">
 				<div class="auth-label-title">Password</div>
-				<input class="auth-form-input el-inp" type="password" placeholder="Enter your password" v-model="user.password.value" :class="{'el-inp--error': user.password.error}">
+				<input
+					class="auth-form-input el-inp"
+					type="password"
+					placeholder="Enter your password"
+					v-model="user.password.value"
+					:class="{'el-inp--error': user.password.error}"
+				>
 				<span class="auth__error-text">{{user.password.error}}</span>
 			</label>
 			<div class="auth-bottom-btns">
@@ -20,17 +32,26 @@
 			</div>
 		</div>
 		<div class="auth-form" v-if="activeForm == 'forgot'">
-			<label class="auth-label">
-				<div class="auth-label-title">Login</div>
-				<input type="text" placeholder="Enter your login" class="auth-form-input el-inp">
-			</label>
-			<div class="auth-bottom-btns">
-				<button class="auth-fill-btn el-btn" @click="activeForm = 'sended'">Reset Password</button>
-				<button class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</button>
-			</div>
+			<form @submit="forgotPass">
+				<label class="auth-label">
+					<div class="auth-label-title">Forgot password</div>
+					<input
+						type="text"
+						v-model="forgot.email.value"
+						placeholder="Enter your Email"
+						class="auth-form-input el-inp"
+						:class="{'el-inp--error': forgot.email.error}"
+					>
+					<span class="auth__error-text">{{forgot.email.error}}</span>
+				</label>
+				<div class="auth-bottom-btns">
+					<button class="auth-fill-btn el-btn">Reset Password</button>
+					<button class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</button>
+				</div>
+			</form>
 		</div>
 		<div class="auth-form auth-form-fix-heigth" v-if="activeForm == 'sended'">
-			New password was sended to your emial.
+			New password was sended to your email.
 		</div>
 	</div>
 </template>
@@ -49,6 +70,10 @@ export default
 				login: {value: '', error: ''},
 				password: {value: '', error: ''}
 			},
+			forgot:
+			{
+				email: {value: '', error: ''}
+			},
 			errors: '',
 			activeForm: 'login'
 		}
@@ -58,7 +83,7 @@ export default
 		/**
 		 * Проверка на валидность полей
 		 */
-		isValid()
+		validateAuth()
 		{
 			var isValid = true;
 
@@ -84,7 +109,7 @@ export default
 		 */
 		async authUser()
 		{
-			if (!this.isValid())
+			if (!this.validateAuth())
 				return false;
 
 			var data = new FormData();
@@ -100,6 +125,52 @@ export default
 			this.$cookie.set('user', JSON.stringify(result.data.user), 12);
 
 			this.$router.push('/');
+		},
+		/**
+		 * Проверка данных для востановления пароля
+		 */
+		validateForgot()
+		{
+			var isValid = true;
+
+			this.forgot.email.error = '';
+
+			if(this.forgot.email.value == '')
+			{
+				this.forgot.email.error = 'Empty email';
+				isValid = false;
+			}
+			else if(!/^\w.+@\w+\.\w{2,4}$/i.test(this.forgot.email.value))
+			{
+				this.forgot.email.error = 'Invalid email format';
+				isValid = false;
+			}
+
+			return isValid;
+		},
+		/**
+		 * Востановление пароля
+		 */
+		async forgotPass(event)
+		{
+			event.preventDefault();
+
+			if(!this.validateForgot())
+				return false;
+
+			var data = new FormData();
+
+			data.append('email', this.forgot.email.value);
+
+			var result = await this.$axios.post('/api/auth/forgotPass/', data);
+
+			if(!result.data.success)
+			{
+				this.forgot.email.error = 'Incorrect email.'
+				return false;
+			}
+
+			this.activeForm = 'sended';
 		}
 	}
 }
