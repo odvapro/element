@@ -65,3 +65,25 @@ body{
 		border-radius: 2px;
 	}
 }
+
+.element-message
+{
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+}
+
+.element-message-notif
+{
+	background-color: gray;
+}
+
+.element-message-error
+{
+	background-color: red;
+}
+
+.element-message-success
+{
+	background-color: green;
+}
