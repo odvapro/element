@@ -263,10 +263,8 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 2px;
-		&:hover
-		{
-			background-color: rgba(103, 115, 135, 0.1);
-		}
+		&:hover {background-color: rgba(103, 115, 135, 0.1); }
+		svg{stroke:#c2c7cf;}
 	}
 	.filters-popup__delete-row-icon
 	{

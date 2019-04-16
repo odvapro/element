@@ -66,24 +66,29 @@ body{
 	}
 }
 
+// message
 .element-message
 {
 	position: absolute;
 	bottom: 20px;
 	left: 50%;
+	border-radius:2px;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	height: 42px;
+	line-height: 42px;
+	padding:0 13px;
+	color: #FFFFFF;
+	a{color:#fff;}
+	a:hover{text-decoration: none;}
 }
-
-.element-message-notif
-{
-	background-color: gray;
-}
-
-.element-message-error
-{
-	background-color: red;
-}
-
-.element-message-success
-{
-	background-color: green;
+.element-message-notif {background: rgba(25, 28, 33, 0.7); }
+.element-message-error {background: #D01246; }
+.element-message-close{
+	transform: rotate(45deg);
+	stroke:rgba(255,255,255,0.8);
+    top: 3px;
+    position: relative;
+    cursor: pointer;
 }

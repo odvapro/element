@@ -37,8 +37,8 @@
 				<line x1="6" y1="11" x2="6" y2="1" stroke="white" stroke-width="2" stroke-linecap="round"/>
 			</symbol>
 			<symbol id="plus-white" viewBox="0 0 12 12">
-				<line x1="1" y1="6" x2="11" y2="6" stroke="#c2c7cf" stroke-width="2" stroke-linecap="round"/>
-				<line x1="6" y1="11" x2="6" y2="1" stroke="#c2c7cf" stroke-width="2" stroke-linecap="round"/>
+				<line x1="1" y1="6" x2="11" y2="6"  stroke-width="2" stroke-linecap="round"/>
+				<line x1="6" y1="11" x2="6" y2="1" stroke-width="2" stroke-linecap="round"/>
 			</symbol>
 			<symbol id="lines" viewBox="0 0 6 5">
 				<g clip-path="url(#clip0)">
@@ -70,6 +70,13 @@
 			<symbol id="add-button" viewBox="0 0 510 510">
 				<path fill="#677387" d="M280.5,127.5h-51v102h-102v51h102v102h51v-102h102v-51h-102V127.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255
 					s255-114.75,255-255S395.25,0,255,0z M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"/>
+			</symbol>
+
+			<symbol id="close" width="16" height="16" viewBox="0 0 16 16">
+				<g opacity="0.8" clip-path="url(#clip0)">
+				<line x1="4.46448" y1="4.94975" x2="11.5355" y2="12.0208" stroke="white" stroke-width="2" stroke-linecap="round"/>
+				<line x1="4.46448" y1="12.0208" x2="11.5355" y2="4.94975" stroke="white" stroke-width="2" stroke-linecap="round"/>
+				</g>
 			</symbol>
 		</svg>
 	</div>

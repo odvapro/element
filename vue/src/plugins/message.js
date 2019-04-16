@@ -30,7 +30,7 @@ message.messageParams = {
 message.template = `
 	<div class="element-message element-message-#type# #messageClass#">
 		<span class="element-message-text">#text#</span>
-		<span class="element-message-close">x</span>
+		<svg class="element-message-close" width="16" height="16"><use xlink:href="#plus-white"></use></svg>
 	</div>
 `;
 
@@ -65,16 +65,6 @@ message.notif = function(options)
 message.error = function(options)
 {
 	message.messageParams.type = 'error';
-
-	if(!message.prepareParams(options))
-		return false;
-
-	message.render();
-}
-
-message.success = function(options)
-{
-	message.messageParams.type = 'success';
 
 	if(!message.prepareParams(options))
 		return false;
