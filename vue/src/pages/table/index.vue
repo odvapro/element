@@ -162,12 +162,6 @@
 		mounted()
 		{
 			this.activeTable();
-
-			for (let table of this.$store.state.tables.tables)
-			{
-				let tview = this.getDefaultTview(table);
-				this.$set(table, 'visible', typeof tview.settings.table == 'undefined' ? false : tview.settings.table.visible === 'true' ? true : false);
-			}
 		},
 		watch:
 		{

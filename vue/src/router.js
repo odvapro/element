@@ -23,6 +23,11 @@ var router = new Router({
 			component: () => import('./pages/table/index.vue')
 		},
 		{
+			path: '/table/:tableCode/el/:id/',
+			name: 'tableDetail',
+			component: () => import('./pages/table/detail.vue')
+		},
+		{
 			path: '/settings/',
 			name: 'settings',
 			component: () => import('./pages/settings.vue')

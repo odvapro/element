@@ -117,9 +117,16 @@ class ElController extends ControllerBase
 			foreach ($emViewsTable as $tview)
 			{
 				$table['tviews'][] = $tview->toArray();
-				if ($tview->default == '1')
-					if (isset($tview->settings['table']['name']))
-						$table['name'] = $tview->settings['table']['name'];
+				if ($tview->default != '1')
+					continue;
+
+				if (isset($tview->settings['table']['name']))
+					$table['name'] = $tview->settings['table']['name'];
+
+				if (isset($tview->settings['table']['visible']))
+					$table['visible'] = ($tview->settings['table']['visible'] == "false")?false:true;
+				else
+					$table['visible'] = false;
 			}
 		}
 
@@ -127,23 +134,6 @@ class ElController extends ControllerBase
 			'success' => true,
 			'tables'  => $tables
 		]);
-	}
-	/**
-	 * Get Columns
-	 * @return json
-	 */
-	public function getColumnsAction()
-	{
-		$tableName = $this->request->getPost('tableName');
-
-		if (empty($tableName))
-			return $this->jsonResult(['success' => false, 'message' => 'need require param tableName']);
-
-		$tableColumns = $this->element->getColumns($tableName);
-		if ($tableColumns === false)
-			return $this->jsonResult(['success' => false, 'message' => 'table not found']);
-
-		return $this->jsonResult(['success' => true, 'columns' => $tableColumns]);
 	}
 
 	/**

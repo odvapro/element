@@ -240,10 +240,7 @@
 
 				for (let table of this.tables)
 				{
-					let tview = this.getDefaultTview(table);
-
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
-					this.$set(table, 'visible', typeof tview.settings.table == 'undefined' ? false : tview.settings.table.visible === 'true' ? true : false);
 				}
 			}
 		},

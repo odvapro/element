@@ -32,7 +32,7 @@
 			</div>
 			<div class="table-row" v-for="(row, rowIndex) in tableContent.items">
 				<div class="table-overlay-row">
-					<button class="table-row-btn">edit</button>
+					<button @click="openDetail(row,rowIndex)" class="table-row-btn">edit</button>
 					<button @click="remove(row,rowIndex)" class="table-row-btn">remove</button>
 				</div>
 				<div
@@ -373,6 +373,11 @@
 						}
 					}
 				});
+			},
+			openDetail(row,rowIndex)
+			{
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
+				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode].value }});
 			}
 		},
 		/**

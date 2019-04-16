@@ -9,9 +9,9 @@ const table =
 	{
 		selectRequest: {},
 		tables   : [],
-
 		tableColumns : [],
 		tableContent : {},
+		selectedElement:{}
 	},
 	mutations:
 	{
@@ -54,6 +54,13 @@ const table =
 		{
 			state.tableContent = tableContent;
 		},
+		/**
+		 * Записать содержимое таблицы
+		 */
+		setSelectedElement(state, selectedElement)
+		{
+			state.selectedElement = selectedElement;
+		},
 	},
 	getters:
 	{
@@ -81,6 +88,19 @@ const table =
 			}
 			return primaryFieldCode;
 		},
+		/**
+		 * Достает колонки таблицы
+		 */
+		getColumns: store=> tableCode=>
+		{
+			for(let table of store.tables)
+			{
+				if(table.code != tableCode)
+					continue;
+				return table.columns;
+			}
+			return false;
+		}
 	},
 	actions:
 	{
@@ -98,25 +118,6 @@ const table =
 				return false;
 
 			store.commit('setTables', result.data.tables);
-		},
-
-		/**
-		 * Достать колонки таблицы
-		 */
-		async getColumns(store, tableName)
-		{
-			var data = qs.stringify({tableName: tableName});
-
-			var result = await axios({
-				method: 'post',
-				url: '/api/el/getColumns',
-				data: data
-			});
-
-			if (!result.data.success)
-				return false;
-
-			store.commit('setTableColumns', result.data.columns);
 		},
 
 		/**
@@ -190,6 +191,32 @@ const table =
 				return false;
 
 			return true;
+		},
+
+		/**
+		 * Достать содержимое таблицы
+		 */
+		async selectElement(store, params)
+		{
+			store.commit('setSelectRequest', params);
+			var data = qs.stringify(params);
+
+			var result = await axios({
+				method : 'get',
+				url    : '/api/el/select/',
+				params : data,
+				/**
+				 * сериализовать отправляемые данные
+				 */
+				paramsSerializer: function(params)
+				{
+					return data;
+				},
+			});
+
+			if (!result.data.success || result.data.result.items.length == 0)
+				return false;
+			this.commit('setSelectRequest',result.data.result.items[0]);
 		}
 	}
 }

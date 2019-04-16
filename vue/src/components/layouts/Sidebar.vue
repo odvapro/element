@@ -25,7 +25,9 @@
 			<div class="sidebar-table-head">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables" v-if="table.visible">
-					<a @click="selectTable(table)" href="javascript:void(0)"
+					<a
+						@click="selectTable(table)"
+						href="javascript:void(0)"
 						:class="{active: table.code == getActiveTable}"
 					>
 						<div class="sidebar-points">

@@ -43,35 +43,6 @@ class TableWorkerCest
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.default');
 	}
 
-	public function getColumns(ApiTester $I)
-	{
-		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
-		$I->seeResponseContainsJson(['success' => true]);
-
-		$I->sendPOST('/el/getColumns', ['tableName' => 'products']);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.field');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.null');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.key');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.default');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.extra');
-
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.type');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.settings');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.required');
-		$I->seeResponseJsonMatchesJsonPath('$.columns.*.em.type_info');
-
-		$I->sendPOST('/el/getColumns', ['tableName' => 'asdsad']);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => false]);
-
-		$I->sendPOST('/el/getColumns');
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => false]);
-	}
-
 	public function select(ApiTester $I)
 	{
 		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
