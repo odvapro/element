@@ -11,6 +11,9 @@
 				</div>
 			</div>
 		</div>
+		<button @click="showNotif">notif</button>
+		<button @click="showError">error</button>
+		<button @click="showSuccess">success</button>
 		<div class="settings-tab-wrapper">
 			<div class="settings-tabs-head">
 				<div class="settings-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
@@ -51,6 +54,22 @@
 		},
 		methods:
 		{
+			showNotif()
+			{
+				this.ElMessage('notif')
+			},
+			showError()
+			{
+				this.ElMessage({
+					type         : 'error',
+					text         : 'error',
+					closeTimeout : 1000
+				});
+			},
+			showSuccess()
+			{
+				this.ElMessage.success('success');
+			},
 			/**
 			 * Задать активность табу
 			 */
