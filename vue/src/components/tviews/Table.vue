@@ -43,10 +43,11 @@
 					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
 				>
 					<MainField
+						mode="edit"
 						:params="{
 							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,
-							settings  : getFieldSettings(column, row)
+							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
 						}"
 						@onChange="changeTableValue"
 					/>
@@ -175,36 +176,6 @@
 					return column.field;
 
 				return column.em.name;
-			},
-
-			/**
-			 * Задать настройки для одного филда
-			 */
-			getFieldSettings(column, row)
-			{
-				let primaryFieldCode = false;
-
-				for(let columnCode in this.table.columns)
-				{
-					let column = this.table.columns[columnCode];
-					if(column.key == 'PRI')
-					{
-						primaryFieldCode = columnCode;
-						break;
-					}
-				}
-
-				let primaryKey = {
-					value: row[primaryFieldCode].value,
-					fieldCode: primaryFieldCode
-				};
-
-				var settings        = column.em.settings;
-				settings.fieldCode  = column.field;
-				settings.tableCode  = this.table.code;
-				settings.primaryKey = primaryKey;
-
-				return Object.assign({}, settings);
 			},
 
 			/**
@@ -577,14 +548,5 @@
 		{
 			background-color: #e6e6e6;
 		}
-	}
-	.table__empty-field
-	{
-		font-style: normal;
-		font-weight: normal;
-		font-size: 12px;
-		line-height: normal;
-		color: rgba(103, 115, 135, 0.4);
-		cursor: pointer;
 	}
 </style>

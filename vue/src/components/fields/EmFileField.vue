@@ -4,7 +4,7 @@
 			<img :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
 		</div>
 		<template v-if="!dataField">
-			<span class="table__empty-field">Empty</span>
+			<span class="el-empty">Empty</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
 			<div class="em-file__edit-item" v-for="(item, index) in dataField">
@@ -13,7 +13,7 @@
 			</div>
 			<template v-if="!dataField">
 				<div class="em-file__empty-pop">
-					<span class="table__empty-field">No files</span>
+					<span class="el-empty">No files</span>
 				</div>
 			</template>
 			<button class="el-gbtn" @click="openSubPopup()">Add file</button>

@@ -145,15 +145,8 @@
 			 */
 			activeTable()
 			{
-				for (let table of this.$store.state.tables.tables)
-				{
-					if(table.code == this.$route.params.tableCode)
-					{
-						this.table = table;
-						this.propertiesPopupData = table.columns;
-						break;
-					}
-				}
+				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
+				this.propertiesPopupData = this.table.columns;
 			}
 		},
 		/**

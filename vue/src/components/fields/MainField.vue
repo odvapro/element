@@ -4,6 +4,7 @@
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
 			:fieldSettings="params.settings"
+			:mode="mode"
 			@onChange="changeValue"
 		></component>
 	</div>
@@ -11,7 +12,7 @@
 <script>
 	export default
 	{
-		props: ['params'],
+		props: ['params','mode'],
 		computed:
 		{
 			/**
@@ -29,6 +30,10 @@
 		{
 			/**
 			 * Отслеживать изменения в филде
+			 * @value {
+			 *        value
+			 *        settings (main format)
+			 * }
 			 */
 			changeValue(value)
 			{

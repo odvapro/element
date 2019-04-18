@@ -66,6 +66,17 @@ body{
 	}
 }
 
+//empty lines
+.el-empty
+{
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: normal;
+	color: rgba(103, 115, 135, 0.4);
+	cursor: pointer;
+}
+
 // message
 .element-message
 {

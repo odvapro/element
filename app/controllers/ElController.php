@@ -22,6 +22,7 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDelete]);
 	}
+
 	/**
 	 * insert method SQL
 	 * @return json
@@ -40,6 +41,7 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultInsert]);
 	}
+
 	/**
 	 * update method SQL
 	 * @return json
@@ -58,6 +60,7 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultUpdate]);
 	}
+
 	/**
 	 * select methos SQL
 	 * @return json
@@ -85,6 +88,7 @@ class ElController extends ControllerBase
 		$resultSelect = $paginator->getPaginate();
 		return $this->jsonResult(['success' => true, 'result' => $resultSelect]);
 	}
+
 	/**
 	 * Get Tables
 	 * @return json
@@ -158,5 +162,14 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
 		return $this->jsonResult(['success' => true]);
+	}
+
+	/**
+	 * Сохранение одного филда
+	 * @return json
+	 */
+	public function saveFieldValueAction()
+	{
+		
 	}
 }

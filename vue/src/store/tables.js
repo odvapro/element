@@ -7,11 +7,11 @@ const table =
 {
 	state:
 	{
-		selectRequest: {},
-		tables   : [],
-		tableColumns : [],
-		tableContent : {},
-		selectedElement:{}
+		selectRequest   : {},
+		tables          : [],
+		tableColumns    : [],
+		tableContent    : {},
+		selectedElement : {}
 	},
 	mutations:
 	{
@@ -54,6 +54,7 @@ const table =
 		{
 			state.tableContent = tableContent;
 		},
+
 		/**
 		 * Записать содержимое таблицы
 		 */
@@ -65,41 +66,78 @@ const table =
 	getters:
 	{
 		/**
-		 * Достает ключ таблицы
+		 * Возвращет таблику по коду
+		 * @param  table code
+		 * @return table object
 		 */
-		getPrimaryKeyCode: store=> tableCode =>
+		getTable: store => tableCode =>
 		{
-			let primaryFieldCode = false;
-			let tableColumns     = false;
 			for(let table of store.tables)
 			{
 				if(table.code != tableCode)
 					continue;
+				return table;
+			}
+			return false;
+		},
 
-				for(let columnCode in table.columns)
-				{
-					let column = table.columns[columnCode];
-					if(column.key != 'PRI')
-						continue;
+		/**
+		 * Достает ключ таблицы
+		 */
+		getPrimaryKeyCode: (store, getters )=> tableCode =>
+		{
+			let primaryFieldCode = false;
+			let table = getters.getTable(tableCode);
+			if(table === false)
+				return false;
 
-					primaryFieldCode = columnCode;
-					break;
-				}
+			for(let columnCode in table.columns)
+			{
+				let column = table.columns[columnCode];
+				if(column.key != 'PRI')
+					continue;
+
+				primaryFieldCode = columnCode;
+				break;
 			}
 			return primaryFieldCode;
 		},
+
 		/**
 		 * Достает колонки таблицы
 		 */
-		getColumns: store=> tableCode=>
+		getColumns: (store, getters) => tableCode =>
 		{
-			for(let table of store.tables)
-			{
-				if(table.code != tableCode)
-					continue;
-				return table.columns;
-			}
-			return false;
+			let table = getters.getTable(tableCode);
+			if(table === false)
+				return false;
+			return table.columns;
+		},
+
+		/**
+		 * Формирует настройки колоки
+		 * основной формат настроек на всем проекте
+		 * {
+		 * 		primartyKey
+		 * 		fieldCode
+		 * 		tableCode
+		 * 		...  (остальые поля для каждого филда свои)
+		 * 	}
+		 */
+		getColumnSettings: (store, getters) => (tableCode, column, row) =>
+		{
+			let primaryKeyCode = getters.getPrimaryKeyCode(tableCode);
+			let primaryKey = {
+				value     : row[primaryKeyCode].value,
+				fieldCode : primaryKeyCode
+			};
+
+			var settings        = column.em.settings;
+			settings.fieldCode  = column.field;
+			settings.tableCode  = tableCode;
+			settings.primaryKey = primaryKey;
+
+			return Object.assign({}, settings);
 		}
 	},
 	actions:
@@ -110,8 +148,8 @@ const table =
 		async getTables(store)
 		{
 			var result = await axios({
-				method: 'get',
-				url: '/api/el/getTables'
+				method : 'get',
+				url    : '/api/el/getTables'
 			});
 
 			if (!result.data.success)
@@ -170,8 +208,8 @@ const table =
 				data: qs.stringify({delete:recordPrams.delete}),
 			});
 
-			// if (!result.data.success)
-			// 	return false;
+			if (!result.data.success)
+				return false;
 		},
 
 		/**
@@ -179,12 +217,11 @@ const table =
 		 */
 		async saveColumnsWith(store, params)
 		{
-			var data = qs.stringify(params);
-
+			var data   = qs.stringify(params);
 			var result = await axios({
-				method: 'post',
-				url: '/api/el/setTviewSettings/',
-				data: data
+				method : 'post',
+				url    : '/api/el/setTviewSettings/',
+				data   : data
 			});
 
 			if (!result.data.success)
@@ -216,7 +253,7 @@ const table =
 
 			if (!result.data.success || result.data.result.items.length == 0)
 				return false;
-			this.commit('setSelectRequest',result.data.result.items[0]);
+			this.commit('setSelectedElement',result.data.result.items[0]);
 		}
 	}
 }

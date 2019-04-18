@@ -1,16 +1,47 @@
 <template>
 	<div class="em-string">
-		{{ fieldValue }}
-		<span v-if="!fieldValue" class="table__empty-field">Empty</span>
+		<template v-if="mode == 'edit'">
+			<input
+				type="text"
+				class="em-string-input"
+				@change="changeValue"
+				:value="fieldValue"
+				placeholder="Empty"
+			/>
+		</template>
+		<template v-else>
+			{{ fieldValue }}
+			<span v-if="!fieldValue" class="el-empty">Empty</span>
+		</template>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings'],
+		props: ['fieldValue','fieldSettings','mode'],
+		data()
+		{
+			return {
+				localFieldValue:''
+			}
+		},
+		mounted()
+		{
+			this.localFieldValue = this.fieldValue;
+		},
+		methods:
+		{
+			changeValue(event)
+			{
+				this.$emit('onChange', {
+					value    : event.target.value,
+					settings : this.fieldSettings
+				});
+			}
+		}
 	}
 </script>
-<style>
+<style lang="scss">
 	.em-string
 	{
 		line-height: 49px;
@@ -27,5 +58,18 @@
 		height: 100%;
 		padding-left: 10px;
 		padding-right: 10px;
+	}
+	.em-string-input
+	{
+		border: 0px;
+		width:100%;
+		height: 100%;
+		background: none;
+		line-height: 49px;
+		font-size: 12px;
+		color: #677387;
+		&:focus,&:active{color: #191C21;}
+		&::placeholder{color: rgba(103, 115, 135, 0.4);}
+		&:focus::placeholder{color: transparent;}
 	}
 </style>
