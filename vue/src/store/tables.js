@@ -286,6 +286,26 @@ const table =
 		async saveFieldValue(store, fieldValue)
 		{
 			// todo - отправка запроса на сохранение
+			let setValues  = {}
+			let primaryKey = fieldValue.settings.primaryKey;
+			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
+			var data = qs.stringify({
+				update:{
+					table :fieldValue.settings.tableCode,
+					set   :setValues,
+					where :{
+						operation:'and',
+						fields:[
+							{
+								code      :primaryKey.fieldCode,
+								operation :'IS',
+								value     :primaryKey.value
+							}
+						]
+					}
+				}
+			});
+			let result = await axios.post('/api/el/update/',data);
 			this.commit('setFieldValue',fieldValue);
 		}
 	}

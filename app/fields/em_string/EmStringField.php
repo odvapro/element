@@ -29,6 +29,6 @@ class EmStringField extends FieldBase
 	 */
 	public function saveValue()
 	{
-
+		return $this->fieldValue;
 	}
 }

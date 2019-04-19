@@ -288,7 +288,10 @@ class TableWorkerCest
 			'update' =>
 			[
 				'table' => 'testTable',
-				'set' => ['email = 3', 'col = 5'],
+				'set' => [
+					'email' => 3,
+					'col'   => 5
+				],
 				'where' => [
 					'operation' => 'and',
 					'fields' =>
@@ -303,14 +306,16 @@ class TableWorkerCest
 				],
 			]
 		]);
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/', [
 			'update' => [
 				'table' => 'testTable',
-				'set' => ["email = 'rrrrr'", "col = '222222'"],
+				'set' => [
+					'email' => 'rrrrr',
+					'col'   => '222222'
+				],
 				'where' => [
 					'operation' => 'and',
 					'fields' => [
@@ -319,16 +324,17 @@ class TableWorkerCest
 				]
 			]
 		]);
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeInDatabase('testTable', ['id' => 2, 'email' => 'rrrrr', 'col'=>'222222']);
+
 
 		$I->sendPOST('/el/update/',
 		[
 			'update' =>
 			[
 				'table' => 'testTable',
-				'set' => ["name = 'ggапфффыввфывg'", ],
+				'set' => ["name"=> 'ggапфффыввфывg' ],
 				'where' =>
 				[
 					'operation' => 'and',
@@ -343,28 +349,20 @@ class TableWorkerCest
 				]
 			]
 		]);
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/update/',
-		[
+		$I->sendPOST('/el/update/', [
 			'update' => ['table' => 'testTable']
 		]);
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
-		$I->sendPOST('/el/update/',
-		[
-			'update' => []
-		]);
-
+		$I->sendPOST('/el/update/', ['update' => [] ]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/update/');
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 	}

@@ -53,7 +53,7 @@ class ElController extends ControllerBase
 		if (empty($update))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultUpdate = $this->eldb->update($update);
+		$resultUpdate = $this->element->update($update);
 
 		if ($resultUpdate === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
@@ -78,8 +78,7 @@ class ElController extends ControllerBase
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		$paginator = new PaginatorArray(
-		[
+		$paginator = new PaginatorArray([
 			'data'  => $resultSelect,
 			'limit' => $limit,
 			'page'  => $page,
