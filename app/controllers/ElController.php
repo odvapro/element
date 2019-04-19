@@ -163,13 +163,4 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true]);
 	}
-
-	/**
-	 * Сохранение одного филда
-	 * @return json
-	 */
-	public function saveFieldValueAction()
-	{
-		
-	}
 }

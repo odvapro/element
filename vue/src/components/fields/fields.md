@@ -5,7 +5,7 @@
 
 ###fieldSettings
 {
-	primartyKey
+	primaryKey:{fieldCode:<код филда>,value:<значение>}
 	fieldCode
 	tableCode
 	...  (остальые поля для каждого филда свои)

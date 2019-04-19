@@ -288,36 +288,16 @@ class TableWorkerCest
 			'update' =>
 			[
 				'table' => 'testTable',
-				'set' =>
-				[
-					'email = 3',
-					'col = 5'
-				],
-				'where' =>
-				[
+				'set' => ['email = 3', 'col = 5'],
+				'where' => [
 					'operation' => 'and',
 					'fields' =>
 					[
-						[
-							'code' => 'name',
-							'operation' => 'IS',
-							'value' => 'eee'
-						],
-						[
-							'code' => 'email',
-							'operation' => 'DOES NOT CONTAIN',
-							'value' => '3'
-						],
+						['code' => 'name', 'operation' => 'IS', 'value' => 'eee'],
+						['code' => 'email', 'operation' => 'DOES NOT CONTAIN', 'value' => '3'],
 						[
 							'operation' => 'or',
-							'fields' =>
-							[
-								[
-									'code' => 'avat',
-									'operation' => 'IS',
-									'value' => '3'
-								]
-							]
+							'fields' => [['code' => 'avat', 'operation' => 'IS', 'value' => '3'] ]
 						]
 					]
 				],
@@ -327,26 +307,14 @@ class TableWorkerCest
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/update/',
-		[
-			'update' =>
-			[
+		$I->sendPOST('/el/update/', [
+			'update' => [
 				'table' => 'testTable',
-				'set' =>
-				[
-					"email = 'rrrrr'",
-					"col = '222222'"
-				],
-				'where' =>
-				[
+				'set' => ["email = 'rrrrr'", "col = '222222'"],
+				'where' => [
 					'operation' => 'and',
-					'fields' =>
-					[
-						[
-							'code' => 'id',
-							'operation' => 'IS',
-							'value' => 2
-						]
+					'fields' => [
+						['code' => 'id', 'operation' => 'IS', 'value' => 2 ]
 					]
 				]
 			]
@@ -360,30 +328,16 @@ class TableWorkerCest
 			'update' =>
 			[
 				'table' => 'testTable',
-				'set' =>
-				[
-					"name = 'ggапфффыввфывg'",
-				],
+				'set' => ["name = 'ggапфффыввфывg'", ],
 				'where' =>
 				[
 					'operation' => 'and',
 					'fields' =>
 					[
-						[
-							'code' => 'name',
-							'operation' => 'CONTAINS',
-							'value' => 'ggg'
-						],
+						['code' => 'name', 'operation' => 'CONTAINS', 'value' => 'ggg'],
 						[
 							'operation' => 'or',
-							'fields' =>
-							[
-								[
-									'code' => 'avat',
-									'operation' => 'IS',
-									'value' => '3'
-								]
-							]
+							'fields' => [['code' => 'avat', 'operation' => 'IS', 'value' => '3'] ]
 						]
 					]
 				]
@@ -395,10 +349,7 @@ class TableWorkerCest
 
 		$I->sendPOST('/el/update/',
 		[
-			'update' =>
-			[
-				'table' => 'testTable'
-			]
+			'update' => ['table' => 'testTable']
 		]);
 
 		$I->seeResponseCodeIs(200);

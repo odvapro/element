@@ -62,6 +62,26 @@ const table =
 		{
 			state.selectedElement = selectedElement;
 		},
+
+		/**
+		 * Установка значания поля
+		 * @params {
+		 *     fieldValue,
+		 *     fieldSettings(основной формат)
+		 * }
+		 */
+		setFieldValue(state,fieldValue)
+		{
+			let primaryKey = fieldValue.settings.primaryKey;
+			for(let tableLine of state.tableContent.items)
+			{
+				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
+					continue;
+
+				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
+				break;
+			}
+		}
 	},
 	getters:
 	{
@@ -254,6 +274,19 @@ const table =
 			if (!result.data.success || result.data.result.items.length == 0)
 				return false;
 			this.commit('setSelectedElement',result.data.result.items[0]);
+		},
+
+		/**
+		 * Сохранение значения филда (его изменение)
+		 * @params {
+		 *     value,
+		 *     settings(основной формат)
+		 * }
+		 */
+		async saveFieldValue(store, fieldValue)
+		{
+			// todo - отправка запроса на сохранение
+			this.commit('setFieldValue',fieldValue);
 		}
 	}
 }

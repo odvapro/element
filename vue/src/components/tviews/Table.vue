@@ -49,7 +49,7 @@
 							value     : row[column.field].value,
 							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
 						}"
-						@onChange="changeTableValue"
+						@onChange="changeFieldValue"
 					/>
 				</div>
 				<div class="table-item">
@@ -155,16 +155,14 @@
 		{
 			/**
 			 * Сохранить локально измененные данные в таблице
+			 * @tableValues {
+			 *     value
+			 *     settings (main format)
+			 * }
 			 */
-			changeTableValue(tableValues)
+			changeFieldValue(fieldValue)
 			{
-				this.setTableValue(
-					tableValues.settings.primaryKey.fieldCode,
-					tableValues.settings.primaryKey.value,
-					this.tableContent.items,
-					tableValues.settings.fieldCode,
-					tableValues.value,
-				);
+				this.$store.dispatch('saveFieldValue',fieldValue);
 			},
 
 			/**

@@ -64,9 +64,9 @@
 		data()
 		{
 			return {
-				showPopup: false,
-				showSubPopup: false,
-				dataField: false,
+				showPopup    : false,
+				showSubPopup : false,
+				dataField    : false,
 				tabs:
 				[
 					{ name: 'Upload', active: true },
