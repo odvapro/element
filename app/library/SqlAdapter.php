@@ -186,16 +186,21 @@ class SqlAdapter extends PdoAdapter
 		if (empty($table) || empty($values))
 			return false;
 
-		$sql = "INSERT INTO {$table} ";
+		if (empty($columns) || empty($columns))
+			return false;
 
-		if (!empty($columns))
-			$sql .= '(' . implode(', ', $columns) . ' ) ';
+		$columns   = implode(', ', $columns);
+		$sqlValues = str_repeat("?", 10);
+		$sqlValues = [];
+		foreach ($values as $insertValue)
+			$sqlValues[] = "?";
+		$sqlValues = implode(', ', $sqlValues);
 
-		$sql .= 'VALUES (' . implode(', ', $values) . ' )';
+		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$sqlValues })";
 
 		try
 		{
-			$this->db->execute($sql);
+			$this->db->execute($sql,$values);
 		} catch (Exception $e) {
 			return false;
 		}
@@ -277,7 +282,6 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
-
 		$columns = [];
 		foreach ($res as &$fieldDbArray)
 		{
@@ -288,5 +292,14 @@ class SqlAdapter extends PdoAdapter
 		}
 
 		return $columns;
+	}
+
+	/**
+	 * Return last inserted id
+	 * @return int
+	 */
+	public function getLastInsertId()
+	{
+		return $this->db->lastInsertId();
 	}
 }

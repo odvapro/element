@@ -28,6 +28,11 @@ var router = new Router({
 			component: () => import('./pages/table/detail.vue')
 		},
 		{
+			path: '/table/:tableCode/add/',
+			name: 'tableAddElement',
+			component: () => import('./pages/table/detail.vue')
+		},
+		{
 			path: '/settings/',
 			name: 'settings',
 			component: () => import('./pages/settings.vue')

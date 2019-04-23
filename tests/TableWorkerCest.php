@@ -377,14 +377,8 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'testTable',
-				'columns' =>
-				[
-					'name', 'email', 'col', 'avat'
-				],
-				'values' =>
-				[
-					'"11"', '"qwe"', '"222222"', '"222211211"'
-				]
+				'columns' => ['name', 'email', 'col', 'avat'],
+				'values' => ['11', 'qwe', '222222', '222211211']
 			]
 		]);
 
@@ -396,14 +390,8 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'testTable',
-				'columns' =>
-				[
-					'name', 'avat'
-				],
-				'values' =>
-				[
-					'"11"', '"qwe"', '"222222"', '"222211211"'
-				]
+				'columns' => ['name', 'avat'],
+				'values' => ['11', 'qwe', '222222', '222211211']
 			]
 		]);
 
@@ -415,10 +403,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'testTable',
-				'values' =>
-				[
-					'"33"', '"qwe"', '"222222"', '"222211211"'
-				]
+				'values' => ['33', 'qwe', '222222', '222211211']
 			]
 		]);
 
@@ -430,10 +415,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'testTable',
-				'values' =>
-				[
-					'"44"'
-				]
+				'values' => ['44']
 			]
 		]);
 
@@ -442,10 +424,7 @@ class TableWorkerCest
 
 		$I->sendPOST('/el/insert/',
 		[
-			'insert' =>
-			[
-				'table' => 'testTable'
-			]
+			'insert' => ['table' => 'testTable']
 		]);
 
 		$I->seeResponseCodeIs(200);

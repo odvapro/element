@@ -114,6 +114,20 @@ class Element
 
 		return $tableColumns;
 	}
+
+	/**
+	 * Достает код ключа
+	 * @param  string $tableName table code
+	 * @return string primary key code
+	 */
+	public function getPrimaryKeyCode($tableName)
+	{
+		$columns = $this->eldb->getColumns($tableName);
+		echo "<pre>";
+		print_r($columns);
+		exit();
+	}
+
 	/**
 	 * Селект запрос, достаем значения и типы полей для отображения
 	 * @param  array $selectParams
@@ -181,5 +195,39 @@ class Element
 		$updateParams['set'] = $set;
 
 		return $this->eldb->update($updateParams);
+	}
+
+	/**
+	 * Insert request
+	 * @return array
+	 */
+	public function insert($insertParams)
+	{
+		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['columns']) || empty($insertParams['values']))
+			return false;
+
+		if(count($insertParams['columns']) != count($insertParams['values']))
+			return false;
+
+		$tableColumns = $this->getColumns($insertParams['table']);
+
+		$valuesSet = [];
+		foreach ($insertParams['columns'] as $fieldIndex => $fieldCode)
+		{
+			$fieldValue = $insertParams['values'][$fieldIndex];
+
+			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+
+			if (class_exists($fieldClass))
+				$field = new $fieldClass($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+			else
+				$field = new EmStringField($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+
+			$fieldSaveValue = $field->saveValue();
+			$valuesSet[]    = $fieldSaveValue;
+		}
+		$insertParams['values'] = $valuesSet;
+
+		return $this->eldb->insert($insertParams);
 	}
 }

@@ -106,10 +106,14 @@
 				if (!result.data.success)
 					return false;
 
-				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
+				/*this.$emit('onChange', {
+					value    : result.data.value,
+					settings : this.fieldSettings
+				});*/
 
 				this.closePopup();
 			},
+
 			/**
 			 * Удалить файл
 			 */
@@ -132,8 +136,12 @@
 				if (!result.data.success)
 					return false;
 
-				this.$emit('onChange', {value: result.data.value, settings: this.fieldSettings});
+				this.$emit('onChange', {
+					value    : result.data.value,
+					settings : this.fieldSettings
+				});
 			},
+
 			/**
 			 * Задать активность табу
 			 */
@@ -145,6 +153,7 @@
 				tab.active = true;
 				this.activeTab = tab.name;
 			},
+
 			/**
 			 * Закрыть/Открыть попап
 			 */
@@ -152,6 +161,7 @@
 			{
 				this.showPopup = true;
 			},
+
 			/**
 			 * Закрыть/Открыть попап
 			 */
@@ -159,6 +169,7 @@
 			{
 				this.showSubPopup = true;
 			},
+
 			/**
 			 * Закрыть попап
 			 */
@@ -166,6 +177,7 @@
 			{
 				this.showPopup = false;
 			},
+
 			/**
 			 * Закрыть попап
 			 */

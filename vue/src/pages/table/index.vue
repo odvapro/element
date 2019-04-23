@@ -54,21 +54,12 @@
 							v-click-outside:isFiltersPopupShow="closePopup"
 						/>
 					</li>
-					<li class="index__points index__menu-item">
-						<svg width="19" height="2">
-							<use xlink:href="#points"></use>
-						</svg>
-					</li>
 				</ul>
-				<button class="index__head-add-btn">
-					<div class="index__head-btn-wrapper">
-						<svg width="12" height="12">
-							<use xlink:href="#plus"></use>
-						</svg>
-					</div>
-					<span class="index__head-add-btn-name">
-						Add Element
-					</span>
+				<button class="index__add-btn el-btn" @click="addElement()">
+					<svg width="12" height="12">
+						<use xlink:href="#plus"></use>
+					</svg>
+					Add Element
 				</button>
 			</div>
 		</div>
@@ -147,6 +138,11 @@
 			{
 				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
 				this.propertiesPopupData = this.table.columns;
+			},
+
+			addElement()
+			{
+				this.$router.push(`/table/${this.table.code}/add/`);
 			}
 		},
 		/**
@@ -239,36 +235,10 @@
 			border-radius: 2px;
 		}
 	}
-	.index__head-add-btn
+	.index__add-btn svg
 	{
-		display: flex;
-		background-color: rgba(25, 28, 33, 0.7);
-		border-radius: 2px;
-		padding: 0 11px 0 32px;
 		position: relative;
-		font-size: 12px;
-		color: #fff;
-		height: 31px;
-		align-items: center;
-		color: #fff;
-		outline: none;
-		border: none;
-		cursor: pointer;
-		&:active
-		{
-			border: none;
-		}
-	}
-	.index__head-btn-wrapper
-	{
-		position: absolute;
-		left: 10px;
-		width: 12px;
-		height: 12px;
-		top: calc(50% - 6px);
-	}
-	.index__head-add-btn-name
-	{
-		color: #fff;
+		top:1px;
+		margin-right:2px;
 	}
 </style>

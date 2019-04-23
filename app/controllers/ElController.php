@@ -34,12 +34,18 @@ class ElController extends ControllerBase
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultInsert = $this->eldb->insert($insert);
+		$resultInsert = $this->element->insert($insert);
 
 		if ($resultInsert === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'result' => $resultInsert]);
+		$lastId = $this->eldb->getLastInsertId();
+
+		return $this->jsonResult([
+			'success' => true,
+			'result'  => $resultInsert,
+			'lastid'  => $lastId
+		]);
 	}
 
 	/**

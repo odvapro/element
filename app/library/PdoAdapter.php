@@ -8,6 +8,7 @@ abstract class PdoAdapter
 	abstract protected function delete($requestParams);
 	abstract protected function getTables();
 	abstract protected function getColumns($tableName);
+	abstract protected function getLastInsertId();
 }
 
 ?>

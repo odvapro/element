@@ -221,11 +221,13 @@ const table =
 		 */
 		async removeRecord(store, recordPrams)
 		{
-			store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+			if(typeof recordPrams.rowIndex != 'undefined')
+				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+
 			var result = await axios({
-				method: 'post',
-				url: '/api/el/delete/',
-				data: qs.stringify({delete:recordPrams.delete}),
+				method : 'post',
+				url    : '/api/el/delete/',
+				data   : qs.stringify({delete:recordPrams.delete}),
 			});
 
 			if (!result.data.success)
@@ -285,7 +287,6 @@ const table =
 		 */
 		async saveFieldValue(store, fieldValue)
 		{
-			// todo - отправка запроса на сохранение
 			let setValues  = {}
 			let primaryKey = fieldValue.settings.primaryKey;
 			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
@@ -307,6 +308,38 @@ const table =
 			});
 			let result = await axios.post('/api/el/update/',data);
 			this.commit('setFieldValue',fieldValue);
+		},
+
+		/**
+		 * Сохранение выбранного элемента
+		 * @selectedElement {
+		 * 	<код филда>:{value,fieldName},
+		 * }
+		 */
+		async saveSelectedElement(store,{selectedElement,tableCode})
+		{
+			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
+			let setValues  = {}
+			for(let fieldCode in selectedElement)
+				setValues[fieldCode] = selectedElement[fieldCode].value;
+
+			var data = qs.stringify({
+				update:{
+					table :tableCode,
+					set   :setValues,
+					where :{
+						operation:'and',
+						fields:[
+							{
+								code      : primaryKeyCode,
+								operation : 'IS',
+								value     : selectedElement[primaryKeyCode].value
+							}
+						]
+					}
+				}
+			});
+			let result = await axios.post('/api/el/update/',data);
 		}
 	}
 }

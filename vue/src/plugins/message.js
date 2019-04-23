@@ -15,11 +15,11 @@ var message = function message(options)
 };
 
 message.defaultParams = {
-	closeTimeout: 10000
+	closeTimeout: 1000
 };
 
 message.params = {
-	closeTimeout: 10000
+	closeTimeout: 1000
 };
 
 message.messageParams = {

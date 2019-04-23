@@ -155,7 +155,7 @@
 		{
 			/**
 			 * Сохранить локально измененные данные в таблице
-			 * @tableValues {
+			 * @fieldValue {
 			 *     value
 			 *     settings (main format)
 			 * }
@@ -531,6 +531,7 @@
 			height: 100%;
 			object-fit: contain;
 		}
+		svg{stroke:rgba(103, 115, 135, 0.4);}
 	}
 	// TODO убрать
 	.drug-col
