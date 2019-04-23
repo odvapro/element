@@ -4,32 +4,34 @@
 			<img src="/images/logo.svg" alt="">
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
-			<label class="auth-label">
-				<div class="auth-label-title">Login</div>
-				<input
-					class="auth-form-input el-inp"
-					type="text"
-					placeholder="Enter your login or email"
-					v-model="user.login.value"
-					:class="{'el-inp--error': user.login.error}"
-				>
-				<span class="auth__error-text">{{user.login.error}}</span>
-			</label>
-			<label class="auth-label">
-				<div class="auth-label-title">Password</div>
-				<input
-					class="auth-form-input el-inp"
-					type="password"
-					placeholder="Enter your password"
-					v-model="user.password.value"
-					:class="{'el-inp--error': user.password.error}"
-				>
-				<span class="auth__error-text">{{user.password.error}}</span>
-			</label>
-			<div class="auth-bottom-btns">
-				<button class="auth-fill-btn el-btn" @click="authUser()">Log In</button>
-				<button class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</button>
-			</div>
+			<form @submit.stop="authUser">
+				<label class="auth-label">
+					<div class="auth-label-title">Login</div>
+					<input
+						class="auth-form-input el-inp"
+						type="text"
+						placeholder="Enter your login or email"
+						v-model="user.login.value"
+						:class="{'el-inp--error': user.login.error}"
+					>
+					<span class="auth__error-text">{{user.login.error}}</span>
+				</label>
+				<label class="auth-label">
+					<div class="auth-label-title">Password</div>
+					<input
+						class="auth-form-input el-inp"
+						type="password"
+						placeholder="Enter your password"
+						v-model="user.password.value"
+						:class="{'el-inp--error': user.password.error}"
+					>
+					<span class="auth__error-text">{{user.password.error}}</span>
+				</label>
+				<div class="auth-bottom-btns">
+					<button class="auth-fill-btn el-btn" @click="authUser()">Log In</button>
+					<button class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</button>
+				</div>
+			</form>
 		</div>
 		<div class="auth-form" v-if="activeForm == 'forgot'">
 			<form @submit="forgotPass">
