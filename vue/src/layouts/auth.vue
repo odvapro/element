@@ -4,7 +4,7 @@
 			<img src="/images/logo.svg" alt="">
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
-			<form @submit.stop="authUser">
+			<form @submit.prevent="authUser">
 				<label class="auth-label">
 					<div class="auth-label-title">Login</div>
 					<input
@@ -94,7 +94,7 @@ export default
 
 			if (this.user.login.value == '')
 			{
-				this.user.login.error = 'Incorrect username';
+				this.user.login.error = 'Incorrect login';
 				isValid = false;
 			}
 
@@ -122,7 +122,11 @@ export default
 			var result = await this.$axios.post('/api/auth/index/', data);
 
 			if (!result.data.success)
+			{
+				this.user.login.error = 'Incorrect login or password';
+				this.user.password.error = 'Incorrect login or password';
 				return false;
+			}
 
 			this.$cookie.set('user', JSON.stringify(result.data.user), 12);
 
