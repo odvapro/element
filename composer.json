@@ -19,6 +19,6 @@
     },
     "files": [
         "app",
-        "vue/dist",
+        "vue/dist"
     ]
 }
