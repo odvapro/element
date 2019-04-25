@@ -5,7 +5,6 @@
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -24,7 +23,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
 # PHALCON
 /api/app/cache/
 !/api/app/cache/readme.md
@@ -39,8 +37,6 @@ googleSecrets.json
 vendor
 codeception.yml
 
-/dist/
 /docs/
 composer.lock
 package-lock.json
-vue/dist
