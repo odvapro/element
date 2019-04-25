@@ -16,8 +16,7 @@
         "codeception/codeception": "^2.5",
         "flow/jsonpath": "dev-master"
     },
-    "files": [
-        "app",
-        "vue/dist/*"
-    ]
+    "archive": {
+        "exclude": ["/tests", "/vue/src", "/vue/public"]
+    }
 }
