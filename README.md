@@ -1,5 +1,5 @@
 # Element CMF
-Admin panel
+Admin panel on Phalcon + Vue
 
 ## Run tests
 ```
