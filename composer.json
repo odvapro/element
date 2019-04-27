@@ -1,6 +1,7 @@
 {
     "name": "dzantiev/element",
     "description": "Element CMF",
+    "type": "project",
     "authors": [
         {
             "name": "Mihail Dzantiev",
