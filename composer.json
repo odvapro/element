@@ -17,6 +17,6 @@
         "flow/jsonpath": "dev-master"
     },
     "archive": {
-        "exclude": ["/tests", "/vue/src", "/vue/public"]
+        "exclude": ["tests", "/vue/src", "/vue/public"]
     }
 }
