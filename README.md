@@ -1,4 +1,7 @@
-##Run tests
+# Element CMF
+Admin panel
+
+## Run tests
 ```
 vendor/bin/codecept run
 vendor/bin/codecept run api CatalogCest:getProducts
