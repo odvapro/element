@@ -15,8 +15,5 @@
     "require-dev": {
         "codeception/codeception": "^2.5",
         "flow/jsonpath": "dev-master"
-    },
-    "archive": {
-        "exclude": ["tests", "/vue/src", "/vue/public"]
     }
 }

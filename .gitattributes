@@ -1,0 +1,3 @@
+tests/ export-ignore
+vue/public/ export-ignore
+vue/src/ export-ignore
