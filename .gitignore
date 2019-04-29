@@ -31,6 +31,7 @@ config.php
 .phalcon/migration-version
 
 # PROJECT
+.env
 sftp-config.json
 node_modules
 googleSecrets.json
