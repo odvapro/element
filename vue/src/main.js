@@ -19,6 +19,7 @@ Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next)
 {
+	console.log('ok');
 	var valid = await router.app.$axios({url: '/api/' });
 
 	if (!valid.data.success)

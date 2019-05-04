@@ -1,7 +1,10 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine on
-	RewriteRule  ^$ public/    [L]
-	RewriteRule  (.*) public/$1 [L]
+	RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^api\/(.*)$ public/api.php?_url=/$1 [QSA,L]
+	RewriteRule ^$ public/dist/    [L]
+	RewriteRule (.*) public/dist/$1 [L]
 </IfModule>
 <IfModule mod_headers.c>
     Header add Access-Control-Allow-Origin "http://localhost:8080"

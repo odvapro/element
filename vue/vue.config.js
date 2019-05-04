@@ -1,4 +1,6 @@
 module.exports = {
+	outputDir:'../public/dist/',
+	publicPath:'/element/',
 	chainWebpack: config => {
 		const oneOfsMap = config.module.rule('scss').oneOfs.store
 		oneOfsMap.forEach(item => {

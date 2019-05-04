@@ -10,7 +10,7 @@ try
 {
 	if(!file_exists(__DIR__ . "/../app/config/config.php"))
 	{
-		echo json_encode(['success' => false, 'message' => 'Not foud config']);
+		echo json_encode(['success' => false, 'message' => 'Config not found']);
 		exit();
 	}
 	/**

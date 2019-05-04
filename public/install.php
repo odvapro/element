@@ -8,7 +8,13 @@ if(file_exists(__DIR__ . "/../app/config/config.php"))
 }
 if (!empty($_POST))
 {
-	if (!empty($_POST['adapter']) && !empty($_POST['host']) && !empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['dbname']) && !empty($_POST['baseUrl']))
+	if (!empty($_POST['adapter']) &&
+	    !empty($_POST['host']) &&
+	    !empty($_POST['username']) &&
+	    !empty($_POST['password']) &&
+	    !empty($_POST['dbname']) &&
+	    !empty($_POST['baseUrl'])
+	)
 	{
 		try{
 

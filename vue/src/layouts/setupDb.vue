@@ -2,55 +2,61 @@
 	<div class="setup-db-wrapper">
 		<div class="setup-db-form">
 			<div class="setup-db-head">
-				<img src="/images/logo.svg" alt="">
+				<img src="images/logo.svg" alt="">
 			</div>
 			<div class="setup-db-content">
 				<label class="setup-db-label">
 					Host
-					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.host.value" placeholder="Enter hostname">
-					</div>
+					<input
+						type="text"
+						class="el-inp setup-db__input"
+						v-model="config.host.value"
+						placeholder="Enter hostname"
+					/>
 				</label>
 				<label class="setup-db-label">
 					Database username
-					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.username.value" placeholder="Enter username">
-					</div>
+					<input
+						type="text"
+						class="el-inp setup-db__input"
+						v-model="config.username.value"
+						placeholder="Enter username"
+					/>
 				</label>
 				<label class="setup-db-label">
 					Database Password
-					<div class="setup-db-input-wrapper">
-						<input type="password" v-model="config.password.value" placeholder="Enter password">
-					</div>
+					<input
+						type="password"
+						class="el-inp setup-db__input"
+						v-model="config.password.value"
+						placeholder="Enter password"
+					/>
 				</label>
 				<label class="setup-db-label">
 					Database name
-					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.dbname.value" placeholder="Enter database name">
-					</div>
+					<input
+						type="text"
+						class="el-inp setup-db__input"
+						v-model="config.dbname.value"
+						placeholder="Enter database name"
+					/>
 				</label>
 				<label class="setup-db-label">
 					BaseUrl
-					<div class="setup-db-input-wrapper">
-						<input type="text" v-model="config.baseUrl.value" placeholder="Enter BaseUrl">
-					</div>
+					<input
+						type="text"
+						class="el-inp setup-db__input"
+						v-model="config.baseUrl.value"
+						placeholder="Enter BaseUrl"
+					/>
 				</label>
-				<label class="setup-db-label">
-					Select Database
-					<div class="setup-db-input-wrapper">
-						<select v-model="config.adapter.value">
-							<option value="Postgres">Postgres</option>
-							<option value="Mysql">MySql</option>
-						</select>
-					</div>
-				</label>
+				{{errors}}
 				<div class="setup-db-button-wrapper">
-					<div class="setup-db-button-light" @click="submitConfig(true)">Check</div>
-					<div class="setup-db-button-dark" @click="submitConfig(false)">Install</div>
+					<div class="el-gbtn" @click="submitConfig(true)">Check</div>
+					<div class="el-btn" @click="submitConfig(false)">Install</div>
 				</div>
 			</div>
 		</div>
-		{{errors}}
 	</div>
 </template>
 <script>
@@ -88,7 +94,7 @@ export default
 			var oldPass = this.config.password,
 				data = new FormData();
 
-			this.config.password = this.config.password.replace(/[\`\~\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\\\|]/g, '\\' + '$&');
+			this.config.password = this.config.password.value.replace(/[\`\~\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\\\|]/g, '\\' + '$&');
 			this.config.isCheck = isCheck;
 
 			for (var item in this.config)
@@ -116,16 +122,7 @@ export default
 }
 </script>
 <style lang="scss">
-	.setup-db-head
-	{
-		text-align: center;
-		margin-bottom: 26px;
-	}
-	.setup-db-label
-	{
-		font-size: 12px;
-		color: #000;
-	}
+	.setup-db-head {text-align: center; margin-bottom: 26px; }
 	.setup-db-content
 	{
 		border: 1px solid rgba(103, 115, 135, 0.1);
@@ -141,55 +138,20 @@ export default
 		justify-content: center;
 		height: 100%;
 	}
-	.setup-db-input-wrapper
+	.setup-db-label
 	{
-		background: #FFFFFF;
-		border: 1px solid rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		margin: 7px 0 14px;
-		height: 30px;
-		select
-		{
-			border: none;
-			background: none;
-			width: 100%;
-			height: 100%;
-		}
-		input
-		{
-			border: none;
-			font-size: 10px;
-			padding: 0 11px;
-			width: 100%;
-			height: 100%;
-			border: 1px solid rgba(103, 115, 135, 0.4);
-			box-sizing: border-box;
-		}
+		font-size: 12px;
+		color: #191C21;
+		display: block;
+		margin-bottom:15px;
 	}
+	.setup-db__input {width:100%; margin-top: 7px; }
 	.setup-db-button-wrapper
 	{
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 8px 0;
-	}
-	.setup-db-button-light
-	{
-		color: rgba(103, 115, 135, 0.7);
-		font-size: 12px;
-		padding: 7px 11px;
-		background: rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		margin-right: 15px;
-		cursor: pointer;
-	}
-	.setup-db-button-dark
-	{
-		padding: 7px 11px;
-		background: rgba(25, 28, 33, 0.7);
-		border-radius: 2px;
-		font-size: 12px;
-		cursor: pointer;
-		color: #fff;
+		.el-gbtn{margin-right: 15px;}
 	}
 </style>
