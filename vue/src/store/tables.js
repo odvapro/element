@@ -169,7 +169,7 @@ const table =
 		{
 			var result = await axios({
 				method : 'get',
-				url    : '/api/el/getTables'
+				url    : '/el/getTables'
 			});
 
 			if (!result.data.success)
@@ -188,7 +188,7 @@ const table =
 
 			var result = await axios({
 				method: 'get',
-				url: '/api/el/select/',
+				url: '/el/select/',
 				params: data,
 				/**
 				 * сериализовать отправляемые данные
@@ -226,7 +226,7 @@ const table =
 
 			var result = await axios({
 				method : 'post',
-				url    : '/api/el/delete/',
+				url    : '/el/delete/',
 				data   : qs.stringify({delete:recordPrams.delete}),
 			});
 
@@ -242,7 +242,7 @@ const table =
 			var data   = qs.stringify(params);
 			var result = await axios({
 				method : 'post',
-				url    : '/api/el/setTviewSettings/',
+				url    : '/el/setTviewSettings/',
 				data   : data
 			});
 
@@ -262,7 +262,7 @@ const table =
 
 			var result = await axios({
 				method : 'get',
-				url    : '/api/el/select/',
+				url    : '/el/select/',
 				params : data,
 				/**
 				 * сериализовать отправляемые данные
@@ -306,7 +306,7 @@ const table =
 					}
 				}
 			});
-			let result = await axios.post('/api/el/update/',data);
+			let result = await axios.post('/el/update/',data);
 			this.commit('setFieldValue',fieldValue);
 		},
 
@@ -339,7 +339,7 @@ const table =
 					}
 				}
 			});
-			let result = await axios.post('/api/el/update/',data);
+			let result = await axios.post('/el/update/',data);
 		}
 	}
 }

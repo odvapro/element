@@ -160,7 +160,7 @@
 
 				let result = await this.$axios({
 					method: 'post',
-					url: '/api/settings/changeFieldType/',
+					url: '/settings/changeFieldType/',
 					data: requestChangeType
 				});
 
@@ -219,7 +219,7 @@
 
 				var result = await this.$axios({
 					method: 'POST',
-					url: '/api/settings/changeName/',
+					url: '/settings/changeName/',
 					data: data
 				});
 
@@ -231,7 +231,7 @@
 			 */
 			async initTables()
 			{
-				let result = await this.$axios.get('/api/settings/getFiledTypes/');
+				let result = await this.$axios.get('/settings/getFiledTypes/');
 
 				if(result.data.success)
 					this.fieldTypes = result.data.types;

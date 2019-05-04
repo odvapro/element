@@ -100,7 +100,7 @@
 			 */
 			async logOut()
 			{
-				let result = await this.$axios.post('/api/auth/logOut/');
+				let result = await this.$axios.post('/auth/logOut/');
 
 				if (!result.data.success)
 					return false;

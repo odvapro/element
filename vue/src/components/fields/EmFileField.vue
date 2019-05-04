@@ -100,7 +100,7 @@
 					method : 'POST',
 					data   : formData,
 					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/api/field/em_file/index/upload/'
+					url    : '/field/em_file/index/upload/'
 				});
 
 				if (!result.data.success)
@@ -130,7 +130,7 @@
 					method : 'POST',
 					data   : formData,
 					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/api/field/em_file/index/delete/'
+					url    : '/field/em_file/index/delete/'
 				});
 
 				if (!result.data.success)

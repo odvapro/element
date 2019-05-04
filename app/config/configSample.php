@@ -19,8 +19,7 @@ return new \Phalcon\Config(array(
 		'extDir'         => ROOT . '/app/extensions/',
 		'fldDir'         => ROOT . '/app/fields/',
 		'tViewsDir'      => ROOT . '/app/tviews/',
-		'domain'         => 'http://element.dev2.odva.pro',
-		'baseUri'        => '/element',
+		'baseUri'        => '#baseuri#',
 		// указывается относительно baseUri, так как вставляется после него
 		'defaultFilesUploadPath' => '/public/upload'
 	)

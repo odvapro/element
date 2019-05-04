@@ -119,7 +119,7 @@ export default
 			data.append('login', this.user.login.value);
 			data.append('password', this.user.password.value);
 
-			var result = await this.$axios.post('/api/auth/index/', data);
+			var result = await this.$axios.post('/auth/index/', data);
 
 			if (!result.data.success)
 			{
@@ -168,7 +168,7 @@ export default
 
 			data.append('email', this.forgot.email.value);
 
-			var result = await this.$axios.post('/api/auth/forgotPass/', data);
+			var result = await this.$axios.post('/auth/forgotPass/', data);
 
 			if(!result.data.success)
 			{

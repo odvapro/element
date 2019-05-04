@@ -50,7 +50,7 @@ export default
 			let result = await this.$axios({
 				method : 'POST',
 				data   : data,
-				url    : '/api/el/setTviewSettings/'
+				url    : '/el/setTviewSettings/'
 			})
 
 			if (!result.data.success)

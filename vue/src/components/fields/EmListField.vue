@@ -72,7 +72,7 @@
 
 				let result = await this.$axios({
 					method: 'POST',
-					url: '/api/field/em_list/index/saveSelectedItem/',
+					url: '/field/em_list/index/saveSelectedItem/',
 					data: request
 				});
 
