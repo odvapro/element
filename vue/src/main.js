@@ -20,7 +20,6 @@ Vue.config.productionTip = false;
 router.beforeEach(async function(to, from, next)
 {
 	var valid = await router.app.$axios({url: '/' });
-	console.log(valid)
 	if (!valid.data.success)
 	{
 		store.commit('setInstallDb', false);

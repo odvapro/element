@@ -1,6 +1,6 @@
 module.exports = {
-	outputDir:'../public/dist/',
-	publicPath:'/element/',
+	outputDir:'../public/',
+	publicPath: process.env.BASE_URL,
 	chainWebpack: config => {
 		const oneOfsMap = config.module.rule('scss').oneOfs.store
 		oneOfsMap.forEach(item => {
