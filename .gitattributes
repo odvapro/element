@@ -1,3 +1,4 @@
 tests/ export-ignore
-vue/public/ export-ignore
-vue/src/ export-ignore
+vue/ export-ignore
+documentation/ export-ignore
+codeceptionSample.yml export-ignore

@@ -8,11 +8,11 @@
 <script>
 	import Auth from './layouts/auth';
 	import Content from './layouts/content';
-	import SetupDb from './layouts/setupDb';
+	import Setup from './layouts/setup';
 	import Sprite from './components/layouts/Sprite.vue';
 	export default
 	{
-		components: { Sprite, SetupDb, Content, Auth },
+		components: { Sprite, Setup, Content, Auth },
 		metaInfo:{
 			title: 'Element',
 			meta:
@@ -37,7 +37,7 @@
 			layout()
 			{
 				if (this.$store.state.isIntallDb == false)
-					return 'SetupDb';
+					return 'Setup';
 
 				if (this.$store.state.isAuth == false)
 					return 'Auth';

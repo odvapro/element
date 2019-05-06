@@ -1,6 +1,7 @@
 {
     "name": "dzantiev/element",
     "description": "Element CMF",
+    "verstion":"v0.1.10",
     "type": "project",
     "authors": [
         {

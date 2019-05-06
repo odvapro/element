@@ -152,7 +152,7 @@
 						values  :setValues
 					}
 				});
-				let result = await this.$axios.post('/api/el/insert/',data);
+				let result = await this.$axios.post('/el/insert/',data);
 				if(result.data.success == true)
 				{
 					this.$router.push({name:'tableDetail', params:{tableCode:this.tableCode, id:result.data.lastid }});

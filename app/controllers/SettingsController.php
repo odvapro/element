@@ -119,4 +119,30 @@ class SettingsController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'settings' => $field]);
 	}
+
+
+	/**
+	 * Проверка на наличие обновления
+	 * @return json
+	 */
+	public function checkVersionAction()
+	{
+		$composerJson = file_get_contents(ROOT."/composer.json");
+	}
+
+	/**
+	 * Обновление элемента
+	 * @return  json
+	 */
+	public function updateAction()
+	{
+		// список тегов
+		// https://api.github.com/repos/dzantiev/element/tags
+
+		// разница межу разными версиями
+		// https://api.github.com/repos/dzantiev/element/compare/v0.1.5...v0.1.9
+		// row
+		// https://github.com/dzantiev/element/blob/c3f091dbd5a6ab1f917303e6bc5740eda93623c2/.gitattributes
+		// при обновлении осключать лишниые файлы - export ignore
+	}
 }

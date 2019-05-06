@@ -43,7 +43,7 @@
 				let result = await this.$axios({
 					method : 'POST',
 					data   : data,
-					url    : '/api/field/em_check/index/changeStatus/'
+					url    : '/field/em_check/index/changeStatus/'
 				});
 
 				if (!result.data.success)

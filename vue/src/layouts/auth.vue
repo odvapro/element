@@ -1,7 +1,7 @@
 <template>
 	<div class="auth-content-wrapper">
 		<div class="auth-content__logo">
-			<img src="/images/logo.svg" alt="">
+			<img src="images/logo.svg" alt="">
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<form @submit.prevent="authUser">
@@ -119,7 +119,7 @@ export default
 			data.append('login', this.user.login.value);
 			data.append('password', this.user.password.value);
 
-			var result = await this.$axios.post('/api/auth/index/', data);
+			var result = await this.$axios.post('/auth/index/', data);
 
 			if (!result.data.success)
 			{
@@ -168,7 +168,7 @@ export default
 
 			data.append('email', this.forgot.email.value);
 
-			var result = await this.$axios.post('/api/auth/forgotPass/', data);
+			var result = await this.$axios.post('/auth/forgotPass/', data);
 
 			if(!result.data.success)
 			{

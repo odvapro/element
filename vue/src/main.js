@@ -19,8 +19,7 @@ Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next)
 {
-	var valid = await router.app.$axios({url: '/api/' });
-
+	var valid = await router.app.$axios({url: '/' });
 	if (!valid.data.success)
 	{
 		store.commit('setInstallDb', false);
@@ -32,7 +31,7 @@ router.beforeEach(async function(to, from, next)
 
 router.beforeEach(async function(to, from, next)
 {
-	var valid = await router.app.$axios({url: '/api/auth/isLogged/' });
+	var valid = await router.app.$axios({url: '/auth/isLogged/' });
 
 	if (!valid.data.success)
 	{
