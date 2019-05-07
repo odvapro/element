@@ -6,6 +6,11 @@ error_reporting(E_ALL);
 
 define('ROOT', __DIR__ . '/../');
 
+/**
+ * URI change relative to base uri
+ */
+$_SERVER['REQUEST_URI'] = str_replace('/element/api/', '/', $_SERVER['REQUEST_URI']);
+
 try
 {
 	if(!file_exists(__DIR__ . "/../app/config/config.php"))
