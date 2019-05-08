@@ -2,7 +2,7 @@
 	<div class="setup-wrapper">
 		<div class="setup-form">
 			<div class="setup-head">
-				<img src="images/logo.svg" alt="">
+				<img src="@/assets/images/logo.svg" alt="">
 			</div>
 			<div class="setup-content">
 				<label class="setup-label">
