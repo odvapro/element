@@ -2,9 +2,7 @@
 	<div class="update-wrapper">
 		<div class="update-head">
 			<div class="update-head-name">
-				<div class="update-icon-wrapper">
-					⚙️
-				</div>
+				<div class="update-icon-wrapper"> ⚙️ </div>
 				<div class="update-name-wrapper">
 					<div class="update-head-label">Update</div>
 					<div class="update-head-descr">Check and update element</div>
@@ -13,10 +11,13 @@
 		</div>
 		<div class="update-content">
 			<div class="update-version">
-				Current version: <em>v0.1.0</em>
+				Current version: <em>{{ currentVersion }}</em>
 				<div v-if="showLatestIsInstalled"> You have the latest version</div>
 			</div>
-			<div class="update-buttons">
+			<template v-if="successUpdate">
+				<div class="update-success">System has been updated successfully</div>
+			</template>
+			<div class="update-buttons" v-if="!successUpdate">
 				<button @click="checkVersion()" class="el-gbtn">Check version</button>
 				<button @click="update()" v-if="canUpdate" class="el-btn">Update to {{ newVersion }}</button>
 			</div>
@@ -29,9 +30,11 @@
 		data()
 		{
 			return {
+				currentVersion        : '',
 				canUpdate             : false,
 				newVersion            : '',
-				showLatestIsInstalled :false
+				showLatestIsInstalled : false,
+				successUpdate         : false
 			}
 		},
 		methods:
@@ -52,14 +55,25 @@
 				else
 					this.showLatestIsInstalled = true;
 			},
+
 			/**
 			 * Обновление системы
 			 */
 			async update()
 			{
 				let result = await this.$axios.get('/settings/update/');
-				console.log(result)
+				if(typeof result.data.success != 'undefined' && result.data.success)
+					this.successUpdate = true;
 			}
+		},
+		/**
+		 * Доастаем текущую версию системы
+		 */
+		async mounted()
+		{
+			let result = await this.$axios.get('/settings/getCurrentVersion/');
+			if(typeof result.data.success != 'undefined' && result.data.success)
+				this.currentVersion = result.data.version;
 		}
 	}
 </script>
@@ -111,4 +125,5 @@
 		em{font-style: normal; font-weight: bold; color:#191C21;}
 	}
 	.update-buttons .el-gbtn {margin-right: 17px; }
+	.update-success {color:#3A8406; font-size: 14px;}
 </style>

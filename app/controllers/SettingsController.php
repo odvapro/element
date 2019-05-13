@@ -120,6 +120,17 @@ class SettingsController extends ControllerBase
 		return $this->jsonResult(['success' => true, 'settings' => $field]);
 	}
 
+	/**
+	 * Определяет последнюю версию системы
+	 * @return json
+	 */
+	public function getCurrentVersionAction()
+	{
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
+		return $this->jsonResult(['success'=>true, 'version'=>$currentVersion]);
+	}
 
 	/**
 	 * Проверка на наличие обновления
@@ -169,26 +180,36 @@ class SettingsController extends ControllerBase
 		$diffJson = file_get_contents($diffUrl, false, $context);
 		$diffJson = json_decode($diffJson,true);
 
+		// определение файлов  для игнорирования
+		$gitAttributes = file(ROOT.".gitattributes");
+		foreach ($gitAttributes as &$gitAttributeLine)
+			$gitAttributeLine = trim(str_replace(' export-ignore', '', $gitAttributeLine));
+
 		foreach ($diffJson['files'] as $fileArr)
 		{
+			$needIgnore = array_reduce($gitAttributes, function($carry, $item) use ($fileArr)
+			{
+				if(strpos($fileArr['filename'], $item) === 0)
+					$carry = true;
+				return $carry;
+			},false);
+			if($needIgnore) continue;
+
+			$fileContent = file_get_contents($fileArr['raw_url']);
 			switch ($fileArr['status'])
 			{
 				case 'modified':
-					# code...
-					break;
+					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+				break;
 				case 'added':
-					# code...
-					break;
+					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+				break;
 				case 'deleted':
-					# code...
-					break;
+					@unlink(ROOT.$fileArr['filename']);
+				break;
 			}
 		}
-		echo "<pre>";
-		print_r($diffJson['files']);
-		exit();
-		// row
-		// https://github.com/dzantiev/element/blob/c3f091dbd5a6ab1f917303e6bc5740eda93623c2/.gitattributes
-		// при обновлении осключать лишниые файлы - export ignore
+
+		return $this->jsonResult(['success'=>true]);
 	}
 }
