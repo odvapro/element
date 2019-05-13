@@ -15,10 +15,33 @@ composer create-project dzantiev/element
 <видео>
 
 ## Nginx
-Настройки в nginx.config
+Убедитесь что на вашем сайте работает обработка php файлов.
+В конфигурационный файл вашего сайта добавьте следующие строки.
+
+```
+if ( $uri ~ "^/element(.*)" ) {
+	set $elementPrefix "/element/public";
+	set $elementExecFile "/index.html";
+	set $elementFile $1;
+}
+
+if ( $uri ~ "^/element/api(.*)" ) {
+	set $elementPrefix "/element/api";
+	set $elementExecFile "/index.php";
+	set $elementFile $1;
+}
+
+if ( $uri ~ "^/element/public(.*)" ) {
+	set $elementPrefix "/element/public";
+	set $elementExecFile "/index.html";
+	set $elementFile $1;
+}
+
+location /element/ {
+	try_files $elementPrefix$elementFile $elementPrefix$elementFile/ $elementPrefix$elementExecFile;
+}
 ```
 ---
-```
 <видео>
 
 ## Настройка конфигурации

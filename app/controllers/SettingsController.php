@@ -120,6 +120,17 @@ class SettingsController extends ControllerBase
 		return $this->jsonResult(['success' => true, 'settings' => $field]);
 	}
 
+	/**
+	 * Определяет последнюю версию системы
+	 * @return json
+	 */
+	public function getCurrentVersionAction()
+	{
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
+		return $this->jsonResult(['success'=>true, 'version'=>$currentVersion]);
+	}
 
 	/**
 	 * Проверка на наличие обновления
@@ -127,7 +138,20 @@ class SettingsController extends ControllerBase
 	 */
 	public function checkVersionAction()
 	{
-		$composerJson = file_get_contents(ROOT."/composer.json");
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
+
+		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
+		$context     = stream_context_create($opts);
+		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = json_decode($tagsList,true);
+		$lastVersion = reset($tagsList);
+
+		if($lastVersion['name'] != $currentVersion)
+			return $this->jsonResult(['success'=>true,'result'=>true, 'new_version'=>$lastVersion['name']]);
+		else
+			return $this->jsonResult(['success'=>true,'result'=>false]);
 	}
 
 	/**
@@ -136,13 +160,56 @@ class SettingsController extends ControllerBase
 	 */
 	public function updateAction()
 	{
-		// список тегов
-		// https://api.github.com/repos/dzantiev/element/tags
+		// достаем разницу тегов
+		// проходимся по файлам
+		// фильтруем нужные
+		// остальные - добавляем/удаляем/обновляем
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
 
-		// разница межу разными версиями
-		// https://api.github.com/repos/dzantiev/element/compare/v0.1.5...v0.1.9
-		// row
-		// https://github.com/dzantiev/element/blob/c3f091dbd5a6ab1f917303e6bc5740eda93623c2/.gitattributes
-		// при обновлении осключать лишниые файлы - export ignore
+		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
+		$context     = stream_context_create($opts);
+		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = json_decode($tagsList,true);
+		$lastVersion = reset($tagsList);
+		if($lastVersion['name'] == $currentVersion)
+			return $this->jsonResult(['success'=>false,'msg'=>'You have latest version!']);
+
+		$diffUrl = "https://api.github.com/repos/dzantiev/element/compare/{$currentVersion}...{$lastVersion['name']}";
+		$diffJson = file_get_contents($diffUrl, false, $context);
+		$diffJson = json_decode($diffJson,true);
+
+		// определение файлов  для игнорирования
+		$gitAttributes = file(ROOT.".gitattributes");
+		foreach ($gitAttributes as &$gitAttributeLine)
+			$gitAttributeLine = trim(str_replace(' export-ignore', '', $gitAttributeLine));
+
+		foreach ($diffJson['files'] as $fileArr)
+		{
+			$needIgnore = array_reduce($gitAttributes, function($carry, $item) use ($fileArr)
+			{
+				if(strpos($fileArr['filename'], $item) === 0)
+					$carry = true;
+				return $carry;
+			},false);
+			if($needIgnore) continue;
+
+			$fileContent = file_get_contents($fileArr['raw_url']);
+			switch ($fileArr['status'])
+			{
+				case 'modified':
+					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+				break;
+				case 'added':
+					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+				break;
+				case 'deleted':
+					@unlink(ROOT.$fileArr['filename']);
+				break;
+			}
+		}
+
+		return $this->jsonResult(['success'=>true]);
 	}
 }

@@ -37,6 +37,11 @@ var router = new Router({
 			name: 'settings',
 			component: () => import('./pages/settings.vue')
 		},
+		{
+			path: '/update/',
+			name: 'update',
+			component: () => import('./pages/update.vue')
+		},
 	]
 });
 

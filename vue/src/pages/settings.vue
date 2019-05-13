@@ -13,7 +13,12 @@
 		</div>
 		<div class="settings-tab-wrapper">
 			<div class="settings-tabs-head">
-				<div class="settings-tab-item" @click="setActiveTab(item)" v-for="item in tabs" :class="{active: item.active}">{{item.name}}</div>
+				<div
+					class="settings-tab-item"
+					@click="setActiveTab(item)"
+					v-for="item in tabs"
+					:class="{active: item.active}"
+				>{{item.name}}</div>
 			</div>
 			<div class="settings-tabs-content-wrapper">
 				<div class="settings-tab-content" v-if="activeTab == 'Tables'">
@@ -66,10 +71,7 @@
 	}
 </script>
 <style lang="scss">
-	.settings-wrapper
-	{
-		padding: 23px 0 23px 21px;
-	}
+	.settings-wrapper {padding: 23px 0 23px 21px; }
 	.settings-head
 	{
 		display: flex;

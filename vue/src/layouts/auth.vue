@@ -1,7 +1,7 @@
 <template>
 	<div class="auth-content-wrapper">
 		<div class="auth-content__logo">
-			<img src="images/logo.svg" alt="">
+			<img src="@/assets/images/logo.svg" alt="">
 		</div>
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<form @submit.prevent="authUser">

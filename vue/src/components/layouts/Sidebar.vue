@@ -16,8 +16,7 @@
 					</a>
 					<div class="sidebar__user-logout" @click="logOut()">log out</div>
 				</li>
-				<li><a href="javascript:void(0)">Quiq Find</a></li>
-				<li><a href="javascript:void(0)">Update</a></li>
+				<li :class="{active: getActiveMenuItem == 'update'}"><router-link to="/update/">Update</router-link></li>
 				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">Settings & Users</router-link></li>
 			</ul>
 		</div>
