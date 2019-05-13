@@ -1,6 +1,9 @@
 <template>
 	<div class="settings-table-wrapper">
-		<div class="settings-table-head">
+		<div class="settings-empty-tables" v-if="tables.length < 1">
+			No tables
+		</div>
+		<div class="settings-table-head" v-if="tables.length > 0">
 			<div class="settings-table-row-data">
 				<div class="settings-table-item">
 					<div class="settings-table-item-title">Code</div>
@@ -264,10 +267,8 @@
 	}
 </script>
 <style lang="scss">
-	.settings-tab-wrapper
-	{
-		height: 100%;
-	}
+	.settings-tab-wrapper {height: 100%; }
+	.settings-empty-tables{font-size:14px; color:#191C21;}
 	.settings-table-input-name
 	{
 		border: none;
@@ -281,10 +282,7 @@
 		margin-right: 11px;
 		cursor: pointer;
 		transition: all 0.3s;
-		&.active
-		{
-			transform: rotate(90deg);
-		}
+		&.active {transform: rotate(90deg); }
 	}
 	.settings-table-item-flag
 	{

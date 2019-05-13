@@ -21,7 +21,7 @@
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
-			<div class="sidebar-table-head">Tables</div>
+			<div class="sidebar-table-head" v-if="tables.length > 0">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables" v-if="table.visible">
 					<a
