@@ -36,7 +36,10 @@ try
 		'host'     => $_POST['host'],
 		'username' => $_POST['username'],
 		'password' => $_POST['password'],
-		'dbname'   => $_POST['dbname']
+		'dbname'   => $_POST['dbname'],
+		"options" => [
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+		]
 	]);
 
 	if (!is_dir('../app/config') or !is_writable('../app/config'))

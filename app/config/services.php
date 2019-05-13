@@ -90,7 +90,10 @@ $options = [
 	'username' => $config->database->username,
 	'password' => $config->database->password,
 	'dbname'   => $config->database->dbname,
-	'adapter'  => $config->database->adapter
+	'adapter'  => $config->database->adapter,
+	"options" => [
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+	]
 ];
 $db  = Factory::load($options);
 $di->set('eldb', function () use ($config,$db)

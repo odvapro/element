@@ -127,7 +127,20 @@ class SettingsController extends ControllerBase
 	 */
 	public function checkVersionAction()
 	{
-		$composerJson = file_get_contents(ROOT."/composer.json");
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
+
+		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
+		$context     = stream_context_create($opts);
+		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = json_decode($tagsList,true);
+		$lastVersion = reset($tagsList);
+
+		if($lastVersion['name'] != $currentVersion)
+			return $this->jsonResult(['success'=>true,'result'=>true, 'new_version'=>$lastVersion['name']]);
+		else
+			return $this->jsonResult(['success'=>true,'result'=>false]);
 	}
 
 	/**
@@ -136,11 +149,44 @@ class SettingsController extends ControllerBase
 	 */
 	public function updateAction()
 	{
-		// список тегов
-		// https://api.github.com/repos/dzantiev/element/tags
+		// достаем разницу тегов
+		// проходимся по файлам
+		// фильтруем нужные
+		// остальные - добавляем/удаляем/обновляем
+		$composerJson   = file_get_contents(ROOT."/composer.json");
+		$composerJson   = json_decode($composerJson,true);
+		$currentVersion = $composerJson['verstion'];
 
-		// разница межу разными версиями
-		// https://api.github.com/repos/dzantiev/element/compare/v0.1.5...v0.1.9
+		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
+		$context     = stream_context_create($opts);
+		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = json_decode($tagsList,true);
+		$lastVersion = reset($tagsList);
+		if($lastVersion['name'] == $currentVersion)
+			return $this->jsonResult(['success'=>false,'msg'=>'You have latest version!']);
+
+		$diffUrl = "https://api.github.com/repos/dzantiev/element/compare/{$currentVersion}...{$lastVersion['name']}";
+		$diffJson = file_get_contents($diffUrl, false, $context);
+		$diffJson = json_decode($diffJson,true);
+
+		foreach ($diffJson['files'] as $fileArr)
+		{
+			switch ($fileArr['status'])
+			{
+				case 'modified':
+					# code...
+					break;
+				case 'added':
+					# code...
+					break;
+				case 'deleted':
+					# code...
+					break;
+			}
+		}
+		echo "<pre>";
+		print_r($diffJson['files']);
+		exit();
 		// row
 		// https://github.com/dzantiev/element/blob/c3f091dbd5a6ab1f917303e6bc5740eda93623c2/.gitattributes
 		// при обновлении осключать лишниые файлы - export ignore
