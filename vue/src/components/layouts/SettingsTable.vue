@@ -39,7 +39,12 @@
 						<div class="settings-table-item-flag">
 							<div class="settings-table__check-wrapper">
 								<label class="settings-table__check-label">
-									<input type="checkbox" v-model="table.visible" @change="setTviewSetting(table, 'table', {visible: String(table.visible)})" class="settings-table__check">
+									<input
+										type="checkbox"
+										v-model="table.visible"
+										@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
+										class="settings-table__check"
+									/>
 									<span>
 										<svg width="7" height="7">
 											<use xlink:href="#check"></use>

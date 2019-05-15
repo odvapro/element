@@ -4,18 +4,18 @@
 			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
 			<router-view class="content-wrapper"/>
 		</div>
-		<MainPopup/>
+		<Popups/>
 		<SettingsPopup v-if="$store.state.settings.popupActive"/>
 	</div>
 </template>
 <script>
 	import Sidebar from '@/components/layouts/Sidebar.vue';
-	import MainPopup from '@/components/popups/MainPopup.vue';
+	import Popups from '@/components/popups/Popups.vue';
 	import SettingsPopup from '@/components/popups/SettingsPopup.vue';
 	export default
 	{
 		name: 'Content',
-		components: { Sidebar, MainPopup, SettingsPopup },
+		components: { Sidebar, Popups, SettingsPopup },
 		/**
 		 * Глобальные переменные страницы
 		 */

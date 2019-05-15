@@ -12,7 +12,7 @@
 						<div class="sidebar__user-img-wrapper">
 							<img :src="$store.state.users.authUser.avatar" alt="">
 						</div>
-						<span>{{$store.state.users.authUser.name}}</span>
+						<span>{{ $store.state.users.authUser.name }}</span>
 					</a>
 					<div class="sidebar__user-logout" @click="logOut()">log out</div>
 				</li>

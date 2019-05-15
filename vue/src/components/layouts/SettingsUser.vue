@@ -5,69 +5,83 @@
 				<div class="settings-users-item">
 					<div class="settings-users-item-title">Login</div>
 				</div>
-				<div class="settings-users-item item-width__210">
+				<div class="settings-users-item">
 					<div class="settings-users-item-title">Name</div>
 				</div>
 				<div class="settings-users-item"></div>
 			</div>
-			<div class="settings-users-row" v-for="item in settings">
+			<div class="settings-users-row" v-for="user in users">
 				<div class="settings-users-row-data">
 					<div class="settings-users-item">
-						<svg width="7" height="13" class="settings-users-item-img" :class="{active: item.isShow}" @click="setRowSetting(item)">
+						<svg width="7" height="13" class="settings-users-item-img" :class="{active: user.isShow}" @click="setRowSetting(user)">
 							<use xlink:href="#arrow"></use>
 						</svg>
-						<div class="settings-users-item-code">Code</div>
+						<div class="settings-users-item-code">{{ user.login }}</div>
 					</div>
-					<div class="settings-users-item item-width__210">
-						<div class="settings-users-item-flag">
-							<EmCheckField :fieldValue="{value: true}"/>
-						</div>
-					</div>
+					<div class="settings-users-item">{{ user.name }}</div>
 					<div class="settings-users-item"></div>
 				</div>
 				<div class="settings-users-row-setting">
-					<div class="settings-users-row-setting-item" :class="{active: item.isShow}">
+					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
 						<div class="settings-users-item">
 							id
 						</div>
-						<div class="settings-users-item centered item-width__210">
-							1
+						<div class="settings-users-item">
+							{{ user.id }}
 						</div>
 					</div>
-					<div class="settings-users-row-setting-item" :class="{active: item.isShow}">
+					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
+						<div class="settings-users-item"> name </div>
 						<div class="settings-users-item">
-							name
-						</div>
-						<div class="settings-users-item centered item-width__210">
-							Valeron
+							<input
+								type="text"
+								class="settings-users-input"
+								v-model="user.name"
+								@change="updateUser(user)"
+								placeholder="Set name"
+							/>
 						</div>
 					</div>
-					<div class="settings-users-row-setting-item" :class="{active: item.isShow}">
+					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
+						<div class="settings-users-item"> login </div>
 						<div class="settings-users-item">
-							password
+							<input
+								type="text"
+								class="settings-users-input"
+								v-model="user.login"
+								@change="updateUser(user)"
+								placeholder="Set login"
+							/>
 						</div>
-						<div class="settings-users-item centered item-width__210">
-							<input type="password" class="settings-users-input" placeholder="Set password">
-							<button class="settings-users-btn">change</button>
+					</div>
+					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
+						<div class="settings-users-item"> email </div>
+						<div class="settings-users-item">
+							<input
+								type="text"
+								class="settings-users-input"
+								v-model="user.email"
+								@change="updateUser(user)"
+								placeholder="Set email"
+							/>
+						</div>
+					</div>
+					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
+						<div class="settings-users-item"> password </div>
+						<div class="settings-users-item settings-users__password-field">
+							<input type="password" class="settings-users-input" v-model="user.newPassword" placeholder="Set password">
+							<button @click="updatePassword(user)" v-if="user.newPassword != ''" class="settings-users-btn">change</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<button class="settings-users-add-btn">
-			<div class="settings-users-btn-icon">
-				<svg width="12" height="12">
-					<use xlink:href="#plus-white"></use>
-				</svg>
-			</div>
-			<span class="settings-users-btn-name">
-				Add User
-			</span>
-		</button>
+		<button class="el-gbtn">Add User</button>
 	</div>
 </template>
 <script>
 	import EmCheckField from '@/components/fields/EmCheckField.vue';
+	import qs from 'qs';
 	export default
 	{
 		components: { EmCheckField },
@@ -77,13 +91,7 @@
 		data()
 		{
 			return {
-				settings:
-				[
-					{isShow: false},
-					{isShow: false},
-					{isShow: false},
-					{isShow: false},
-				]
+				users: []
 			}
 		},
 		methods:
@@ -94,38 +102,63 @@
 			setRowSetting(settingItem)
 			{
 				settingItem.isShow = !settingItem.isShow;
+			},
+
+			/**
+			 * Updates User data
+			 */
+			async updateUser(user)
+			{
+				let updateData   = {}
+				updateData.id    = user.id;
+				updateData.login = user.login;
+				updateData.name  = user.name;
+				updateData.email = user.email;
+				updateData       = qs.stringify(updateData);
+
+				var result = await this.$axios.post('/users/updateUser/',updateData);
+				if(result.data.success)
+					this.ElMessage('User saved.');
+			},
+
+			/**
+			 * Updates user password
+			 */
+			async updatePassword(user)
+			{
+				let updateData      = {}
+				updateData.id       = user.id;
+				updateData.password = user.newPassword;
+				updateData          = qs.stringify(updateData);
+
+				var result = await this.$axios.post('/users/updateUser/',updateData);
+				if(result.data.success)
+				{
+					this.ElMessage('Password saved.');
+					user.newPassword = '';
+				}
 			}
+		},
+
+		/**
+		 * Get all users
+		 */
+		async mounted()
+		{
+			var result = await this.$axios.get('/users/getUsers/');
+			for(let user of result.data.users)
+			{
+				user.isShow = false;
+				user.newPassword = '';
+			}
+			this.users = result.data.users;
+
+			this.$store.commit('openPopup','AddUser');
 		}
 	}
 </script>
 <style lang="scss">
-	.settings-users-head
-	{
-		margin-bottom: 10px;
-	}
-	.settings-users-btn-name
-	{
-		line-height: 10px;
-	}
-	.settings-users-btn-icon
-	{
-		height: 12px;
-		width: 12px;
-		margin-right: 10px;
-	}
-	.settings-users-add-btn
-	{
-		background: rgba(25, 28, 33, 0.1);
-		border-radius: 2px;
-		border: none;
-		padding: 0 10px;
-		display: flex;
-		width: 105px;
-		height: 30px;
-		align-items: center;
-		font-size: 12px;
-		color: rgba(25, 28, 33, 0.7);
-	}
+	.settings-users-head {margin-bottom: 10px; }
 	.settings-users-btn
 	{
 		width: 53px;
@@ -142,25 +175,17 @@
 	{
 		border: none;
 		background-color: transparent;
-		width: 100%;
+		width: 130px;
 		height: 100%;
 		font-size: 12px;
+		&::placeholder{color: rgba(103, 115, 135, 0.4); }
 	}
 	.settings-users-item-img
 	{
 		margin-right: 11px;
 		cursor: pointer;
 		transition: all 0.3s;
-		&.active
-		{
-			transform: rotate(90deg);
-		}
-	}
-	.settings-users-item-flag
-	{
-		display: flex;
-		width: 100%;
-		justify-content: center;
+		&.active {transform: rotate(90deg); }
 	}
 	.settings-users-item-name
 	{
@@ -185,19 +210,9 @@
 		transition: all 0.3s;
 		height: 0;
 		padding: 0 8px;
-		.settings-users-item
-		{
-			border-right: none;
-		}
-		.settings-users-item:first-child
-		{
-			padding-left: 30px;
-		}
-		&.active
-		{
-			height: 39px;
-			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		}
+		.settings-users-item {border-right: none; }
+		.settings-users-item:first-child {padding-left: 30px; }
+		&.active {height: 39px; border-bottom: 1px solid rgba(103, 115, 135, 0.1); }
 	}
 	.settings-users-row-data
 	{
@@ -210,18 +225,9 @@
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		.settings-users-row-setting-item.active:first-child
-		{
-			border-top: none;
-		}
-		.settings-users-row-setting-item.active:last-child
-		{
-			border-bottom: none;
-		}
-		&:last-child
-		{
-			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		}
+		.settings-users-row-setting-item.active:first-child {border-top: none; }
+		.settings-users-row-setting-item.active:last-child {border-bottom: none; }
+		&:last-child {border-bottom: 1px solid rgba(103, 115, 135, 0.1); }
 	}
 	.settings-users-item
 	{
@@ -237,22 +243,7 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&:last-child
-		{
-			border-right: none;
-		}
-		&.centered
-		{
-			justify-content: center;
-		}
-		&.category-font
-		{
-			color: #191C21;
-		}
-		&.item-width__210
-		{
-			min-width: 210px;
-			width: 210px;
-		}
+		&:last-child {border-right: none; }
 	}
+	.settings-users__password-field{width:210px;}
 </style>

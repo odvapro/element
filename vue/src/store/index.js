@@ -19,11 +19,10 @@ export default new Vuex.Store({
 	state:
 	{
 		drugPosition: 400,
-		openPopupName:false,
-		popupCoords: '',
-		openPopup: false,
 		isAuth: true,
-		isIntallDb: true
+		isIntallDb: true,
+		openPopup:false,
+		openPopupName:false,
 	},
 	mutations:
 	{
@@ -51,11 +50,10 @@ export default new Vuex.Store({
 		/**
 		 * Открытие попапов
 		 */
-		openPopup(state, popup)
+		openPopup(state,popuName)
 		{
 			state.openPopup = true;
-			state.openPopupName = popup.name;
-			state.popupCoords = popup.coords;
+			state.openPopupName = popuName;
 		},
 		/**
 		 * Закрытие всех попапов

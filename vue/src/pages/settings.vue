@@ -110,7 +110,7 @@
 	.settings-tabs-head
 	{
 		display: flex;
-		height: 38px;
+		height: 37px;
 		width: 152px;
 		margin-bottom: 18px;
 		align-items: center;
