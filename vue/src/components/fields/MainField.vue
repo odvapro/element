@@ -23,7 +23,7 @@
 				if (typeof this.params == 'undefined')
 					return false;
 
-				return () => import(`@/components/fields/${this.params.fieldName}.vue`);
+				return () => import(`@/components/fields/${this.params.fieldName}/Field.vue`);
 			}
 		},
 		methods:

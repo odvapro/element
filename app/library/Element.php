@@ -59,7 +59,7 @@ class Element
 
 	/**
 	 * Достать колонки таблицы c типами
-	 * @param  [string] $tableName
+	 * @param  string $tableName
 	 * @return Array
 	 */
 	public function getColumns($tableName)
@@ -123,9 +123,6 @@ class Element
 	public function getPrimaryKeyCode($tableName)
 	{
 		$columns = $this->eldb->getColumns($tableName);
-		echo "<pre>";
-		print_r($columns);
-		exit();
 	}
 
 	/**
@@ -160,7 +157,7 @@ class Element
 					$field = new EmStringField($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
 
 				$result[$fieldCode]['value']     = $field->getValue();
-				$result[$fieldCode]['fieldName'] = get_class($field);
+				$result[$fieldCode]['fieldName'] = $tableColumns[$fieldCode]['em']['type_info']['code'];
 			}
 			return $result;
 		}, $selectResult);

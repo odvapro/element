@@ -89,12 +89,11 @@
 	</div>
 </template>
 <script>
-	import EmCheckField from '@/components/fields/EmCheckField.vue';
 	import AddUser from '@/components/popups/AddUser.vue';
 	import qs from 'qs';
 	export default
 	{
-		components: { EmCheckField,AddUser },
+		components: { AddUser },
 		/**
 		 * Глобальные переменные страницы
 		 */

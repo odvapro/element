@@ -67,7 +67,6 @@
 	</div>
 </template>
 <script>
-	import EmCheck from '@/components/fields/EmCheckField.vue';
 	import MainField from '@/components/fields/MainField.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
@@ -76,7 +75,7 @@
 	{
 		props:['table', 'tview'],
 		mixins: [TableWork],
-		components: {MainField, EmCheck, TagItem, Pagination},
+		components: {MainField, TagItem, Pagination},
 		/**
 		 * Глобальные переменные страницы
 		 */

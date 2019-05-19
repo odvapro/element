@@ -29,11 +29,9 @@
 	</div>
 </template>
 <script>
-	import Checkbox from '@/components/fields/EmCheckField.vue';
 	export default
 	{
 		props: ['column'],
-		components: { Checkbox }
 	}
 </script>
 <style lang="scss">
