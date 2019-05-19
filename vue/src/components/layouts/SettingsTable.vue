@@ -66,7 +66,7 @@
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click.stop="openSettingsPopup(column)">settings</button>
+							<button @click="openSettingsPopup(column)">settings</button>
 						</div>
 					</div>
 				</div>

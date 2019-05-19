@@ -1,7 +1,8 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" v-if="visible">
-			<div v-click-outside="close" class="popup-block">
+		<div class="popup-overlay" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
+			<div
+				v-click-outside="close" class="popup-block">
 				<div class="popup-close" @click="close">
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>
@@ -24,11 +25,6 @@
 				default: false
 			},
 		},
-		data()
-		{
-			return {
-			}
-		},
 		methods:
 		{
 			/**
@@ -37,17 +33,29 @@
 			close()
 			{
 				this.$emit('update:visible', false);
+			},
+			keyup(event)
+			{
+				if (event.keyCode === 27)
+					this.close();
 			}
 		},
 		mounted()
 		{
 			if (this.visible)
+			{
 				document.body.appendChild(this.$el);
+			}
+		},
+		created()
+		{
+  			document.addEventListener('keyup', this.keyup);
 		},
 		destroyed()
 		{
 			if (this.$el && this.$el.parentNode)
 				this.$el.parentNode.removeChild(this.$el);
+			 document.removeEventListener('keyup', this.keyup);
 		}
 	};
 </script>
