@@ -29,7 +29,7 @@
 				</label>
 				<div class="auth-bottom-btns">
 					<button class="auth-fill-btn el-btn" @click="authUser()">Log In</button>
-					<button class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</button>
+					<a class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</a>
 				</div>
 			</form>
 		</div>
@@ -48,7 +48,7 @@
 				</label>
 				<div class="auth-bottom-btns">
 					<button class="auth-fill-btn el-btn">Reset Password</button>
-					<button class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</button>
+					<a class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</a>
 				</div>
 			</form>
 		</div>
@@ -192,6 +192,7 @@ export default
 		color: rgba(103, 115, 135, 0.7);
 		border: none;
 		cursor: pointer;
+		&:hover{text-decoration: underline;}
 	}
 	.auth-bottom-btns
 	{
