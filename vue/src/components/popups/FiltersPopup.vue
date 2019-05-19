@@ -152,7 +152,7 @@
 
 				let resultSaveFilters = await this.$axios({
 					method: 'GET',
-					url: '/api/tview/saveFilters/',
+					url: '/tview/saveFilters/',
 					params: data,
 					/**
 					 * сериализовать отправляемые данные

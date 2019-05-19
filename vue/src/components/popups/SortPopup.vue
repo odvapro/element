@@ -140,7 +140,7 @@
 
 				let resultSaveSort = await this.$axios({
 					method: 'GET',
-					url: '/api/tview/saveSort/',
+					url: '/tview/saveSort/',
 					params: data,
 					/**
 					 * сериализовать отправляемые данные
