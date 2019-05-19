@@ -190,7 +190,6 @@
 					if (typeof tableColumns[column].width == 'undefined')
 						return false;
 
-					request['params']['columns'][column] = {};
 					request['params']['columns'][column] = {
 						width: tableColumns[column].width,
 						visible: tableColumns[column].visible
@@ -247,15 +246,13 @@
 			{
 				var requestParams = {
 					select : {},
-					where  : [],
-					order  : [],
 				};
 
 				if (typeof this.tview.filter.operation != 'undefined')
-					requestParams.where = this.tview.filter;
+					requestParams.select.where = this.tview.filter;
 
 				if (typeof this.tview.sort != 'undefined')
-					requestParams.order = this.tview.sort;
+					requestParams.select.order = this.tview.sort;
 
 				requestParams.select.from = this.$route.params.tableCode;
 				requestParams.select.page = this.$route.params.page;
