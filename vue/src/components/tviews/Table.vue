@@ -71,12 +71,11 @@
 	import MainField from '@/components/fields/MainField.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TagItem from '@/components/forms/TagItem.vue';
-	import Popup from '@/mixins/popup.js';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
-		mixins: [Popup, TableWork],
+		mixins: [TableWork],
 		components: {MainField, EmCheck, TagItem, Pagination},
 		/**
 		 * Глобальные переменные страницы

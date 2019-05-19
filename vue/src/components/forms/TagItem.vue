@@ -6,7 +6,6 @@
 	</div>
 </template>
 <script>
-	import Popup from '@/mixins/popup.js';
 	export default
 	{
 		props: ['name']

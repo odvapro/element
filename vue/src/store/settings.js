@@ -8,8 +8,6 @@ const settings =
 	state:
 	{
 		users:[],
-		popupActive: false,
-		popupParams: {}
 	},
 	mutations:
 	{
@@ -44,21 +42,6 @@ const settings =
 				}
 			}
 		},
-
-		/**
-		 * Открыть/закрыть попап
-		 */
-		setActivePopup(state, status)
-		{
-			state.popupActive = status
-		},
-		/**
-		 * Передать параметры для попапа
-		 */
-		setPopupParams(state, params)
-		{
-			state.popupParams = params;
-		}
 	},
 	actions:
 	{

@@ -1,13 +1,13 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" v-if="$store.state.openPopup">
+		<div class="popup-overlay" v-if="visible">
 			<div v-click-outside="close" class="popup-block">
-				<div class="popup-close" @click="close()">
+				<div class="popup-close" @click="close">
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>
 					</svg>
 				</div>
-				<component v-bind:is="contentComponent"></component>
+				<slot></slot>
 			</div>
 		</div>
 	</transition>
@@ -15,29 +15,41 @@
 <script>
 	export default
 	{
-		computed:
+		name: 'Popup',
+		props:
 		{
-			/**
-			 * Подключает файл для контента попапа
-			 */
-			contentComponent()
+			visible:
 			{
-				if(!this.$store.state.openPopupName)
-					return null;
-				return () => import(`@/components/popups/${this.$store.state.openPopupName}`);
+				type: Boolean,
+				default: false
+			},
+		},
+		data()
+		{
+			return {
 			}
 		},
 		methods:
 		{
 			/**
-			 * Закрытие попапа
+			 * Closes popup
 			 */
 			close()
 			{
-				this.$store.commit('closePopup');
+				this.$emit('update:visible', false);
 			}
+		},
+		mounted()
+		{
+			if (this.visible)
+				document.body.appendChild(this.$el);
+		},
+		destroyed()
+		{
+			if (this.$el && this.$el.parentNode)
+				this.$el.parentNode.removeChild(this.$el);
 		}
-	}
+	};
 </script>
 <style lang="scss">
 	.popup-overlay

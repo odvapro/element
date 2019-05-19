@@ -23,11 +23,9 @@
 	</div>
 </template>
 <script>
-	import PopupParams from '@/mixins/popupParams.js';
 	import InputFile from '@/components/forms/InputFile.vue';
 	export default
 	{
-		mixins: [PopupParams],
 		components: { InputFile },
 		/**
 		 * Глоабальные переменные странциы

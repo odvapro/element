@@ -65,34 +65,37 @@
 						<div class="settings-table-item table-item centered">
 							<List
 								:params="{
-									value     : column.em.type_info.name,
-									settings  : getFieldSettings(table, column)
+									value    : column.em.type_info.name,
+									settings : getFieldSettings(table, column)
 								}"
 								@onChange="changeType"
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click.stop="setSettingsPopupParams({
-								fieldName: column.em.type_info.fieldComponent,
-								required: column.em.required,
-								settings: column.em.settings
-							})">settings</button>
+							<button @click.stop="openSettingsPopup(column)">settings</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<Popup :visible.sync="settingsPopup">
+			<div class="popup__name">Settings</div>
+			<component
+				:is="settingsComponent"
+				:settings="currentSettgins"
+				@save="saveSettings"
+				@cancel="settingsPopup = false"
+			></component>
+		</Popup>
 	</div>
 </template>
 <script>
 	import List from '@/components/layouts/List.vue';
-	import MainField from '@/components/fields/MainField.vue';
-	import Popup from '@/mixins/popup.js';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		mixins: [Popup, TableWork],
-		components: { MainField, List},
+		mixins: [TableWork],
+		components: { List},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -107,19 +110,65 @@
 				{
 					height: '0px',
 					overflow: 'hidden'
-				}
+				},
+
+				settingsPopup:false,
+				settingsFielType:false,
+				currentSettgins:false
+			}
+		},
+		computed:
+		{
+			/**
+			 * Field settings component
+			 */
+			settingsComponent()
+			{
+				if (this.settingsFielType == false)
+					return false;
+				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
+			},
+
+			/**
+			 * Достать колонки столбца
+			 */
+			getColumns()
+			{
+				return this.$store.state.tables.tableColumns;
 			}
 		},
 		methods:
 		{
 			/**
-			 * Передать параметры филда в попап и открыть
+			 * Opens field settgins popups
 			 */
-			setSettingsPopupParams(params)
+			openSettingsPopup(column)
 			{
-				this.$store.commit('setPopupParams', params);
-				this.$store.commit('setActivePopup', true);
+				this.settingsFielType = column.em.settings.fieldType;
+				this.currentSettgins  = column.em.settings;
+				this.settingsPopup    = true;
 			},
+
+			async saveSettings(settgins)
+			{
+				console.log(settgins)
+				return false;
+
+				/*let data = {
+					tableName  : this.popupParams.settings.tableCode,
+					columnName : this.popupParams.settings.fieldCode,
+					fieldType  : this.popupParams.settings.fieldType,
+					settings   : this.newSettings
+				};
+
+				let dataStr = qs.stringify(data);
+				let result =  await this.$axios({
+					method: 'POST',
+					url: '/api/settings/setFieldSettings/',
+					data: dataStr
+				});*/
+			},
+
 			/**
 			 * Достать данные колонки
 			 */
@@ -250,16 +299,6 @@
 				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
 				}
-			}
-		},
-		computed:
-		{
-			/**
-			 * Достать колонки столбца
-			 */
-			getColumns()
-			{
-				return this.$store.state.tables.tableColumns;
 			}
 		},
 		/**
@@ -406,62 +445,62 @@
 			cursor: pointer;
 		}
 	}
-.settings-table__check-wrapper
-{
-	display: inherit;
-	.settings-table__check-label
+	.settings-table__check-wrapper
 	{
-		display: inline-block;
-		position: relative;
-		padding-left: 12px;
-		font-size: 14px;
-		height: 12px;
-		color: #334D66;
-		cursor: pointer;
-	}
-	.settings-table__check
-	{
-		visibility: hidden;
-		position: absolute;
-	}
-	.settings-table__check:not(checked) + span
-	{
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 13px;
-		height: 13px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		position: absolute;
-		left: 0;
-		transition: border 0.3s;
-		background-color: #fff;
-	}
-	.settings-table__check:checked + span
-	{
-		background: #7C7791;
-		border: 1px solid #7C7791;
-		background-repeat: no-repeat;
-		background-size: contain;
-		transition: background 0.3s;
-		img
+		display: inherit;
+		.settings-table__check-label
 		{
-			width: 7px;
-			height: 7px;
-			object-fit: contain;
+			display: inline-block;
+			position: relative;
+			padding-left: 12px;
+			font-size: 14px;
+			height: 12px;
+			color: #334D66;
+			cursor: pointer;
+		}
+		.settings-table__check
+		{
+			visibility: hidden;
+			position: absolute;
+		}
+		.settings-table__check:not(checked) + span
+		{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 13px;
+			height: 13px;
+			border: 1px solid rgba(103, 115, 135, 0.4);
+			border-radius: 2px;
+			position: absolute;
+			left: 0;
+			transition: border 0.3s;
+			background-color: #fff;
+		}
+		.settings-table__check:checked + span
+		{
+			background: #7C7791;
+			border: 1px solid #7C7791;
+			background-repeat: no-repeat;
+			background-size: contain;
+			transition: background 0.3s;
+			img
+			{
+				width: 7px;
+				height: 7px;
+				object-fit: contain;
+			}
+		}
+
+		.settings-table__check:checked:hover + span
+		{
+			transition: background 0.3s;
+			border: 1px solid rgba(103, 115, 135, 0.5);
+		}
+		.settings-table__check:not(checked):hover + span
+		{
+			border: 1px solid rgba(103, 115, 135, 0.8);
+			transition: border 0.3s;
 		}
 	}
-
-	.settings-table__check:checked:hover + span
-	{
-		transition: background 0.3s;
-		border: 1px solid rgba(103, 115, 135, 0.5);
-	}
-	.settings-table__check:not(checked):hover + span
-	{
-		border: 1px solid rgba(103, 115, 135, 0.8);
-		transition: border 0.3s;
-	}
-}
 </style>

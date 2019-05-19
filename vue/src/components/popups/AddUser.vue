@@ -38,7 +38,7 @@
 			</div>
 		</div>
 		<div class="popup__buttons">
-			<button @click="$store.commit('closePopup');" class="el-gbtn">Cancel</button>
+			<button @click="cancel()" class="el-gbtn">Cancel</button>
 			<button @click="addUser()" class="el-btn">Add</button>
 		</div>
 	</div>
@@ -106,11 +106,19 @@
 				{
 					formData.id = result.data.id;
 					this.$store.commit('addUser',formData);
-					return this.$store.commit('closePopup');
+					this.cancel();
 				}
 				else
 					return this.ElMessage.error(result.data.message);
 
+			},
+
+			/**
+			 * Close popup
+			 */
+			cancel()
+			{
+				this.$emit('cancel');
 			}
 		}
 	}

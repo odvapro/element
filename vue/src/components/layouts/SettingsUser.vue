@@ -79,21 +79,30 @@
 			</div>
 		</div>
 		<button @click="openAddUser()" class="el-gbtn">Add User</button>
+		<Popup
+			:visible.sync="addPopupVisible"
+		>
+			<AddUser
+				@cancel="addPopupVisible = false"
+			></AddUser>
+		</Popup>
 	</div>
 </template>
 <script>
 	import EmCheckField from '@/components/fields/EmCheckField.vue';
+	import AddUser from '@/components/popups/AddUser.vue';
 	import qs from 'qs';
 	export default
 	{
-		components: { EmCheckField },
+		components: { EmCheckField,AddUser },
 		/**
 		 * Глобальные переменные страницы
 		 */
 		data()
 		{
 			return {
-				users: []
+				users: [],
+				addPopupVisible:false
 			}
 		},
 		methods:
@@ -145,7 +154,7 @@
 			 */
 			openAddUser()
 			{
-				this.$store.commit('openPopup','AddUser');
+				this.addPopupVisible = true;
 			},
 			/**
 			 * Removes user

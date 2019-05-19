@@ -20,9 +20,7 @@ export default new Vuex.Store({
 	{
 		drugPosition: 400,
 		isAuth: true,
-		isIntallDb: true,
-		openPopup:false,
-		openPopupName:false,
+		isIntallDb: true
 	},
 	mutations:
 	{
@@ -33,6 +31,7 @@ export default new Vuex.Store({
 		{
 			state.isIntallDb = status;
 		},
+
 		/**
 		 * Установить статус авторизации
 		 */
@@ -40,31 +39,13 @@ export default new Vuex.Store({
 		{
 			state.isAuth = status;
 		},
+
 		/**
 		 * Установить ширину сайдбара
 		 */
 		drugPosition(state, position)
 		{
 			state.drugPosition = position;
-		},
-		/**
-		 * Открытие попапов
-		 */
-		openPopup(state,popuName)
-		{
-			state.openPopup = true;
-			state.openPopupName = popuName;
-		},
-		/**
-		 * Закрытие всех попапов
-		 */
-		closePopup(state)
-		{
-			state.openPopup = false;
 		}
-	},
-	actions:
-	{
-		test(){alert('dsdsds');}
 	}
 })
