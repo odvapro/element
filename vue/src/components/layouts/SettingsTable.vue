@@ -32,26 +32,20 @@
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-name">
-							<input type="text" @change="setTviewSetting(table, 'table', {name: table.name})" v-model="table.name" placeholder="Set Name">
+							<input
+								type="text"
+								@change="setTviewSetting(table, 'table', {name: table.name})"
+								v-model="table.name"
+								placeholder="Set Name"
+							/>
 						</div>
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-flag">
-							<div class="settings-table__check-wrapper">
-								<label class="settings-table__check-label">
-									<input
-										type="checkbox"
-										v-model="table.visible"
-										@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
-										class="settings-table__check"
-									/>
-									<span>
-										<svg width="7" height="7">
-											<use xlink:href="#check"></use>
-										</svg>
-									</span>
-								</label>
-							</div>
+							<Checkbox
+								:checked.sync="table.visible"
+								@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
+							></Checkbox>
 						</div>
 					</div>
 					<div class="settings-table-item"></div>
@@ -91,11 +85,12 @@
 </template>
 <script>
 	import List from '@/components/layouts/List.vue';
+	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: { List},
+		components: {List, Checkbox},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -443,64 +438,7 @@
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
-		}
-	}
-	.settings-table__check-wrapper
-	{
-		display: inherit;
-		.settings-table__check-label
-		{
-			display: inline-block;
-			position: relative;
-			padding-left: 12px;
-			font-size: 14px;
-			height: 12px;
-			color: #334D66;
-			cursor: pointer;
-		}
-		.settings-table__check
-		{
-			visibility: hidden;
-			position: absolute;
-		}
-		.settings-table__check:not(checked) + span
-		{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 13px;
-			height: 13px;
-			border: 1px solid rgba(103, 115, 135, 0.4);
-			border-radius: 2px;
-			position: absolute;
-			left: 0;
-			transition: border 0.3s;
-			background-color: #fff;
-		}
-		.settings-table__check:checked + span
-		{
-			background: #7C7791;
-			border: 1px solid #7C7791;
-			background-repeat: no-repeat;
-			background-size: contain;
-			transition: background 0.3s;
-			img
-			{
-				width: 7px;
-				height: 7px;
-				object-fit: contain;
-			}
-		}
-
-		.settings-table__check:checked:hover + span
-		{
-			transition: background 0.3s;
-			border: 1px solid rgba(103, 115, 135, 0.5);
-		}
-		.settings-table__check:not(checked):hover + span
-		{
-			border: 1px solid rgba(103, 115, 135, 0.8);
-			transition: border 0.3s;
+			&:hover{text-decoration: underline;}
 		}
 	}
 </style>
