@@ -62,5 +62,9 @@ export default new Vuex.Store({
 		{
 			state.openPopup = false;
 		}
+	},
+	actions:
+	{
+		test(){alert('dsdsds');}
 	}
 })

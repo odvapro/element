@@ -10,7 +10,7 @@
 				</div>
 				<div class="settings-users-item"></div>
 			</div>
-			<div class="settings-users-row" v-for="user in users">
+			<div class="settings-users-row" v-for="user in $store.state.settings.users">
 				<div class="settings-users-row-data">
 					<div class="settings-users-item">
 						<svg width="7" height="13" class="settings-users-item-img" :class="{active: user.isShow}" @click="setRowSetting(user)">
@@ -19,7 +19,9 @@
 						<div class="settings-users-item-code">{{ user.login }}</div>
 					</div>
 					<div class="settings-users-item">{{ user.name }}</div>
-					<div class="settings-users-item"></div>
+					<div class="settings-users-item">
+						<a @click="removeUser(user)" class="settings-users__remove-user" href="#">remove</a>
+					</div>
 				</div>
 				<div class="settings-users-row-setting">
 					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
@@ -76,7 +78,7 @@
 				</div>
 			</div>
 		</div>
-		<button class="el-gbtn">Add User</button>
+		<button @click="openAddUser()" class="el-gbtn">Add User</button>
 	</div>
 </template>
 <script>
@@ -137,6 +139,20 @@
 					this.ElMessage('Password saved.');
 					user.newPassword = '';
 				}
+			},
+			/**
+			 * Открыть
+			 */
+			openAddUser()
+			{
+				this.$store.commit('openPopup','AddUser');
+			},
+			/**
+			 * Removes user
+			 */
+			removeUser(user)
+			{
+				this.$store.dispatch('removeUser',user);
 			}
 		},
 
@@ -145,15 +161,7 @@
 		 */
 		async mounted()
 		{
-			var result = await this.$axios.get('/users/getUsers/');
-			for(let user of result.data.users)
-			{
-				user.isShow = false;
-				user.newPassword = '';
-			}
-			this.users = result.data.users;
-
-			this.$store.commit('openPopup','AddUser');
+			this.$store.dispatch('getUsers');
 		}
 	}
 </script>
@@ -246,4 +254,14 @@
 		&:last-child {border-right: none; }
 	}
 	.settings-users__password-field{width:210px;}
+	.settings-users__remove-user
+	{
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 16px;
+		color: rgba(25, 28, 33, 0.5);
+		text-decoration: none;
+		&:hover{text-decoration: underline;}
+	}
 </style>

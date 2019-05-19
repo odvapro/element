@@ -116,6 +116,6 @@ class UsersController extends ControllerBase
 		if(!$user->save())
 			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
 
-		return $this->jsonResult(['success' => true]);
+		return $this->jsonResult(['success' => true, 'id'=>$user->id]);
 	}
 }
