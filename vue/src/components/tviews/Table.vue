@@ -4,6 +4,20 @@
 		@mouseup="endResize($event, columnDrug.col)">
 		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 			<div class="table-row no-hover">
+				<div class="table-item table__many-box">
+					<Checkbox
+						:checked.sync="checkAll"
+						@change="checkAllRows"
+					></Checkbox>
+					<svg class="table__many-arrow" width="7" height="13" @click="openedEditRowIndex = 'all'">
+						<use xlink:href="#arrow"></use>
+					</svg>
+					<div class="table__many-modal" v-if="openedEditRowIndex === 'all'" v-click-outside="closeEditModal">
+						<ul>
+							<li @click="removeSelected()" class="table__many-delete">Delete</li>
+						</ul>
+					</div>
+				</div>
 				<div
 					class="table-item"
 					v-for="column in table.columns"
@@ -31,12 +45,21 @@
 				</div>
 			</div>
 			<div class="table-row" v-for="(row, rowIndex) in tableContent.items">
-				<div class="table-overlay-row">
-					<button @click="openDetail(row,rowIndex)" class="table-row-btn">edit</button>
-					<button @click="remove(row,rowIndex)" class="table-row-btn">remove</button>
+				<div class="table-item table__many-box">
+					<Checkbox
+						:checked.sync="selectedRows[rowIndex]"
+					></Checkbox>
+					<svg class="table__many-arrow" width="7" height="13" @click="openedEditRowIndex = rowIndex">
+						<use xlink:href="#arrow"></use>
+					</svg>
+					<div class="table__many-modal" v-if="openedEditRowIndex === rowIndex" v-click-outside="closeEditModal">
+						<ul>
+							<li @click="openDetail(row,rowIndex)">Edit</li>
+							<li @click="remove(row,rowIndex)" class="table__many-delete">Delete</li>
+						</ul>
+					</div>
 				</div>
 				<div
-
 					class="table-item"
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
@@ -68,13 +91,14 @@
 </template>
 <script>
 	import MainField from '@/components/fields/MainField.vue';
+	import Checkbox from '@/components/forms/Checkbox.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
 		mixins: [TableWork],
-		components: {MainField, Pagination},
+		components: {MainField, Pagination, Checkbox},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -90,7 +114,10 @@
 					width: 0,
 					col: ''
 				},
-				openProperties: false
+				openProperties: false,
+				openedEditRowIndex:false,
+				checkAll:false,
+				selectedRows:{},
 			}
 		},
 		computed:
@@ -102,6 +129,7 @@
 			{
 				return this.$store.state.tables.tableContent;
 			},
+
 			/**
 			 * Определить минимальную ширину таблицу
 			 */
@@ -114,6 +142,7 @@
 
 				return sum + 300;
 			},
+
 			/**
 			 * Достать название таблицы из урла
 			 */
@@ -150,6 +179,41 @@
 		},
 		methods:
 		{
+			/**
+			 * Checkes are
+			 */
+			areSelected(rowIndex)
+			{
+				if(this.selectedRows.indexOf(rowIndex) != -1)
+					return false;
+				return false;
+			},
+
+			/**
+			 * Checkes all rows
+			 */
+			checkAllRows(checkedStatus)
+			{
+				if(checkedStatus === false)
+				{
+					this.selectedRows = {};
+				}
+				else
+				{
+					this.selectedRows = [];
+					for(let rowIndex in this.tableContent.items)
+						this.selectedRows[parseInt(rowIndex)] = true;
+				}
+			},
+
+			/**
+			 * Closw edit modal window
+			 */
+			closeEditModal()
+			{
+				this.openedEditRowIndex = false;
+			},
+
 			/**
 			 * Сохранить локально измененные данные в таблице
 			 * @fieldValue {
@@ -244,9 +308,7 @@
 			 */
 			async getTableContent()
 			{
-				var requestParams = {
-					select : {},
-				};
+				var requestParams = {select : {}, };
 
 				if (typeof this.tview.filter.operation != 'undefined')
 					requestParams.select.where = this.tview.filter;
@@ -314,6 +376,46 @@
 			},
 
 			/**
+			 * Removes selected records
+			 */
+			async removeSelected()
+			{
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
+				let requestWhere = {
+					operation:'or',
+					fields:[]
+				}
+				let rowIndexes = [];
+				for(let rowIndex in this.selectedRows)
+				{
+					if(this.selectedRows[rowIndex] === false) continue;
+					if(typeof this.tableContent.items[rowIndex] == 'undefined')
+						continue;
+
+					rowIndexes.push(parseInt(rowIndex));
+					let row = this.tableContent.items[rowIndex];
+					requestWhere.fields.push({
+						code      : primaryKeyCode,
+						operation : 'IS',
+						value     : row[primaryKeyCode].value
+					});
+				}
+
+				await this.$store.dispatch('removeRecord', {
+					rowIndex:rowIndexes,
+					delete:
+					{
+						table: this.table.code,
+						where: requestWhere
+					}
+				});
+
+				this.selectedRows = {};
+				this.openedEditRowIndex	= false;
+				this.checkAll = false;
+			},
+
+			/**
 			 * Удаляет запись
 			 */
 			async remove(row,rowIndex)
@@ -336,7 +438,12 @@
 						}
 					}
 				});
+				this.openedEditRowIndex	= false;
 			},
+
+			/**
+			 * Opens detail page
+			 */
 			openDetail(row,rowIndex)
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
@@ -359,13 +466,6 @@
 		width: 14px;
 		height: 14px;
 		margin-right: 6px;
-	}
-	.table-overlay-row-option-icon
-	{
-		width: 19px;
-		height: 2px;
-		position: relative;
-		z-index: 2;
 	}
 	.table-row-btn
 	{
@@ -423,45 +523,12 @@
 	}
 	.table-row
 	{
-		.table-overlay-row
-		{
-			display: none;
-		}
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		position: relative;
 		&:last-child
 		{
 			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		}
-		&.no-hover:hover .table-overlay-row
-		{
-			display: none;
-		}
-		&:hover
-		{
-			.table-overlay-row
-			{
-				background-color: rgba(103, 115, 135, 0.1);
-				width: 100%;
-				padding-left: 10px;
-				display: flex;
-				align-items: center;
-				position: absolute;
-				height: 100%;
-				top: 0;
-				left: 0;
-				&:after
-				{
-					content: '';
-					background-color: #f0f1f3;
-					width: 139px;
-					height: 100%;
-					z-index: 1;
-					position: absolute;
-					left: 0;
-				}
-			}
 		}
 		.em-check-label
 		{
@@ -527,6 +594,54 @@
 		}
 		svg{stroke:rgba(103, 115, 135, 0.4);}
 	}
+	.table__many-box
+	{
+		width:50px;
+		padding:0 12px;
+		text-align: center;
+	}
+	.table__many-box:hover .table__many-arrow{visibility: visible;}
+	.table__many-arrow
+	{
+		transform: rotate(90deg);
+		width:5px;
+		margin-left:7px;
+		visibility: hidden;
+		cursor: pointer;
+	}
+	.table__many-modal
+	{
+		position: absolute;
+		background: #fff;
+		z-index:10;
+		top:40px;
+		border:1px solid #E2E4E8;
+		border-radius: 2px;
+		width:80px;
+		text-align:left;
+		padding:10px;
+	    box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		ul li
+		{
+			font-style: normal;
+			font-weight: normal;
+			font-size: 10px;
+			line-height: 13px;
+			color: rgba(25, 28, 33, 0.7);
+			margin-bottom: 7px;
+			cursor: pointer;
+			&:last-child{margin-bottom: 0px;}
+			&.table__many-delete
+			{
+				font-style: normal;
+				font-weight: normal;
+				font-size: 10px;
+				line-height: 13px;
+				color: rgba(208, 18, 70, 0.7);
+			}
+		}
+	}
+
 	// TODO убрать
 	.drug-col
 	{

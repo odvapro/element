@@ -26,6 +26,13 @@
 				isCheched:false
 			}
 		},
+		watch:
+		{
+			checked(newVal, oldVal)
+			{
+				this.isCheched = newVal;
+			}
+		},
 		methods:
 		{
 			change()
