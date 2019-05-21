@@ -2,11 +2,26 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Email
-				<small class="popup__field-error">example</small>
+				Required
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter email">
+				<input type="text" class="el-inp-noborder" placeholder="Enter email" v-model="required">
+			</div>
+		</div>
+		<div class="popup__field">
+			<div class="popup__field-name">
+				Checked status in DB
+			</div>
+			<div class="popup__field-input">
+				<input type="text" class="el-inp-noborder" placeholder="Enter checked string" v-model="checkedString">
+			</div>
+		</div>
+		<div class="popup__field">
+			<div class="popup__field-name">
+				Unchecked status in DB
+			</div>
+			<div class="popup__field-input">
+				<input type="text" class="el-inp-noborder" placeholder="Enter unchecked string" v-model="uncheckedString">
 			</div>
 		</div>
 		<div class="popup__buttons">
@@ -25,7 +40,9 @@
 		data()
 		{
 			return {
-				required: false
+				required: false,
+				checkedString:'1',
+				uncheckedString:'0'
 			}
 		},
 		methods:
@@ -37,29 +54,26 @@
 			{
 				this.$emit('cancel');
 			},
+
 			/**
 			 * Save settings
 			 */
 			save()
 			{
-				this.$emit('save',{})
-			},
-			/**
-			 * Задать обязательность поля
-			 */
-			setStatus(status)
-			{
-				this.required = status;
-				this.$emit('changeSettings', {required: status});
+				let formData = {
+					required: this.required,
+					checkedString: this.checkedString,
+					uncheckedString: this.uncheckedString,
+				}
+				this.$emit('save',formData);
 			}
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
 		mounted()
 		{
-			this.required = this.isRequired;
-			this.setStatus(this.required);
+			if(typeof this.settings.checkedString != 'undefined')
+				this.checkedString = this.settings.checkedString;
+			if(typeof this.settings.uncheckedString != 'undefined')
+				this.uncheckedString = this.settings.uncheckedString;
 		}
 	}
 </script>

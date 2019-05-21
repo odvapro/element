@@ -31,6 +31,9 @@
 		},
 		methods:
 		{
+			/**
+			 * Send change current value
+			 */
 			changeValue(event)
 			{
 				this.$emit('onChange', {

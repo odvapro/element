@@ -32,7 +32,6 @@ class Element
 			while($fieldCode = readdir($handle))
 			{
 				$fieldDirPath = $config->application->fldDir . $fieldCode;
-
 				$infoFilePath = $fieldDirPath . '/info.json';
 
 				if(file_exists($infoFilePath))
@@ -149,12 +148,13 @@ class Element
 			$result = [];
 			foreach ($selectItem as $fieldCode => $columnValue)
 			{
-				$fieldClass   = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 				if (class_exists($fieldClass))
-					$field = new $fieldClass($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
+					$field = new $fieldClass($columnValue,$settings);
 				else
-					$field = new EmStringField($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
+					$field = new EmStringField($columnValue,$settings);
 
 				$result[$fieldCode]['value']     = $field->getValue();
 				$result[$fieldCode]['fieldName'] = $tableColumns[$fieldCode]['em']['type_info']['code'];
@@ -179,12 +179,13 @@ class Element
 		$set = [];
 		foreach ($updateParams['set'] as $fieldCode => $fieldValue)
 		{
-			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+				$field = new $fieldClass($fieldValue,$settings);
 			else
-				$field = new EmStringField($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+				$field = new EmStringField($fieldValue,$settings);
 
 			$fieldSaveValue = $field->saveValue();
 			$set[]          = "{$fieldCode} = '{$fieldSaveValue}'";
@@ -212,13 +213,13 @@ class Element
 		foreach ($insertParams['columns'] as $fieldIndex => $fieldCode)
 		{
 			$fieldValue = $insertParams['values'][$fieldIndex];
-
-			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+				$field = new $fieldClass($fieldValue,$settings);
 			else
-				$field = new EmStringField($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+				$field = new EmStringField($fieldValue,$settings);
 
 			$fieldSaveValue = $field->saveValue();
 			$valuesSet[]    = $fieldSaveValue;

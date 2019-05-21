@@ -2,7 +2,7 @@
 	<div class="em-check-wrapper">
 		<Checkbox
 			:checked.sync="isChecked"
-			@change="changeStatus()"
+			@change="changeStatus"
 		></Checkbox>
 	</div>
 </template>
@@ -13,7 +13,7 @@
 		components: {Checkbox},
 		props: ['fieldValue', 'fieldSettings'],
 		/**
-		 * Глобальные переменные страницы
+		 * Checke status
 		 */
 		data()
 		{
@@ -23,35 +23,16 @@
 		},
 		methods:
 		{
-			/**
-			 * Изменить статус
-			 */
-			async changeStatus()
+			async changeStatus(checkboxStatus)
 			{
-				let qs = require('qs');
-
-				let data = qs.stringify({
-					tableCode       : this.fieldSettings.tableCode,
-					fieldCode       : this.fieldSettings.fieldCode,
-					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
-					primaryKeyValue : this.fieldSettings.primaryKey.value,
-					status          : this.isChecked
+				this.$emit('onChange', {
+					value    : checkboxStatus,
+					settings : this.fieldSettings
 				});
-
-				let result = await this.$axios({
-					method : 'POST',
-					data   : data,
-					url    : '/field/em_check/index/changeStatus/'
-				});
-
-				if (!result.data.success)
-					return false;
-
-				this.$emit('onChange', {value: this.isChecked, settings: this.fieldSettings});
 			}
 		},
 		/**
-		 * Хук при загрузке страницы
+		 * Set default value
 		 */
 		mounted()
 		{

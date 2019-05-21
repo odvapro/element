@@ -66,7 +66,7 @@
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="openSettingsPopup(column)">settings</button>
+							<button @click="openSettingsPopup(table,column)">settings</button>
 						</div>
 					</div>
 				</div>
@@ -84,6 +84,7 @@
 	</div>
 </template>
 <script>
+	import qs from 'qs';
 	import List from '@/components/layouts/List.vue';
 	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
@@ -97,19 +98,15 @@
 		data()
 		{
 			return {
-				tableColumns: {},
 				fieldTypes:[],
 				tables: [],
-				typePopupShow: false,
-				tableStyle:
-				{
-					height: '0px',
-					overflow: 'hidden'
-				},
+				tableStyle: {height: '0px', overflow: 'hidden'},
 
 				settingsPopup:false,
 				settingsFielType:false,
-				currentSettgins:false
+				currentSettgins:false,
+				settingsTable:false,
+				settingsColumn:false,
 			}
 		},
 		computed:
@@ -137,31 +134,47 @@
 			/**
 			 * Opens field settgins popups
 			 */
-			openSettingsPopup(column)
+			openSettingsPopup(table,column)
 			{
+				this.settingsTable    = table,
+				this.settingsColumn   = column,
 				this.settingsFielType = column.em.settings.fieldType;
 				this.currentSettgins  = column.em.settings;
 				this.settingsPopup    = true;
 			},
 
-			async saveSettings(settgins)
+			/**
+			 * Saves field settings
+			 */
+			async saveSettings(settings)
 			{
-				console.log(settgins)
-				return false;
-
-				/*let data = {
-					tableName  : this.popupParams.settings.tableCode,
-					columnName : this.popupParams.settings.fieldCode,
-					fieldType  : this.popupParams.settings.fieldType,
-					settings   : this.newSettings
+				let data = {
+					tableName  : this.settingsTable.code,
+					columnName : this.settingsColumn.field,
+					fieldType  : this.settingsFielType,
+					settings   : settings
 				};
 
-				let dataStr = qs.stringify(data);
-				let result =  await this.$axios({
-					method: 'POST',
-					url: '/api/settings/setFieldSettings/',
-					data: dataStr
-				});*/
+				data = qs.stringify(data);
+				let result = await this.$axios.post('/settings/setFieldSettings/',data);
+				if(result.data.success)
+				{
+					this.settingsPopup = false;
+
+					//TODO - rebuild
+					//just set new settings in state
+					for(let table of this.tables)
+					{
+						if(table.code != this.settingsTable.code)
+							continue;
+						for(let columnCode in table.columns)
+						{
+							if(columnCode == this.settingsColumn.field)
+								table.columns[columnCode].em.settings = settings;
+						}
+					}
+					this.ElMessage('😎 Settings saved!');
+				}
 			},
 
 			/**
@@ -202,8 +215,6 @@
 			 */
 			async changeType(values)
 			{
-				let qs = require('qs');
-
 				let requestChangeType = qs.stringify({
 					tableName  : values.table,
 					columnName : values.column,
