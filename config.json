@@ -1,0 +1,7 @@
+{
+	"migration":
+	{
+		"migrations": "app/migrations",
+		"config": "app/config/config.php"
+	}
+}
