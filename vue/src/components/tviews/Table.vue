@@ -73,6 +73,7 @@
 							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
 						}"
 						@onChange="changeFieldValue"
+						@openEdit="openDetail(row,rowIndex)"
 					/>
 				</div>
 				<div class="table-item">

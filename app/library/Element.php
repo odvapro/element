@@ -101,10 +101,11 @@ class Element
 			if(array_key_exists('em', $tableColumn))
 				continue;
 
+			$defaultType = ($tableColumn['key'] == 'PRI')?$emTypes['em_primary']:$emTypes['em_string'];
 			$emFieldArray = [
 				'name'      => '',
 				'type'      => $tableColumn['type'],
-				'type_info' => $emTypes['em_string'],
+				'type_info' => $defaultType,
 				'settings'  => [],
 				'required'  => false,
 			];

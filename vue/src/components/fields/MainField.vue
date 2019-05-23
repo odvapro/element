@@ -6,6 +6,7 @@
 			:fieldSettings="params.settings"
 			:mode="mode"
 			@onChange="changeValue"
+			@openEdit="openEdit"
 		></component>
 	</div>
 </template>
@@ -38,6 +39,14 @@
 			changeValue(value)
 			{
 				this.$emit('onChange', value);
+			},
+
+			/**
+			 * Opens edit page
+			 */
+			openEdit()
+			{
+				this.$emit('openEdit');
 			}
 		}
 	}
