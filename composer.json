@@ -1,21 +1,21 @@
 {
-    "name": "dzantiev/element",
-    "description": "Element CMF",
-    "verstion":"v0.1.12",
-    "type": "project",
-    "authors": [
-        {
-            "name": "Mihail Dzantiev",
-            "email": "axel0726@gmail.com"
-        }
-    ],
+	"name": "dzantiev/element",
+	"description": "Element CMF",
+	"verstion":"v0.1.13",
+	"type": "project",
+	"authors": [
+		{
+			"name": "Mihail Dzantiev",
+			"email": "axel0726@gmail.com"
+		}
+	],
 	"prefer-stable": true,
-    "require": {
-    	"php": ">=7.0",
-    	"phalcon/devtools": "^2.0"
-    },
-    "require-dev": {
-        "codeception/codeception": "^2.5",
-        "flow/jsonpath": "dev-master"
-    }
+	"require": {
+		"php": ">=7.0",
+		"phalcon/devtools": "^2.0"
+	},
+	"require-dev": {
+		"codeception/codeception": "^2.5",
+		"flow/jsonpath": "dev-master"
+	}
 }

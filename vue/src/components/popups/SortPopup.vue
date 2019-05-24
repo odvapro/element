@@ -140,7 +140,7 @@
 
 				let resultSaveSort = await this.$axios({
 					method: 'GET',
-					url: '/api/tview/saveSort/',
+					url: '/tview/saveSort/',
 					params: data,
 					/**
 					 * сериализовать отправляемые данные
@@ -252,6 +252,7 @@
 		width: 12px;
 		height: 12px;
 		transform: rotate(45deg);
+		svg{stroke:#677387;}
 	}
 	.sort-popup__row
 	{

@@ -14,19 +14,9 @@ var message = function message(options)
 	message[options.type](options);
 };
 
-message.defaultParams = {
-	closeTimeout: 1000
-};
-
-message.params = {
-	closeTimeout: 1000
-};
-
-message.messageParams = {
-	type: 'notif',
-	text: 'notification'
-};
-
+message.defaultParams = {closeTimeout: 1000 };
+message.params = {closeTimeout: 1000 };
+message.messageParams = {type: 'notif', text: 'notification'};
 message.template = `
 	<div class="element-message element-message-#type# #messageClass#">
 		<span class="element-message-text">#text#</span>

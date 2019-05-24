@@ -209,6 +209,7 @@
 		padding-left:10px;
 		cursor: pointer;
 	}
+	.detail-field-box .em-file-item-col{padding-left:0px;}
 	.em-file-item-wrapper
 	{
 		width: 14px;

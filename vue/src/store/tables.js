@@ -217,12 +217,25 @@ const table =
 		},
 
 		/**
-		 * Удалить запись
+		 * Remove records or one record
+		 * @var reocrdParams {
+		 *      rowIndex:<array or index of deletign row>,
+		 *      delete:<sql params for deleting>
+		 * }
 		 */
 		async removeRecord(store, recordPrams)
 		{
-			if(typeof recordPrams.rowIndex != 'undefined')
+			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
 				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+
+			if(typeof recordPrams.rowIndex == 'object')
+			{
+				let curTableCont = store.state.tableContent;
+				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>{
+					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
+				});
+				this.commit('setTableContent',curTableCont);
+			}
 
 			var result = await axios({
 				method : 'post',

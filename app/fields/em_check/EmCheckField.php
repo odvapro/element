@@ -1,35 +1,43 @@
 <?php
-
 class EmCheckField extends FieldBase
 {
-	protected $fieldValue = '';
+	/**
+	 * Returns checked status string
+	 * @return string
+	 */
+	private function getChechedString()
+	{
+		if(isset($this->settings['checkedString']))
+			return $this->settings['checkedString'];
+		return '1';
+	}
 
 	/**
-	 * Конструктор принимает значение поля
+	 * Returns unchecked status string
+	 * @return string
 	 */
-	public function __construct($fieldValue = '')
+	private function getUnChechedString()
 	{
-		$this->fieldValue = $fieldValue;
+		if(isset($this->settings['uncheckedString']))
+			return $this->settings['uncheckedString'];
+		return '0';
 	}
-	/**
-	 * Добавить настройки для поля
-	 */
-	public function setSettings()
-	{
 
-	}
 	/**
 	 * Достать значение поля
 	 */
 	public function getValue()
 	{
-		return $this->fieldValue === '1' ? true : false;
+		return $this->fieldValue === $this->getChechedString() ? true : false;
 	}
+
 	/**
 	 * Сохранить значение
 	 */
 	public function saveValue()
 	{
-
+		if($this->fieldValue == 'false')
+			return $this->getUnChechedString();
+		return $this->getChechedString();
 	}
 }

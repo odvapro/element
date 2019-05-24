@@ -482,46 +482,43 @@ class TableWorkerCest
 					'operation' => 'or',
 					'fields' =>
 					[
-						[
-							'code' => 'name',
-							'operation' => 'CONTAINS',
-							'value' => 'ggg'
-						],
-						[
-							'code' => 'email',
-							'operation' => 'IS',
-							'value' => '1'
-						]
+						['code' => 'name', 'operation' => 'CONTAINS', 'value' => 'ggg'],
+						['code' => 'email', 'operation' => 'IS', 'value' => '1']
 					]
 				]
 			]
 		]);
-
-		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/',
 		[
 			'delete' =>
 			[
-				'table' => 'testTable'
+				'table' => 'products',
+				'where' =>
+				[
+					'operation' => 'or',
+					'fields' =>
+					[
+				        ['code' => 'id', 'operation' => 'IS', 'value' => 20, ],
+				        ['code' => 'id', 'operation' => 'IS', 'value' => 21, ],
+				        ['code' => 'id', 'operation' => 'IS', 'value' => 22, ]
+					]
+				]
 			]
 		]);
-
-		$I->seeResponseCodeIs(200);
+		$I->dontSeeInDatabase('products', ['id' => 20]);
+		$I->dontSeeInDatabase('products', ['id' => 21]);
+		$I->dontSeeInDatabase('products', ['id' => 22]);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/delete/',
-		[
-			'delete' => []
-		]);
+		$I->sendPOST('/el/delete/', ['delete' => ['table' => 'testTable'] ]);
+		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->seeResponseCodeIs(200);
+		$I->sendPOST('/el/delete/', ['delete' => [] ]);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/el/delete/');
-
-		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 	}
 

@@ -1,8 +1,9 @@
 <?php
 
-class EmStringField extends FieldBase
+class EmPrimaryField extends FieldBase
 {
 	protected $fieldValue = '';
+
 	/**
 	 * Конструктор принимает значение поля
 	 */
@@ -16,7 +17,7 @@ class EmStringField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval(strip_tags($this->fieldValue));
+		return intval($this->fieldValue);
 	}
 
 	/**
@@ -24,6 +25,6 @@ class EmStringField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		return $this->fieldValue;
+		return intval($this->fieldValue);
 	}
 }

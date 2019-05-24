@@ -32,7 +32,6 @@ class Element
 			while($fieldCode = readdir($handle))
 			{
 				$fieldDirPath = $config->application->fldDir . $fieldCode;
-
 				$infoFilePath = $fieldDirPath . '/info.json';
 
 				if(file_exists($infoFilePath))
@@ -59,7 +58,7 @@ class Element
 
 	/**
 	 * Достать колонки таблицы c типами
-	 * @param  [string] $tableName
+	 * @param  string $tableName
 	 * @return Array
 	 */
 	public function getColumns($tableName)
@@ -102,10 +101,11 @@ class Element
 			if(array_key_exists('em', $tableColumn))
 				continue;
 
+			$defaultType = ($tableColumn['key'] == 'PRI')?$emTypes['em_primary']:$emTypes['em_string'];
 			$emFieldArray = [
 				'name'      => '',
 				'type'      => $tableColumn['type'],
-				'type_info' => $emTypes['em_string'],
+				'type_info' => $defaultType,
 				'settings'  => [],
 				'required'  => false,
 			];
@@ -123,9 +123,6 @@ class Element
 	public function getPrimaryKeyCode($tableName)
 	{
 		$columns = $this->eldb->getColumns($tableName);
-		echo "<pre>";
-		print_r($columns);
-		exit();
 	}
 
 	/**
@@ -152,15 +149,16 @@ class Element
 			$result = [];
 			foreach ($selectItem as $fieldCode => $columnValue)
 			{
-				$fieldClass   = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 				if (class_exists($fieldClass))
-					$field = new $fieldClass($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
+					$field = new $fieldClass($columnValue,$settings);
 				else
-					$field = new EmStringField($columnValue, $selectParams['from'], $tableColumns[$fieldCode]);
+					$field = new EmStringField($columnValue,$settings);
 
 				$result[$fieldCode]['value']     = $field->getValue();
-				$result[$fieldCode]['fieldName'] = get_class($field);
+				$result[$fieldCode]['fieldName'] = $tableColumns[$fieldCode]['em']['type_info']['code'];
 			}
 			return $result;
 		}, $selectResult);
@@ -182,12 +180,13 @@ class Element
 		$set = [];
 		foreach ($updateParams['set'] as $fieldCode => $fieldValue)
 		{
-			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+				$field = new $fieldClass($fieldValue,$settings);
 			else
-				$field = new EmStringField($fieldValue, $updateParams['table'], $tableColumns[$fieldCode]);
+				$field = new EmStringField($fieldValue,$settings);
 
 			$fieldSaveValue = $field->saveValue();
 			$set[]          = "{$fieldCode} = '{$fieldSaveValue}'";
@@ -215,13 +214,13 @@ class Element
 		foreach ($insertParams['columns'] as $fieldIndex => $fieldCode)
 		{
 			$fieldValue = $insertParams['values'][$fieldIndex];
-
-			$fieldClass  = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+				$field = new $fieldClass($fieldValue,$settings);
 			else
-				$field = new EmStringField($fieldValue, $insertParams['table'], $tableColumns[$fieldCode]);
+				$field = new EmStringField($fieldValue,$settings);
 
 			$fieldSaveValue = $field->saveValue();
 			$valuesSet[]    = $fieldSaveValue;

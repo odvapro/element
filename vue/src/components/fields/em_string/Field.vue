@@ -3,7 +3,7 @@
 		<template v-if="mode == 'edit'">
 			<input
 				type="text"
-				class="em-string-input"
+				class="el-inp-noborder"
 				@change="changeValue"
 				:value="fieldValue"
 				placeholder="Empty"
@@ -31,6 +31,9 @@
 		},
 		methods:
 		{
+			/**
+			 * Send change current value
+			 */
 			changeValue(event)
 			{
 				this.$emit('onChange', {
@@ -59,17 +62,5 @@
 		padding-left: 10px;
 		padding-right: 10px;
 	}
-	.em-string-input
-	{
-		border: 0px;
-		width:100%;
-		height: 100%;
-		background: none;
-		line-height: 49px;
-		font-size: 12px;
-		color: #677387;
-		&:focus,&:active{color: #191C21;}
-		&::placeholder{color: rgba(103, 115, 135, 0.4);}
-		&:focus::placeholder{color: transparent;}
-	}
+	.detail-field-box .em-string{padding:0px; }
 </style>

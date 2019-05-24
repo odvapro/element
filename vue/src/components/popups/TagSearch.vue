@@ -18,11 +18,9 @@
 	</div>
 </template>
 <script>
-	import PopupParams from '@/mixins/popupParams.js';
 	export default
 	{
 		props: ['types', 'defaultValue'],
-		mixins: [PopupParams],
 		/**
 		 * Глобальные переменные страницы
 		 */

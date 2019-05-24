@@ -1,6 +1,9 @@
 <template>
 	<div class="settings-table-wrapper">
-		<div class="settings-table-head">
+		<div class="settings-empty-tables" v-if="tables.length < 1">
+			No tables
+		</div>
+		<div class="settings-table-head" v-if="tables.length > 0">
 			<div class="settings-table-row-data">
 				<div class="settings-table-item">
 					<div class="settings-table-item-title">Code</div>
@@ -29,21 +32,20 @@
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-name">
-							<input type="text" @change="setTviewSetting(table, 'table', {name: table.name})" v-model="table.name" placeholder="Set Name">
+							<input
+								type="text"
+								@change="setTviewSetting(table, 'table', {name: table.name})"
+								v-model="table.name"
+								placeholder="Set Name"
+							/>
 						</div>
 					</div>
 					<div class="settings-table-item">
 						<div class="settings-table-item-flag">
-							<div class="settings-table__check-wrapper">
-								<label class="settings-table__check-label">
-									<input type="checkbox" v-model="table.visible" @change="setTviewSetting(table, 'table', {visible: String(table.visible)})" class="settings-table__check">
-									<span>
-										<svg width="7" height="7">
-											<use xlink:href="#check"></use>
-										</svg>
-									</span>
-								</label>
-							</div>
+							<Checkbox
+								:checked.sync="table.visible"
+								@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
+							></Checkbox>
 						</div>
 					</div>
 					<div class="settings-table-item"></div>
@@ -57,61 +59,124 @@
 						<div class="settings-table-item table-item centered">
 							<List
 								:params="{
-									value     : column.em.type_info.name,
-									settings  : getFieldSettings(table, column)
+									value    : column.em.type_info.name,
+									settings : getFieldSettings(table, column)
 								}"
 								@onChange="changeType"
 							/>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click.stop="setSettingsPopupParams({
-								fieldName: column.em.type_info.fieldComponent,
-								required: column.em.required,
-								settings: column.em.settings
-							})">settings</button>
+							<button @click="openSettingsPopup(table,column)">settings</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<Popup :visible.sync="settingsPopup">
+			<div class="popup__name">Settings</div>
+			<component
+				:is="settingsComponent"
+				:settings="currentSettgins"
+				@save="saveSettings"
+				@cancel="settingsPopup = false"
+			></component>
+		</Popup>
 	</div>
 </template>
 <script>
+	import qs from 'qs';
 	import List from '@/components/layouts/List.vue';
-	import MainField from '@/components/fields/MainField.vue';
-	import Popup from '@/mixins/popup.js';
+	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		mixins: [Popup, TableWork],
-		components: { MainField, List},
+		mixins: [TableWork],
+		components: {List, Checkbox},
 		/**
 		 * Глобальные переменные страницы
 		 */
 		data()
 		{
 			return {
-				tableColumns: {},
 				fieldTypes:[],
 				tables: [],
-				typePopupShow: false,
-				tableStyle:
-				{
-					height: '0px',
-					overflow: 'hidden'
-				}
+				tableStyle: {height: '0px', overflow: 'hidden'},
+
+				settingsPopup:false,
+				settingsFielType:false,
+				currentSettgins:false,
+				settingsTable:false,
+				settingsColumn:false,
+			}
+		},
+		computed:
+		{
+			/**
+			 * Field settings component
+			 */
+			settingsComponent()
+			{
+				if (this.settingsFielType == false)
+					return false;
+				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
+			},
+
+			/**
+			 * Достать колонки столбца
+			 */
+			getColumns()
+			{
+				return this.$store.state.tables.tableColumns;
 			}
 		},
 		methods:
 		{
 			/**
-			 * Передать параметры филда в попап и открыть
+			 * Opens field settgins popups
 			 */
-			setSettingsPopupParams(params)
+			openSettingsPopup(table,column)
 			{
-				this.$store.commit('setPopupParams', params);
-				this.$store.commit('setActivePopup', true);
+				this.settingsTable    = table,
+				this.settingsColumn   = column,
+				this.settingsFielType = column.em.settings.fieldType;
+				this.currentSettgins  = column.em.settings;
+				this.settingsPopup    = true;
 			},
+
+			/**
+			 * Saves field settings
+			 */
+			async saveSettings(settings)
+			{
+				let data = {
+					tableName  : this.settingsTable.code,
+					columnName : this.settingsColumn.field,
+					fieldType  : this.settingsFielType,
+					settings   : settings
+				};
+
+				data = qs.stringify(data);
+				let result = await this.$axios.post('/settings/setFieldSettings/',data);
+				if(result.data.success)
+				{
+					this.settingsPopup = false;
+
+					//TODO - rebuild
+					//just set new settings in state
+					for(let table of this.tables)
+					{
+						if(table.code != this.settingsTable.code)
+							continue;
+						for(let columnCode in table.columns)
+						{
+							if(columnCode == this.settingsColumn.field)
+								table.columns[columnCode].em.settings = settings;
+						}
+					}
+					this.ElMessage('😎 Settings saved!');
+				}
+			},
+
 			/**
 			 * Достать данные колонки
 			 */
@@ -150,8 +215,6 @@
 			 */
 			async changeType(values)
 			{
-				let qs = require('qs');
-
 				let requestChangeType = qs.stringify({
 					tableName  : values.table,
 					columnName : values.column,
@@ -244,16 +307,6 @@
 				}
 			}
 		},
-		computed:
-		{
-			/**
-			 * Достать колонки столбца
-			 */
-			getColumns()
-			{
-				return this.$store.state.tables.tableColumns;
-			}
-		},
 		/**
 		 * Хук при загрузке страницы
 		 */
@@ -264,10 +317,8 @@
 	}
 </script>
 <style lang="scss">
-	.settings-tab-wrapper
-	{
-		height: 100%;
-	}
+	.settings-tab-wrapper {height: 100%; }
+	.settings-empty-tables{font-size:14px; color:#191C21;}
 	.settings-table-input-name
 	{
 		border: none;
@@ -281,10 +332,7 @@
 		margin-right: 11px;
 		cursor: pointer;
 		transition: all 0.3s;
-		&.active
-		{
-			transform: rotate(90deg);
-		}
+		&.active {transform: rotate(90deg); }
 	}
 	.settings-table-item-flag
 	{
@@ -401,64 +449,7 @@
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
+			&:hover{text-decoration: underline;}
 		}
 	}
-.settings-table__check-wrapper
-{
-	display: inherit;
-	.settings-table__check-label
-	{
-		display: inline-block;
-		position: relative;
-		padding-left: 12px;
-		font-size: 14px;
-		height: 12px;
-		color: #334D66;
-		cursor: pointer;
-	}
-	.settings-table__check
-	{
-		visibility: hidden;
-		position: absolute;
-	}
-	.settings-table__check:not(checked) + span
-	{
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 13px;
-		height: 13px;
-		border: 1px solid rgba(103, 115, 135, 0.4);
-		border-radius: 2px;
-		position: absolute;
-		left: 0;
-		transition: border 0.3s;
-		background-color: #fff;
-	}
-	.settings-table__check:checked + span
-	{
-		background: #7C7791;
-		border: 1px solid #7C7791;
-		background-repeat: no-repeat;
-		background-size: contain;
-		transition: background 0.3s;
-		img
-		{
-			width: 7px;
-			height: 7px;
-			object-fit: contain;
-		}
-	}
-
-	.settings-table__check:checked:hover + span
-	{
-		transition: background 0.3s;
-		border: 1px solid rgba(103, 115, 135, 0.5);
-	}
-	.settings-table__check:not(checked):hover + span
-	{
-		border: 1px solid rgba(103, 115, 135, 0.8);
-		transition: border 0.3s;
-	}
-}
 </style>

@@ -7,29 +7,68 @@ const settings =
 {
 	state:
 	{
-		popupActive: false,
-		popupParams: {}
+		users:[],
 	},
 	mutations:
 	{
 		/**
-		 * Открыть/закрыть попап
+		 * Set Users
 		 */
-		setActivePopup(state, status)
+		setUsers(state,users)
 		{
-			state.popupActive = status
+			state.users = users;
 		},
+
 		/**
-		 * Передать параметры для попапа
+		 * Add user
+		 * @var user - object
 		 */
-		setPopupParams(state, params)
+		addUser(state,user)
 		{
-			state.popupParams = params;
-		}
+			state.users.push(user);
+		},
+
+		/**
+		 * Remove User
+		 */
+		removeUser(state,user)
+		{
+			for(let cUserIndex in state.users)
+			{
+				if(state.users[cUserIndex].id == user.id)
+				{
+					state.users.splice(cUserIndex,1);
+					break;
+				}
+			}
+		},
 	},
 	actions:
 	{
+		/**
+		 * Gets users from database
+		 */
+		async getUsers(store)
+		{
+			var result = await axios.get('/users/getUsers/');
+			for(let user of result.data.users)
+			{
+				user.isShow = false;
+				user.newPassword = '';
+			}
+			store.commit('setUsers',result.data.users);
+		},
 
+		async removeUser(store,user)
+		{
+			let data = qs.stringify({id:user.id});
+
+			let result = await axios.post('/users/deleteUser/',data);
+			if(result.data.success)
+				return store.commit('removeUser',user);
+			else
+				return this.ElMessage.error(result.data.message);
+		}
 	}
 }
 export default settings;

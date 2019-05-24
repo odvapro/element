@@ -96,7 +96,7 @@
 				{
 					this.selectedElement[columnCode] = {
 						value     :'',
-						fieldName :this.columns[columnCode].em.type_info.fieldComponent
+						fieldName :this.columns[columnCode].em.type_info.code
 					}
 				}
 			}

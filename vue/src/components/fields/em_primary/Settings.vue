@@ -1,31 +1,39 @@
 <template>
 	<div class="settings-popup-row-params">
-		<div class="settings-popup-item-wrapper">
-			Required
-		</div>
-		<div class="settings-popup-item-wrapper">
-			<div class="settings-popup-radio-wrapper">
-				<div class="settings-popup-radio-btn" @click="setStatus(true)" :class="{active: required}">Yes</div>
-				<div class="settings-popup-radio-btn" @click="setStatus(false)" :class="{active: !required}">No</div>
-			</div>
+		<p class="el-empty">No settings</p>
+		<div class="popup__buttons">
+			<button @click="cancel()" class="el-gbtn">Cancel</button>
+			<button @click="save()" class="el-btn">Save settigns</button>
 		</div>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['isRequired'],
+		props: ['settings','isRequired'],
 		/**
 		 * Глобальные переменные странциы
 		 */
 		data()
 		{
-			return {
-				required: false
-			}
+			return {required: false }
 		},
 		methods:
 		{
+			/**
+			 * Cancel editing settgins
+			 */
+			cancel()
+			{
+				this.$emit('cancel');
+			},
+			/**
+			 * Save settings
+			 */
+			save()
+			{
+				this.$emit('save',{})
+			},
 			/**
 			 * Задать обязательность поля
 			 */

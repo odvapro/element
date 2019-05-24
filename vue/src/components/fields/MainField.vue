@@ -6,6 +6,7 @@
 			:fieldSettings="params.settings"
 			:mode="mode"
 			@onChange="changeValue"
+			@openEdit="openEdit"
 		></component>
 	</div>
 </template>
@@ -23,7 +24,7 @@
 				if (typeof this.params == 'undefined')
 					return false;
 
-				return () => import(`@/components/fields/${this.params.fieldName}.vue`);
+				return () => import(`@/components/fields/${this.params.fieldName}/Field.vue`);
 			}
 		},
 		methods:
@@ -38,6 +39,14 @@
 			changeValue(value)
 			{
 				this.$emit('onChange', value);
+			},
+
+			/**
+			 * Opens edit page
+			 */
+			openEdit()
+			{
+				this.$emit('openEdit');
 			}
 		}
 	}

@@ -12,7 +12,7 @@
 						<div class="sidebar__user-img-wrapper">
 							<img :src="$store.state.users.authUser.avatar" alt="">
 						</div>
-						<span>{{$store.state.users.authUser.name}}</span>
+						<span>{{ $store.state.users.authUser.name }}</span>
 					</a>
 					<div class="sidebar__user-logout" @click="logOut()">log out</div>
 				</li>
@@ -21,7 +21,7 @@
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
-			<div class="sidebar-table-head">Tables</div>
+			<div class="sidebar-table-head" v-if="tables.length > 0">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables" v-if="table.visible">
 					<a
