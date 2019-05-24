@@ -37,6 +37,7 @@ node_modules
 googleSecrets.json
 vendor
 codeception.yml
+deploy.php
 
 /docs/
 composer.lock
