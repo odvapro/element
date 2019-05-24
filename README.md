@@ -13,3 +13,7 @@ Generate
 ```
 vendor/bin/phalcon.php migration generate
 ```
+Run
+```
+vendor/bin/phalcon.php migration run
+```
