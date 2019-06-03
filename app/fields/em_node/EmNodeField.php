@@ -2,34 +2,14 @@
 
 class EmNodeField extends FieldBase
 {
-	protected $fieldValue = '';
-	protected $table      = '';
-	protected $columns    = [];
-	protected $settings   = [];
-	/**
-	 * Конструктор принимает значение поля
-	 */
-	public function __construct($fieldValue = '', $tableCode = '', $columns = [])
-	{
-		$this->fieldValue = $fieldValue;
-		$this->table      = $tableCode;
-		$this->columns    = $columns;
-
-		$this->settings   = $columns['em']['settings'];
-	}
-	/**
-	 * Добавить настройки для поля
-	 */
-	public function setSettings()
-	{
-
-	}
 	/**
 	 * Достать значение поля
 	 */
 	public function getValue()
 	{
-		$eldb = $this->di->get('db');
+		return strval(strip_tags($this->fieldValue));
+
+		/*$eldb = $this->di->get('db');
 		$config  = $this->di->get('config');
 		$baseUri = $config->application->baseUri;
 		$nodeElement = [];
@@ -48,14 +28,15 @@ class EmNodeField extends FieldBase
 			$nodeElement['name'] = $tableValue[$this->settings['searchField']];
 			$nodeElement['url']  = "{$baseUri}table/{$this->settings['bindTable']}/edit/{$tableValue[$this->settings['bindField']]}";
 		}
-
-		return $nodeElement;
+*/
+		// return $nodeElement;
 	}
+
 	/**
 	 * Сохранить значение
 	 */
 	public function saveValue()
 	{
-
+		return $this->fieldValue;
 	}
 }

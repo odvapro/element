@@ -2,5 +2,5 @@
 
 class EmNodeController extends ControllerBase
 {
-
+	
 }

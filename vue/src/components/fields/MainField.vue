@@ -26,6 +26,8 @@
 			 */
 			columnContent()
 			{
+				if(this.view != 'detail')
+					this.localParams = this.params;
 				if (typeof this.localParams == 'undefined')
 					return false;
 
