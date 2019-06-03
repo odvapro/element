@@ -38,6 +38,7 @@
 			<div class="detail-field-box">
 				<MainField
 					mode="edit"
+					view="detail"
 					:params="{
 						fieldName : column.fieldName,
 						value     : column.value,
@@ -246,6 +247,7 @@
 	.detail-field-name
 	{
 		width:200px;
+		flex-shrink:0;
 		span
 		{
 			display:block;

@@ -67,6 +67,7 @@
 				>
 					<MainField
 						mode="edit"
+						view="table"
 						:params="{
 							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,

@@ -1,20 +1,42 @@
 <template>
-	<div class="em-text__item-name-wrapper">
-		<div class="em-text__item-overide-name">{{ fieldValue }}</div>
+	<div class="em-text">
+		<template v-if="view=='detail'">
+			<vue-editor
+				:editorOptions="editorSettings"
+				:editorToolbar="toolbarOptions"
+				v-model="localValue"
+			></vue-editor>
+		</template>
+		<!-- <div class="em-text__item-overide-name">{{ fieldValue }}</div> -->
 	</div>
 </template>
 <script>
+	import { VueEditor } from "vue2-editor";
 	export default
 	{
-		props: ['fieldValue','fieldSettings'],
+		props: ['fieldValue','fieldSettings','view'],
+		components:{VueEditor},
+		data()
+		{
+			return {
+				localValue:this.fieldValue,
+				editorSettings:
+				{
+					theme: 'bubble'
+				},
+				toolbarOptions:[
+					['bold', 'italic'], ['link', 'image']
+				]
+			}
+		}
 	}
 </script>
-<style>
-	.em-text__item-overide-name
+<style lang="scss">
+	@import url('http://cdn.quilljs.com/1.3.6/quill.bubble.css');
+	.em-text
 	{
-		line-height: 12px;
-		font-size: 12px;
-		color: #677387;
-		text-transform: capitalize;
+		.ql-editor{
+			padding:0px;
+		}
 	}
 </style>
