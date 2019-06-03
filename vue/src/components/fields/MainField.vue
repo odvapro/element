@@ -15,6 +15,10 @@
 	export default
 	{
 		props: ['params','mode','view'],
+		data()
+		{
+			return { localParams:this.params }
+		},
 		computed:
 		{
 			/**
@@ -22,10 +26,10 @@
 			 */
 			columnContent()
 			{
-				if (typeof this.params == 'undefined')
+				if (typeof this.localParams == 'undefined')
 					return false;
 
-				return () => import(`@/components/fields/${this.params.fieldName}/Field.vue`);
+				return () => import(`@/components/fields/${this.localParams.fieldName}/Field.vue`);
 			}
 		},
 		methods:

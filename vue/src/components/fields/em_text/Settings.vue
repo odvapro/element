@@ -1,14 +1,6 @@
 <template>
 	<div class="settings-popup-row-params">
-		<div class="popup__field">
-			<div class="popup__field-name">
-				Email
-				<small class="popup__field-error">example</small>
-			</div>
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter email">
-			</div>
-		</div>
+		<div class="el-empty">No settings</div>
 		<div class="popup__buttons">
 			<button @click="cancel()" class="el-gbtn">Cancel</button>
 			<button @click="save()" class="el-btn">Save settigns</button>
