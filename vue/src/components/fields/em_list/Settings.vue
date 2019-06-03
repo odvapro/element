@@ -1,13 +1,18 @@
 <template>
 	<div class="settings-popup-row-params">
-		<div class="popup__field">
-			<div class="popup__field-name">
-				Email
-				<small class="popup__field-error">example</small>
+		<div class="popup__field" v-for="listItem, index in list" :key="index">
+			<div class="popup__field-input">
+				<input type="text" class="el-inp-noborder" v-model="listItem.key" placeholder="Key">
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter email">
+				<input type="text" class="el-inp-noborder" v-model="listItem.value" placeholder="Value">
 			</div>
+			<div class="popup__field-input">
+				<div @click="removeValue(index)">remove field</div>
+			</div>
+		</div>
+		<div class="popup__field-input">
+			<div @click="addValues()">add field</div>
 		</div>
 		<div class="popup__buttons">
 			<button @click="cancel()" class="el-gbtn">Cancel</button>
@@ -25,11 +30,28 @@
 		data()
 		{
 			return {
-				required: false
+				required: false,
+				list: [
+					{key: '', value: ''}
+				]
 			}
 		},
 		methods:
 		{
+			/**
+			 * Удалить значение поля
+			 */
+			removeValue(fieldIndex)
+			{
+				this.list.splice(fieldIndex, 1);
+			},
+			/**
+			 * Добавить значения в список значений филда
+			 */
+			addValues()
+			{
+				this.list.push({key: '', value: ''});
+			},
 			/**
 			 * Cancel editing settgins
 			 */
@@ -42,15 +64,12 @@
 			 */
 			save()
 			{
-				this.$emit('save',{})
-			},
-			/**
-			 * Задать обязательность поля
-			 */
-			setStatus(status)
-			{
-				this.required = status;
-				this.$emit('changeSettings', {required: status});
+				let formData = {
+					required: this.required,
+					list: this.list
+				};
+
+				this.$emit('save', formData);
 			}
 		},
 		/**
@@ -59,7 +78,9 @@
 		mounted()
 		{
 			this.required = this.isRequired;
-			this.setStatus(this.required);
+
+			if (typeof this.settings.list != 'undefined')
+				this.list = this.settings.list;
 		}
 	}
 </script>

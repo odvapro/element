@@ -60,26 +60,7 @@
 			 */
 			async changeData(data)
 			{
-				let qs = require('qs');
-
-				let request = qs.stringify({
-					tableCode       : this.fieldSettings.tableCode,
-					fieldCode       : this.fieldSettings.fieldCode,
-					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
-					primaryKeyValue : this.fieldSettings.primaryKey.value,
-					selectedValue   : data.key
-				});
-
-				let result = await this.$axios({
-					method: 'POST',
-					url: '/field/em_list/index/saveSelectedItem/',
-					data: request
-				});
-
-				if (!result.data.success)
-					return false;
-
-				this.$emit('onChange', {value: data.value, settings: this.settings});
+				this.$emit('onChange', {value: data.key, settings: this.settings});
 				this.selectedItem = data.value;
 			}
 		},
@@ -89,7 +70,14 @@
 		mounted()
 		{
 			this.settings = this.fieldSettings;
-			this.selectedItem = this.fieldValue;
+			for (var settingItem of this.settings.list)
+			{
+				if (settingItem.key != this.fieldValue)
+					continue;
+
+				this.selectedItem = settingItem.value;
+				break;
+			}
 		}
 	}
 </script>
