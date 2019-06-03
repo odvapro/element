@@ -91,7 +91,6 @@
 	{
 		display: grid;
 		grid-template-columns: 400px auto;
-		grid-template-rows: 100%;
 	}
 	.content-wrapper
 	{

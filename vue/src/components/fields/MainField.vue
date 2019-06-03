@@ -5,6 +5,7 @@
 			:fieldValue="params.value"
 			:fieldSettings="params.settings"
 			:mode="mode"
+			:view="view"
 			@onChange="changeValue"
 			@openEdit="openEdit"
 		></component>
@@ -13,7 +14,7 @@
 <script>
 	export default
 	{
-		props: ['params','mode'],
+		props: ['params','mode','view'],
 		computed:
 		{
 			/**

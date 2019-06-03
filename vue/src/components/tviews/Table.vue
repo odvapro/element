@@ -67,6 +67,7 @@
 				>
 					<MainField
 						mode="edit"
+						view="table"
 						:params="{
 							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,
@@ -427,7 +428,8 @@
 					delete:
 					{
 						table: this.table.code,
-						where:{
+						where:
+						{
 							operation:'and',
 							fields:[
 								{
@@ -621,7 +623,7 @@
 		width:80px;
 		text-align:left;
 		padding:10px;
-	    box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		ul li
 		{
 			font-style: normal;

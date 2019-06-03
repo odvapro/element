@@ -38,6 +38,7 @@
 			<div class="detail-field-box">
 				<MainField
 					mode="edit"
+					view="detail"
 					:params="{
 						fieldName : column.fieldName,
 						value     : column.value,
@@ -86,7 +87,8 @@
 						}
 					]
 				}
-				this.$store.dispatch('selectElement',requestParams).then(()=>{
+				this.$store.dispatch('selectElement',requestParams).then(()=>
+				{
 					this.selectedElement = this.$store.state.tables.selectedElement;
 				});
 			}
@@ -125,7 +127,8 @@
 				this.$store.dispatch('saveSelectedElement',{
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
-				}).then(()=>{
+				}).then(()=>
+				{
 					this.ElMessage('👌 Element saved!');
 				});
 			},
@@ -146,7 +149,8 @@
 				}
 
 				var data = qs.stringify({
-					insert:{
+					insert:
+					{
 						table   :this.tableCode,
 						columns :setColumns,
 						values  :setValues
@@ -180,7 +184,8 @@
 					delete:
 					{
 						table: this.tableCode,
-						where:{
+						where:
+						{
 							operation:'and',
 							fields:[
 								{
@@ -191,7 +196,8 @@
 							]
 						}
 					}
-				}).then(()=>{
+				}).then(()=>
+				{
 					this.cancel();
 					this.ElMessage('Element removed!');
 				});
@@ -246,6 +252,7 @@
 	.detail-field-name
 	{
 		width:200px;
+		flex-shrink:0;
 		span
 		{
 			display:block;
