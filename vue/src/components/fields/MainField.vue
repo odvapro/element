@@ -14,11 +14,7 @@
 <script>
 	export default
 	{
-		props: ['params','mode','view'],
-		data()
-		{
-			return { localParams:this.params }
-		},
+		props: ['params','mode','view','fieldName'],
 		computed:
 		{
 			/**
@@ -26,14 +22,15 @@
 			 */
 			columnContent()
 			{
-				if(this.view != 'detail')
-					this.localParams = this.params;
-				if (typeof this.localParams == 'undefined')
+				if (typeof this.fieldName == 'undefined' ||  this.fieldName === false )
 					return false;
 
-				return () => import(`@/components/fields/${this.localParams.fieldName}/Field.vue`);
+				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},
+		/*mounted(){
+			this.localParams = JSON.parse(JSON.stringify(this.params));
+		},*/
 		methods:
 		{
 			/**

@@ -69,9 +69,8 @@
 					<MainField
 						mode="edit"
 						view="table"
+						:fieldName="row[column.field].fieldName"
 						:params="{
-							table     : table.code,
-							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,
 							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
 						}"

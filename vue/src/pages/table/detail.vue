@@ -39,8 +39,8 @@
 				<MainField
 					mode="edit"
 					view="detail"
+					:fieldName="column.fieldName"
 					:params="{
-						fieldName : column.fieldName,
 						value     : column.value,
 						settings  : $store.getters.getColumnSettings(tableCode, columns[columnCode], selectedElement)
 					}"
