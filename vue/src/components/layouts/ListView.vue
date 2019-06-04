@@ -1,12 +1,33 @@
 <template>
-	<ListView v-if="selectedItem" :selectVal="selectedItem" :list="settings.list" @onChange="changeData"/>
+	<div class="em-list__wrapper" @click.stop="togglePopup()">
+		<div class="em-list__item-wrapper">
+			<div class="em-list__item">
+				{{selectedItem}}
+			</div>
+		</div>
+		<div class="em-list__search" v-if="showPopup" v-click-outside="closePopup">
+			<div class="em-list__search-popup-head">
+				<div class="em-list__search-item">
+					{{selectedItem}}
+				</div>
+			</div>
+			<div class="em-list__search-popup-item" v-for="listItem in listValues" @click="changeData(listItem)">
+				<div class="em-list__search-icon">
+					<svg width="6" height="5">
+						<use xlink:href="#lines"></use>
+					</svg>
+				</div>
+				<div class="em-list__search-item">
+					{{listItem.value}}
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 <script>
-	import ListView from '@/components/layouts/ListView.vue';
 	export default
 	{
-		components: { ListView },
-		props: ['fieldValue', 'fieldSettings'],
+		props: ['selectVal', 'list'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -15,17 +36,32 @@
 			return {
 				showPopup: false,
 				selectedItem: '',
-				settings: {}
+				listValues: []
 			}
 		},
 		methods:
 		{
 			/**
+			 * Открыть/Закрыть попап
+			 */
+			togglePopup()
+			{
+				this.showPopup = !this.showPopup;
+			},
+			/**
+			 * Закрыть попап
+			 */
+			closePopup()
+			{
+				this.showPopup = false;
+			},
+			/**
 			 * Изменить тип поля
 			 */
-			async changeData(data)
+			async changeData(itemValue)
 			{
-				this.$emit('onChange', {value: data.value, settings: this.settings});
+				this.$emit('onChange', {value: itemValue.key});
+				this.selectedItem = itemValue.value;
 			}
 		},
 		/**
@@ -33,15 +69,8 @@
 		 */
 		mounted()
 		{
-			this.settings = this.fieldSettings;
-			for (var settingItem of this.settings.list)
-			{
-				if (settingItem.key != this.fieldValue)
-					continue;
-
-				this.selectedItem = settingItem.value;
-				break;
-			}
+			this.listValues = this.list;
+			this.selectedItem = this.selectVal;
 		}
 	}
 </script>

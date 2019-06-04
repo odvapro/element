@@ -57,16 +57,18 @@
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" placeholder="Set Name">
 						</div>
 						<div class="settings-table-item table-item centered">
-							<List
-								:params="{
-									value    : column.em.type_info.name,
-									settings : getFieldSettings(table, column)
-								}"
-								@onChange="changeType"
-							/>
+							<Select
+								:defaultText="column.em.type_info.name"
+							>
+								<SelectOption
+									v-for="field in fieldTypes"
+									@click.native="changeType({table: table.code, column: column.field, fieldType: field})"
+									:key="field.code"
+								>{{ field.name }}</SelectOption>
+							</Select>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="openSettingsPopup(table,column)">settings</button>
+							<button @click="openSettingsPopup(table, column)">settings</button>
 						</div>
 					</div>
 				</div>
@@ -76,7 +78,7 @@
 			<div class="popup__name">Settings</div>
 			<component
 				:is="settingsComponent"
-				:settings="currentSettgins"
+				:settings="currentSettings"
 				@save="saveSettings"
 				@cancel="settingsPopup = false"
 			></component>
@@ -85,13 +87,14 @@
 </template>
 <script>
 	import qs from 'qs';
-	import List from '@/components/layouts/List.vue';
+	import Select from '@/components/forms/Select.vue';
+	import SelectOption from '@/components/forms/SelectOption.vue';
 	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: {List, Checkbox},
+		components: {Select, Checkbox, SelectOption},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -104,7 +107,7 @@
 
 				settingsPopup:false,
 				settingsFielType:false,
-				currentSettgins:false,
+				currentSettings:false,
 				settingsTable:false,
 				settingsColumn:false,
 			}
@@ -118,6 +121,7 @@
 			{
 				if (this.settingsFielType == false)
 					return false;
+
 				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
 			},
 
@@ -134,12 +138,12 @@
 			/**
 			 * Opens field settgins popups
 			 */
-			openSettingsPopup(table,column)
+			openSettingsPopup(table, column)
 			{
 				this.settingsTable    = table,
 				this.settingsColumn   = column,
-				this.settingsFielType = column.em.settings.fieldType;
-				this.currentSettgins  = column.em.settings;
+				this.settingsFielType = column.em.type_info.code;
+				this.currentSettings  = column.em.settings;
 				this.settingsPopup    = true;
 			},
 
@@ -218,7 +222,7 @@
 				let requestChangeType = qs.stringify({
 					tableName  : values.table,
 					columnName : values.column,
-					fieldType  : values.data.code
+					fieldType  : values.fieldType.code
 				});
 
 				let result = await this.$axios({
@@ -232,8 +236,8 @@
 
 				let table = this.getTableByCode(values.table, this.tables);
 
-				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-				table.columns[values.column].em.type      = values.data.code;
+				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.fieldType));
+				table.columns[values.column].em.type      = values.fieldType.code;
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона
