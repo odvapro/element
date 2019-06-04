@@ -27,9 +27,9 @@
 		data()
 		{
 			return {
-				active: false,
-				value: '',
-				content: false
+				active  : false,
+				value   : '',
+				content : false
 			}
 		},
 
@@ -59,6 +59,16 @@
 			setContent: function(newValue)
 			{
 				this.content = newValue;
+			}
+		},
+		watch:
+		{
+			/**
+			 * watch change defaultText variable
+			 */
+			'defaultText': function(newValue)
+			{
+				this.setContent(newValue);
 			}
 		}
 	}
