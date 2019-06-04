@@ -21,12 +21,12 @@
 				<small class="popup__field-error">example</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedTable">
+				<Select :defaultText="selectedNodeField">
 					<SelectOption
 						v-for="field,fieldIndex in fields"
 						:key="fieldIndex"
 						@click.native="selectNodeField(field)"
-					>{{ field.code }}</SelectOption>
+					>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
 				</Select>
 			</div>
 		</div>
@@ -36,12 +36,12 @@
 				<small class="popup__field-error">example</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedTable">
+				<Select :defaultText="selectedSearchField">
 					<SelectOption
-						v-for="table,tableIndex in tables"
-						:key="tableIndex"
-						@click.native="selectTable(table.code)"
-					>{{ table.name }}</SelectOption>
+						v-for="field,fieldIndex in fields"
+						:key="fieldIndex"
+						@click.native="selectSearchField(field)"
+					>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
 				</Select>
 			</div>
 		</div>
@@ -64,12 +64,13 @@
 		data()
 		{
 			return {
-				required: false,
-				tables:[],
-				fields:[],
-				localSettings:{
-					tableCode:false,
-					nodeFieldCode:false
+				required      : false,
+				tables        : [],
+				fields        : [],
+				localSettings : {
+					nodeTableCode  : false,
+					nodeFieldCode  : false,
+					nodeSearchCode : false,
 				}
 			}
 		},
@@ -80,14 +81,80 @@
 			 */
 			selectedTable()
 			{
-				if(this.localSettings.tableCode === false)
+				var table = false;
+
+				if(this.localSettings.nodeTableCode !== false)
+					table = this.getTableByCode(this.localSettings.nodeTableCode);;
+
+				if(table === false)
 					return 'Select table'
-				else
-					return this.localSettings.tableCode
-			}
+
+				return table.name;
+
+			},
+			/**
+			 * Default text on select table
+			 */
+			selectedNodeField()
+			{
+				var field = false;
+
+				if(this.localSettings.nodeFieldCode !== false)
+					field = this.getFieldByCode(this.localSettings.nodeFieldCode);
+
+				if(field === false)
+					return 'Select field'
+
+				return (field.em.name) ? field.em.name : field.field;
+			},
+			/**
+			 * Default text on select table
+			 */
+			selectedSearchField()
+			{
+				var field = false;
+
+				if(this.localSettings.nodeSearchCode !== false)
+					field = this.getFieldByCode(this.localSettings.nodeSearchCode);
+
+				if(field === false)
+					return 'Select field'
+
+				return (field.em.name) ? field.em.name : field.field;
+			},
 		},
 		methods:
 		{
+			/**
+			 * Get table by code
+			 */
+			getTableByCode(code)
+			{
+				for(var index in this.tables)
+				{
+					if(this.tables[index].code != code)
+						continue;
+
+					return this.tables[index];
+				}
+
+				return false;
+			},
+			/**
+			 * Get field by code
+			 */
+			getFieldByCode(code)
+			{
+				for(var index in this.fields)
+				{
+					if(this.fields[index].field != code)
+						continue;
+
+					return this.fields[index];
+				}
+
+				return false;
+			},
 			/**
 			 * Cancel editing settgins
 			 */
@@ -100,18 +167,37 @@
 			 */
 			save()
 			{
-				this.$emit('save',{})
+				this.$emit('save', this.localSettings);
 			},
 
+			/**
+			 * Select node table
+			 */
 			selectTable(table)
 			{
-				this.localSettings.tableCode = table.tableCode;
+				if(this.localSettings.nodeTableCode == table.code)
+					return;
+
+				this.localSettings.nodeTableCode  = table.code;
+				this.localSettings.nodeFieldCode  = false;
+				this.localSettings.nodeSearchCode = false;
 				this.fields = table.columns;
 			},
 
+			/**
+			 * Select node field
+			 */
 			selectNodeField(field)
 			{
-				// this.localSettings.tableCode = table.tableCode;
+				this.localSettings.nodeFieldCode = field.field;
+			},
+
+			/**
+			 * Select node search field
+			 */
+			selectSearchField(field)
+			{
+				this.localSettings.nodeSearchCode = field.field;
 			},
 
 			/**
@@ -130,8 +216,25 @@
 		{
 			this.required = this.isRequired;
 			this.setStatus(this.required);
-
 			this.tables = this.$store.state.tables.tables;
+
+			if(typeof this.settings.nodeTableCode != 'undefined')
+			{
+				var table = this.getTableByCode(this.settings.nodeTableCode);
+
+				if(!table)
+					return;
+
+				this.selectTable(table);
+			}
+
+			for(var index in this.localSettings)
+			{
+				if(typeof this.settings[index] == 'undefined')
+					continue;
+
+				this.$set(this.localSettings, index, this.settings[index])
+			}
 		}
 	}
 </script>

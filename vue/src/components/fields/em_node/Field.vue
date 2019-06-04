@@ -1,14 +1,33 @@
 <template>
 	<div class="em-node__item-wrapper">
-		<div class="em-node__item">
-			{{fieldValue.name}}
-		</div>
+		<template v-if="view == 'detail'">
+			<span>hello</span>
+		</template>
+		<template v-else>
+			<div v-if="fieldValue.id" class="em-node__item">
+				{{ fieldValue.name }}
+			</div>
+			<span v-else class="el-empty">Empty</span>
+		</template>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['fieldValue']
+		props: ['fieldValue','fieldSettings','mode', 'view'],
+		methods:
+		{
+			/**
+			 * Send change current value
+			 */
+			changeValue(event)
+			{
+				this.$emit('onChange', {
+					value    : event.target.value,
+					settings : this.fieldSettings
+				});
+			}
+		}
 	}
 </script>
 <style lang="scss">
