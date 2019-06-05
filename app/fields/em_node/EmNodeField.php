@@ -7,29 +7,30 @@ class EmNodeField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval(strip_tags($this->fieldValue));
+		$select  = [
+			'from'  => $this->settings['nodeTableCode'],
+			'where' => [
+				'operation' => 'and',
+				'fields'    => [[
+					'code'      => $this->settings['nodeFieldCode'],
+					'operation' => 'IS',
+					'value'     => $this->fieldValue
+				]]
+			]
+		];
+		$node = $this->element->select($select);
 
-		/*$eldb = $this->di->get('db');
-		$config  = $this->di->get('config');
-		$baseUri = $config->application->baseUri;
-		$nodeElement = [];
-
-		$whereSql = $this->settings['bindField'] . " IN (" . $this->fieldValue . ")";
-
-		$tableResult = $eldb->fetchAll(
-			"SELECT * FROM " . $this->settings['bindTable'] . " WHERE  $whereSql ",
-			Phalcon\Db::FETCH_ASSOC
-		);
-
-		foreach ($tableResult as $tableValue)
+		if(count($node) > 0)
 		{
-			$nodeElement         = [];
-			$nodeElement['id']   = $tableValue[$this->settings['bindField']];
-			$nodeElement['name'] = $tableValue[$this->settings['searchField']];
-			$nodeElement['url']  = "{$baseUri}table/{$this->settings['bindTable']}/edit/{$tableValue[$this->settings['bindField']]}";
+			$node = $node[0];
+			return [
+				'id'   => $node[$this->settings['nodeFieldCode']]['value'],
+				'name' => $node[$this->settings['nodeSearchCode']]['value'],
+				'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]['value']}"
+			];
 		}
-*/
-		// return $nodeElement;
+
+		return [];
 	}
 
 	/**
