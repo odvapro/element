@@ -7,7 +7,6 @@ class EmNodeField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$baseUri = $this->config->application->baseUri;
 		$select  = [
 			'from'  => $this->settings['nodeTableCode'],
 			'where' => [
@@ -27,7 +26,7 @@ class EmNodeField extends FieldBase
 			return [
 				'id'   => $node[$this->settings['nodeFieldCode']]['value'],
 				'name' => $node[$this->settings['nodeSearchCode']]['value'],
-				'url'  => "{$baseUri}table/{$this->settings['nodeTableCode']}/edit/{$node[$this->settings['nodeFieldCode']]['value']}"
+				'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]['value']}"
 			];
 		}
 

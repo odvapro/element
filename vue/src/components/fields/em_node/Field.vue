@@ -13,7 +13,7 @@
 			>{{ nodeItem.name }}</button>
 		</template>
 		<template v-else>
-			<div v-if="fieldValue.id" class="em-node__item">
+			<div v-if="fieldValue.id" class="em-node__item" @click="goToNode">
 				{{ fieldValue.name }}
 			</div>
 			<span v-else class="el-empty">Empty</span>
@@ -63,6 +63,13 @@
 					return false;
 
 				this.list = result.data.result;
+			},
+			goToNode()
+			{
+				if(!this.fieldValue.id)
+					return;
+
+				this.$router.push(this.fieldValue.url)
 			}
 		},
 		mounted()
