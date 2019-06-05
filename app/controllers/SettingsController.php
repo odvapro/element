@@ -42,7 +42,7 @@ class SettingsController extends ControllerBase
 	 */
 	public function getFiledTypesAction()
 	{
-		$fieldsTypes = $this->element->getEmTypes();
+		$fieldsTypes = $this->element->emTypes;
 
 		return $this->jsonResult(['success' => true, 'types' => $fieldsTypes]);
 	}
@@ -90,6 +90,9 @@ class SettingsController extends ControllerBase
 		if (empty($tableName) || empty($columnName) || empty($fieldType))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
 
+		if(!array_key_exists($fieldType, $this->element->emTypes))
+			return $this->jsonResult(['success' => false, 'message' => 'incorrect field type']);
+
 		if (array_key_exists('path', $settings))
 			if (!is_dir(ROOT . $settings['path']))
 				return $this->jsonResult(['success' => false, 'message' => "directory {$settings['path']} does not exist"]);
@@ -117,7 +120,11 @@ class SettingsController extends ControllerBase
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$settings   = $fieldClass->getSettings();
+
+		return $this->jsonResult(['success' => true, 'settings' => $settings]);
 	}
 
 	/**

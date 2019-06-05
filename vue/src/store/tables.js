@@ -163,18 +163,16 @@ const table =
 		 * 		...  (остальые поля для каждого филда свои)
 		 * 	}
 		 */
-		getColumnSettings: (store, getters) => (tableCode, column, row) =>
+		getColumnSettings: (store, getters) => (tableCode, columnCode, row) =>
 		{
-			let primaryKeyCode = getters.getPrimaryKeyCode(tableCode);
-			let primaryKey = {
-				value     : row[primaryKeyCode].value,
+			const column         = getters.getColumn(tableCode, columnCode);
+			const primaryKeyCode = getters.getPrimaryKeyCode(tableCode);
+			let   settings       = column.em.settings;
+
+			settings.primaryKey = {
+				value     : (row) ? row[primaryKeyCode].value : '',
 				fieldCode : primaryKeyCode
 			};
-
-			var settings        = column.em.settings;
-			settings.fieldCode  = column.field;
-			settings.tableCode  = tableCode;
-			settings.primaryKey = primaryKey;
 
 			return Object.assign({}, settings);
 		}
