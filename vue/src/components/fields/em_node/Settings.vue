@@ -3,7 +3,7 @@
 		<div class="popup__field">
 			<div class="popup__field-name">
 				Table
-				<small class="popup__field-error">example</small>
+				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
 				<Select :defaultText="selectedTable">
@@ -18,11 +18,12 @@
 		<div class="popup__field">
 			<div class="popup__field-name">
 				Node field
-				<small class="popup__field-error">example</small>
+				<small v-if="errors.nodeFieldCode" class="popup__field-error">{{ errors.nodeFieldCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedNodeField">
+				<Select :defaultText="selectedNodeField" :disabled="(fields === false)">
 					<SelectOption
+						v-if="fields"
 						v-for="field,fieldIndex in fields"
 						:key="fieldIndex"
 						@click.native="selectNodeField(field)"
@@ -33,11 +34,12 @@
 		<div class="popup__field">
 			<div class="popup__field-name">
 				Search field
-				<small class="popup__field-error">example</small>
+				<small v-if="errors.nodeSearchCode" class="popup__field-error">{{ errors.nodeSearchCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedSearchField">
+				<Select :defaultText="selectedSearchField" :disabled="(fields === false)">
 					<SelectOption
+						v-if="fields"
 						v-for="field,fieldIndex in fields"
 						:key="fieldIndex"
 						@click.native="selectSearchField(field)"
@@ -56,7 +58,7 @@
 	import SelectOption from '@/components/forms/SelectOption.vue';
 	export default
 	{
-		props: ['settings','isRequired'],
+		props: ['settings'],
 		components:{Select,SelectOption},
 		/**
 		 * Глобальные переменные странциы
@@ -64,18 +66,31 @@
 		data()
 		{
 			return {
-				required      : false,
-				tables        : [],
-				fields        : [],
-				localSettings : {
+				localSettings :
+				{
 					nodeTableCode  : false,
 					nodeFieldCode  : false,
 					nodeSearchCode : false,
-				}
+				},
+				errors: {}
 			}
 		},
 		computed:
 		{
+			/**
+			 * Get tables list
+			 */
+			tables()
+			{
+				return this.$store.state.tables.tables;
+			},
+			/**
+			 * Get fields list for current table
+			 */
+			fields()
+			{
+				return this.$store.getters.getColumns(this.localSettings.nodeTableCode);
+			},
 			/**
 			 * Default text on select table
 			 */
@@ -84,7 +99,7 @@
 				var table = false;
 
 				if(this.localSettings.nodeTableCode !== false)
-					table = this.getTableByCode(this.localSettings.nodeTableCode);;
+					table = this.$store.getters.getTable(this.localSettings.nodeTableCode)
 
 				if(table === false)
 					return 'Select table'
@@ -100,7 +115,7 @@
 				var field = false;
 
 				if(this.localSettings.nodeFieldCode !== false)
-					field = this.getFieldByCode(this.localSettings.nodeFieldCode);
+					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeFieldCode)
 
 				if(field === false)
 					return 'Select field'
@@ -115,7 +130,7 @@
 				var field = false;
 
 				if(this.localSettings.nodeSearchCode !== false)
-					field = this.getFieldByCode(this.localSettings.nodeSearchCode);
+					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeSearchCode)
 
 				if(field === false)
 					return 'Select field'
@@ -125,36 +140,6 @@
 		},
 		methods:
 		{
-			/**
-			 * Get table by code
-			 */
-			getTableByCode(code)
-			{
-				for(var index in this.tables)
-				{
-					if(this.tables[index].code != code)
-						continue;
-
-					return this.tables[index];
-				}
-
-				return false;
-			},
-			/**
-			 * Get field by code
-			 */
-			getFieldByCode(code)
-			{
-				for(var index in this.fields)
-				{
-					if(this.fields[index].field != code)
-						continue;
-
-					return this.fields[index];
-				}
-
-				return false;
-			},
 			/**
 			 * Cancel editing settgins
 			 */
@@ -167,6 +152,20 @@
 			 */
 			save()
 			{
+				var error = false;
+
+				for(var index in this.localSettings)
+				{
+					if(this.localSettings[index] != false)
+						continue;
+
+					this.$set(this.errors, index, {message: 'Field is required'})
+					error = true;
+				}
+
+				if(error)
+					return;
+
 				this.$emit('save', this.localSettings);
 			},
 
@@ -181,7 +180,7 @@
 				this.localSettings.nodeTableCode  = table.code;
 				this.localSettings.nodeFieldCode  = false;
 				this.localSettings.nodeSearchCode = false;
-				this.fields = table.columns;
+				this.$delete(this.errors, 'nodeTableCode');
 			},
 
 			/**
@@ -190,6 +189,7 @@
 			selectNodeField(field)
 			{
 				this.localSettings.nodeFieldCode = field.field;
+				this.$delete(this.errors, 'nodeFieldCode');
 			},
 
 			/**
@@ -198,36 +198,14 @@
 			selectSearchField(field)
 			{
 				this.localSettings.nodeSearchCode = field.field;
+				this.$delete(this.errors, 'nodeSearchCode');
 			},
-
-			/**
-			 * Задать обязательность поля
-			 */
-			setStatus(status)
-			{
-				this.required = status;
-				this.$emit('changeSettings', {required: status});
-			}
 		},
 		/**
 		 * Хук при загрузке страницы
 		 */
 		mounted()
 		{
-			this.required = this.isRequired;
-			this.setStatus(this.required);
-			this.tables = this.$store.state.tables.tables;
-
-			if(typeof this.settings.nodeTableCode != 'undefined')
-			{
-				var table = this.getTableByCode(this.settings.nodeTableCode);
-
-				if(!table)
-					return;
-
-				this.selectTable(table);
-			}
-
 			for(var index in this.localSettings)
 			{
 				if(typeof this.settings[index] == 'undefined')
