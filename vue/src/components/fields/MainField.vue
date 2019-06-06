@@ -5,6 +5,7 @@
 			:fieldValue="params.value"
 			:fieldSettings="params.settings"
 			:mode="mode"
+			:view="view"
 			@onChange="changeValue"
 			@openEdit="openEdit"
 		></component>
@@ -13,7 +14,7 @@
 <script>
 	export default
 	{
-		props: ['params','mode'],
+		props: ['params','mode','view','fieldName'],
 		computed:
 		{
 			/**
@@ -21,12 +22,15 @@
 			 */
 			columnContent()
 			{
-				if (typeof this.params == 'undefined')
+				if (typeof this.fieldName == 'undefined' ||  this.fieldName === false )
 					return false;
 
-				return () => import(`@/components/fields/${this.params.fieldName}/Field.vue`);
+				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},
+		/*mounted(){
+			this.localParams = JSON.parse(JSON.stringify(this.params));
+		},*/
 		methods:
 		{
 			/**

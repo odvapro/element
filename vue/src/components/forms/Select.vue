@@ -4,7 +4,10 @@
 			class="select__trigger"
 			@click="toggleDropdown"
 			v-click-outside="closeDropdown"
-			:class="{active: active}"
+			:class="{
+				active: active,
+				disabled: disabled
+			}"
 		>
 			<div class="select__content" v-html="content"></div>
 			<span class="select__arrow">
@@ -23,13 +26,21 @@
 <script>
 	export default
 	{
-		props:['defaultText'],
+		props:
+		{
+			defaultText :String,
+			disabled    :
+			{
+				tupe    : Boolean,
+				default : false
+			}
+		},
 		data()
 		{
 			return {
-				active: false,
-				value: '',
-				content: false
+				active  : false,
+				value   : '',
+				content : false
 			}
 		},
 
@@ -59,6 +70,16 @@
 			setContent: function(newValue)
 			{
 				this.content = newValue;
+			}
+		},
+		watch:
+		{
+			/**
+			 * watch change defaultText variable
+			 */
+			'defaultText': function(newValue)
+			{
+				this.setContent(newValue);
 			}
 		}
 	}

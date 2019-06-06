@@ -25,7 +25,7 @@
 					:style="{ width: column.width + 'px', 'min-width': column.width + 'px' }"
 				>
 					<div class="table-item-img">
-						<img :src="column.em.type_info.iconPath" alt="">
+						<img :src="require(`@/assets${column.em.type_info.iconPath}`)" alt="">
 					</div>
 					<div class="table-item-name-wrapper">
 						<div class="table-item-overide-name">{{getOverideName(column)}}</div>
@@ -64,11 +64,13 @@
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
 					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
+					:key="`${index}${table.code}`"
 				>
 					<MainField
 						mode="edit"
+						view="table"
+						:fieldName="row[column.field].fieldName"
 						:params="{
-							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,
 							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
 						}"
@@ -106,15 +108,7 @@
 		data()
 		{
 			return {
-				columnDrug:
-				{
-					isDrug: false,
-					posX: 0,
-					start: 0,
-					top: 0,
-					width: 0,
-					col: ''
-				},
+				columnDrug: {isDrug: false, posX: 0, start: 0, top: 0, width: 0, col: ''},
 				openProperties: false,
 				openedEditRowIndex:false,
 				checkAll:false,

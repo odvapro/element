@@ -10,13 +10,7 @@ class EmTextField extends FieldBase
 	{
 		$this->fieldValue = $fieldValue;
 	}
-	/**
-	 * Добавить настройки для поля
-	 */
-	public function setSettings()
-	{
 
-	}
 	/**
 	 * Достать значение поля
 	 */
@@ -29,6 +23,6 @@ class EmTextField extends FieldBase
 	 */
 	public function saveValue()
 	{
-
+		return strval($this->fieldValue);
 	}
 }

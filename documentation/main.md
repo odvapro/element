@@ -38,7 +38,7 @@ if ( $uri ~ "^/element/public(.*)" ) {
 }
 
 location /element/ {
-	try_files $elementPrefix$elementFile $elementPrefix$elementFile/ $elementPrefix$elementExecFile;
+	try_files $elementPrefix$elementFile $elementPrefix$elementFile/ $elementPrefix$elementExecFile?$args;
 }
 ```
 ---
