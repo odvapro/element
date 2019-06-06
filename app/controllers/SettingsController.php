@@ -73,9 +73,20 @@ class SettingsController extends ControllerBase
 		$field->table    = $tableName;
 		$field->type     = $fieldType;
 
-		$field->save();
+		if ($field->save() === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$emSettings = [
+			'name'      => $field->name,
+			'type'      => $field->type,
+			'type_info' => $this->element->emTypes[$field->type],
+			'settings'  => $fieldClass->getSettings(),
+			'required'  => $field->getRequired()
+		];
+
+		return $this->jsonResult(['success' => true, 'settings' => $emSettings]);
 	}
 
 	/**

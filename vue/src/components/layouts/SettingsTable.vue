@@ -59,8 +59,10 @@
 						<div class="settings-table-item table-item centered">
 							<List
 								:params="{
-									value    : column.em.type_info.name,
-									settings : getFieldSettings(table, column)
+									value      : column.em.type_info.name,
+									columnCode : column.field,
+									tableCode  : table.code,
+									fieldTypes : fieldTypes
 								}"
 								@onChange="changeType"
 							/>
@@ -225,8 +227,7 @@
 
 				let table = this.getTableByCode(values.table, this.tables);
 
-				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-				table.columns[values.column].em.type      = values.data.code;
+				this.$set(table.columns[values.column], 'em', result.data.settings);
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона
