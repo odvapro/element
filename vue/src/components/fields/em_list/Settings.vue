@@ -23,7 +23,7 @@
 <script>
 	export default
 	{
-		props: ['settings','isRequired'],
+		props: ['settings'],
 		/**
 		 * Глобальные переменные странциы
 		 */

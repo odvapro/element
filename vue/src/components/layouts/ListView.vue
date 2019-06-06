@@ -1,23 +1,23 @@
 <template>
-	<div class="em-list__wrapper" @click.stop="togglePopup()">
-		<div class="em-list__item-wrapper">
-			<div class="em-list__item">
+	<div class="list-view__wrapper" @click.stop="togglePopup()">
+		<div class="list-view__item-wrapper">
+			<div class="list-view__item">
 				{{selectedItem}}
 			</div>
 		</div>
-		<div class="em-list__search" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-list__search-popup-head">
-				<div class="em-list__search-item">
+		<div class="list-view__search" v-if="showPopup" v-click-outside="closePopup">
+			<div class="list-view__search-popup-head">
+				<div class="list-view__search-item">
 					{{selectedItem}}
 				</div>
 			</div>
-			<div class="em-list__search-popup-item" v-for="listItem in listValues" @click="changeData(listItem)">
-				<div class="em-list__search-icon">
+			<div class="list-view__search-popup-item" v-for="listItem in listValues" @click="changeData(listItem)">
+				<div class="list-view__search-icon">
 					<svg width="6" height="5">
 						<use xlink:href="#lines"></use>
 					</svg>
 				</div>
-				<div class="em-list__search-item">
+				<div class="list-view__search-item">
 					{{listItem.value}}
 				</div>
 			</div>
@@ -75,7 +75,7 @@
 	}
 </script>
 <style lang="scss">
-	.em-list__item
+	.list-view__item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -86,7 +86,7 @@
 		position: relative;
 		cursor: pointer;
 	}
-	.em-list__search-popup-head
+	.list-view__search-popup-head
 	{
 		height: 49px;
 		display: flex;
@@ -97,7 +97,7 @@
 		color: rgba(25, 28, 33, 0.4);
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.em-list__search
+	.list-view__search
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		width: 193px;
@@ -110,7 +110,7 @@
 		z-index: 2;
 		left: -1px;
 	}
-	.em-list__search-icon
+	.list-view__search-icon
 	{
 		width: 6px;
 		height: 14px;
@@ -124,7 +124,7 @@
 			object-fit: contain;
 		}
 	}
-	.em-list__search-item
+	.list-view__search-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -134,7 +134,7 @@
 		color: #7C7791;
 		position: relative;
 	}
-	.em-list__search-popup-item
+	.list-view__search-popup-item
 	{
 		display: flex;
 		padding: 0 9px;
