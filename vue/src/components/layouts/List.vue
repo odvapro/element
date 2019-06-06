@@ -1,15 +1,15 @@
 <template>
 	<div class="list__table-select" @click="togglePopup()">
 		<div class="list__item-wrapper">
-			<div class="list__head-item">{{fieldValue}}</div>
+			<div class="list__head-item">{{this.params.value}}</div>
 		</div>
 		<div class="list__search" v-if="showPopup" v-click-outside="closePopup">
 			<div class="list__search-popup-head">
 				<div class="list__search-item">
-					{{fieldValue}}
+					{{this.params.value}}
 				</div>
 			</div>
-			<div class="list__search-popup-item" v-for="listItem in fieldSettings.values" @click="selectItem(listItem)">
+			<div class="list__search-popup-item" v-for="listItem in params.fieldTypes" @click="selectItem(listItem)">
 				<div class="list__search-icon">
 					<svg width="6" height="5">
 						<use xlink:href="#lines"></use>
@@ -32,9 +32,7 @@
 		data()
 		{
 			return {
-				showPopup: false,
-				fieldValue: '',
-				fieldSettings: {}
+				showPopup: false
 			}
 		},
 		methods:
@@ -58,22 +56,13 @@
 			 */
 			selectItem(data)
 			{
-				this.fieldValue = data.name;
 				this.$emit('onChange', {
 					data   : data,
-					column : this.fieldSettings.fieldCode,
-					table  : this.fieldSettings.tableCode
+					column : this.params.columnCode,
+					table  : this.params.tableCode
 				});
 			}
 		},
-		/**
-		 * Хук при загрузке компонента
-		 */
-		mounted()
-		{
-			this.fieldValue = this.params.value;
-			this.fieldSettings = this.params.settings;
-		}
 	}
 </script>
 <style lang="scss">

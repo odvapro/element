@@ -42,7 +42,7 @@
 					:fieldName="column.fieldName"
 					:params="{
 						value     : column.value,
-						settings  : $store.getters.getColumnSettings(tableCode, columns[columnCode], selectedElement)
+						settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
 					}"
 					@onChange="changeFieldValue"
 				/>
