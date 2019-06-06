@@ -59,8 +59,10 @@
 						<div class="settings-table-item table-item centered">
 							<List
 								:params="{
-									value    : column.em.type_info.name,
-									settings : getFieldSettings(table, column)
+									value      : column.em.type_info.name,
+									columnCode : column.field,
+									tableCode  : table.code,
+									fieldTypes : fieldTypes
 								}"
 								@onChange="changeType"
 							/>
@@ -141,7 +143,7 @@
 			{
 				try
 				{
-					require(`@/components/fields/${column.em.settings.fieldType}/Settings.vue`)
+					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)
 				}
 				catch (e)
 				{
@@ -157,7 +159,7 @@
 			{
 				this.settingsTable    = table,
 				this.settingsColumn   = column,
-				this.settingsFielType = column.em.settings.fieldType;
+				this.settingsFielType = column.em.settings.code;
 				this.currentSettgins  = column.em.settings;
 				this.settingsPopup    = true;
 			},
@@ -189,7 +191,7 @@
 						for(let columnCode in table.columns)
 						{
 							if(columnCode == this.settingsColumn.field)
-								table.columns[columnCode].em.settings = settings;
+								table.columns[columnCode].em.settings = result.data.settings;
 						}
 					}
 					this.ElMessage('😎 Settings saved!');
@@ -201,33 +203,7 @@
 			 */
 			getFieldSettings(table, column)
 			{
-				let columns = table.columns;
-				let primaryFieldCode = false;
-
-				for (let columnCode in columns)
-				{
-					let column = columns[columnCode];
-
-					if(column.key == 'PRI')
-					{
-						primaryFieldCode = columnCode;
-						break;
-					}
-				}
-
-				let primaryKey = {
-					value: '',
-					fieldCode: primaryFieldCode
-				};
-
-				let settings        = column.em.settings;
-				settings.fieldCode  = column.field;
-				settings.tableCode  = table.code;
-				settings.fieldType  = column.em.type_info.code;
-				settings.primaryKey = primaryKey;
-				settings.values     = this.fieldTypes;
-
-				return settings;
+				return this.$store.getters.getColumnSettings(table.code, column.field);
 			},
 			/**
 			 * Изменение типа поля
@@ -251,8 +227,7 @@
 
 				let table = this.getTableByCode(values.table, this.tables);
 
-				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-				table.columns[values.column].em.type      = values.data.code;
+				this.$set(table.columns[values.column], 'em', result.data.settings);
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона

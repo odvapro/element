@@ -42,7 +42,7 @@ class SettingsController extends ControllerBase
 	 */
 	public function getFiledTypesAction()
 	{
-		$fieldsTypes = $this->element->getEmTypes();
+		$fieldsTypes = $this->element->emTypes;
 
 		return $this->jsonResult(['success' => true, 'types' => $fieldsTypes]);
 	}
@@ -73,9 +73,20 @@ class SettingsController extends ControllerBase
 		$field->table    = $tableName;
 		$field->type     = $fieldType;
 
-		$field->save();
+		if ($field->save() === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$emSettings = [
+			'name'      => $field->name,
+			'type'      => $field->type,
+			'type_info' => $this->element->emTypes[$field->type],
+			'settings'  => $fieldClass->getSettings(),
+			'required'  => $field->getRequired()
+		];
+
+		return $this->jsonResult(['success' => true, 'settings' => $emSettings]);
 	}
 
 	/**
@@ -89,6 +100,9 @@ class SettingsController extends ControllerBase
 		$settings   = $this->request->getPost('settings');
 		if (empty($tableName) || empty($columnName) || empty($fieldType))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
+
+		if(!array_key_exists($fieldType, $this->element->emTypes))
+			return $this->jsonResult(['success' => false, 'message' => 'incorrect field type']);
 
 		if (array_key_exists('path', $settings))
 			if (!is_dir(ROOT . $settings['path']))
@@ -117,7 +131,11 @@ class SettingsController extends ControllerBase
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$settings   = $fieldClass->getSettings();
+
+		return $this->jsonResult(['success' => true, 'settings' => $settings]);
 	}
 
 	/**
