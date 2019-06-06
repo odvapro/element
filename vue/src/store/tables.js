@@ -135,6 +135,25 @@ const table =
 		},
 
 		/**
+		 * Get column by code
+		 */
+		getColumn: (store, getters) => (tableCode, columnCode) =>
+		{
+			let table = getters.getTable(tableCode);
+
+			if(table === false)
+				return false;
+
+			for(var index in table.columns)
+			{
+				if(table.columns[index].field == columnCode)
+					return table.columns[index];
+			}
+
+			return false;
+		},
+
+		/**
 		 * Формирует настройки колоки
 		 * основной формат настроек на всем проекте
 		 * {

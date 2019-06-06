@@ -39,8 +39,8 @@
 				<MainField
 					mode="edit"
 					view="detail"
+					:fieldName="column.fieldName"
 					:params="{
-						fieldName : column.fieldName,
 						value     : column.value,
 						settings  : $store.getters.getColumnSettings(tableCode, columns[columnCode], selectedElement)
 					}"
@@ -244,10 +244,11 @@
 		text-transform: lowercase;
 	}
 	.detail-name-wrapper{padding-left:7px; }
-	.detail-feild{
+	.detail-feild
+	{
 		min-height: 50px;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 	}
 	.detail-field-name
 	{
@@ -273,7 +274,7 @@
 	{
 		position: relative;
 		min-width: 200px;
-		height: 49px;
+		min-height: 49px;
 	}
 	.detail-head__buttons
 	{

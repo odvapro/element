@@ -68,7 +68,10 @@
 							</Select>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="openSettingsPopup(table, column)">settings</button>
+							<button
+								@click="openSettingsPopup(table,column)"
+								v-if="checkSettingComponent(table,column)"
+							>settings</button>
 						</div>
 					</div>
 				</div>
@@ -135,6 +138,22 @@
 		},
 		methods:
 		{
+			/**
+			 * check exist settings component for field
+			 */
+			checkSettingComponent(table, column)
+			{
+				try
+				{
+					require(`@/components/fields/${column.em.settings.fieldType}/Settings.vue`)
+				}
+				catch (e)
+				{
+					return false;
+				}
+
+				return true;
+			},
 			/**
 			 * Opens field settgins popups
 			 */
