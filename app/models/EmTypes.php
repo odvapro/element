@@ -3,15 +3,29 @@
 class EmTypes extends ModelBase
 {
 	/**
-	 * Достать настройки поля таблицы в виде json
+	 * Закрытие настроек поля
+	 * @var String
 	 */
-	public function afterFetch()
+	protected $settings;
+
+	/**
+	 * Конвертирование настроек в массив
+	 * @return Array Массив настроек
+	 */
+	public function getSettings()
 	{
-		if(empty($this->settings))
-			$this->settings = [];
-		else
-			$this->settings = json_decode($this->settings, true);
+		return json_decode($this->settings, true);
 	}
+
+	/**
+	 * Запись настроек
+	 * @param Array $settings Массив настроек
+	 */
+	public function setSettings($settings)
+	{
+		$this->settings = json_encode($settings);
+	}
+
 	/**
 	 * Обязательное поле
 	 * @return bool
@@ -22,17 +36,17 @@ class EmTypes extends ModelBase
 			return true;
 		return false;
 	}
-	/**
-	 * Перед сохранением
-	 * @return [type] [description]
-	 */
-	public function beforeSave()
-	{
-		if (!empty($this->settings))
-			$this->settings = json_encode($this->settings);
-		else
-			$this->settings = NULL;
 
-		return true;
+	/**
+	 * Преобразование в массив
+	 * @param  Array $columns Массив полей которые нужны
+	 * @return Array          Массив полей модели
+	 */
+	public function toArray($columns = NULL)
+	{
+		$result             = parent::toArray($columns);
+		$result['settings'] = $this->getSettings();
+
+		return $result;
 	}
 }
