@@ -3,6 +3,8 @@
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
+			:fieldCode="fieldCode"
+			:tableCode="tableCode"
 			:fieldSettings="params.settings"
 			:mode="mode"
 			:view="view"
@@ -14,7 +16,7 @@
 <script>
 	export default
 	{
-		props: ['params','mode','view','fieldName'],
+		props: ['params','mode','view','fieldName', 'fieldCode', 'tableCode'],
 		computed:
 		{
 			/**

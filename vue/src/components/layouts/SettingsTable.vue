@@ -229,8 +229,7 @@
 
 				let table = this.getTableByCode(values.table, this.tables);
 
-				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.fieldType));
-				table.columns[values.column].em.type      = values.fieldType.code;
+				this.$set(table.columns[values.column], 'em', result.data.settings);
 			},
 			/**
 			 * Анимация для открытия и закрытия аккордеона

@@ -57,7 +57,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue', 'fieldSettings'],
+		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
 		/**
 		 * Глобальные переменные странциы
 		 */
@@ -106,10 +106,12 @@
 				if (!result.data.success)
 					return false;
 
-				/*this.$emit('onChange', {
-					value    : result.data.value,
-					settings : this.fieldSettings
-				});*/
+				this.$emit('onChange', {
+					value     : result.data.value,
+					settings  : this.fieldSettings,
+					tableCode : this.tableCode,
+					fieldCode : this.fieldCode
+				});
 
 				this.closePopup();
 			},
@@ -137,8 +139,10 @@
 					return false;
 
 				this.$emit('onChange', {
-					value    : result.data.value,
-					settings : this.fieldSettings
+					value     : result.data.value,
+					settings  : this.fieldSettings,
+					tableCode : this.tableCode,
+					fieldCode : this.fieldCode
 				});
 			},
 

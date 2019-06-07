@@ -6,7 +6,7 @@
 	export default
 	{
 		components: { ListView },
-		props: ['fieldValue', 'fieldSettings'],
+		props: ['fieldValue','fieldSettings','fieldCode', 'tableCode','mode', 'view'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -25,7 +25,12 @@
 			 */
 			async changeData(data)
 			{
-				this.$emit('onChange', {value: data.value, settings: this.settings});
+				this.$emit('onChange', {
+					value: data.value,
+					settings: this.settings,
+					tableCode: this.tableCode,
+					fieldCode: this.fieldCode
+				});
 			}
 		},
 		/**

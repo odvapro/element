@@ -23,7 +23,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings','mode', 'view'],
+		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
 		data()
 		{
 			return {
@@ -39,8 +39,10 @@
 			changeValue(newValue)
 			{
 				this.$emit('onChange', {
-					value    : newValue,
-					settings : this.fieldSettings
+					value     : newValue,
+					settings  : this.fieldSettings,
+					tableCode  : this.tableCode,
+					fieldCode : this.fieldCode
 				});
 			},
 			async getNodes()

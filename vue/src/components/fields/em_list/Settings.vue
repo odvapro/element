@@ -1,6 +1,6 @@
 <template>
 	<div class="settings-popup-row-params">
-		<div class="popup__field" v-for="listItem, index in list" :key="index">
+		<div class="popup__field" v-for="listItem, index in localSettings.list" :key="index">
 			<div class="popup__field-input">
 				<input type="text" class="el-inp-noborder" v-model="listItem.key" placeholder="Key">
 			</div>
@@ -30,10 +30,12 @@
 		data()
 		{
 			return {
-				required: false,
-				list: [
-					{key: '', value: ''}
-				]
+				localSettings :
+				{
+					list: [
+						{key: '', value: ''}
+					]
+				},
 			}
 		},
 		methods:
@@ -43,14 +45,14 @@
 			 */
 			removeValue(fieldIndex)
 			{
-				this.list.splice(fieldIndex, 1);
+				this.localSettings.list.splice(fieldIndex, 1);
 			},
 			/**
 			 * Добавить значения в список значений филда
 			 */
 			addValues()
 			{
-				this.list.push({key: '', value: ''});
+				this.localSettings.list.push({key: '', value: ''});
 			},
 			/**
 			 * Cancel editing settgins
@@ -65,8 +67,7 @@
 			save()
 			{
 				let formData = {
-					required: this.required,
-					list: this.list
+					list: this.localSettings.list
 				};
 
 				this.$emit('save', formData);
@@ -77,10 +78,13 @@
 		 */
 		mounted()
 		{
-			this.required = this.isRequired;
+			for(var index in this.localSettings)
+			{
+				if(typeof this.settings[index] == 'undefined')
+					continue;
 
-			if (typeof this.settings.list != 'undefined')
-				this.list = this.settings.list;
+				this.$set(this.localSettings, index, this.settings[index])
+			}
 		}
 	}
 </script>

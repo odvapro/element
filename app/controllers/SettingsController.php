@@ -126,7 +126,7 @@ class SettingsController extends ControllerBase
 		else
 			$field->required = 0;
 
-		$field->settings = $settings;
+		$field->settings = (object) $settings;
 
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);

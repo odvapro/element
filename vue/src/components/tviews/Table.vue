@@ -70,9 +70,11 @@
 						mode="edit"
 						view="table"
 						:fieldName="row[column.field].fieldName"
+						:fieldCode="column.field"
+						:tableCode="table.code"
 						:params="{
 							value     : row[column.field].value,
-							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
+							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
 						}"
 						@onChange="changeFieldValue"
 						@openEdit="openDetail(row,rowIndex)"
