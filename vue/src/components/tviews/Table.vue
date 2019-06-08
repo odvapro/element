@@ -70,9 +70,11 @@
 						mode="edit"
 						view="table"
 						:fieldName="row[column.field].fieldName"
+						:fieldCode="column.field"
+						:tableCode="table.code"
 						:params="{
 							value     : row[column.field].value,
-							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
+							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
 						}"
 						@onChange="changeFieldValue"
 						@openEdit="openDetail(row,rowIndex)"
@@ -421,7 +423,8 @@
 					delete:
 					{
 						table: this.table.code,
-						where:{
+						where:
+						{
 							operation:'and',
 							fields:[
 								{
@@ -615,7 +618,7 @@
 		width:80px;
 		text-align:left;
 		padding:10px;
-	    box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		ul li
 		{
 			font-style: normal;

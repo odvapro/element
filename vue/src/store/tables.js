@@ -78,7 +78,7 @@ const table =
 				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
 					continue;
 
-				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
+				tableLine[fieldValue.fieldCode].value = fieldValue.value;
 				break;
 			}
 		}
@@ -319,10 +319,10 @@ const table =
 		{
 			let setValues  = {}
 			let primaryKey = fieldValue.settings.primaryKey;
-			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
+			setValues[fieldValue.fieldCode] = fieldValue.value;
 			var data = qs.stringify({
 				update:{
-					table :fieldValue.settings.tableCode,
+					table :fieldValue.tableCode,
 					set   :setValues,
 					where :{
 						operation:'and',

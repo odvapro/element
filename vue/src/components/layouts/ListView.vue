@@ -1,12 +1,33 @@
 <template>
-	<ListView v-if="selectedItem" :selectVal="selectedItem" :list="settings.list" @onChange="changeData"/>
+	<div class="list-view__wrapper" @click.stop="togglePopup()">
+		<div class="list-view__item-wrapper">
+			<div class="list-view__item">
+				{{selectedItem}}
+			</div>
+		</div>
+		<div class="list-view__search" v-if="showPopup" v-click-outside="closePopup">
+			<div class="list-view__search-popup-head">
+				<div class="list-view__search-item">
+					{{selectedItem}}
+				</div>
+			</div>
+			<div class="list-view__search-popup-item" v-for="listItem in listValues" @click="changeData(listItem)">
+				<div class="list-view__search-icon">
+					<svg width="6" height="5">
+						<use xlink:href="#lines"></use>
+					</svg>
+				</div>
+				<div class="list-view__search-item">
+					{{listItem.value}}
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 <script>
-	import ListView from '@/components/layouts/ListView.vue';
 	export default
 	{
-		components: { ListView },
-		props: ['fieldValue','fieldSettings','fieldCode', 'tableCode','mode', 'view'],
+		props: ['selectVal', 'list'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -15,22 +36,32 @@
 			return {
 				showPopup: false,
 				selectedItem: '',
-				settings: {}
+				listValues: []
 			}
 		},
 		methods:
 		{
 			/**
+			 * Открыть/Закрыть попап
+			 */
+			togglePopup()
+			{
+				this.showPopup = !this.showPopup;
+			},
+			/**
+			 * Закрыть попап
+			 */
+			closePopup()
+			{
+				this.showPopup = false;
+			},
+			/**
 			 * Изменить тип поля
 			 */
-			async changeData(data)
+			async changeData(itemValue)
 			{
-				this.$emit('onChange', {
-					value: data.value,
-					settings: this.settings,
-					tableCode: this.tableCode,
-					fieldCode: this.fieldCode
-				});
+				this.$emit('onChange', {value: itemValue.key});
+				this.selectedItem = itemValue.value;
 			}
 		},
 		/**
@@ -38,20 +69,13 @@
 		 */
 		mounted()
 		{
-			this.settings = this.fieldSettings;
-			for (var settingItem of this.settings.list)
-			{
-				if (settingItem.key != this.fieldValue)
-					continue;
-
-				this.selectedItem = settingItem.value;
-				break;
-			}
+			this.listValues = this.list;
+			this.selectedItem = this.selectVal;
 		}
 	}
 </script>
 <style lang="scss">
-	.em-list__item
+	.list-view__item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -62,7 +86,7 @@
 		position: relative;
 		cursor: pointer;
 	}
-	.em-list__search-popup-head
+	.list-view__search-popup-head
 	{
 		height: 49px;
 		display: flex;
@@ -73,7 +97,7 @@
 		color: rgba(25, 28, 33, 0.4);
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.em-list__search
+	.list-view__search
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		width: 193px;
@@ -86,7 +110,7 @@
 		z-index: 2;
 		left: -1px;
 	}
-	.em-list__search-icon
+	.list-view__search-icon
 	{
 		width: 6px;
 		height: 14px;
@@ -100,7 +124,7 @@
 			object-fit: contain;
 		}
 	}
-	.em-list__search-item
+	.list-view__search-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -110,7 +134,7 @@
 		color: #7C7791;
 		position: relative;
 	}
-	.em-list__search-popup-item
+	.list-view__search-popup-item
 	{
 		display: flex;
 		padding: 0 9px;

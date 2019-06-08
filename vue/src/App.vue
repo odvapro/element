@@ -13,7 +13,8 @@
 	export default
 	{
 		components: { Sprite, Setup, Content, Auth },
-		metaInfo:{
+		metaInfo:
+		{
 			title: 'Element',
 			meta:
 			[
