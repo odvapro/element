@@ -4,13 +4,6 @@ class EmFileField extends FieldBase
 {
 	protected $fieldValue = '';
 	/**
-	 * Конструктор принимает значение поля
-	 */
-	public function __construct($fieldValue = '')
-	{
-		$this->fieldValue = $fieldValue;
-	}
-	/**
 	 * Добавить настройки для поля
 	 */
 	public function setSettings()
@@ -23,16 +16,23 @@ class EmFileField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$domain = $this->di->get('config')->application->domain;
+		$domain   = $this->di->get('config')->application->domain;
 		$resArray = json_decode($this->fieldValue, true);
+
 		if(empty($resArray)) return false;
 
 		foreach ($resArray as &$image)
 		{
-			$image['path'] = $domain.$image['path'];
+			$image['localPath'] = $image['path'];
+			$image['path']      = $domain.$image['path'];
+
 			foreach ($image['sizes'] as &$imageSize)
-				$imageSize = $domain.$imageSize;
+				$imageSize = [
+					'path'      => $domain.$imageSize,
+					'localPath' => $imageSize,
+				];
 		}
+
 		return $resArray;
 	}
 
@@ -41,6 +41,33 @@ class EmFileField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		return $this->fieldValue;
+		if(!is_array($this->fieldValue))
+			return ($this->fieldValue == 'false') ? '' : $this->fieldValue;
+
+		if(empty($this->fieldValue))
+			return '';
+
+		foreach($this->fieldValue as &$image)
+		{
+			$image['path'] = $image['localPath'];
+			unset($image['localPath']);
+
+			foreach ($image['sizes'] as &$imageSize)
+				$imageSize = $imageSize['localPath'];
+		}
+
+		return json_encode($this->fieldValue);
+	}
+
+	/**
+	 * Получить настройки поля
+	 * @return Array Настройки поля
+	 */
+	public function getSettings()
+	{
+		$settings             = parent::getSettings();
+		$settings['rootPath'] = realpath(ROOT . '/../') . '/';
+
+		return $settings;
 	}
 }

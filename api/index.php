@@ -4,7 +4,7 @@ error_reporting(E_ALL);
  * CONSTATNTS
  */
 
-define('ROOT', __DIR__ . '/../');
+define('ROOT', realpath(__DIR__ . '/..'));
 
 /**
  * URI change relative to base uri
@@ -13,7 +13,7 @@ $_SERVER['REQUEST_URI'] = str_replace('/element/api/', '/', $_SERVER['REQUEST_UR
 
 try
 {
-	if(!file_exists(__DIR__ . "/../app/config/config.php"))
+	if(!file_exists(ROOT . "/app/config/config.php"))
 	{
 		echo json_encode(['success' => false, 'message' => 'Config not found']);
 		exit();

@@ -1,17 +1,17 @@
 <template>
 	<div class="em-file-item-col" @click="openPopup()">
-		<div class="em-file-item-wrapper" v-for="item in dataField">
-			<img :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
+		<div class="em-file-item-wrapper" v-for="item in fieldValue">
+			<img :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
 		</div>
-		<template v-if="!dataField">
+		<template v-if="!fieldValue">
 			<span class="el-empty">Empty</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-file__edit-item" v-for="(item, index) in dataField">
-				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
+			<div class="em-file__edit-item" v-for="(item, index) in fieldValue">
+				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
 				<a href="javascript:void(0);" @click="removeFile(`${item.upName}`)">remove</a>
 			</div>
-			<template v-if="!dataField">
+			<template v-if="!fieldValue">
 				<div class="em-file__empty-pop">
 					<span class="el-empty">No files</span>
 				</div>
@@ -66,7 +66,6 @@
 			return {
 				showPopup    : false,
 				showSubPopup : false,
-				dataField    : false,
 				tabs:
 				[
 					{ name: 'Upload', active: true },
@@ -85,8 +84,8 @@
 			{
 				let formData = new FormData();
 
-				formData.append('tableCode', this.fieldSettings.tableCode);
-				formData.append('fieldCode', this.fieldSettings.fieldCode);
+				formData.append('tableCode', this.tableCode);
+				formData.append('fieldCode', this.fieldCode);
 				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
 				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
 				formData.append('typeUpload', type);
@@ -113,7 +112,7 @@
 					fieldCode : this.fieldCode
 				});
 
-				this.closePopup();
+				this.closeSubPopup();
 			},
 
 			/**
@@ -122,8 +121,8 @@
 			async removeFile(fileName)
 			{
 				let formData = new FormData();
-				formData.append('tableCode', this.fieldSettings.tableCode);
-				formData.append('fieldCode', this.fieldSettings.fieldCode);
+				formData.append('tableCode', this.tableCode);
+				formData.append('fieldCode', this.fieldCode);
 				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
 				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
 				formData.append('fileName', fileName);
@@ -180,6 +179,7 @@
 			closePopup()
 			{
 				this.showPopup = false;
+				this.closeSubPopup();
 			},
 
 			/**
@@ -190,13 +190,6 @@
 				this.showSubPopup = false;
 			}
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			this.dataField = this.fieldValue;
-		}
 	}
 </script>
 <style lang="scss">

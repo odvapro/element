@@ -30,6 +30,28 @@ class IndexFController extends ControllerBase
 	];
 
 	/**
+	 * check path for save images
+	 * @return json
+	 */
+	public function checkPathAction()
+	{
+		$path = $this->request->getPost('path');
+
+		if(empty($path))
+			return $this->jsonResult(['success' => false, 'message' => 'wrong params']);
+
+		$fullPath = ROOT . '/../' . $path;
+
+		if(!is_dir($fullPath))
+			return $this->jsonResult(['success' => false, 'message' => 'directory not found']);
+
+		if(!is_writable($fullPath))
+			return $this->jsonResult(['success' => false, 'message' => 'directory can\'t be written']);
+
+		return $this->jsonResult(['success' => true]);
+	}
+
+	/**
 	 * Загрузить файл на сервер
 	 * @return json
 	 */
@@ -78,10 +100,22 @@ class IndexFController extends ControllerBase
 		if (empty($emField))
 			return $this->jsonResult(['success' => false, 'message' => 'field not found']);
 
-		if (empty($emField->settings['path']))
+		$savePath = $emField->settings['savePath'];
+
+		if (empty($savePath))
 			return $this->jsonResult(['success' => false, 'message' => 'field settings not found']);
 
-		$imageSizes = [['width'  => 50, 'height' => 50, 'name'   => 'small']];
+		$imageSizes = ['small' => ['width' => 50, 'height' => 50, 'name' => 'small']];
+
+		foreach($emField->settings['resolutions'] as $resolution)
+		{
+			$imageSizes[$resolution['code']] = [
+				'width'  => (intval($resolution['width']) <= 0) ? 'auto' : intval($resolution['width']),
+				'height' => (intval($resolution['height']) <= 0) ? 'auto' : intval($resolution['height']),
+				'name'   => $resolution['code']
+			];
+		}
+
 		if($typeUpload == 'link')
 		{
 			if (!filter_var($link, FILTER_VALIDATE_URL))
@@ -133,8 +167,8 @@ class IndexFController extends ControllerBase
 
 			$fileName     = hash('md5', $file->getName() . date('Y.m.d H:i:s') . $indexFile);
 			$fullFileName = $fileName . $extension;
-			$localPath    = rtrim($emField->settings['path'], '/') . '/';
-			$fullPath     = ROOT . $localPath . $fullFileName;
+			$localPath    = '/' . trim($emField->settings['savePath'], '/') . '/';
+			$fullPath     = ROOT . '/..' . $localPath . $fullFileName;
 
 			if($typeUpload == 'link')
 				$error = !rename($file->getTempName(), $fullPath);
@@ -243,11 +277,26 @@ class IndexFController extends ControllerBase
 		{
 			if($file['upName'] !== $fileName)
 				continue;
+
+			$pathPrefix = ROOT . '/..';
+
+			if(file_exists($pathPrefix . $fieldDBValue[$fileIndex]['path']))
+				unlink($pathPrefix . $fieldDBValue[$fileIndex]['path']);
+
+			foreach($fieldDBValue[$fileIndex]['sizes'] as $size)
+			{
+				if(file_exists($pathPrefix . $size))
+					unlink($pathPrefix . $size);
+			}
+
 			unset($fieldDBValue[$fileIndex]);
 			break;
 		}
 
-		$fieldDBValue    = json_encode($fieldDBValue);
+		if(!empty($fieldDBValue))
+			$fieldDBValue    = json_encode(array_values($fieldDBValue));
+		else
+			$fieldDBValue = '';
 		$set             = [];
 		$set[$fieldCode] = $fieldDBValue;
 		$updateResult = $this->element->update([
@@ -279,10 +328,17 @@ class IndexFController extends ControllerBase
 			return false;
 
 		$image = new Image($imagePath);
+
+		if($imageSize['width'] == 'auto')
+			$imageSize['width'] = $image->getSourceWidth();
+
+		if($imageSize['height'] == 'auto')
+			$imageSize['height'] = $image->getSourceHeight();
+
 		$image->crop($imageSize['width'], $imageSize['height']);
 
 		$publicPath = "{$savePath}{$imageSize['name']}_{$newName}{$extension}";
-		$image->save(ROOT . $publicPath);
-		return "{$this->config->application->baseUri}/{$publicPath}";
+		$image->save(ROOT . '/..' . $publicPath);
+		return $publicPath;
 	}
 }
