@@ -1,17 +1,25 @@
 <template>
 	<div class="em-file-item-col" @click="openPopup()">
-		<div class="em-file-item-wrapper" v-for="item in fieldValue">
+		<div
+			class="em-file-item-wrapper"
+			v-for="item in localValue"
+			v-if="!item.noShow"
+		>
 			<img :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
 		</div>
-		<template v-if="!fieldValue">
+		<template v-if="countFiels == 0">
 			<span class="el-empty">Empty</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-file__edit-item" v-for="(item, index) in fieldValue">
+			<div
+				class="em-file__edit-item"
+				v-for="(item, index) in localValue"
+				v-if="!item.noShow"
+			>
 				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
-				<a href="javascript:void(0);" @click="removeFile(`${item.upName}`)">remove</a>
+				<a href="javascript:void(0);" @click="removeFile(index)">remove</a>
 			</div>
-			<template v-if="!fieldValue">
+			<template v-if="countFiels == 0">
 				<div class="em-file__empty-pop">
 					<span class="el-empty">No files</span>
 				</div>
@@ -64,6 +72,7 @@
 		data()
 		{
 			return {
+				localValue   : false,
 				showPopup    : false,
 				showSubPopup : false,
 				tabs:
@@ -75,6 +84,24 @@
 				link: ''
 			}
 		},
+		computed:
+		{
+			countFiels()
+			{
+				var count = 0;
+
+				if(!this.localValue)
+					return count;
+
+				for(var index in this.localValue)
+				{
+					if(!this.localValue[index].noShow)
+						count++;
+				}
+
+				return count;
+			}
+		},
 		methods:
 		{
 			/**
@@ -82,67 +109,160 @@
 			 */
 			async uploadFile(type)
 			{
-				let formData = new FormData();
+				if(!this.localValue)
+					this.$set(this, 'localValue', []);
 
-				formData.append('tableCode', this.tableCode);
-				formData.append('fieldCode', this.fieldCode);
-				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
-				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
-				formData.append('typeUpload', type);
-				formData.append('link', this.link);
+				if(type == 'link')
+				{
+					let index = this.localValue.push({
+						uploadType : type,
+						link       : this.link
+					});
+					this.setPreviewForImage(this.link, index - 1);
+				}
+				else if(type == 'file')
+				{
+					if (typeof this.$refs.emFile != 'undefined')
+					{
+						for (var file of this.$refs.emFile.files)
+						{
+							let index = this.localValue.push({
+								uploadType : type,
+								file       : file,
+								name       : file.name
+							});
+							if(/^image/.test(file.type))
+								this.setPreview(URL.createObjectURL(file), index - 1);
+							else
+								this.setPreview(false, index - 1);
 
-				if (typeof this.$refs.emFile != 'undefined')
-					for (var file of this.$refs.emFile.files)
-						formData.append('files' + file.name, file);
+						}
+					}
+				}
 
-				let result = await this.$axios({
-					method : 'POST',
-					data   : formData,
-					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_file/index/upload/'
-				});
+				if(this.view == 'table')
+				{
+					var result = await this.sendUpdate();
 
-				if (!result.data.success)
-					return false;
+					if(!result)
+						return false;
 
-				this.$emit('onChange', {
-					value     : result.data.value,
-					settings  : this.fieldSettings,
-					tableCode : this.tableCode,
-					fieldCode : this.fieldCode
-				});
+					this.localValue = result;
+				}
 
+				this.sendValue();
 				this.closeSubPopup();
 			},
 
 			/**
 			 * Удалить файл
 			 */
-			async removeFile(fileName)
+			async removeFile(index)
 			{
-				let formData = new FormData();
+				if(typeof this.localValue[index].uploadType != 'undefined')
+				{
+					this.$delete(this.localValue, index);
+					this.sendValue();
+					return;
+				}
+
+				this.$set(this.localValue[index], 'delete', true);
+				this.$set(this.localValue[index], 'noShow', true);
+
+				if(this.view == 'table')
+				{
+					var result = await this.sendUpdate();
+
+					if(!result)
+						return false;
+
+					this.localValue = result;
+				}
+
+				this.sendValue();
+			},
+
+			/**
+			 * Отправить данные на сохранение
+			 */
+			async sendUpdate()
+			{
+				let formData   = new FormData();
+
 				formData.append('tableCode', this.tableCode);
 				formData.append('fieldCode', this.fieldCode);
 				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
 				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
-				formData.append('fileName', fileName);
+
+				let valuesForSave = [];
+
+				for(const fileIndex in this.localValue)
+				{
+					let file = this.localValue[fileIndex];
+
+					if(file.uploadType != "file")
+					{
+						valuesForSave.push(file);
+						continue;
+					}
+
+					formData.append(`${this.fieldCode}[]`, file.file);
+				}
+
+				formData.append('value', JSON.stringify(valuesForSave));
 
 				let result = await this.$axios({
 					method : 'POST',
 					data   : formData,
 					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_file/index/delete/'
+					url    : '/field/em_file/index/update/'
 				});
 
-				if (!result.data.success)
+				if(!result.data.success)
 					return false;
 
+				return result.data.value;
+			},
+
+			/**
+			 * Отправить измененное значение родителю
+			 */
+			sendValue(newValue)
+			{
 				this.$emit('onChange', {
-					value     : result.data.value,
+					value     : this.localValue,
 					settings  : this.fieldSettings,
 					tableCode : this.tableCode,
 					fieldCode : this.fieldCode
 				});
+			},
+
+			/**
+			 * Установить превью для url
+			 */
+			setPreviewForImage(url, index)
+			{
+				if(url.match(/\.(jpeg|jpg|gif|png)$/) == null)
+					url = false;
+
+				this.setPreview(url, index);
+			},
+
+			/**
+			 * Установать превью
+			 */
+			setPreview(url, index)
+			{
+				var item = this.localValue[index];
+
+				item.type  = (url == false) ? 'no-image' : 'image';
+				item.sizes = {
+					small: {
+						path: url
+					}
+				};
+
+				this.$set(this.localValue, index, item);
 			},
 
 			/**
@@ -190,6 +310,23 @@
 				this.showSubPopup = false;
 			}
 		},
+		watch:
+		{
+			/**
+			 * Отслеживать изменение значения у родителя
+			 */
+			'fieldValue'(newValue)
+			{
+				this.localValue = newValue;
+			}
+		},
+		/**
+		 * Функция создания компонента
+		 */
+		created()
+		{
+			this.localValue = this.fieldValue;
+		}
 	}
 </script>
 <style lang="scss">

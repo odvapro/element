@@ -124,8 +124,55 @@
 			/**
 			 * Сохранение элемента
 			 */
-			saveElement()
+			async saveElement()
 			{
+				for(const key in this.selectedElement)
+				{
+					let item = this.selectedElement[key];
+
+					if(item.fieldName != "em_file")
+						continue;
+
+					const settings = this.$store.getters.getColumnSettings(this.tableCode, key, this.selectedElement);
+					let formData   = new FormData();
+
+					formData.append('tableCode', this.tableCode);
+					formData.append('fieldCode', key);
+					formData.append('primaryKey', settings.primaryKey.fieldCode);
+					formData.append('primaryKeyValue', settings.primaryKey.value);
+
+					let valuesForSave = [];
+
+					for(const fileIndex in item.value)
+					{
+						let file = item.value[fileIndex];
+
+						if(file.uploadType != "file")
+						{
+							valuesForSave.push(file);
+							continue;
+						}
+
+						formData.append(`${key}[]`, file.file);
+					}
+
+					formData.append('value', JSON.stringify(valuesForSave));
+
+					let result = await this.$axios({
+						method : 'POST',
+						data   : formData,
+						headers: { 'Content-Type': 'multipart/form-data' },
+						url    : '/field/em_file/index/update/'
+					});
+
+					if(!result.data.success)
+					{
+						this.ElMessage('Error upload files!');
+						return false;
+					}
+					this.selectedElement[key].value = result.data.value;
+				}
+
 				this.$store.dispatch('saveSelectedElement',{
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
