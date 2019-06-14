@@ -2,8 +2,8 @@
 	<div class="confirm-popup__wrapper">
 		<div class="confirm-popup__text">{{title}}</div>
 		<div class="confirm-popup__btns">
-			<button class="el-btn confirm-popup__right-margin" @click="response(false)">Нет</button>
-			<button class="el-gbtn" @click="response(true)">Да</button>
+			<button class="el-btn confirm-popup__right-margin" @click="$emit('response', false)">Нет</button>
+			<button class="el-gbtn" @click="$emit('response', true)">Да</button>
 		</div>
 	</div>
 </template>
@@ -18,16 +18,6 @@
 		{
 			return {
 				title: 'Вы уверены ?'
-			}
-		},
-		methods:
-		{
-			/**
-			 * Отдать овет
-			 */
-			response(answer)
-			{
-				this.$emit('response', answer);
 			}
 		},
 		/**
