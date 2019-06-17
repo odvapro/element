@@ -12,6 +12,7 @@ use Phalcon\Db\Adapter\Pdo\Factory;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -55,6 +56,14 @@ $di->set('dispatcher', function() use ($di)
 
 	return $dispatcher;
 });
+
+/**
+ * Логгер
+ */
+$di->set('logger', function() use($config)
+{
+	return new FileAdapter(ROOT . '/app/logs/element.log');
+}, true);
 
 /**
  * Setting up the view component

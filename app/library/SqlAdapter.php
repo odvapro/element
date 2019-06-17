@@ -129,11 +129,17 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
+			Phalcon\Di::getDefault()->get('logger')->log(
+				"selectRequest: {$sql}"
+			);
 			$select = $this->db->fetchAll(
 				$sql,
 				Phalcon\Db::FETCH_ASSOC
 			);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"selectError: {$e->getMessage()}"
+			);
 			return false;
 		}
 
@@ -163,8 +169,14 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
+			Phalcon\Di::getDefault()->get('logger')->log(
+				"updateRequest: {$sql}"
+			);
 			$this->db->execute($sql);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"updateRequest: {$sql}"
+			);
 			return false;
 		}
 
@@ -200,8 +212,14 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
+			Phalcon\Di::getDefault()->get('logger')->log(
+				"insertRequest: {$sql}"
+			);
 			$this->db->execute($sql,$values);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"insertRequest: {$sql}"
+			);
 			return false;
 		}
 
@@ -229,8 +247,14 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
+			Phalcon\Di::getDefault()->get('logger')->log(
+				"deleteRequest: {$sql}"
+			);
 			$this->db->execute($sql);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"deleteRequest: {$sql}"
+			);
 			return false;
 		}
 
