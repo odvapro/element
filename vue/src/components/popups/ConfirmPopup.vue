@@ -1,5 +1,5 @@
 <template>
-	<div class="confirm-popup__wrapper">
+	<div class="confirm-popup">
 		<div class="confirm-popup__text">{{title}}</div>
 		<div class="confirm-popup__btns">
 			<button class="el-btn confirm-popup__right-margin" @click="$emit('response', false)">Нет</button>
