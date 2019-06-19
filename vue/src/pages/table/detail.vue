@@ -40,6 +40,8 @@
 					mode="edit"
 					view="detail"
 					:fieldName="column.fieldName"
+					:fieldCode="columnCode"
+					:tableCode="tableCode"
 					:params="{
 						value     : column.value,
 						settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
@@ -116,13 +118,13 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+				this.selectedElement[fieldValue.fieldCode].value = fieldValue.value;
 			},
 
 			/**
 			 * Сохранение элемента
 			 */
-			saveElement()
+			async saveElement()
 			{
 				this.$store.dispatch('saveSelectedElement',{
 					selectedElement : this.selectedElement,

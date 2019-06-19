@@ -38,6 +38,9 @@ class EmNodeField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		return $this->fieldValue;
+		if(!is_array($this->fieldValue))
+			return $this->fieldValue;
+
+		return $this->fieldValue['id'];
 	}
 }
