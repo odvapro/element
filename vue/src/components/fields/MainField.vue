@@ -3,8 +3,6 @@
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
-			:fieldCode="fieldCode"
-			:tableCode="tableCode"
 			:fieldSettings="params.settings"
 			:mode="mode"
 			:view="view"
@@ -16,7 +14,7 @@
 <script>
 	export default
 	{
-		props: ['params','mode','view','fieldName', 'fieldCode', 'tableCode'],
+		props: ['params','mode','view','fieldName'],
 		computed:
 		{
 			/**
@@ -30,9 +28,6 @@
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},
-		/*mounted(){
-			this.localParams = JSON.parse(JSON.stringify(this.params));
-		},*/
 		methods:
 		{
 			/**

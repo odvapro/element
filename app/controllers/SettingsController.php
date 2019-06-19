@@ -76,6 +76,9 @@ class SettingsController extends ControllerBase
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
+		if(empty($this->element->emTypes[$fieldType]))
+			return $this->jsonResult(['success' => false, 'message' => 'no such field']);
+
 		$emType     = $this->element->emTypes[$fieldType];
 		$fieldClass = new $emType['fieldComponent']('', $field->settings);
 		$emSettings = [

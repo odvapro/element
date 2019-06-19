@@ -6,7 +6,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		data()
 		{
 			return {

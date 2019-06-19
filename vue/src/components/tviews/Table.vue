@@ -70,8 +70,6 @@
 						mode="edit"
 						view="table"
 						:fieldName="row[column.field].fieldName"
-						:fieldCode="column.field"
-						:tableCode="table.code"
 						:params="{
 							value     : row[column.field].value,
 							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
@@ -492,10 +490,8 @@
 		padding-left: 9px;
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&:last-child
-		{
-			border-right: none;
-		}
+		&:last-child {border-right: none; }
+		&:hover{background: rgba(103, 115, 135, 0.05);}
 	}
 	.table-item-overide-name
 	{

@@ -24,7 +24,7 @@
 	import { VueEditor } from "vue2-editor";
 	export default
 	{
-		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		components:{VueEditor},
 		data()
 		{
@@ -53,9 +53,7 @@
 			{
 				this.$emit('onChange', {
 					value     : this.localValue,
-					settings  : this.fieldSettings,
-					tableCode : this.tableCode,
-					fieldCode : this.fieldCode
+					settings  : this.fieldSettings
 				});
 			}
 		}

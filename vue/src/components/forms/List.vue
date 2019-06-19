@@ -1,23 +1,31 @@
 <template>
-	<div class="list-view__wrapper" @click.stop="togglePopup()">
-		<div class="list-view__item-wrapper">
-			<div class="list-view__item">
-				{{selectedItem}}
+	<div class="list" v-click-outside="closePopup">
+		<div class="list__shown" @click="openPopup()">
+			<div class="list__item" v-if="selectedItem">
+				{{ selectedItem }}
 			</div>
+			<span v-else class="el-empty">Empty</span>
 		</div>
-		<div class="list-view__search" v-if="showPopup" v-click-outside="closePopup">
-			<div class="list-view__search-popup-head">
-				<div class="list-view__search-item">
-					{{selectedItem}}
-				</div>
+		<div class="list__search" v-if="showPopup">
+			<div class="list__search-popup-head">
+				<input
+					ref="searchInput"
+					v-if="!selectedItem"
+					class="el-inp-noborder"
+					type="text"
+					placeholder="Search for an option..."
+					v-model="searchText"
+				/>
+				<template v-else>
+					<div class="list__search-item"> {{ selectedItem }} </div>
+				</template>
 			</div>
-			<div class="list-view__search-popup-item" v-for="listItem in listValues" @click="changeData(listItem)">
-				<div class="list-view__search-icon">
-					<svg width="6" height="5">
-						<use xlink:href="#lines"></use>
-					</svg>
-				</div>
-				<div class="list-view__search-item">
+			<div
+				class="list__search-popup-item"
+				v-for="listItem in list"
+				@click="changeData(listItem)"
+			>
+				<div class="list__search-item">
 					{{listItem.value}}
 				</div>
 			</div>
@@ -36,17 +44,23 @@
 			return {
 				showPopup: false,
 				selectedItem: '',
-				listValues: []
+				listValues: [],
+				searchText:''
 			}
 		},
 		methods:
 		{
 			/**
-			 * Открыть/Закрыть попап
+			 * Открыть попап
 			 */
-			togglePopup()
+			openPopup()
 			{
-				this.showPopup = !this.showPopup;
+				this.showPopup = true;
+				this.searchText = '';
+				this.$nextTick(()=>{
+					if(typeof this.$refs.searchInput != 'undefined')
+						this.$refs.searchInput.focus();
+				});
 			},
 			/**
 			 * Закрыть попап
@@ -62,6 +76,7 @@
 			{
 				this.$emit('onChange', {value: itemValue.key});
 				this.selectedItem = itemValue.value;
+				this.closePopup();
 			}
 		},
 		/**
@@ -75,8 +90,21 @@
 	}
 </script>
 <style lang="scss">
-	.list-view__item
+	.list
 	{
+		width:100%;
+		height: 100%;
+	}
+	.list__shown
+	{
+		width:100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+	.list__item
+	{
+		display: inline-block;
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
 		border-radius: 2px;
@@ -86,18 +114,18 @@
 		position: relative;
 		cursor: pointer;
 	}
-	.list-view__search-popup-head
+	.list__search-popup-head
 	{
-		height: 49px;
+		height: 30px;
 		display: flex;
 		align-items: center;
 		padding: 0 9px;
 		font-size: 10px;
-		background-color: rgba(103, 115, 135, 0.1);
+		background-color: rgba(103, 115, 135, 0.05);
 		color: rgba(25, 28, 33, 0.4);
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.list-view__search
+	.list__search
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		width: 193px;
@@ -105,26 +133,12 @@
 		border-radius: 2px;
 		background: white;
 		position: absolute;
-		top: -1px;
+		top: -2px;
 		background: white;
 		z-index: 2;
-		left: -1px;
+		left: -2px;
 	}
-	.list-view__search-icon
-	{
-		width: 6px;
-		height: 14px;
-		display: flex;
-		align-items: center;
-		margin-right: 8px;
-		img
-		{
-			width: 100%;
-			height: 100%;
-			object-fit: contain;
-		}
-	}
-	.list-view__search-item
+	.list__search-item
 	{
 		padding: 4px 8px;
 		background-color: rgba(124, 119, 145, 0.1);
@@ -134,7 +148,7 @@
 		color: #7C7791;
 		position: relative;
 	}
-	.list-view__search-popup-item
+	.list__search-popup-item
 	{
 		display: flex;
 		padding: 0 9px;

@@ -64,7 +64,7 @@ class SettingsCest
 			'columnName' => 'id',
 			'fieldType'  => 'EmString'
 		]);
-		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/settings/changeFieldType', [
 			'tableName'  => 'newTest',

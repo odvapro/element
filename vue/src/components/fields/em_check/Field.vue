@@ -11,7 +11,7 @@
 	export default
 	{
 		components: {Checkbox},
-		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Checke status
 		 */
@@ -27,9 +27,7 @@
 			{
 				this.$emit('onChange', {
 					value     : checkboxStatus,
-					settings  : this.fieldSettings,
-					tableCode : this.tableCode,
-					fieldCode : this.fieldCode
+					settings  : this.fieldSettings
 				});
 			}
 		},

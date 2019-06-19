@@ -37,10 +37,10 @@ LOCK TABLES `block_type` WRITE;
 
 INSERT INTO `block_type` (`id`, `value`, `name`)
 VALUES
-  (1,'text','Текст'),
-  (2,'product-card','Карточка'),
-  (3,'small-card','Карточка 2'),
-  (4,'slider','Слайдер'),
+  (1,'text','text'),
+  (2,'product-card','cart'),
+  (3,'small-card','cart2'),
+  (4,'slider','slider'),
   (6,'form-order','Форма заказа');
 
 /*!40000 ALTER TABLE `block_type` ENABLE KEYS */;
@@ -152,21 +152,12 @@ LOCK TABLES `em_views` WRITE;
 
 INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `default`, `settings`)
 VALUES
-  (1,'Отображениеblock_type','block_type','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"value\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (2,'Отображениеblocks','blocks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"false\"},\"page_id\":{\"width\":\"140\",\"visible\":\"false\"},\"content\":{\"width\":\"140\",\"visible\":\"false\"},\"position\":{\"width\":\"200\",\"visible\":\"false\"},\"block_type\":{\"width\":\"140\",\"visible\":\"false\"},\"images\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"140\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (3,'Отображениеcallbacks','callbacks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"phone\":{\"width\":\"140\",\"visible\":\"true\"},\"date\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"status\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (4,'Отображениеfeedback','feedback','[]','[]',1,'[]'),
-  (5,'Отображениеfield_types','field_types','[]','[]',1,'[]'),
-  (6,'Отображениеform_relations','form_relations','[]','[]',1,'[]'),
-  (7,'Отображениеforms','forms','[]','[]',1,'[]'),
-  (8,'Отображениеmenu','menu','[]','[]',1,'[]'),
-  (9,'Отображениеnews','news','[]','[]',1,'[]'),
-  (10,'Отображениеorders','orders','[]','[]',1,'[]'),
-  (11,'Отображениеpages','pages','[]','[]',1,'[]'),
-  (12,'Отображениеproducts','products','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"386\",\"visible\":\"true\"},\"images\":{\"width\":\"600\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"},\"special\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (13,'Отображениеreviews','reviews','[]','[]',1,'[]'),
-  (14,'Отображениеstatic','static','[]','[]',1,'[]'),
-  (15,'ОтображениеtestTable','testTable','[]','[]',1,'[]');
+  (16, 'Default view', 'block_type', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Block Type\"}}'),
+  (17, 'Default view', 'callbacks', '[]', '[]', 1, '[]'),
+  (18, 'Default view', 'field_types', '[]', '[]', 1, '[]'),
+  (19, 'Default view', 'pages', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Pages\"}}'),
+  (20, 'Default view', 'products', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Products\"}}'),
+  (21, 'Default view', 'testTable', '[]', '[]', 1, '[]');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;

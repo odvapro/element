@@ -78,7 +78,7 @@ const table =
 				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
 					continue;
 
-				tableLine[fieldValue.fieldCode].value = fieldValue.value;
+				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
 				break;
 			}
 		}
@@ -173,6 +173,8 @@ const table =
 				value     : (row) ? row[primaryKeyCode].value : '',
 				fieldCode : primaryKeyCode
 			};
+			settings.fieldCode  = column.field;
+			settings.tableCode  = tableCode;
 
 			return Object.assign({}, settings);
 		}
@@ -319,10 +321,10 @@ const table =
 		{
 			let setValues  = {}
 			let primaryKey = fieldValue.settings.primaryKey;
-			setValues[fieldValue.fieldCode] = fieldValue.value;
+			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
 			var data = qs.stringify({
 				update:{
-					table :fieldValue.tableCode,
+					table :fieldValue.settings.tableCode,
 					set   :setValues,
 					where :{
 						operation:'and',
