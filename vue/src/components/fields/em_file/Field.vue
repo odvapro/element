@@ -112,42 +112,46 @@
 				if(!this.localValue)
 					this.$set(this, 'localValue', []);
 
+				let formData   = new FormData();
+
+				formData.append('tableCode', this.tableCode);
+				formData.append('fieldCode', this.fieldCode);
+				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
+				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
+
 				if(type == 'link')
 				{
-					let index = this.localValue.push({
-						uploadType : type,
-						link       : this.link
-					});
-					this.setPreviewForImage(this.link, index - 1);
+					formData.append('typeUpload', 'link');
+					formData.append('link', this.link);
 				}
 				else if(type == 'file')
 				{
-					if (typeof this.$refs.emFile != 'undefined')
-					{
-						for (var file of this.$refs.emFile.files)
-						{
-							let index = this.localValue.push({
-								uploadType : type,
-								file       : file,
-								name       : file.name
-							});
-							if(/^image/.test(file.type))
-								this.setPreview(URL.createObjectURL(file), index - 1);
-							else
-								this.setPreview(false, index - 1);
+					if (typeof this.$refs.emFile == 'undefined' || this.$refs.emFile.length == 0)
+						return;
 
-						}
-					}
+					for(var file of this.$refs.emFile.files)
+						formData.append(`${this.fieldCode}[]`, file);
+
+					formData.append('typeUpload', 'file');
 				}
+				else
+					return;
 
-				if(this.view == 'table')
+				let result = await this.$axios({
+					method : 'POST',
+					data   : formData,
+					headers: { 'Content-Type': 'multipart/form-data' },
+					url    : '/field/em_file/index/upload/'
+				});
+
+				if(!result.data.success)
+					return false;
+
+				for(var newFile of result.data.value)
 				{
-					var result = await this.sendUpdate();
+					newFile.new = true;
 
-					if(!result)
-						return false;
-
-					this.localValue = result;
+					this.localValue.push(newFile);
 				}
 
 				this.sendValue();
@@ -159,7 +163,7 @@
 			 */
 			async removeFile(index)
 			{
-				if(typeof this.localValue[index].uploadType != 'undefined')
+				if(typeof this.localValue[index].new != 'undefined')
 				{
 					this.$delete(this.localValue, index);
 					this.sendValue();
@@ -169,59 +173,7 @@
 				this.$set(this.localValue[index], 'delete', true);
 				this.$set(this.localValue[index], 'noShow', true);
 
-				if(this.view == 'table')
-				{
-					var result = await this.sendUpdate();
-
-					if(!result)
-						return false;
-
-					this.localValue = result;
-				}
-
 				this.sendValue();
-			},
-
-			/**
-			 * Отправить данные на сохранение
-			 */
-			async sendUpdate()
-			{
-				let formData   = new FormData();
-
-				formData.append('tableCode', this.tableCode);
-				formData.append('fieldCode', this.fieldCode);
-				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
-				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
-
-				let valuesForSave = [];
-
-				for(const fileIndex in this.localValue)
-				{
-					let file = this.localValue[fileIndex];
-
-					if(file.uploadType != "file")
-					{
-						valuesForSave.push(file);
-						continue;
-					}
-
-					formData.append(`${this.fieldCode}[]`, file.file);
-				}
-
-				formData.append('value', JSON.stringify(valuesForSave));
-
-				let result = await this.$axios({
-					method : 'POST',
-					data   : formData,
-					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_file/index/update/'
-				});
-
-				if(!result.data.success)
-					return false;
-
-				return result.data.value;
 			},
 
 			/**
