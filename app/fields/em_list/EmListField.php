@@ -7,31 +7,20 @@ class EmListField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$settingsList = empty($this->settings) ? false : $this->settings['list'];
+		if(empty($this->fieldValue))
+			return [];
 
-		if (empty($settingsList))
-			return $this->fieldValue;
-
-		foreach ($settingsList as $listItem)
-			if ($listItem['key'] == $this->fieldValue)
-				return $listItem['key'];
-
-		return $this->fieldValue;
+		return explode(',', $this->fieldValue);
 	}
+
 	/**
 	 * Сохранить значение
 	 */
 	public function saveValue()
 	{
-		$settingsList = empty($this->settings) ? false : $this->settings['list'];
-
-		if (empty($settingsList))
-			return $this->fieldValue;
-
-		foreach ($settingsList as $listItem)
-			if ($listItem['key'] == $this->fieldValue)
-				return $listItem['key'];
-
-		return $this->fieldValue;
+		if(is_array($this->fieldValue))
+			return implode(',',$this->fieldValue);
+		else
+			return '';
 	}
 }

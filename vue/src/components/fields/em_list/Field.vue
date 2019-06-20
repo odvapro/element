@@ -1,7 +1,7 @@
 <template>
 	<div class="em_list">
 		<List
-			:selectVal="selectedItem"
+			:selected="fieldValue"
 			:list="fieldSettings.list"
 			@onChange="changeData"
 		/>
@@ -20,7 +20,6 @@
 		{
 			return {
 				showPopup: false,
-				selectedItem: ''
 			}
 		},
 		methods:
@@ -30,24 +29,11 @@
 			 */
 			async changeData(data)
 			{
+				let curValue = (data.value.length == 0)?'':data.value;
 				this.$emit('onChange', {
-					value: data.value,
+					value: curValue,
 					settings: this.fieldSettings
 				});
-			}
-		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			for (var settingItem of this.fieldSettings.list)
-			{
-				if (settingItem.key != this.fieldValue)
-					continue;
-
-				this.selectedItem = settingItem.value;
-				break;
 			}
 		}
 	}
