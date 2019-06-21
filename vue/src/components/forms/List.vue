@@ -1,55 +1,31 @@
 <template>
 	<div class="list" v-click-outside="closePopup">
 		<div class="list__shown" @click="openPopup()">
-			<div class="list__item" v-for="selectedItem in selectedItems">
-				{{ selectedItem.value }}
-			</div>
-			<span v-if="!selectedItems.length" class="el-empty">Empty</span>
+			<span v-if="!hasSelectedSlot" class="el-empty">Empty</span>
+			<slot name="selected"></slot>
 		</div>
 		<div class="list__search" v-if="showPopup">
 			<div class="list__search-popup-head">
 				<input
 					ref="searchInput"
-					v-if="!selectedItems.length"
+					v-if="!hasSelectedSlot"
 					class="el-inp-noborder"
 					type="text"
 					placeholder="Search for an option..."
-					v-model="searchText"
+					v-model="localSearchText"
 				/>
-				<template v-else>
-					<div
-						class="list__search-item"
-						v-for="(selectedItem, selectedItemIndex) in selectedItems"
-					>
-					{{ selectedItem.value }}
-					<svg width="9" height="9" @click.stop="remove(selectedItemIndex)">
-						<use xlink:href="#plus-white"></use>
-					</svg>
-					</div>
-				</template>
+				<slot name="selected"></slot>
 			</div>
-			<div
-				class="list__search-popup-item"
-				v-for="listItem in itemsList"
-				@click="changeData(listItem)"
-			>
-				<div class="list__search-item">
-					{{listItem.value}}
-				</div>
+			<div class="list__options">
+				<slot></slot>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-	/**
-	 * Принимает параметры
-	 * - selected = массив кодов выбранных опций [keyCode1,keyCode2...]
-	 * - list = массив для выбора [ {key:'exampleKey',value:'exampleValue'},
-	 * 								{key:'exampleKey2',value:'exampleValue2'} ]
-	 */
 	export default
 	{
-		props: ['selected', 'list'],
+		props:['searchText'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -57,35 +33,33 @@
 		{
 			return {
 				showPopup: false,
-				searchText:'',
-				localSelected:[]
+				localSearchText:'',
+				localSelected:this.selected
+			}
+		},
+		watch:
+		{
+			localSearchText(value)
+			{
+				this.$emit('update:searchText',this.localSearchText);
 			}
 		},
 		computed:
 		{
 			/**
-			 * Возврощает список выбранных элементов
-			 * [{key:<key code>,value:<value>}]
+			 * Проверка есть слот или нет
 			 */
-			selectedItems()
+			hasDefaultSlot()
 			{
-				if(this.localSelected.length == 0)
-					return [];
-				return this.list.filter(listItem=>{
-					if(this.localSelected.indexOf(listItem.key) !== -1)
-						return true;
-				});
+				return !!this.$slots.default
 			},
 
 			/**
-			 * Выдаем отфильтрованный список опций
+			 * Проверка есть слот или нет
 			 */
-			itemsList()
+			hasSelectedSlot()
 			{
-				return this.list.filter(listItem=>{
-					if(listItem.value.indexOf(this.searchText) !== -1)
-						return true;
-				});
+				return !!this.$slots['selected']
 			}
 		},
 		methods:
@@ -96,7 +70,7 @@
 			openPopup()
 			{
 				this.showPopup = true;
-				this.searchText = '';
+				this.localSearchText = '';
 				this.$nextTick(()=>{
 					if(typeof this.$refs.searchInput != 'undefined')
 						this.$refs.searchInput.focus();
@@ -110,36 +84,6 @@
 			{
 				this.showPopup = false;
 			},
-
-			/**
-			 * Изменить тип поля
-			 */
-			async changeData(itemValue)
-			{
-				this.localSelected = [itemValue.key];
-				this.$emit('onChange', {
-					value     : this.localSelected,
-					settings  : this.fieldSettings
-				});
-				this.closePopup();
-			},
-
-			/**
-			 * Удаляет желемент из списка
-			 */
-			remove(itemIndex)
-			{
-				this.localSelected.splice(itemIndex,1);
-				this.$emit('onChange', {
-					value     : this.localSelected,
-					settings  : this.fieldSettings
-				});
-				this.closePopup();
-			}
-		},
-		mounted()
-		{
-			this.localSelected = this.selected
 		}
 	}
 </script>
@@ -156,18 +100,6 @@
 		display: flex;
 		align-items: center;
 	}
-	.list__item
-	{
-		display: inline-block;
-		padding: 4px 8px;
-		background-color: rgba(124, 119, 145, 0.1);
-		border-radius: 2px;
-		font-size: 10px;
-		margin-right: 2px;
-		color: #7C7791;
-		position: relative;
-		cursor: pointer;
-	}
 	.list__search-popup-head
 	{
 		height: 30px;
@@ -182,7 +114,7 @@
 	.list__search
 	{
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-		width: 193px;
+		width: 250px;
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		background: white;
@@ -192,33 +124,14 @@
 		z-index: 2;
 		left: -2px;
 	}
-	.list__search-item
+	.list__options
 	{
-		padding: 4px 8px;
-		background-color: rgba(124, 119, 145, 0.1);
-		border-radius: 2px;
-		font-size: 10px;
-		margin-right: 2px;
-		color: #7C7791;
-		position: relative;
-		svg
-		{
-			position: relative;
-			top:1px;
-			stroke:#677387;
-			transform: rotate(45deg);
-		}
+		max-height: 190px;
+		overflow: auto;
+		margin:5px 0;
+		.list-option{padding:5px 0 5px 10px; height: 30px;}
+		.list-option:hover{background: rgba(103, 115, 135, 0.1);}
 	}
-	.list__search-popup-item
-	{
-		display: flex;
-		padding: 0 9px;
-		align-items: center;
-		height: 30px;
-		cursor: pointer;
-		&:hover
-		{
-			background-color: rgba(103, 115, 135, 0.1);
-		}
-	}
+	.list__search-popup-head .list-option__remove{display: inline-block;}
+	.list__search-popup-head .list-option span{padding-right: 18px;}
 </style>

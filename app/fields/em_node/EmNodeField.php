@@ -20,17 +20,15 @@ class EmNodeField extends FieldBase
 		];
 		$node = $this->element->select($select);
 
-		if(count($node) > 0)
-		{
-			$node = $node[0];
-			return [
-				'id'   => $node[$this->settings['nodeFieldCode']]['value'],
-				'name' => $node[$this->settings['nodeSearchCode']]['value'],
-				'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]['value']}"
-			];
-		}
+		if(!count($node) )
+			return [];
 
-		return [];
+		$node = $node[0];
+		return [
+			'id'   => $node[$this->settings['nodeFieldCode']]['value'],
+			'name' => $node[$this->settings['nodeSearchCode']]['value'],
+			'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]['value']}"
+		];
 	}
 
 	/**
