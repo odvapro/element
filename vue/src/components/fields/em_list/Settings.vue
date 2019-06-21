@@ -1,18 +1,40 @@
 <template>
-	<div class="settings-popup-row-params">
-		<div class="popup__field" v-for="listItem, index in localSettings.list" :key="index">
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" v-model="listItem.key" placeholder="Key">
+	<div class="em-list">
+		<div class="em-list__line">
+			<div class="em-list__key-block">Key</div>
+			<div class="em-list__key-block">Value</div>
+		</div>
+		<div
+			class="em-list__line"
+			v-for="listItem, index in localSettings.list"
+			:key="index"
+		>
+			<div class="em-list__key-block">
+				<input
+					type="text"
+					class="el-inp-noborder"
+					v-model="listItem.key"
+					placeholder="Enter key"
+				/>
 			</div>
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" v-model="listItem.value" placeholder="Value">
+			<div class="em-list__value-block">
+				<input
+					type="text"
+					class="el-inp-noborder"
+					v-model="listItem.value"
+					placeholder="Enter value"
+				/>
 			</div>
-			<div class="popup__field-input">
-				<div @click="removeValue(index)">remove field</div>
+			<div class="em-list__remove-block">
+				<div class="em-list__remove-item" @click.stop="removeValue(index)">
+					<svg width="12" height="12">
+						<use xlink:href="#plus-white"></use>
+					</svg>
+				</div>
 			</div>
 		</div>
-		<div class="popup__field-input">
-			<div @click="addValues()">add field</div>
+		<div class="em-list__add-line">
+			<button class="el-gbtn" @click="addValues()">Add option</button>
 		</div>
 		<div class="popup__buttons">
 			<button @click="cancel()" class="el-gbtn">Cancel</button>
@@ -88,3 +110,47 @@
 		}
 	}
 </script>
+<style lang="scss">
+	.em-list{margin-top:30px;}
+	.em-list .popup__buttons{margin-top:30px;}
+	.em-list__line
+	{
+		height: 40px;
+		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
+		display: flex;
+		align-items: center;
+		&:first-child{border-top: 1px solid rgba(103, 115, 135, 0.1);}
+	}
+	.em-list__key-block
+	{
+		width:230px;
+		border-right:1px solid rgba(103, 115, 135, 0.1);
+		height: 100%;
+		padding-left:10px;
+		line-height:40px;
+		color:#677387;
+		font-size: 12px;
+	}
+	.em-list__value-block
+	{
+		width:230px;
+		border-right:1px solid rgba(103, 115, 135, 0.1);
+		height: 100%;
+		padding-left:10px;
+	}
+	.em-list__remove-block{padding-left:10px; }
+	.em-list__add-line{margin-top:20px; }
+	.em-list__remove-item
+	{
+		width: 24px;
+		height: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 2px;
+		cursor: pointer;
+		&:hover {background-color: rgba(103, 115, 135, 0.1); }
+		svg{stroke:#677387;transform: rotate(45deg);}
+
+	}
+</style>

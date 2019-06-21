@@ -78,7 +78,7 @@
 			</div>
 		</div>
 		<Popup :visible.sync="settingsPopup">
-			<div class="popup__name">Settings</div>
+			<div class="popup__name">{{ settingsColumn.field }} settings</div>
 			<component
 				:is="settingsComponent"
 				:settings="currentSettings"
@@ -207,6 +207,7 @@
 			{
 				return this.$store.getters.getColumnSettings(table.code, column.field);
 			},
+
 			/**
 			 * Изменение типа поля
 			 */
@@ -231,6 +232,7 @@
 
 				this.$set(table.columns[values.column], 'em', result.data.settings);
 			},
+
 			/**
 			 * Анимация для открытия и закрытия аккордеона
 			 */
@@ -256,6 +258,7 @@
 					table.showSettings.overflow = 'visible';
 				}, 300);
 			},
+
 			/**
 			 * Открыть/закрыть настройки колонок
 			 */
@@ -263,6 +266,7 @@
 			{
 				table.showSettings = !table.showSettings;
 			},
+
 			/**
 			 * Переопределить имя колонки
 			 */
@@ -285,6 +289,7 @@
 				if (!result.data.success)
 					return false;
 			},
+
 			/**
 			 * Инициализация и преобразование массива таблицы
 			 */
