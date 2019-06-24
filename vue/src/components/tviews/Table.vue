@@ -35,12 +35,12 @@
 				</div>
 				<div class="table-item">
 					<div class="table__add-column-item">
-						<div class="table__add-col-img">
+						<!-- <div class="table__add-col-img">
 							<svg width="12" height="12">
 								<use xlink:href="#plus-white"></use>
 							</svg>
 						</div>
-						<span class="table__add-col-label">Add field</span>
+						<span class="table__add-col-label">Add field</span> -->
 					</div>
 				</div>
 			</div>
@@ -564,7 +564,7 @@
 	.table-vertical-scroll
 	{
 		overflow: auto;
-		padding-bottom: 120px;
+		height: calc(100vh - 100px);
 	}
 	.table__add-column-item
 	{

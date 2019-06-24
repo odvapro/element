@@ -157,6 +157,9 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
 
 		$tview = EmViews::findFirstById($tviewId);
+		if(!$tview)
+			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
+
 		$tviewSettings = $tview->settings;
 
 		foreach ($params as $keySetting => $setting)

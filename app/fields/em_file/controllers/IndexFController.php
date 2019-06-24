@@ -39,7 +39,12 @@ class IndexFController extends ControllerBase
 		$primaryKeyValue = $this->request->getPost('primaryKeyValue');
 		$link            = $this->request->getPost('link');
 
-		if(empty($fieldCode) || empty($tableCode) || empty($typeUpload) || empty($primaryKey) || empty($primaryKeyValue))
+		if(empty($fieldCode) ||
+		   empty($tableCode) ||
+		   empty($typeUpload) ||
+		   empty($primaryKey) ||
+		   empty($primaryKeyValue)
+		)
 			return $this->jsonResult(['success' => false, 'message' => 'required fields in not found']);
 
 		// Проверяем существование записи

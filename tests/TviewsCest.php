@@ -11,7 +11,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/tview/saveFilters/', [
-			'tviewId' => 1,
+			'tviewId' => 21,
 			'filters' => [
 				'operation' => 'AND',
 				'fields' => [
@@ -24,7 +24,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/tview/saveFilters/', [
-			'tviewId' => 1
+			'tviewId' => 21
 		]);
 		$I->seeResponseContainsJson(['success' => true]);
 
@@ -32,7 +32,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendGET('/tview/saveFilters/', [
-			'tviewId' => 1,
+			'tviewId' => 21,
 			'filters' => [
 				'operation' => 'AND'
 			]
@@ -48,7 +48,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/tview/saveSort/', [
-			'tviewId' => 1,
+			'tviewId' => 21,
 			'sort' => [
 				'name DESC', 'id ASC'
 			]
@@ -56,7 +56,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendGET('/tview/saveSort/', [
-			'tviewId' => 1
+			'tviewId' => 21
 		]);
 		$I->seeResponseContainsJson(['success' => true]);
 
@@ -64,7 +64,7 @@ class TviewsCest
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendGET('/tview/saveSort/', [
-			'tviewId' => 1,
+			'tviewId' => 21,
 			'sort' => []
 		]);
 		$I->seeResponseContainsJson(['success' => true]);

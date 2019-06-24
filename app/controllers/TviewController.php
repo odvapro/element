@@ -16,6 +16,8 @@ class TviewController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
 
 		$tview = EmViews::findFirstById($tviewId);
+		if(!$tview)
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
 		$tview->filter = $filters;
 		$tview->save();
 
@@ -33,6 +35,8 @@ class TviewController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
 
 		$tview = EmViews::findFirstById($tviewId);
+		if(!$tview)
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
 		$tview->sort = $sort;
 		$tview->save();
 

@@ -12,28 +12,6 @@
 				@select="selectItem(listItem)"
 			>{{ listItem.name }}</ListOption>
 		</List>
-
-		<!-- <template v-if="view == 'detail'">
-			<div v-if="fieldValue.id" class="em-node__item" @click="goToNode">
-				{{ fieldValue.name }}
-			</div>
-			<input
-				type="text"
-				v-model="query"
-				placeholder="Начните вводить"
-				@keyup="getNodes"
-			>
-			<button
-				v-for="nodeItem in list"
-				@click="changeValue(nodeItem.id)"
-			>{{ nodeItem.name }}</button>
-		</template>
-		<template v-else>
-			<div v-if="fieldValue.id" class="em-node__item" @click="goToNode">
-				{{ fieldValue.name }}
-			</div>
-			<span v-else class="el-empty">Empty</span>
-		</template> -->
 	</div>
 </template>
 <script>
@@ -92,13 +70,6 @@
 				if (!result.data.success)
 					return false;
 				this.list = result.data.result;
-			},
-			goToNode()
-			{
-				if(!this.fieldValue.id)
-					return;
-
-				this.$router.push(this.fieldValue.url)
 			},
 
 			/**

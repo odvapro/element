@@ -107,15 +107,9 @@ class SettingsController extends ControllerBase
 		if(!array_key_exists($fieldType, $this->element->emTypes))
 			return $this->jsonResult(['success' => false, 'message' => 'incorrect field type']);
 
-		if (array_key_exists('path', $settings))
-			if (!is_dir(ROOT . $settings['path']))
-				return $this->jsonResult(['success' => false, 'message' => "directory {$settings['path']} does not exist"]);
-
 		$field = EmTypes::findFirst([
 			'table = ?0 and field = ?1',
-			'bind' => [
-				$tableName, $columnName
-			]
+			'bind' => [$tableName, $columnName ]
 		]);
 		if (!$field)
 			$field = new EmTypes();

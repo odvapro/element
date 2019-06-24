@@ -2,14 +2,6 @@
 
 class EmFileField extends FieldBase
 {
-	protected $fieldValue = '';
-	/**
-	 * Добавить настройки для поля
-	 */
-	public function setSettings()
-	{
-
-	}
 	/**
 	 * Достать значение поля
 	 */
