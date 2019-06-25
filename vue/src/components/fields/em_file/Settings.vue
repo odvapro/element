@@ -116,7 +116,10 @@
 				}
 
 				if(this.errorPath !== false)
+				{
 					this.$set(this.errors, 'savePath', {message: this.errorPath})
+					error = true;
+				}
 
 				var resolutionsErrors = [];
 

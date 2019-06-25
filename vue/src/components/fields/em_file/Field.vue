@@ -65,7 +65,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings','fieldCode','tableCode','mode', 'view'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Глобальные переменные странциы
 		 */
@@ -100,6 +100,20 @@
 				}
 
 				return count;
+			},
+			fieldCode()
+			{
+				if(typeof this.fieldSettings.fieldCode !== 'undefined')
+					return this.fieldSettings.fieldCode;
+
+				return false;
+			},
+			tableCode()
+			{
+				if(typeof this.fieldSettings.tableCode !== 'undefined')
+					return this.fieldSettings.tableCode;
+
+				return false;
 			}
 		},
 		methods:
@@ -137,6 +151,11 @@
 				else
 					return;
 
+				if(this.view == 'table')
+				{
+					formData.append('prepareForSave', true);
+				}
+
 				let result = await this.$axios({
 					method : 'POST',
 					data   : formData,
@@ -148,11 +167,7 @@
 					return false;
 
 				for(var newFile of result.data.value)
-				{
-					newFile.new = true;
-
 					this.localValue.push(newFile);
-				}
 
 				this.sendValue();
 				this.closeSubPopup();

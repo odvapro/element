@@ -59,6 +59,7 @@ class EmFileField extends FieldBase
 				unset($this->fieldValue[$fileKey]);
 				continue;
 			}
+
 			if(!isset($file['new']))
 				continue;
 

@@ -38,6 +38,7 @@ class IndexFController extends ControllerBase
 		$primaryKey      = $this->request->getPost('primaryKey');
 		$primaryKeyValue = $this->request->getPost('primaryKeyValue');
 		$link            = $this->request->getPost('link');
+		$prepareForSave  = $this->request->getPost('prepareForSave');
 
 		if(empty($fieldCode) ||
 		   empty($tableCode) ||
@@ -64,10 +65,10 @@ class IndexFController extends ControllerBase
 		];
 		$selectedItem = $this->eldb->select($select)[0];
 
-		if (empty($selectedItem))
+		if(empty($selectedItem))
 			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
 
-		if(!isset($selectedItem[$fieldCode]))
+		if(!array_key_exists($fieldCode, $selectedItem))
 			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
 
 		// Получаем настройки поля
@@ -110,7 +111,7 @@ class IndexFController extends ControllerBase
 		else
 			return $this->jsonResult(['success' => false, 'message' => 'unidentified upload type']);
 
-		// Сохраняем файлы
+		// Сохраняем файлы во временную директорию
 		$this->element;
 		$fieldClass = new EmFileField('', $emField->settings);
 		$fieldValue = [];
@@ -125,6 +126,7 @@ class IndexFController extends ControllerBase
 
 			$fileName = basename($tempPath);
 			$fileInfo = [
+				'new'    => true,
 				'upName' => $fileName,
 				'type'   => $fileType,
 				'path'   => '/element' . str_replace(ROOT, '', $tempPath),
@@ -144,6 +146,15 @@ class IndexFController extends ControllerBase
 		}
 
 		$fieldClass->setValue(json_encode($fieldValue));
+
+		if(!$prepareForSave)
+			return $this->jsonResult(['success' => true, 'value' => $fieldClass->getValue()]);
+
+		// Полностью сохраняем файлы
+		$fieldValue = $fieldClass->getValue();
+		$fieldClass->setValue($fieldValue);
+		$fieldValue = $fieldClass->saveValue();
+		$fieldClass->setValue($fieldValue);
 
 		return $this->jsonResult(['success' => true, 'value' => $fieldClass->getValue()]);
 	}
