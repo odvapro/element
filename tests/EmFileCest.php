@@ -31,8 +31,6 @@ class EmFileCest
 		$I->sendPOST('/field/em_file/index/upload/', [
 			'tableCode'       => 'block_type',
 			'fieldCode'       => 'file',
-			'primaryKey'      => 'id',
-			'primaryKeyValue' => 1,
 			'typeUpload'      => 'link',
 			'link'            => $link
 		]);

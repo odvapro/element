@@ -30,6 +30,10 @@ Temporary Items
 !/public/upload/.gitkeep
 /public/tmp/
 !/public/tmp/.gitkeep
+/vue/public/upload/
+!/vue/public/upload/.gitkeep
+/vue/public/tmp/
+!/vue/public/tmp/.gitkeep
 config.php
 .phalcon/migration-version
 

@@ -35,40 +35,18 @@ class IndexFController extends ControllerBase
 		$fieldCode       = $this->request->getPost('fieldCode');
 		$tableCode       = $this->request->getPost('tableCode');
 		$typeUpload      = $this->request->getPost('typeUpload');
-		$primaryKey      = $this->request->getPost('primaryKey');
-		$primaryKeyValue = $this->request->getPost('primaryKeyValue');
 		$link            = $this->request->getPost('link');
 		$prepareForSave  = $this->request->getPost('prepareForSave');
 
 		if(empty($fieldCode) ||
 		   empty($tableCode) ||
-		   empty($typeUpload) ||
-		   empty($primaryKey) ||
-		   empty($primaryKeyValue)
+		   empty($typeUpload)
 		)
 			return $this->jsonResult(['success' => false, 'message' => 'required fields in not found']);
 
-		// Проверяем существование записи
-		$select = [
-			'from' => $tableCode,
-			'where' => [
-				'operation' => 'and',
-				'fields'    =>
-				[
-					[
-						'code'      => $primaryKey,
-						'operation' => 'IS',
-						'value'     => $primaryKeyValue
-					],
-				]
-			]
-		];
-		$selectedItem = $this->eldb->select($select)[0];
+		$columns = $this->element->getColumns($tableCode);
 
-		if(empty($selectedItem))
-			return $this->jsonResult(['success' => false, 'message' => 'empty result']);
-
-		if(!array_key_exists($fieldCode, $selectedItem))
+		if(!array_key_exists($fieldCode, $columns))
 			return $this->jsonResult(['success' => false, 'message' => 'not found field']);
 
 		// Получаем настройки поля
@@ -112,7 +90,6 @@ class IndexFController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'unidentified upload type']);
 
 		// Сохраняем файлы во временную директорию
-		$this->element;
 		$fieldClass = new EmFileField('', $emField->settings);
 		$fieldValue = [];
 
