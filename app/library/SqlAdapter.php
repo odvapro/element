@@ -177,7 +177,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function insert($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
 		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
@@ -189,13 +188,16 @@ class SqlAdapter extends PdoAdapter
 		if (empty($columns) || empty($columns))
 			return false;
 
+		$table   = $this->escapeRealStr($table);
+		$columns = $this->escapeRealStr($columns);
+
 		$columns   = implode(', ', $columns);
-		$sqlValues = str_repeat("?", 10);
 		$sqlValues = [];
+
 		foreach ($values as $insertValue)
 			$sqlValues[] = "?";
-		$sqlValues = implode(', ', $sqlValues);
 
+		$sqlValues = implode(', ', $sqlValues);
 		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$sqlValues })";
 
 		try
