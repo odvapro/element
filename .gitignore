@@ -34,6 +34,8 @@ Temporary Items
 !/vue/public/upload/.gitkeep
 /vue/public/tmp/
 !/vue/public/tmp/.gitkeep
+app/logs/
+!app/logs/.gitkeep
 config.php
 .phalcon/migration-version
 
@@ -49,4 +51,3 @@ deploy.php
 /docs/
 composer.lock
 package-lock.json
-app/logs/
