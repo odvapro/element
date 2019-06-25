@@ -104,6 +104,7 @@
 		line-height: 21px;
 		color: #191C21;
 		margin-bottom: 10px;
+		text-transform: capitalize;
 	}
 	.popup__field
 	{

@@ -1,17 +1,25 @@
 <template>
 	<div class="em-file-item-col" @click="openPopup()">
-		<div class="em-file-item-wrapper" v-for="item in dataField">
-			<img :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
+		<div
+			class="em-file-item-wrapper"
+			v-for="item in localValue"
+			v-if="!item.noShow"
+		>
+			<img :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
 		</div>
-		<template v-if="!dataField">
+		<template v-if="countFiels == 0">
 			<span class="el-empty">Empty</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-file__edit-item" v-for="(item, index) in dataField">
-				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small : '/images/fileicon.png'" alt=""/>
-				<a href="javascript:void(0);" @click="removeFile(`${item.upName}`)">remove</a>
+			<div
+				class="em-file__edit-item"
+				v-for="(item, index) in localValue"
+				v-if="!item.noShow"
+			>
+				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
+				<a href="javascript:void(0);" @click="removeFile(index)">remove</a>
 			</div>
-			<template v-if="!dataField">
+			<template v-if="countFiels == 0">
 				<div class="em-file__empty-pop">
 					<span class="el-empty">No files</span>
 				</div>
@@ -57,16 +65,16 @@
 <script>
 	export default
 	{
-		props: ['fieldValue', 'fieldSettings'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Глобальные переменные странциы
 		 */
 		data()
 		{
 			return {
+				localValue   : false,
 				showPopup    : false,
 				showSubPopup : false,
-				dataField    : false,
 				tabs:
 				[
 					{ name: 'Upload', active: true },
@@ -76,6 +84,38 @@
 				link: ''
 			}
 		},
+		computed:
+		{
+			countFiels()
+			{
+				var count = 0;
+
+				if(!this.localValue)
+					return count;
+
+				for(var index in this.localValue)
+				{
+					if(!this.localValue[index].noShow)
+						count++;
+				}
+
+				return count;
+			},
+			fieldCode()
+			{
+				if(typeof this.fieldSettings.fieldCode !== 'undefined')
+					return this.fieldSettings.fieldCode;
+
+				return false;
+			},
+			tableCode()
+			{
+				if(typeof this.fieldSettings.tableCode !== 'undefined')
+					return this.fieldSettings.tableCode;
+
+				return false;
+			}
+		},
 		methods:
 		{
 			/**
@@ -83,18 +123,38 @@
 			 */
 			async uploadFile(type)
 			{
-				let formData = new FormData();
+				if(!this.localValue)
+					this.$set(this, 'localValue', []);
 
-				formData.append('tableCode', this.fieldSettings.tableCode);
-				formData.append('fieldCode', this.fieldSettings.fieldCode);
+				let formData   = new FormData();
+
+				formData.append('tableCode', this.tableCode);
+				formData.append('fieldCode', this.fieldCode);
 				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
 				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
-				formData.append('typeUpload', type);
-				formData.append('link', this.link);
 
-				if (typeof this.$refs.emFile != 'undefined')
-					for (var file of this.$refs.emFile.files)
-						formData.append('files' + file.name, file);
+				if(type == 'link')
+				{
+					formData.append('typeUpload', 'link');
+					formData.append('link', this.link);
+				}
+				else if(type == 'file')
+				{
+					if (typeof this.$refs.emFile == 'undefined' || this.$refs.emFile.length == 0)
+						return;
+
+					for(var file of this.$refs.emFile.files)
+						formData.append(`${this.fieldCode}[]`, file);
+
+					formData.append('typeUpload', 'file');
+				}
+				else
+					return;
+
+				if(this.view == 'table')
+				{
+					formData.append('prepareForSave', true);
+				}
 
 				let result = await this.$axios({
 					method : 'POST',
@@ -103,43 +163,73 @@
 					url    : '/field/em_file/index/upload/'
 				});
 
-				if (!result.data.success)
+				if(!result.data.success)
 					return false;
 
-				/*this.$emit('onChange', {
-					value    : result.data.value,
-					settings : this.fieldSettings
-				});*/
+				for(var newFile of result.data.value)
+					this.localValue.push(newFile);
 
-				this.closePopup();
+				this.sendValue();
+				this.closeSubPopup();
 			},
 
 			/**
 			 * Удалить файл
 			 */
-			async removeFile(fileName)
+			async removeFile(index)
 			{
-				let formData = new FormData();
-				formData.append('tableCode', this.fieldSettings.tableCode);
-				formData.append('fieldCode', this.fieldSettings.fieldCode);
-				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
-				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
-				formData.append('fileName', fileName);
+				if(typeof this.localValue[index].new != 'undefined')
+				{
+					this.$delete(this.localValue, index);
+					this.sendValue();
+					return;
+				}
 
-				let result = await this.$axios({
-					method : 'POST',
-					data   : formData,
-					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_file/index/delete/'
-				});
+				this.$set(this.localValue[index], 'delete', true);
+				this.$set(this.localValue[index], 'noShow', true);
 
-				if (!result.data.success)
-					return false;
+				this.sendValue();
+			},
 
+			/**
+			 * Отправить измененное значение родителю
+			 */
+			sendValue(newValue)
+			{
 				this.$emit('onChange', {
-					value    : result.data.value,
-					settings : this.fieldSettings
+					value     : this.localValue,
+					settings  : this.fieldSettings,
+					tableCode : this.tableCode,
+					fieldCode : this.fieldCode
 				});
+			},
+
+			/**
+			 * Установить превью для url
+			 */
+			setPreviewForImage(url, index)
+			{
+				if(url.match(/\.(jpeg|jpg|gif|png)$/) == null)
+					url = false;
+
+				this.setPreview(url, index);
+			},
+
+			/**
+			 * Установать превью
+			 */
+			setPreview(url, index)
+			{
+				var item = this.localValue[index];
+
+				item.type  = (url == false) ? 'no-image' : 'image';
+				item.sizes = {
+					small: {
+						path: url
+					}
+				};
+
+				this.$set(this.localValue, index, item);
 			},
 
 			/**
@@ -176,6 +266,7 @@
 			closePopup()
 			{
 				this.showPopup = false;
+				this.closeSubPopup();
 			},
 
 			/**
@@ -186,12 +277,22 @@
 				this.showSubPopup = false;
 			}
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
+		watch:
 		{
-			this.dataField = this.fieldValue;
+			/**
+			 * Отслеживать изменение значения у родителя
+			 */
+			'fieldValue'(newValue)
+			{
+				this.localValue = newValue;
+			}
+		},
+		/**
+		 * Функция создания компонента
+		 */
+		created()
+		{
+			this.localValue = this.fieldValue;
 		}
 	}
 </script>

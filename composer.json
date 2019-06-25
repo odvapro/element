@@ -1,7 +1,7 @@
 {
 	"name": "dzantiev/element",
 	"description": "Element CMF",
-	"verstion":"v0.1.14",
+	"verstion":"v0.1.16",
 	"type": "project",
 	"authors": [
 		{
@@ -15,7 +15,7 @@
 		"phalcon/devtools": "^2.0"
 	},
 	"require-dev": {
-		"codeception/codeception": "^2.5",
+		"codeception/codeception": "^3.0",
 		"flow/jsonpath": "dev-master"
 	}
 }

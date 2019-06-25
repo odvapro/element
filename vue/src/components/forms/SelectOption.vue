@@ -4,7 +4,6 @@
 <script>
 	export default
 	{
-		template:``,
 		name:"SelectOption",
 		methods:
 		{

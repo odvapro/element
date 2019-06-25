@@ -1,33 +1,28 @@
 <template>
-	<div class="em-list__wrapper" @click.stop="togglePopup()">
-		<div class="em-list__item-wrapper">
-			<div class="em-list__item">
-				{{selectedItem}}
-			</div>
-		</div>
-		<div class="em-list__search" v-if="showPopup" v-click-outside="closePopup">
-			<div class="em-list__search-popup-head">
-				<div class="em-list__search-item">
-					{{selectedItem}}
-				</div>
-			</div>
-			<div class="em-list__search-popup-item" v-for="listItem in settings.list" @click="changeData(listItem)">
-				<div class="em-list__search-icon">
-					<svg width="6" height="5">
-						<use xlink:href="#lines"></use>
-					</svg>
-				</div>
-				<div class="em-list__search-item">
-					{{listItem.value}}
-				</div>
-			</div>
-		</div>
+	<div class="em-list">
+		<List
+			:searchText.sync="searchText"
+		>
+			<template v-slot:selected>
+				<ListOption
+					v-for="listItem in selectedItems"
+					@remove="removeItem(listItem)"
+				>{{ listItem.value }}</ListOption>
+			</template>
+			<ListOption
+				v-for="listItem in itemsList"
+				@select="selectItem(listItem)"
+			>{{ listItem.value }}</ListOption>
+		</List>
 	</div>
 </template>
 <script>
+	import List from '@/components/forms/List.vue';
+	import ListOption from '@/components/forms/ListOption.vue';
 	export default
 	{
-		props: ['fieldValue', 'fieldSettings'],
+		components: { List, ListOption },
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -35,134 +30,78 @@
 		{
 			return {
 				showPopup: false,
-				selectedItem: '',
-				settings: {}
+				searchText:'',
+				localFieldValue:this.fieldValue
 			}
+		},
+
+		computed:
+		{
+			/**
+			 * Возврощает список выбранных элементов
+			 * [{key:<key code>,value:<value>}]
+			 */
+			selectedItems()
+			{
+				if(this.localFieldValue.length == 0)
+					return [];
+				return this.fieldSettings.list.filter(listItem=>{
+					if(this.localFieldValue.indexOf(listItem.key) !== -1)
+						return true;
+				});
+			},
+
+			/**
+			 * Выдаем отфильтрованный список опций
+			 */
+			itemsList()
+			{
+				return this.fieldSettings.list.filter(listItem=>{
+					if(listItem.value.indexOf(this.searchText) !== -1)
+						return true;
+				});
+			},
 		},
 		methods:
 		{
 			/**
-			 * Открыть/Закрыть попап
+			 * Выбор опции
 			 */
-			togglePopup()
+			selectItem(listItem)
 			{
-				this.showPopup = !this.showPopup;
-			},
-			/**
-			 * Закрыть попап
-			 */
-			closePopup()
-			{
-				this.showPopup = false;
-			},
-			/**
-			 * Изменить тип поля
-			 */
-			async changeData(data)
-			{
-				let qs = require('qs');
-
-				let request = qs.stringify({
-					tableCode       : this.fieldSettings.tableCode,
-					fieldCode       : this.fieldSettings.fieldCode,
-					primaryKey      : this.fieldSettings.primaryKey.fieldCode,
-					primaryKeyValue : this.fieldSettings.primaryKey.value,
-					selectedValue   : data.key
+				this.localFieldValue = [listItem.key];
+				this.$emit('onChange', {
+					value: this.localFieldValue,
+					settings: this.fieldSettings
 				});
+			},
 
-				let result = await this.$axios({
-					method: 'POST',
-					url: '/field/em_list/index/saveSelectedItem/',
-					data: request
+			/**
+			 * Удаление выбранной опции
+			 */
+			removeItem(listItem)
+			{
+				let keyIndex = this.localFieldValue.indexOf(listItem.key);
+				this.localFieldValue.splice(keyIndex,1);
+				let curValue = (this.localFieldValue.length == 0)?'':this.localFieldValue;
+				this.$emit('onChange', {
+					value     : curValue,
+					settings  : this.fieldSettings
 				});
-
-				if (!result.data.success)
-					return false;
-
-				this.$emit('onChange', {value: data.value, settings: this.settings});
-				this.selectedItem = data.value;
 			}
-		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			this.settings = this.fieldSettings;
-			this.selectedItem = this.fieldValue;
 		}
 	}
 </script>
 <style lang="scss">
-	.em-list__item
+	.em-list
 	{
-		padding: 4px 8px;
-		background-color: rgba(124, 119, 145, 0.1);
-		border-radius: 2px;
-		font-size: 10px;
-		margin-right: 2px;
-		color: #7C7791;
-		position: relative;
-		cursor: pointer;
-	}
-	.em-list__search-popup-head
-	{
-		height: 49px;
-		display: flex;
-		align-items: center;
-		padding: 0 9px;
-		font-size: 10px;
-		background-color: rgba(103, 115, 135, 0.1);
-		color: rgba(25, 28, 33, 0.4);
-		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-	}
-	.em-list__search
-	{
-		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-		width: 193px;
-		border: 1px solid rgba(103, 115, 135, 0.1);
-		border-radius: 2px;
-		background: white;
+		width:100%;
+		height:100%;
 		position: absolute;
-		top: -1px;
-		background: white;
-		z-index: 2;
-		left: -1px;
-	}
-	.em-list__search-icon
-	{
-		width: 6px;
-		height: 14px;
-		display: flex;
-		align-items: center;
-		margin-right: 8px;
-		img
-		{
-			width: 100%;
-			height: 100%;
-			object-fit: contain;
-		}
-	}
-	.em-list__search-item
-	{
-		padding: 4px 8px;
-		background-color: rgba(124, 119, 145, 0.1);
-		border-radius: 2px;
-		font-size: 10px;
-		margin-right: 2px;
-		color: #7C7791;
-		position: relative;
-	}
-	.em-list__search-popup-item
-	{
-		display: flex;
-		padding: 0 9px;
-		align-items: center;
-		height: 30px;
+		top:0px;
+		left:0px;
 		cursor: pointer;
-		&:hover
-		{
-			background-color: rgba(103, 115, 135, 0.1);
-		}
+		.list{padding-left:10px; }
 	}
+	.detail-field-box .em-list .list{padding-left:0px;}
 </style>

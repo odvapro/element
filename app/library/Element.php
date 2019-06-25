@@ -12,8 +12,9 @@ class Element
 	 */
 	public function __construct($eldb, $di)
 	{
-		$this->eldb = $eldb;
-		$this->di = $di;
+		$this->eldb    = $eldb;
+		$this->di      = $di;
+		$this->emTypes = $this->getEmTypes();
 	}
 
 	/**
@@ -31,24 +32,23 @@ class Element
 		{
 			while($fieldCode = readdir($handle))
 			{
-				$fieldDirPath = $config->application->fldDir . $fieldCode;
-				$infoFilePath = $fieldDirPath . '/info.json';
+				$fieldDirPath     = $config->application->fldDir . $fieldCode;
+				$fieldComponent   = $fieldCode;
+				$fieldComponent   = explode('_', $fieldComponent);
+				$fieldComponent   = array_map('ucfirst', $fieldComponent);
+				$fieldComponent[] = 'Field';
+				$fieldComponent   = implode('', $fieldComponent);
 
-				if(file_exists($infoFilePath))
+				if(strpos($fieldCode, '.') !== false || !is_dir($fieldDirPath))
+					continue;
+
+				$loader->registerDirs([$fieldDirPath], true)->register();
+
+				if(class_exists($fieldComponent))
 				{
-					$emTypes[$fieldCode]                   = json_decode(file_get_contents($infoFilePath), true);
-					$emTypes[$fieldCode]['code']           = $fieldCode;
-
-					$fieldComponent                        = $emTypes[$fieldCode]['code'];
-					$fieldComponent                        = explode('_', $fieldComponent);
-					$fieldComponent                        = array_map('ucfirst', $fieldComponent);
-					$fieldComponent[]                      = 'Field';
-					$fieldComponent                        = implode('', $fieldComponent);
-					$emTypes[$fieldCode]['fieldComponent'] = $fieldComponent;
+					$fieldClass          = new $fieldComponent();
+					$emTypes[$fieldCode] = $fieldClass->getSettings();
 				}
-
-				if(strpos($fieldCode, '.') === false && is_dir($fieldDirPath))
-					$loader->registerDirs([$fieldDirPath], true)->register();
 			}
 			closedir($handle);
 		}
@@ -67,7 +67,6 @@ class Element
 			return false;
 
 		$tableColumns = $this->eldb->getColumns($tableName);
-		$emTypes      = $this->getEmTypes();
 
 		if (empty($tableColumns))
 			return false;
@@ -82,15 +81,17 @@ class Element
 
 		foreach ($emFields as $emFieldsTypes)
 		{
-			if(!array_key_exists($emFieldsTypes->field, $tableColumns))
+			if(!array_key_exists($emFieldsTypes->field, $tableColumns) || !array_key_exists($emFieldsTypes->type, $this->emTypes))
 				#TODO добавление доп полей которых нет в бд и тд
 				continue;
+
+			$fieldClass = new $this->emTypes[$emFieldsTypes->type]['fieldComponent']('', $emFieldsTypes->settings);
 
 			$emFieldArray = [
 				'name'      => $emFieldsTypes->name,
 				'type'      => $emFieldsTypes->type,
-				'type_info' => $emTypes[$emFieldsTypes->type],
-				'settings'  => $emFieldsTypes->settings,
+				'type_info' => $this->emTypes[$emFieldsTypes->type],
+				'settings'  => $fieldClass->getSettings(),
 				'required'  => $emFieldsTypes->getRequired()
 			];
 			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;
@@ -101,12 +102,13 @@ class Element
 			if(array_key_exists('em', $tableColumn))
 				continue;
 
-			$defaultType = ($tableColumn['key'] == 'PRI')?$emTypes['em_primary']:$emTypes['em_string'];
+			$defaultType = ($tableColumn['key'] == 'PRI')?$this->emTypes['em_primary']:$this->emTypes['em_string'];
+			$fieldClass = new $defaultType['fieldComponent']();
 			$emFieldArray = [
 				'name'      => '',
 				'type'      => $tableColumn['type'],
 				'type_info' => $defaultType,
-				'settings'  => [],
+				'settings'  => $fieldClass->getSettings(),
 				'required'  => false,
 			];
 			$tableColumn['em'] = $emFieldArray;

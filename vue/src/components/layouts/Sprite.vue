@@ -71,13 +71,6 @@
 				<path fill="#677387" d="M280.5,127.5h-51v102h-102v51h102v102h51v-102h102v-51h-102V127.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255
 					s255-114.75,255-255S395.25,0,255,0z M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"/>
 			</symbol>
-
-			<symbol id="close" width="16" height="16" viewBox="0 0 16 16">
-				<g opacity="0.8" clip-path="url(#clip0)">
-				<line x1="4.46448" y1="4.94975" x2="11.5355" y2="12.0208" stroke="white" stroke-width="2" stroke-linecap="round"/>
-				<line x1="4.46448" y1="12.0208" x2="11.5355" y2="4.94975" stroke="white" stroke-width="2" stroke-linecap="round"/>
-				</g>
-			</symbol>
 		</svg>
 	</div>
 </template>

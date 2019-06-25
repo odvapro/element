@@ -3,22 +3,9 @@ class TableWorkerCest
 {
 	public function dbConfig(ApiTester $I)
 	{
-		$I->sendPOST('http://element.dev2.odva.pro/element/install.php', ['host' => 'localhost', 'username' => 'root', 'password' => 'Hi8R28XY|P', 'adapter' => 'Mysql']);
-		$I->seeResponseCodeIs(200);
-		if(file_exists(__DIR__ . "/../app/config/config.php"))
-		{
-			$I->seeResponseContainsJson(['success' => false]);
-		}
-		else
-		{
-			$I->seeResponseContainsJson(['success' => true]);
-		}
-		$I->sendPOST('http://element.dev2.odva.pro/element/install.php', ['host' => 'dda', 'username' => 'f', 'password' => 'Hi8R28XY|P', 'adapter' => 'Mysql']);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => false]);
+		$I->assertFileExists(__DIR__ . "/../app/config/config.php");
 
-		$I->sendPOST('http://element.dev2.odva.pro/element/install.php', ['host' => 'dda', 'username' => 'f', 'adapter' => 'Mysql']);
-		$I->seeResponseCodeIs(200);
+		$I->sendPOST('/install.php', []);
 		$I->seeResponseContainsJson(['success' => false]);
 	}
 
@@ -529,14 +516,10 @@ class TableWorkerCest
 
 		$I->sendPOST('/el/setTviewSettings/',
 		[
-			'tviewId' => '3',
+			'tviewId' => '21',
 			'params' =>
 			[
-				'columns' =>
-				[
-					'id' => [ 'width' => 300 ],
-					'name' => [ 'width' => 600 ]
-				]
+				'columns' => ['id' => [ 'width' => 300 ], 'name' => [ 'width' => 600 ] ]
 			]
 		]);
 
@@ -544,7 +527,6 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/setTviewSettings/', []);
-
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
 	}

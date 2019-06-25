@@ -14,7 +14,6 @@
 			</div>
 			<div class="index__head-options">
 				<ul class="index__head-options-list">
-					<li class="index__menu-item">Views</li>
 					<li
 						class="index__menu-item"
 						:class="{active: popups.isPropertiesPopupShow}"

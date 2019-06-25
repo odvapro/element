@@ -25,7 +25,7 @@
 					:style="{ width: column.width + 'px', 'min-width': column.width + 'px' }"
 				>
 					<div class="table-item-img">
-						<img :src="column.em.type_info.iconPath" alt="">
+						<img :src="require(`@/assets${column.em.type_info.iconPath}`)" alt="">
 					</div>
 					<div class="table-item-name-wrapper">
 						<div class="table-item-overide-name">{{getOverideName(column)}}</div>
@@ -35,12 +35,12 @@
 				</div>
 				<div class="table-item">
 					<div class="table__add-column-item">
-						<div class="table__add-col-img">
+						<!-- <div class="table__add-col-img">
 							<svg width="12" height="12">
 								<use xlink:href="#plus-white"></use>
 							</svg>
 						</div>
-						<span class="table__add-col-label">Add field</span>
+						<span class="table__add-col-label">Add field</span> -->
 					</div>
 				</div>
 			</div>
@@ -64,13 +64,15 @@
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
 					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
+					:key="`${index}${table.code}`"
 				>
 					<MainField
 						mode="edit"
+						view="table"
+						:fieldName="row[column.field].fieldName"
 						:params="{
-							fieldName : row[column.field].fieldName,
 							value     : row[column.field].value,
-							settings  : $store.getters.getColumnSettings($route.params.tableCode, column, row)
+							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
 						}"
 						@onChange="changeFieldValue"
 						@openEdit="openDetail(row,rowIndex)"
@@ -106,15 +108,7 @@
 		data()
 		{
 			return {
-				columnDrug:
-				{
-					isDrug: false,
-					posX: 0,
-					start: 0,
-					top: 0,
-					width: 0,
-					col: ''
-				},
+				columnDrug: {isDrug: false, posX: 0, start: 0, top: 0, width: 0, col: ''},
 				openProperties: false,
 				openedEditRowIndex:false,
 				checkAll:false,
@@ -427,7 +421,8 @@
 					delete:
 					{
 						table: this.table.code,
-						where:{
+						where:
+						{
 							operation:'and',
 							fields:[
 								{
@@ -495,10 +490,8 @@
 		padding-left: 9px;
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&:last-child
-		{
-			border-right: none;
-		}
+		&:last-child {border-right: none; }
+		&:hover{background: rgba(103, 115, 135, 0.05);}
 	}
 	.table-item-overide-name
 	{
@@ -571,7 +564,7 @@
 	.table-vertical-scroll
 	{
 		overflow: auto;
-		padding-bottom: 120px;
+		height: calc(100vh - 100px);
 	}
 	.table__add-column-item
 	{
@@ -621,7 +614,7 @@
 		width:80px;
 		text-align:left;
 		padding:10px;
-	    box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 		ul li
 		{
 			font-style: normal;
