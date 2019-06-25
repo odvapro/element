@@ -49,3 +49,4 @@ deploy.php
 /docs/
 composer.lock
 package-lock.json
+app/logs/
