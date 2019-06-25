@@ -7,7 +7,11 @@ class EmFileField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$domain   = $this->di->get('config')->application->domain;
+		if(isset($_SERVER))
+			$domain = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}";
+		else
+			$domain = '';
+
 		$resArray = json_decode($this->fieldValue, true);
 
 		if(empty($resArray)) return false;
