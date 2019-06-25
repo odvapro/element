@@ -89,6 +89,9 @@ class EmFileField extends FieldBase
 				$imageSize = $imageSize['localPath'];
 		}
 
+		if(empty($this->fieldValue))
+			return '';
+
 		return json_encode($this->fieldValue);
 	}
 
