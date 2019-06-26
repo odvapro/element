@@ -303,6 +303,7 @@
 			 */
 			async getTableContent()
 			{
+				this.$store.commit('showLoader',true);
 				var requestParams = {select : {}, };
 
 				if (typeof this.tview.filter.operation != 'undefined')
@@ -319,6 +320,7 @@
 					requestParams.limit = this.$route.params.limit
 
 				await this.$store.dispatch('select', requestParams);
+				this.$store.commit('showLoader',false);
 			},
 
 			/**

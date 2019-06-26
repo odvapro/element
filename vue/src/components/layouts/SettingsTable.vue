@@ -307,6 +307,7 @@
 				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
 				}
+				this.$store.commit('showLoader',false);
 			}
 		},
 		/**

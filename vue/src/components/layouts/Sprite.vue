@@ -69,7 +69,23 @@
 			</symbol>
 			<symbol id="add-button" viewBox="0 0 510 510">
 				<path fill="#677387" d="M280.5,127.5h-51v102h-102v51h102v102h51v-102h102v-51h-102V127.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255
-					s255-114.75,255-255S395.25,0,255,0z M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"/>
+				s255-114.75,255-255S395.25,0,255,0z M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"/>
+			</symbol>
+			<symbol id="loader" viewBox="-2 -2 42 42">
+				<g fill="none" fill-rule="evenodd">
+					<g transform="translate(1 1)" stroke-width="4">
+						<circle stroke-opacity=".4" cx="18" cy="18" r="18" stroke="#677387"/>
+						<path d="M36 18c0-9.94-8.06-18-18-18" stroke="#677387">
+							<animateTransform
+								attributeName="transform"
+								type="rotate"
+								from="0 18 18"
+								to="360 18 18"
+								dur="1s"
+								repeatCount="indefinite"/>
+						</path>
+					</g>
+				</g>
 			</symbol>
 		</svg>
 	</div>

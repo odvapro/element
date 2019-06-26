@@ -1,0 +1,19 @@
+<template>
+	<div class="loader">
+		<svg width="20" height="20">
+			<use xlink:href="#loader"></use>
+		</svg>
+		<span>Loading...</span>
+	</div>
+</template>
+<script> export default {} </script>
+<style lang="scss">
+	.loader
+	{
+		display: flex;
+		align-items: center;
+		margin-left: -50px;
+		font-size:12px;
+		svg{margin-right:10px;}
+	}
+</style>
