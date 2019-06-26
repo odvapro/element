@@ -5,15 +5,10 @@
 				Folder for save
 				<small v-if="errors.savePath" class="popup__field-error">{{ errors.savePath.message }}</small>
 			</div>
-		</div>
-		<div class="popup__field">
-			<div class="popup__field-name">
-				{{ settings.rootPath }}
-			</div>
-			<div class="popup__field-input">
+			<div class="popup__field-input em-file__settings-path">
+				<span>{{ settings.rootPath }}</span>
 				<input
 					type="text"
-					class="el-inp-noborder"
 					@change="checkPath"
 					v-model="localSettings.savePath"
 					placeholder="Folder for save"
@@ -26,24 +21,37 @@
 				<small v-if="errors.nodeFieldCode" class="popup__field-error">{{ errors.nodeFieldCode.message }}</small>
 			</div>
 		</div>
-		<div class="popup__field" v-for="listItem, index in localSettings.resolutions" :key="index">
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" v-model="listItem.code" placeholder="Code" :disabled="listItem.required">
+		<div class="em-file__s-resolutions">
+			<div class="em-file__s-resolution">
+				<div class="em-file__s-code">Code</div>
+				<div class="em-file__s-width">Width</div>
+				<div class="em-file__s-height">Height</div>
+				<div class="em-file__s-remove"></div>
 			</div>
-			<div class="popup__field-input">
-				<input type="number" class="el-inp-noborder" v-model.number="listItem.width" placeholder="Width">
+			<div class="em-file__s-resolution" v-for="listItem, index in localSettings.resolutions" :key="index">
+				<div class="em-file__s-code">
+					<input type="text" class="el-inp-noborder" v-model="listItem.code" placeholder="Code" :disabled="listItem.required">
+				</div>
+				<div class="em-file__s-width">
+					<input type="number" class="el-inp-noborder" v-model.number="listItem.width" placeholder="Width">
+				</div>
+				<div class="em-file__s-height">
+					<input type="number" class="el-inp-noborder" v-model.number="listItem.height" placeholder="Height">
+				</div>
+				<div class="em-file__s-remove" v-if="!listItem.required">
+					<div class="em-file__s-remove-button" @click.stop="removeResolution(index)">
+						<svg width="12" height="12">
+							<use xlink:href="#plus-white"></use>
+						</svg>
+					</div>
+				</div>
+				<small
+					v-if="errors.resolutions && errors.resolutions[index]"
+					class="em-file__s-error"
+				>{{ errors.resolutions[index].message }}</small>
 			</div>
-			<div class="popup__field-input">
-				<input type="number" class="el-inp-noborder" v-model.number="listItem.height" placeholder="height">
-			</div>
-			<div class="popup__field-input" v-if="!listItem.required">
-				<div @click="removeResolution(index)">remove resolution</div>
-			</div>
-			<small v-if="errors.resolutions && errors.resolutions[index]" class="popup__field-error">{{ errors.resolutions[index].message }}</small>
 		</div>
-		<div class="popup__field-input">
-			<div @click="addResolution()">add resolution</div>
-		</div>
+		<button class="el-gbtn" @click="addResolution()">Add resolution</button>
 		<div class="popup__buttons">
 			<button @click="cancel()" class="el-gbtn">Cancel</button>
 			<button @click="save()" class="el-btn">Save settigns</button>
@@ -75,9 +83,6 @@
 				errorPath: false,
 			}
 		},
-		computed:
-		{
-		},
 		methods:
 		{
 			/**
@@ -87,6 +92,7 @@
 			{
 				this.$emit('cancel');
 			},
+
 			/**
 			 * Save settings
 			 */
@@ -146,6 +152,7 @@
 
 				return !error;
 			},
+
 			/**
 			 * check unique code
 			 */
@@ -157,6 +164,7 @@
 
 				return true;
 			},
+
 			/**
 			 * check path
 			 */
@@ -184,13 +192,16 @@
 
 				this.errorPath = result.data.message;
 			},
+
 			/**
 			 * remove resolution by index
 			 */
 			removeResolution(index)
 			{
 				this.$delete(this.localSettings.resolutions, index);
+				this.errors = {};
 			},
+
 			/**
 			 * add new resolution
 			 */
@@ -214,3 +225,72 @@
 		}
 	}
 </script>
+<style lang="scss">
+	.em-file__settings-path
+	{
+		display:flex;
+		span
+		{
+			background: #F0F1F3;
+			font-size:12px;
+			line-height: 28px;
+			height: 28px;
+			padding:0 10px;
+			border-radius: 2px 0 0 2px;
+			color: #191C21;
+		}
+		input
+		{
+			border:1px solid #F0F1F3;
+			border-radius: 0 2px 2px 0;
+			font-size:12px;
+			height: 28px;
+			padding:0 10px;
+		}
+	}
+	.em-file__s-resolutions{margin-bottom: 20px;}
+	.em-file__s-resolution
+	{
+		height: 40px;
+		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
+		display: flex;
+		align-items: center;
+		&:first-child{border-top: 1px solid rgba(103, 115, 135, 0.1);}
+		position: relative;
+	}
+	.em-file__s-code,.em-file__s-width,.em-file__s-height
+	{
+		width:180px;
+		border-right:1px solid rgba(103, 115, 135, 0.1);
+		height: 100%;
+		padding-left:10px;
+		line-height:40px;
+		color:#677387;
+		font-size: 12px;
+		flex-shrink: 0;
+	}
+	.em-file__s-width,.em-file__s-height{width:140px;}
+	.em-file__s-remove{padding-left:10px;}
+	.em-file__s-remove-button
+	{
+		width: 24px;
+		height: 24px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 2px;
+		cursor: pointer;
+		&:hover {background-color: rgba(103, 115, 135, 0.1); }
+		svg{stroke:#677387;transform: rotate(45deg);}
+	}
+	.em-file__s-error
+	{
+		position: absolute;
+		top:0px;
+		left:10px;
+		color: rgba(208, 18, 70, 0.4);
+		font-size: 8px;
+		line-height: 11px;
+	}
+
+</style>
