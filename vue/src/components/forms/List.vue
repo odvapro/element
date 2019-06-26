@@ -71,6 +71,7 @@
 			{
 				this.showPopup = true;
 				this.localSearchText = '';
+				this.$emit('onopen');
 				this.$nextTick(()=>{
 					if(typeof this.$refs.searchInput != 'undefined')
 						this.$refs.searchInput.focus();

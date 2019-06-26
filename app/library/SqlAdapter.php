@@ -107,6 +107,7 @@ class SqlAdapter extends PdoAdapter
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
 		$limit         = isset($requestParams['limit']) ? $requestParams['limit'] : '';
+		$offset        = isset($requestParams['offset']) ? $requestParams['offset'] : '';
 
 		if (empty($fromTable))
 			return false;
@@ -127,6 +128,9 @@ class SqlAdapter extends PdoAdapter
 		if (!empty($limit))
 			$sql .= ' LIMIT ' . $limit;
 
+		if (!empty($offset))
+			$sql .= ' OFFSET ' . $offset;
+
 		try
 		{
 			$select = $this->db->fetchAll(
@@ -141,6 +145,44 @@ class SqlAdapter extends PdoAdapter
 		}
 
 		return $select;
+	}
+
+	/**
+	 * Gets count of element
+	 * @param  $requestParams from
+	 * @return int
+	 */
+	public function count($requestParams)
+	{
+		$requestParams = $this->escapeRealStr($requestParams);
+
+		$sql           = '';
+		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+
+		if (!empty($where) && !empty($where['fields']))
+			$sql .= 'WHERE ' . $this->buildWhere($where);
+
+		$sql = 'SELECT COUNT(*) as count ';
+		$sql .= "FROM {$fromTable} ";
+
+		if (!empty($where) && !empty($where['fields']))
+			$sql .= 'WHERE ' . $this->buildWhere($where);
+
+		try
+		{
+			$select = $this->db->fetchAll(
+				$sql,
+				Phalcon\Db::FETCH_ASSOC
+			);
+		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"countError: {$e->getMessage()}"
+			);
+			return false;
+		}
+
+		return reset($select)['count'];
 	}
 
 	/**
