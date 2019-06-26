@@ -196,7 +196,7 @@ class SettingsController extends ControllerBase
 		$diffJson = json_decode($diffJson,true);
 
 		// определение файлов  для игнорирования
-		$gitAttributes = file(ROOT.".gitattributes");
+		$gitAttributes = file(ROOT."/.gitattributes");
 		foreach ($gitAttributes as &$gitAttributeLine)
 			$gitAttributeLine = trim(str_replace(' export-ignore', '', $gitAttributeLine));
 
@@ -214,13 +214,13 @@ class SettingsController extends ControllerBase
 			switch ($fileArr['status'])
 			{
 				case 'modified':
-					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'added':
-					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'deleted':
-					@unlink(ROOT.$fileArr['filename']);
+					@unlink(ROOT.'/'.$fileArr['filename']);
 				break;
 			}
 		}

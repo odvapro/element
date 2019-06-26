@@ -12,7 +12,6 @@
 	{
 		display: flex;
 		align-items: center;
-		margin-left: -50px;
 		font-size:12px;
 		svg{margin-right:10px;}
 	}
