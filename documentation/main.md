@@ -6,7 +6,7 @@ composer php7 phalcon
 ## Установка через composer
 Для установки в свой проект вполните команду в корне своего проекта
 ```
-composer create-project dzantiev/element
+composer create-project dzantiev/element --no-dev
 ```
 Настройка под разные конфигурации сервера
 

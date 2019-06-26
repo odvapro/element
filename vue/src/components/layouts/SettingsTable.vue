@@ -56,7 +56,7 @@
 						<div class="settings-table-item category-font">
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" placeholder="Set Name">
 						</div>
-						<div class="settings-table-item table-item centered">
+						<div class="settings-table-item centered">
 							<Select
 								:defaultText="column.em.type_info.name"
 							>
@@ -69,6 +69,7 @@
 						</div>
 						<div class="settings-table-item centered">
 							<button
+								class="settings-table__open-settings"
 								@click="openSettingsPopup(table,column)"
 								v-if="checkSettingComponent(table,column)"
 							>settings</button>
@@ -306,6 +307,7 @@
 				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
 				}
+				this.$store.commit('showLoader',false);
 			}
 		},
 		/**
@@ -428,23 +430,11 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&.table-item
-		{
-			height: 49px;
-		}
-		&:last-child
-		{
-			border-right: none;
-		}
-		&.centered
-		{
-			justify-content: center;
-		}
-		&.category-font
-		{
-			color: #191C21;
-		}
-		button
+		&.table-item {height: 49px; }
+		&:last-child {border-right: none; }
+		&.centered {justify-content: center; }
+		&.category-font {color: #191C21; }
+		.settings-table__open-settings
 		{
 			color: rgba(25, 28, 33, 0.7);
 			background-color: transparent;

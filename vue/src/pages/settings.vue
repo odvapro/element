@@ -67,6 +67,10 @@
 				tab.active = true;
 				this.activeTab = tab.name;
 			}
+		},
+		mounted()
+		{
+			this.$store.commit('showLoader',true);
 		}
 	}
 </script>

@@ -1,13 +1,13 @@
 <template>
 	<div class="property-item-list-item" @click.stop>
-		<div class="property-item-small-icon">
+		<!-- <div class="property-item-small-icon">
 			<svg width="6" height="5">
 				<use xlink:href="#lines"></use>
 			</svg>
-		</div>
+		</div> -->
 		<div>
 			<div class="property-item-big-icon">
-				<img :src="column.em.type_info.iconPath" alt="">
+				<img :src="require(`@/assets${column.em.type_info.iconPath}`)" alt="">
 			</div>
 		</div>
 		<div class="property-item-names-wrapper">

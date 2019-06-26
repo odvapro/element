@@ -1,6 +1,6 @@
 <template>
 	<div class="em-node">
-		<List :searchText.sync="query">
+		<List :searchText.sync="query" @onopen="getNodes()">
 			<template v-slot:selected>
 				<ListOption
 					v-if="localFieldValue.id"
@@ -95,10 +95,6 @@
 					settings  : this.fieldSettings
 				});
 			}
-		},
-		mounted()
-		{
-			this.getNodes();
 		}
 	}
 </script>

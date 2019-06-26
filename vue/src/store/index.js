@@ -20,7 +20,8 @@ export default new Vuex.Store({
 	{
 		drugPosition: 400,
 		isAuth: true,
-		isIntallDb: true
+		isIntallDb: true,
+		showLoader: false
 	},
 	mutations:
 	{
@@ -46,6 +47,14 @@ export default new Vuex.Store({
 		drugPosition(state, position)
 		{
 			state.drugPosition = position;
+		},
+
+		/**
+		 * ShowOrHideLoader
+		 */
+		showLoader(state,hide)
+		{
+			state.showLoader = hide;
 		}
 	}
 })

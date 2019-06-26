@@ -107,6 +107,7 @@ class SqlAdapter extends PdoAdapter
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
 		$limit         = isset($requestParams['limit']) ? $requestParams['limit'] : '';
+		$offset        = isset($requestParams['offset']) ? $requestParams['offset'] : '';
 
 		if (empty($fromTable))
 			return false;
@@ -127,6 +128,9 @@ class SqlAdapter extends PdoAdapter
 		if (!empty($limit))
 			$sql .= ' LIMIT ' . $limit;
 
+		if (!empty($offset))
+			$sql .= ' OFFSET ' . $offset;
+
 		try
 		{
 			$select = $this->db->fetchAll(
@@ -134,10 +138,51 @@ class SqlAdapter extends PdoAdapter
 				Phalcon\Db::FETCH_ASSOC
 			);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"selectError: {$e->getMessage()}"
+			);
 			return false;
 		}
 
 		return $select;
+	}
+
+	/**
+	 * Gets count of element
+	 * @param  $requestParams from
+	 * @return int
+	 */
+	public function count($requestParams)
+	{
+		$requestParams = $this->escapeRealStr($requestParams);
+
+		$sql           = '';
+		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+
+		if (!empty($where) && !empty($where['fields']))
+			$sql .= 'WHERE ' . $this->buildWhere($where);
+
+		$sql = 'SELECT COUNT(*) as count ';
+		$sql .= "FROM {$fromTable} ";
+
+		if (!empty($where) && !empty($where['fields']))
+			$sql .= 'WHERE ' . $this->buildWhere($where);
+
+		try
+		{
+			$select = $this->db->fetchAll(
+				$sql,
+				Phalcon\Db::FETCH_ASSOC
+			);
+		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"countError: {$e->getMessage()}"
+			);
+			return false;
+		}
+
+		return reset($select)['count'];
 	}
 
 	/**
@@ -165,6 +210,9 @@ class SqlAdapter extends PdoAdapter
 		{
 			$this->db->execute($sql);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"updateRequest: {$sql}"
+			);
 			return false;
 		}
 
@@ -177,7 +225,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function insert($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
 		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
@@ -189,19 +236,25 @@ class SqlAdapter extends PdoAdapter
 		if (empty($columns) || empty($columns))
 			return false;
 
+		$table   = $this->escapeRealStr($table);
+		$columns = $this->escapeRealStr($columns);
+
 		$columns   = implode(', ', $columns);
-		$sqlValues = str_repeat("?", 10);
 		$sqlValues = [];
+
 		foreach ($values as $insertValue)
 			$sqlValues[] = "?";
-		$sqlValues = implode(', ', $sqlValues);
 
+		$sqlValues = implode(', ', $sqlValues);
 		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$sqlValues })";
 
 		try
 		{
 			$this->db->execute($sql,$values);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"insertRequest: {$sql}"
+			);
 			return false;
 		}
 
@@ -231,6 +284,9 @@ class SqlAdapter extends PdoAdapter
 		{
 			$this->db->execute($sql);
 		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"deleteRequest: {$sql}"
+			);
 			return false;
 		}
 

@@ -2,16 +2,22 @@
 	<div id="app">
 		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
 			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
-			<router-view class="content-wrapper"/>
+			<div class="content-wrapper">
+				<router-view/>
+				<div class="content__loader" v-if="$store.state.showLoader">
+					<Loader class="content__loader-block" />
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 <script>
+	import Loader from '@/components/forms/Loader.vue';
 	import Sidebar from '@/components/layouts/Sidebar.vue';
 	export default
 	{
 		name: 'Content',
-		components: { Sidebar},
+		components: { Sidebar, Loader },
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -95,5 +101,22 @@
 	.content-wrapper
 	{
 		overflow: hidden;
+		position: relative;
+	}
+	.content__loader
+	{
+		position: absolute;
+		top:0px;
+		left:0px;
+		width:100%;
+		height: 100%;
+		background: rgba(255,255,255,1);
+	}
+	.content__loader-block
+	{
+		position: absolute;
+		top:140px;
+		left:50%;
+		margin-left: -50px;
 	}
 </style>

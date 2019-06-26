@@ -130,8 +130,6 @@
 
 				formData.append('tableCode', this.tableCode);
 				formData.append('fieldCode', this.fieldCode);
-				formData.append('primaryKey', this.fieldSettings.primaryKey.fieldCode);
-				formData.append('primaryKeyValue', this.fieldSettings.primaryKey.value);
 
 				if(type == 'link')
 				{
