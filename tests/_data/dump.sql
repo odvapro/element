@@ -30,19 +30,20 @@ CREATE TABLE `block_type` (
   `value` varchar(50) DEFAULT 'text',
   `name` varchar(50) DEFAULT NULL,
   `file` text,
+  `text` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `block_type` WRITE;
 /*!40000 ALTER TABLE `block_type` DISABLE KEYS */;
 
-INSERT INTO `block_type` (`id`, `value`, `name`)
+INSERT INTO `block_type` (`id`, `value`, `name`, `text`)
 VALUES
-  (1,'text','text'),
-  (2,'product-card','cart'),
-  (3,'small-card','cart2'),
-  (4,'slider','slider'),
-  (6,'form-order','Форма заказа');
+  (1,'text','text','Lorem ipsum <br/> </div> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+  (2,'product-card','cart',''),
+  (3,'small-card','cart2','Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
+  (4,'slider','slider',''),
+  (6,'form-order','Форма заказа','');
 
 /*!40000 ALTER TABLE `block_type` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -102,7 +103,8 @@ LOCK TABLES `em_types` WRITE;
 INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
   (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL),
-  (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL);
+  (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL),
+  (19, 'block_type', 'text', 'em_text', 0, NULL, NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;

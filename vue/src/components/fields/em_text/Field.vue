@@ -1,5 +1,5 @@
 <template>
-	<div class="em-text">
+	<div class="em-text" :class="{'em-text__table':(view != 'detail')}">
 		<template v-if="view=='detail'">
 			<vue-editor
 				:editorOptions="editorSettings"
@@ -63,6 +63,17 @@
 	.em-text
 	{
 		min-width:500px;
+		&.em-text__table
+		{
+			min-width:auto;
+			position: absolute;
+			width: 100%;
+			left: 0px;
+			top: 0px;
+			height: 100%;
+			padding-left: 10px;
+    padding-right: 10px;
+		}
 		.ql-editor
 		{
 			padding:10px;
@@ -590,19 +601,19 @@
 	@media (pointer: coarse) {
 	  .ql-bubble.ql-toolbar button:hover:not(.ql-active),
 	  .ql-bubble .ql-toolbar button:hover:not(.ql-active) {
-	    color: #ccc;
+		color: #ccc;
 	  }
 	  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-fill,
 	  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-fill,
 	  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill,
 	  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill {
-	    fill: #ccc;
+		fill: #ccc;
 	  }
 	  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke,
 	  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke,
 	  .ql-bubble.ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter,
 	  .ql-bubble .ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter {
-	    stroke: #ccc;
+		stroke: #ccc;
 	  }
 	}
 	.ql-bubble {
