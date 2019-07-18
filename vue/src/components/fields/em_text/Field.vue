@@ -72,7 +72,7 @@
 			top: 0px;
 			height: 100%;
 			padding-left: 10px;
-    padding-right: 10px;
+    		padding-right: 10px;
 		}
 		.ql-editor
 		{
