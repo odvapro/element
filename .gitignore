@@ -51,3 +51,5 @@ deploy.php
 /docs/
 composer.lock
 package-lock.json
+*.sublime-project
+*.sublime-workspace
