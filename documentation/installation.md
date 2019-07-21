@@ -8,13 +8,12 @@ composer php7 phalcon
 ```
 composer create-project dzantiev/element --no-dev
 ```
-Настройка под разные конфигурации сервера
 
-## Apache
+## Настройки сервера
+### Apache
 Убедиться в том что включен mod_rewrite
-<видео>
 
-## Nginx
+### Nginx
 Убедитесь что на вашем сайте работает обработка php файлов.
 В конфигурационный файл вашего сайта добавьте следующие строки.
 
@@ -41,12 +40,17 @@ location /element/ {
 	try_files $elementPrefix$elementFile $elementPrefix$elementFile/ $elementPrefix$elementExecFile?$args;
 }
 ```
----
-<видео>
 
-## Настройка конфигурации
-Перейти по адресу <ваш домен>/element/
-Заполнить все поля
-Проверить установить
+## Конфигурация
+Перейти по адресу `<ваш домен>/element/`
+Если открыли первый раз этот адрес откроется форма настройки подлключаения к базе данных
+![Image of install form](/documentation/img/install.png)
+Заполнить все поля и нажмите кнопку `Install`
 
--- все
+
+## Авторизация
+После вам откроется форма авторизации
+![Image of auth form](/documentation/img/auth.png)
+Логин `admin` пароль `adminpass`
+После авторизации не забудьте сменить стандартный пароль
+
