@@ -12,7 +12,7 @@
 ## Установка через composer
 Для установки в свой проект вполните команду в корне своего проекта
 ```
-composer create-project dzantiev/element --no-dev
+composer create-project odvapro/element --no-dev
 ```
 
 ## Настройки сервера

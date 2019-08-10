@@ -159,7 +159,7 @@ class SettingsController extends ControllerBase
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
-		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = file_get_contents("https://api.github.com/repos/odvapro/element/tags", false, $context);
 		$tagsList    = json_decode($tagsList,true);
 		$lastVersion = reset($tagsList);
 
@@ -185,13 +185,13 @@ class SettingsController extends ControllerBase
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
-		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = file_get_contents("https://api.github.com/repos/odvapro/element/tags", false, $context);
 		$tagsList    = json_decode($tagsList,true);
 		$lastVersion = reset($tagsList);
 		if($lastVersion['name'] == $currentVersion)
 			return $this->jsonResult(['success'=>false,'msg'=>'You have latest version!']);
 
-		$diffUrl = "https://api.github.com/repos/dzantiev/element/compare/{$currentVersion}...{$lastVersion['name']}";
+		$diffUrl = "https://api.github.com/repos/odvapro/element/compare/{$currentVersion}...{$lastVersion['name']}";
 		$diffJson = file_get_contents($diffUrl, false, $context);
 		$diffJson = json_decode($diffJson,true);
 
