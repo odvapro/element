@@ -31,19 +31,21 @@ CREATE TABLE `block_type` (
   `name` varchar(50) DEFAULT NULL,
   `file` text,
   `text` text,
+  `date` date DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `block_type` WRITE;
 /*!40000 ALTER TABLE `block_type` DISABLE KEYS */;
 
-INSERT INTO `block_type` (`id`, `value`, `name`, `text`)
+INSERT INTO `block_type` (`id`, `value`, `name`, `file`, `text`, `date`, `datetime`)
 VALUES
-  (1,'text','text','Lorem ipsum <br/> </div> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-  (2,'product-card','cart',''),
-  (3,'small-card','cart2','Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'),
-  (4,'slider','slider',''),
-  (6,'form-order','Форма заказа','');
+  (1, 'text', 'text', NULL, 'Lorem ipsum <br/> </div> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, NULL),
+  (2, 'product-card', 'cart', NULL, '', '2019-08-24', NULL),
+  (3, 'small-card', 'cart2', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, NULL),
+  (4, 'slider', 'slider', NULL, '', NULL, NULL),
+  (6, 'form-order', 'Форма заказа', NULL, '', NULL, NULL);
 
 /*!40000 ALTER TABLE `block_type` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -104,7 +106,9 @@ INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, 
 VALUES
   (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL),
   (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL),
-  (19, 'block_type', 'text', 'em_text', 0, NULL, NULL);
+  (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
+  (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
+  (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;

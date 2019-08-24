@@ -226,7 +226,7 @@
 			 */
 			getOverideName(column)
 			{
-				if (typeof column.em.name == 'undefined' || column.em.name == '')
+				if (typeof column.em.name == 'undefined' || column.em.name == '' || column.em.name == null)
 					return column.field;
 
 				return column.em.name;

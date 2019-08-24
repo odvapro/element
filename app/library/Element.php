@@ -191,7 +191,10 @@ class Element
 				$field = new EmStringField($fieldValue,$settings);
 
 			$fieldSaveValue = $field->saveValue();
-			$set[]          = "{$fieldCode} = '{$fieldSaveValue}'";
+			if($fieldSaveValue === NULL)
+				$set[] = "{$fieldCode} = NULL";
+			else
+				$set[] = "{$fieldCode} = '{$fieldSaveValue}'";
 		}
 		$updateParams['set'] = $set;
 

@@ -1,12 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import tables from './tables.js'
-import users from './users.js'
-import settings from './settings.js'
-import axios from 'axios'
-
-var qs = require('qs');
-axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
+import Vue from 'vue';
+import Vuex from 'vuex';
+import tables from './tables.js';
+import users from './users.js';
+import settings from './settings.js';
 
 Vue.use(Vuex)
 export default new Vuex.Store({

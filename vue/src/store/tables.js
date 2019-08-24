@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-var qs = require('qs');
+import {message} from '../plugins/message.js';
+import qs from 'qs';
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 const table =
@@ -277,7 +277,6 @@ const table =
 				url    : '/el/setTviewSettings/',
 				data   : data
 			});
-
 			if (!result.data.success)
 				return false;
 
@@ -339,6 +338,8 @@ const table =
 				}
 			});
 			let result = await axios.post('/el/update/',data);
+			if(result.data.success != true)
+				message.error('Cant save data.😐');
 			this.commit('setFieldValue',fieldValue);
 		},
 

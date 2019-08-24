@@ -1,6 +1,5 @@
-import Vue from 'vue'
-
-var message = function message(options)
+import Vue from 'vue';
+export let message = function message(options)
 {
 	if(typeof options != 'string' && typeof options != 'object')
 		return false;
