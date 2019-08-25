@@ -11,9 +11,8 @@ class EmDateCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		// check incorect date save
-		$dateValue = 'incorrect format';
 		$this->saveField($I, 'incorrect value', 1);
-		$I->seeResponseContainsJson(['success' => false]);
+		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'date' => null]);
 
 		// check correct date

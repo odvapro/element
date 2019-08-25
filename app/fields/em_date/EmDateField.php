@@ -24,7 +24,7 @@ class EmDateField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		if(empty($this->fieldValue))
+		if(empty($this->fieldValue) || strtotime($this->fieldValue) === false)
 			return NULL;
 		return $this->fieldValue;
 	}
