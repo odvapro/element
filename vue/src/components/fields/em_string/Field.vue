@@ -18,7 +18,7 @@
 <script>
 	export default
 	{
-		props: ['fieldValue','fieldSettings','mode'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		data()
 		{
 			return {
@@ -37,8 +37,8 @@
 			changeValue(event)
 			{
 				this.$emit('onChange', {
-					value    : event.target.value,
-					settings : this.fieldSettings
+					value     : event.target.value,
+					settings  : this.fieldSettings
 				});
 			}
 		}

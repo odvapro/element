@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-var qs = require('qs');
+import {message} from '../plugins/message.js';
+import qs from 'qs';
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 const settings =
@@ -67,7 +67,7 @@ const settings =
 			if(result.data.success)
 				return store.commit('removeUser',user);
 			else
-				return this.ElMessage.error(result.data.message);
+				return message.error(result.data.message);
 		}
 	}
 }

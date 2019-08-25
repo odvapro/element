@@ -80,18 +80,27 @@ class ElController extends ControllerBase
 		if (empty($select))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultSelect = $this->element->select($select);
-		if ($resultSelect === false)
-			return $this->jsonResult(['success' => false, 'message' => 'some error']);
-
-		$paginator = new PaginatorArray([
-			'data'  => $resultSelect,
+		// Define count of element
+		$itemsCount = $this->eldb->count($select);
+		$paginator = new ElPagination([
+			'count'  => $itemsCount,
 			'limit' => $limit,
 			'page'  => $page,
 		]);
+		$pagination = $paginator->getPaginate();
 
-		$resultSelect = $paginator->getPaginate();
-		return $this->jsonResult(['success' => true, 'result' => $resultSelect]);
+		// Select need page
+		$select['limit']  = $limit;
+		$select['offset'] = $pagination['offset'];
+		$resultSelect = $this->element->select($select);
+		if ($resultSelect === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+		$pagination['items'] = $resultSelect;
+
+		return $this->jsonResult([
+			'success' => true,
+			'result' => $pagination
+		]);
 	}
 
 	/**
@@ -157,6 +166,9 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
 
 		$tview = EmViews::findFirstById($tviewId);
+		if(!$tview)
+			return $this->jsonResult(['success' => false, 'message' => 'tview not found']);
+
 		$tviewSettings = $tview->settings;
 
 		foreach ($params as $keySetting => $setting)

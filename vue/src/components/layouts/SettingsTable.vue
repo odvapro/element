@@ -56,27 +56,33 @@
 						<div class="settings-table-item category-font">
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" placeholder="Set Name">
 						</div>
-						<div class="settings-table-item table-item centered">
-							<List
-								:params="{
-									value    : column.em.type_info.name,
-									settings : getFieldSettings(table, column)
-								}"
-								@onChange="changeType"
-							/>
+						<div class="settings-table-item centered">
+							<Select
+								:defaultText="column.em.type_info.name"
+							>
+								<SelectOption
+									v-for="field in fieldTypes"
+									@click.native="changeType({table: table.code, column: column.field, fieldType: field})"
+									:key="field.code"
+								>{{ field.name }}</SelectOption>
+							</Select>
 						</div>
 						<div class="settings-table-item centered">
-							<button @click="openSettingsPopup(table,column)">settings</button>
+							<button
+								class="settings-table__open-settings"
+								@click="openSettingsPopup(table,column)"
+								v-if="checkSettingComponent(table,column)"
+							>settings</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<Popup :visible.sync="settingsPopup">
-			<div class="popup__name">Settings</div>
+			<div class="popup__name">{{ settingsColumn.field }} settings</div>
 			<component
 				:is="settingsComponent"
-				:settings="currentSettgins"
+				:settings="currentSettings"
 				@save="saveSettings"
 				@cancel="settingsPopup = false"
 			></component>
@@ -85,13 +91,14 @@
 </template>
 <script>
 	import qs from 'qs';
-	import List from '@/components/layouts/List.vue';
+	import Select from '@/components/forms/Select.vue';
+	import SelectOption from '@/components/forms/SelectOption.vue';
 	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: {List, Checkbox},
+		components: {Select, Checkbox, SelectOption},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -104,7 +111,7 @@
 
 				settingsPopup:false,
 				settingsFielType:false,
-				currentSettgins:false,
+				currentSettings:false,
 				settingsTable:false,
 				settingsColumn:false,
 			}
@@ -118,6 +125,7 @@
 			{
 				if (this.settingsFielType == false)
 					return false;
+
 				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
 			},
 
@@ -132,14 +140,30 @@
 		methods:
 		{
 			/**
+			 * check exist settings component for field
+			 */
+			checkSettingComponent(table, column)
+			{
+				try
+				{
+					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)
+				}
+				catch (e)
+				{
+					return false;
+				}
+
+				return true;
+			},
+			/**
 			 * Opens field settgins popups
 			 */
-			openSettingsPopup(table,column)
+			openSettingsPopup(table, column)
 			{
 				this.settingsTable    = table,
 				this.settingsColumn   = column,
-				this.settingsFielType = column.em.settings.fieldType;
-				this.currentSettgins  = column.em.settings;
+				this.settingsFielType = column.em.type_info.code;
+				this.currentSettings  = column.em.settings;
 				this.settingsPopup    = true;
 			},
 
@@ -170,7 +194,7 @@
 						for(let columnCode in table.columns)
 						{
 							if(columnCode == this.settingsColumn.field)
-								table.columns[columnCode].em.settings = settings;
+								table.columns[columnCode].em.settings = result.data.settings;
 						}
 					}
 					this.ElMessage('😎 Settings saved!');
@@ -182,34 +206,9 @@
 			 */
 			getFieldSettings(table, column)
 			{
-				let columns = table.columns;
-				let primaryFieldCode = false;
-
-				for (let columnCode in columns)
-				{
-					let column = columns[columnCode];
-
-					if(column.key == 'PRI')
-					{
-						primaryFieldCode = columnCode;
-						break;
-					}
-				}
-
-				let primaryKey = {
-					value: '',
-					fieldCode: primaryFieldCode
-				};
-
-				let settings        = column.em.settings;
-				settings.fieldCode  = column.field;
-				settings.tableCode  = table.code;
-				settings.fieldType  = column.em.type_info.code;
-				settings.primaryKey = primaryKey;
-				settings.values     = this.fieldTypes;
-
-				return settings;
+				return this.$store.getters.getColumnSettings(table.code, column.field);
 			},
+
 			/**
 			 * Изменение типа поля
 			 */
@@ -218,7 +217,7 @@
 				let requestChangeType = qs.stringify({
 					tableName  : values.table,
 					columnName : values.column,
-					fieldType  : values.data.code
+					fieldType  : values.fieldType.code
 				});
 
 				let result = await this.$axios({
@@ -232,9 +231,9 @@
 
 				let table = this.getTableByCode(values.table, this.tables);
 
-				table.columns[values.column].em.type_info = JSON.parse(JSON.stringify(values.data));
-				table.columns[values.column].em.type      = values.data.code;
+				this.$set(table.columns[values.column], 'em', result.data.settings);
 			},
+
 			/**
 			 * Анимация для открытия и закрытия аккордеона
 			 */
@@ -260,6 +259,7 @@
 					table.showSettings.overflow = 'visible';
 				}, 300);
 			},
+
 			/**
 			 * Открыть/закрыть настройки колонок
 			 */
@@ -267,6 +267,7 @@
 			{
 				table.showSettings = !table.showSettings;
 			},
+
 			/**
 			 * Переопределить имя колонки
 			 */
@@ -289,6 +290,7 @@
 				if (!result.data.success)
 					return false;
 			},
+
 			/**
 			 * Инициализация и преобразование массива таблицы
 			 */
@@ -305,6 +307,7 @@
 				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
 				}
+				this.$store.commit('showLoader',false);
 			}
 		},
 		/**
@@ -427,23 +430,11 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&.table-item
-		{
-			height: 49px;
-		}
-		&:last-child
-		{
-			border-right: none;
-		}
-		&.centered
-		{
-			justify-content: center;
-		}
-		&.category-font
-		{
-			color: #191C21;
-		}
-		button
+		&.table-item {height: 49px; }
+		&:last-child {border-right: none; }
+		&.centered {justify-content: center; }
+		&.category-font {color: #191C21; }
+		.settings-table__open-settings
 		{
 			color: rgba(25, 28, 33, 0.7);
 			background-color: transparent;

@@ -10,13 +10,11 @@ import Popup from './plugins/popup/index.js'
 import fonts from './assets/fonts.scss'
 import App from './App.vue'
 import store from './store/index.js'
-
-var VueCookie = require('vue-cookie');
+import VueCookie from 'vue-cookie';
 
 Vue.use(VueCookie);
 Vue.use(Meta)
 Vue.use(Popup)
-
 Vue.config.productionTip = false;
 
 router.beforeEach(async function(to, from, next)
@@ -33,9 +31,9 @@ router.beforeEach(async function(to, from, next)
 
 router.beforeEach(async function(to, from, next)
 {
-	var valid = await router.app.$axios({url: '/auth/isLogged/' });
-
-	if (!valid.data.success)
+	var valid       = await router.app.$axios({url: '/auth/isLogged/' });
+	let userCookies = router.app.$cookie.get('user');
+	if (!valid.data.success || !userCookies)
 	{
 		store.commit('setAuth', false);
 		return false;

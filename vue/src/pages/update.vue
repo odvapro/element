@@ -12,11 +12,12 @@
 		<div class="update-content">
 			<div class="update-version">
 				Current version: <em>{{ currentVersion }}</em>
-				<div v-if="showLatestIsInstalled"> You have the latest version</div>
+				<div v-if="showLatestIsInstalled && !showLoader"> You have the latest version</div>
 			</div>
 			<template v-if="successUpdate">
 				<div class="update-success">System has been updated successfully</div>
 			</template>
+			<Loader class="update__loader" v-if="showLoader" />
 			<div class="update-buttons" v-if="!successUpdate">
 				<button @click="checkVersion()" class="el-gbtn">Check version</button>
 				<button @click="update()" v-if="canUpdate" class="el-btn">Update to {{ newVersion }}</button>
@@ -25,8 +26,10 @@
 	</div>
 </template>
 <script>
+	import Loader from '@/components/forms/Loader.vue';
 	export default
 	{
+		components:{Loader},
 		data()
 		{
 			return {
@@ -34,7 +37,8 @@
 				canUpdate             : false,
 				newVersion            : '',
 				showLatestIsInstalled : false,
-				successUpdate         : false
+				successUpdate         : false,
+				showLoader            : false
 			}
 		},
 		methods:
@@ -44,7 +48,9 @@
 			 */
 			async checkVersion()
 			{
+				this.showLoader = true;
 				let result = await this.$axios.get('/settings/checkVersion/');
+				this.showLoader = false;
 				if(typeof result.data.success == 'undefined')
 					return this.ElMessage.error('Something goes wrong!');
 				if(result.data.result == true)
@@ -61,7 +67,9 @@
 			 */
 			async update()
 			{
+				this.showLoader = true;
 				let result = await this.$axios.get('/settings/update/');
+				this.showLoader = false;
 				if(typeof result.data.success != 'undefined' && result.data.success)
 					this.successUpdate = true;
 			}
@@ -126,4 +134,5 @@
 	}
 	.update-buttons .el-gbtn {margin-right: 17px; }
 	.update-success {color:#3A8406; font-size: 14px;}
+	.update__loader{margin-bottom: 20px;}
 </style>

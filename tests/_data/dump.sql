@@ -29,19 +29,23 @@ CREATE TABLE `block_type` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(50) DEFAULT 'text',
   `name` varchar(50) DEFAULT NULL,
+  `file` text,
+  `text` text,
+  `date` date DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `block_type` WRITE;
 /*!40000 ALTER TABLE `block_type` DISABLE KEYS */;
 
-INSERT INTO `block_type` (`id`, `value`, `name`)
+INSERT INTO `block_type` (`id`, `value`, `name`, `file`, `text`, `date`, `datetime`)
 VALUES
-  (1,'text','Текст'),
-  (2,'product-card','Карточка'),
-  (3,'small-card','Карточка 2'),
-  (4,'slider','Слайдер'),
-  (6,'form-order','Форма заказа');
+  (1, 'text', 'text', NULL, 'Lorem ipsum <br/> </div> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, NULL),
+  (2, 'product-card', 'cart', NULL, '', '2019-08-24', NULL),
+  (3, 'small-card', 'cart2', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', NULL, NULL),
+  (4, 'slider', 'slider', NULL, '', NULL, NULL),
+  (6, 'form-order', 'Форма заказа', NULL, '', NULL, NULL);
 
 /*!40000 ALTER TABLE `block_type` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -100,7 +104,11 @@ LOCK TABLES `em_types` WRITE;
 
 INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
-  (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL);
+  (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL),
+  (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL),
+  (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
+  (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
+  (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -152,21 +160,12 @@ LOCK TABLES `em_views` WRITE;
 
 INSERT INTO `em_views` (`id`, `name`, `table`, `filter`, `sort`, `default`, `settings`)
 VALUES
-  (1,'Отображениеblock_type','block_type','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"value\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (2,'Отображениеblocks','blocks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"false\"},\"page_id\":{\"width\":\"140\",\"visible\":\"false\"},\"content\":{\"width\":\"140\",\"visible\":\"false\"},\"position\":{\"width\":\"200\",\"visible\":\"false\"},\"block_type\":{\"width\":\"140\",\"visible\":\"false\"},\"images\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"140\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (3,'Отображениеcallbacks','callbacks','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"phone\":{\"width\":\"140\",\"visible\":\"true\"},\"date\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"status\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (4,'Отображениеfeedback','feedback','[]','[]',1,'[]'),
-  (5,'Отображениеfield_types','field_types','[]','[]',1,'[]'),
-  (6,'Отображениеform_relations','form_relations','[]','[]',1,'[]'),
-  (7,'Отображениеforms','forms','[]','[]',1,'[]'),
-  (8,'Отображениеmenu','menu','[]','[]',1,'[]'),
-  (9,'Отображениеnews','news','[]','[]',1,'[]'),
-  (10,'Отображениеorders','orders','[]','[]',1,'[]'),
-  (11,'Отображениеpages','pages','[]','[]',1,'[]'),
-  (12,'Отображениеproducts','products','[]','[]',1,'{\"table\":{\"visible\":\"true\"},\"columns\":{\"id\":{\"width\":\"140\",\"visible\":\"true\"},\"name\":{\"width\":\"140\",\"visible\":\"true\"},\"description\":{\"width\":\"386\",\"visible\":\"true\"},\"images\":{\"width\":\"600\",\"visible\":\"true\"},\"link\":{\"width\":\"140\",\"visible\":\"true\"},\"special\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (13,'Отображениеreviews','reviews','[]','[]',1,'[]'),
-  (14,'Отображениеstatic','static','[]','[]',1,'[]'),
-  (15,'ОтображениеtestTable','testTable','[]','[]',1,'[]');
+  (16, 'Default view', 'block_type', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Block Type\"}}'),
+  (17, 'Default view', 'callbacks', '[]', '[]', 1, '[]'),
+  (18, 'Default view', 'field_types', '[]', '[]', 1, '[]'),
+  (19, 'Default view', 'pages', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Pages\"}}'),
+  (20, 'Default view', 'products', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Products\"}}'),
+  (21, 'Default view', 'testTable', '[]', '[]', 1, '[]');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;

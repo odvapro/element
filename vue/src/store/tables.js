@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-var qs = require('qs');
+import {message} from '../plugins/message.js';
+import qs from 'qs';
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 const table =
@@ -135,6 +135,25 @@ const table =
 		},
 
 		/**
+		 * Get column by code
+		 */
+		getColumn: (store, getters) => (tableCode, columnCode) =>
+		{
+			let table = getters.getTable(tableCode);
+
+			if(table === false)
+				return false;
+
+			for(var index in table.columns)
+			{
+				if(table.columns[index].field == columnCode)
+					return table.columns[index];
+			}
+
+			return false;
+		},
+
+		/**
 		 * Формирует настройки колоки
 		 * основной формат настроек на всем проекте
 		 * {
@@ -144,18 +163,18 @@ const table =
 		 * 		...  (остальые поля для каждого филда свои)
 		 * 	}
 		 */
-		getColumnSettings: (store, getters) => (tableCode, column, row) =>
+		getColumnSettings: (store, getters) => (tableCode, columnCode, row) =>
 		{
-			let primaryKeyCode = getters.getPrimaryKeyCode(tableCode);
-			let primaryKey = {
-				value     : row[primaryKeyCode].value,
+			const column         = getters.getColumn(tableCode, columnCode);
+			const primaryKeyCode = getters.getPrimaryKeyCode(tableCode);
+			let   settings       = column.em.settings;
+
+			settings.primaryKey = {
+				value     : (row) ? row[primaryKeyCode].value : '',
 				fieldCode : primaryKeyCode
 			};
-
-			var settings        = column.em.settings;
 			settings.fieldCode  = column.field;
 			settings.tableCode  = tableCode;
-			settings.primaryKey = primaryKey;
 
 			return Object.assign({}, settings);
 		}
@@ -258,7 +277,6 @@ const table =
 				url    : '/el/setTviewSettings/',
 				data   : data
 			});
-
 			if (!result.data.success)
 				return false;
 
@@ -320,6 +338,8 @@ const table =
 				}
 			});
 			let result = await axios.post('/el/update/',data);
+			if(result.data.success != true)
+				message.error('Cant save data.😐');
 			this.commit('setFieldValue',fieldValue);
 		},
 

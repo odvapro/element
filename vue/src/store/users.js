@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-var qs = require('qs');
+import qs from 'qs';
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 
 const users =
@@ -18,10 +17,6 @@ const users =
 		{
 			state.authUser = user;
 		}
-	},
-	actions:
-	{
-
 	}
 }
 export default users;

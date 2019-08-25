@@ -38,10 +38,11 @@
 			<div class="detail-field-box">
 				<MainField
 					mode="edit"
+					view="detail"
+					:fieldName="column.fieldName"
 					:params="{
-						fieldName : column.fieldName,
 						value     : column.value,
-						settings  : $store.getters.getColumnSettings(tableCode, columns[columnCode], selectedElement)
+						settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
 					}"
 					@onChange="changeFieldValue"
 				/>
@@ -86,7 +87,8 @@
 						}
 					]
 				}
-				this.$store.dispatch('selectElement',requestParams).then(()=>{
+				this.$store.dispatch('selectElement',requestParams).then(()=>
+				{
 					this.selectedElement = this.$store.state.tables.selectedElement;
 				});
 			}
@@ -120,12 +122,13 @@
 			/**
 			 * Сохранение элемента
 			 */
-			saveElement()
+			async saveElement()
 			{
 				this.$store.dispatch('saveSelectedElement',{
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
-				}).then(()=>{
+				}).then(()=>
+				{
 					this.ElMessage('👌 Element saved!');
 				});
 			},
@@ -146,7 +149,8 @@
 				}
 
 				var data = qs.stringify({
-					insert:{
+					insert:
+					{
 						table   :this.tableCode,
 						columns :setColumns,
 						values  :setValues
@@ -180,7 +184,8 @@
 					delete:
 					{
 						table: this.tableCode,
-						where:{
+						where:
+						{
 							operation:'and',
 							fields:[
 								{
@@ -191,7 +196,8 @@
 							]
 						}
 					}
-				}).then(()=>{
+				}).then(()=>
+				{
 					this.cancel();
 					this.ElMessage('Element removed!');
 				});
@@ -238,14 +244,16 @@
 		text-transform: lowercase;
 	}
 	.detail-name-wrapper{padding-left:7px; }
-	.detail-feild{
+	.detail-feild
+	{
 		min-height: 50px;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 	}
 	.detail-field-name
 	{
 		width:200px;
+		flex-shrink:0;
 		span
 		{
 			display:block;
@@ -266,7 +274,7 @@
 	{
 		position: relative;
 		min-width: 200px;
-		height: 49px;
+		min-height: 49px;
 	}
 	.detail-head__buttons
 	{

@@ -11,7 +11,7 @@
 	export default
 	{
 		components: {Checkbox},
-		props: ['fieldValue', 'fieldSettings'],
+		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Checke status
 		 */
@@ -26,8 +26,8 @@
 			async changeStatus(checkboxStatus)
 			{
 				this.$emit('onChange', {
-					value    : checkboxStatus,
-					settings : this.fieldSettings
+					value     : checkboxStatus,
+					settings  : this.fieldSettings
 				});
 			}
 		},

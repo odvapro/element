@@ -64,7 +64,7 @@ class SettingsCest
 			'columnName' => 'id',
 			'fieldType'  => 'EmString'
 		]);
-		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/settings/changeFieldType', [
 			'tableName'  => 'newTest',
@@ -104,7 +104,7 @@ class SettingsCest
 			'fieldType'      => 'em_file',
 			'settings'       => [
 				'required' => true,
-				'path'       => 'public'
+				'path'     => 'public'
 			]
 		]);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -115,18 +115,7 @@ class SettingsCest
 			'fieldType'      => 'em_file',
 			'settings'       => [
 				'required' => true,
-				'path'       => 'public'
-			]
-		]);
-		$I->seeResponseContainsJson(['success' => false]);
-
-		$I->sendPOST('/settings/setFieldSettings', [
-			'tableName'      => 'testTable',
-			'columnName'     => 'avat',
-			'fieldType'      => 'em_file',
-			'settings'       => [
-				'required' => true,
-				'path'       => 'public/upload'
+				'path'     => 'public'
 			]
 		]);
 		$I->seeResponseContainsJson(['success' => false]);

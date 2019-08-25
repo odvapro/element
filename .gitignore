@@ -27,6 +27,15 @@ Temporary Items
 /api/app/cache/
 !/api/app/cache/readme.md
 /public/upload/
+!/public/upload/.gitkeep
+/public/tmp/
+!/public/tmp/.gitkeep
+/vue/public/upload/
+!/vue/public/upload/.gitkeep
+/vue/public/tmp/
+!/vue/public/tmp/.gitkeep
+app/logs/
+!app/logs/.gitkeep
 config.php
 .phalcon/migration-version
 
@@ -42,3 +51,5 @@ deploy.php
 /docs/
 composer.lock
 package-lock.json
+*.sublime-project
+*.sublime-workspace

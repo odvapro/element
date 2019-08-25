@@ -42,7 +42,7 @@ class SettingsController extends ControllerBase
 	 */
 	public function getFiledTypesAction()
 	{
-		$fieldsTypes = $this->element->getEmTypes();
+		$fieldsTypes = $this->element->emTypes;
 
 		return $this->jsonResult(['success' => true, 'types' => $fieldsTypes]);
 	}
@@ -73,9 +73,23 @@ class SettingsController extends ControllerBase
 		$field->table    = $tableName;
 		$field->type     = $fieldType;
 
-		$field->save();
+		if ($field->save() === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		if(empty($this->element->emTypes[$fieldType]))
+			return $this->jsonResult(['success' => false, 'message' => 'no such field']);
+
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$emSettings = [
+			'name'      => $field->name,
+			'type'      => $field->type,
+			'type_info' => $this->element->emTypes[$field->type],
+			'settings'  => $fieldClass->getSettings(),
+			'required'  => $field->getRequired()
+		];
+
+		return $this->jsonResult(['success' => true, 'settings' => $emSettings]);
 	}
 
 	/**
@@ -90,15 +104,12 @@ class SettingsController extends ControllerBase
 		if (empty($tableName) || empty($columnName) || empty($fieldType))
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
 
-		if (array_key_exists('path', $settings))
-			if (!is_dir(ROOT . $settings['path']))
-				return $this->jsonResult(['success' => false, 'message' => "directory {$settings['path']} does not exist"]);
+		if(!array_key_exists($fieldType, $this->element->emTypes))
+			return $this->jsonResult(['success' => false, 'message' => 'incorrect field type']);
 
 		$field = EmTypes::findFirst([
 			'table = ?0 and field = ?1',
-			'bind' => [
-				$tableName, $columnName
-			]
+			'bind' => [$tableName, $columnName ]
 		]);
 		if (!$field)
 			$field = new EmTypes();
@@ -112,12 +123,16 @@ class SettingsController extends ControllerBase
 		else
 			$field->required = 0;
 
-		$field->settings = $settings;
+		$field->settings = (object) $settings;
 
 		if ($field->save() === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
-		return $this->jsonResult(['success' => true, 'settings' => $field]);
+		$emType     = $this->element->emTypes[$fieldType];
+		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$settings   = $fieldClass->getSettings();
+
+		return $this->jsonResult(['success' => true, 'settings' => $settings]);
 	}
 
 	/**
@@ -144,7 +159,7 @@ class SettingsController extends ControllerBase
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
-		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = file_get_contents("https://api.github.com/repos/odvapro/element/tags", false, $context);
 		$tagsList    = json_decode($tagsList,true);
 		$lastVersion = reset($tagsList);
 
@@ -170,18 +185,18 @@ class SettingsController extends ControllerBase
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
-		$tagsList    = file_get_contents("https://api.github.com/repos/dzantiev/element/tags", false, $context);
+		$tagsList    = file_get_contents("https://api.github.com/repos/odvapro/element/tags", false, $context);
 		$tagsList    = json_decode($tagsList,true);
 		$lastVersion = reset($tagsList);
 		if($lastVersion['name'] == $currentVersion)
 			return $this->jsonResult(['success'=>false,'msg'=>'You have latest version!']);
 
-		$diffUrl = "https://api.github.com/repos/dzantiev/element/compare/{$currentVersion}...{$lastVersion['name']}";
+		$diffUrl = "https://api.github.com/repos/odvapro/element/compare/{$currentVersion}...{$lastVersion['name']}";
 		$diffJson = file_get_contents($diffUrl, false, $context);
 		$diffJson = json_decode($diffJson,true);
 
 		// определение файлов  для игнорирования
-		$gitAttributes = file(ROOT.".gitattributes");
+		$gitAttributes = file(ROOT."/.gitattributes");
 		foreach ($gitAttributes as &$gitAttributeLine)
 			$gitAttributeLine = trim(str_replace(' export-ignore', '', $gitAttributeLine));
 
@@ -199,13 +214,13 @@ class SettingsController extends ControllerBase
 			switch ($fileArr['status'])
 			{
 				case 'modified':
-					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'added':
-					@file_put_contents(ROOT.$fileArr['filename'], $fileContent);
+					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'deleted':
-					@unlink(ROOT.$fileArr['filename']);
+					@unlink(ROOT.'/'.$fileArr['filename']);
 				break;
 			}
 		}
