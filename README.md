@@ -3,7 +3,9 @@ Admin panel for everything
 Element is a beautifully designed administration panel for Everything. Carefully crafted by the O₂ team to make you the most productive developer in the galaxy.
 
 [Site](/documentation)
+
 [Documentation](/documentation)
+
 [Demo](https://element-demo.odva.pro/element/)
 
 ```
