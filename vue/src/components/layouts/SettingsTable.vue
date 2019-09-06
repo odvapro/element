@@ -123,6 +123,28 @@
 			 */
 			settingsComponent()
 			{
+				if(this.settingsColumn === false)
+					return false;
+
+				// add styles
+				if(typeof this.settingsColumn.em.stylesCss != 'undefined' &&
+				   this.settingsColumn.em.stylesCss !== false &&
+				   window.importStyles.indexOf(this.fieldName) == -1)
+				{
+					var newSS       = document.createElement('style');
+					newSS.innerHTML = this.settingsColumn.em.stylesCss;
+					newSS.type      = 'text/css';
+					document.getElementsByTagName("head")[0].appendChild(newSS);
+					window.importStyles.push(this.fieldName);
+				}
+
+				if(this.settingsColumn.em.type_info.type == 'custom' &&
+				   this.settingsColumn.em.settingsJs != false)
+				{
+					return eval(this.settingsColumn.em.settingsJs);
+				}
+
+
 				if (this.settingsFielType == false)
 					return false;
 
@@ -144,6 +166,9 @@
 			 */
 			checkSettingComponent(table, column)
 			{
+				if(column.em.type_info.type == 'custom' && column.em.settingsJs != false)
+					return true;
+
 				try
 				{
 					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)

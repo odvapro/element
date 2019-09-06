@@ -1,19 +1,12 @@
 # Element CMF
-Admin panel on Phalcon + Vue
+Admin panel for everything
+Element is a beautifully designed administration panel for Everything. Carefully crafted by the O₂ team to make you the most productive developer in the galaxy.
 
-## Run tests
-```
-vendor/bin/codecept run
-vendor/bin/codecept run api CatalogCest:getProducts
-vendor/bin/codecept run api CatalogCest:getProducts --debug
-```
+[Site](/documentation)
+[Documentation](/documentation)
+[Demo](https://element-demo.odva.pro/element/)
 
-## Migrations
-Generate
 ```
-vendor/bin/phalcon.php migration generate
-```
-Run
-```
-vendor/bin/phalcon.php migration run
+login: admin
+password: adminpass
 ```

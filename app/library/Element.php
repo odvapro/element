@@ -88,15 +88,20 @@ class Element
 			$fieldClass = new $this->emTypes[$emFieldsTypes->type]['fieldComponent']('', $emFieldsTypes->settings);
 
 			$emFieldArray = [
-				'name'      => $emFieldsTypes->name,
-				'type'      => $emFieldsTypes->type,
-				'type_info' => $this->emTypes[$emFieldsTypes->type],
-				'settings'  => $fieldClass->getSettings(),
-				'required'  => $emFieldsTypes->getRequired()
+				'name'         => $emFieldsTypes->name,
+				'type'         => $emFieldsTypes->type,
+				'type_info'    => $this->emTypes[$emFieldsTypes->type],
+				'settings'     => $fieldClass->getSettings(),
+				'required'     => $emFieldsTypes->getRequired(),
+				'fieldJs'      => $fieldClass->getFieldJs(),
+				'settingsJs'   => $fieldClass->getSettingsJs(),
+				'stylesCss' => $fieldClass->getStylesCss()
 			];
 			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;
 		}
 
+		// этот цикл для установки типов полей по умолчанию
+		// то есть em_string и em_primary
 		foreach ($tableColumns as &$tableColumn)
 		{
 			if(array_key_exists('em', $tableColumn))

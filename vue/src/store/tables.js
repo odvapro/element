@@ -173,6 +173,9 @@ const table =
 				value     : (row) ? row[primaryKeyCode].value : '',
 				fieldCode : primaryKeyCode
 			};
+			settings.fieldJs    = column.em.fieldJs;
+			settings.settingsJs = column.em.settingsJs;
+			settings.stylesCss  = column.em.stylesCss;
 			settings.fieldCode  = column.field;
 			settings.tableCode  = tableCode;
 
