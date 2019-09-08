@@ -34,7 +34,7 @@
 						<div class="settings-table-item-name">
 							<input
 								type="text"
-								@change="setTviewSetting(table, 'table', {name: table.name})"
+								@change="saveTableSettings(table)"
 								v-model="table.name"
 								placeholder="Set Name"
 							/>
@@ -44,7 +44,7 @@
 						<div class="settings-table-item-flag">
 							<Checkbox
 								:checked.sync="table.visible"
-								@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
+								@change="saveTableSettings(table)"
 							></Checkbox>
 						</div>
 					</div>
@@ -120,6 +120,8 @@
 		{
 			/**
 			 * Field settings component
+			 * gets settings component
+			 * @return vue component or false
 			 */
 			settingsComponent()
 			{
@@ -180,6 +182,7 @@
 
 				return true;
 			},
+
 			/**
 			 * Opens field settgins popups
 			 */
@@ -314,6 +317,32 @@
 
 				if (!result.data.success)
 					return false;
+			},
+
+			/**
+			 * Set show setting for table
+			 * set for default table view name and show props
+			 */
+			async saveTableSettings(table)
+			{
+				// defina default tview
+				// check settings definition
+				// set sibible settings
+				let tview = false;
+				for (var cTview of table.tviews)
+					if (cTview.default === '1')
+						tview = cTview;
+
+				let data = qs.stringify({
+					tviewId : tview.id,
+					params  : {table:{visible:table.visible,name:table.name}}
+				});
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : data,
+					url    : '/el/setTviewSettings/'
+				});
 			},
 
 			/**

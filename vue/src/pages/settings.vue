@@ -46,11 +46,7 @@
 		data()
 		{
 			return {
-				tabs:
-				[
-					{ name: 'Tables', active: true },
-					{ name: 'Users', active: false }
-				],
+				tabs: [{ name: 'Tables', active: true }, { name: 'Users', active: false } ],
 				activeTab: 'Tables'
 			}
 		},
