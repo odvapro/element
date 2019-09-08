@@ -1,14 +1,14 @@
 # Содержание документации Element
 
 - Установка
-  - [Требования](/documentation/installation.md#требования)
-  - [Установка через composer](/documentation/installation.md#установка-через-composer)
-  - [Настройки сервера](/documentation/installation.md#настройки-сервера)
-  - [Конфигурация](/documentation/installation.md#конфигурация)
-  - [Авторизация](/documentation/installation.md#авторизация)
+  - [Требования](/documentation/ru/installation.md#требования)
+  - [Установка через composer](/documentation/ru/installation.md#установка-через-composer)
+  - [Настройки сервера](/documentation/ru/installation.md#настройки-сервера)
+  - [Конфигурация](/documentation/ru/installation.md#конфигурация)
+  - [Авторизация](/documentation/ru/installation.md#авторизация)
 
 - Филды
-  - [Основное](/documentation/fields.md)
-  - [Кастомизированный филд](/documentation/customfield.md)
+  - [Основное](/documentation/ru/fields.md)
+  - [Кастомизированный филд](/documentation/ru/customfield.md)
 
 
