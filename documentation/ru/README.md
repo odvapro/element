@@ -8,13 +8,7 @@
   - [Авторизация](/documentation/installation.md#авторизация)
 
 - Филды
-  - [Настройка филдов](/documentation/fields.md)
-  - Флаг
-  - Файл
-  - Выбор
-  - Связь
-  - Ключ
-  - Строка
-  - Текст
-  - Дата
+  - [Основное](/documentation/fields.md)
+  - [Кастомизированный филд](/documentation/customfield.md)
+
 
