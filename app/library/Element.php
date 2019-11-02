@@ -123,16 +123,6 @@ class Element
 	}
 
 	/**
-	 * Достает код ключа
-	 * @param  string $tableName table code
-	 * @return string primary key code
-	 */
-	public function getPrimaryKeyCode($tableName)
-	{
-		$columns = $this->eldb->getColumns($tableName);
-	}
-
-	/**
 	 * Селект запрос, достаем значения и типы полей для отображения
 	 * @param  array $selectParams
 	 * @return array
@@ -160,9 +150,9 @@ class Element
 				$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 				if (class_exists($fieldClass))
-					$field = new $fieldClass($columnValue,$settings);
+					$field = new $fieldClass($columnValue,$settings,$selectItem);
 				else
-					$field = new EmStringField($columnValue,$settings);
+					$field = new EmStringField($columnValue,$settings,$selectItem);
 
 				$result[$fieldCode]['value']     = $field->getValue();
 				$result[$fieldCode]['fieldName'] = $tableColumns[$fieldCode]['em']['type_info']['code'];
@@ -191,9 +181,9 @@ class Element
 			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue,$settings);
+				$field = new $fieldClass($fieldValue,$settings,$updateParams['set']);
 			else
-				$field = new EmStringField($fieldValue,$settings);
+				$field = new EmStringField($fieldValue,$settings,$updateParams['set']);
 
 			$fieldSaveValue = $field->saveValue();
 			if($fieldSaveValue === NULL)
@@ -228,9 +218,9 @@ class Element
 			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
 			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue,$settings);
+				$field = new $fieldClass($fieldValue,$settings,$insertParams['values']);
 			else
-				$field = new EmStringField($fieldValue,$settings);
+				$field = new EmStringField($fieldValue,$settings,$insertParams['values']);
 
 			$fieldSaveValue = $field->saveValue();
 			$valuesSet[]    = $fieldSaveValue;
