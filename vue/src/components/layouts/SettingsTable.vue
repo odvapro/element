@@ -34,7 +34,7 @@
 						<div class="settings-table-item-name">
 							<input
 								type="text"
-								@change="setTviewSetting(table, 'table', {name: table.name})"
+								@change="saveTableSettings(table)"
 								v-model="table.name"
 								placeholder="Set Name"
 							/>
@@ -44,7 +44,7 @@
 						<div class="settings-table-item-flag">
 							<Checkbox
 								:checked.sync="table.visible"
-								@change="setTviewSetting(table, 'table', {visible: String(table.visible)})"
+								@change="saveTableSettings(table)"
 							></Checkbox>
 						</div>
 					</div>
@@ -120,9 +120,33 @@
 		{
 			/**
 			 * Field settings component
+			 * gets settings component
+			 * @return vue component or false
 			 */
 			settingsComponent()
 			{
+				if(this.settingsColumn === false)
+					return false;
+
+				// add styles
+				if(typeof this.settingsColumn.em.stylesCss != 'undefined' &&
+				   this.settingsColumn.em.stylesCss !== false &&
+				   window.importStyles.indexOf(this.fieldName) == -1)
+				{
+					var newSS       = document.createElement('style');
+					newSS.innerHTML = this.settingsColumn.em.stylesCss;
+					newSS.type      = 'text/css';
+					document.getElementsByTagName("head")[0].appendChild(newSS);
+					window.importStyles.push(this.fieldName);
+				}
+
+				if(this.settingsColumn.em.type_info.type == 'custom' &&
+				   this.settingsColumn.em.settingsJs != false)
+				{
+					return eval(this.settingsColumn.em.settingsJs);
+				}
+
+
 				if (this.settingsFielType == false)
 					return false;
 
@@ -144,6 +168,9 @@
 			 */
 			checkSettingComponent(table, column)
 			{
+				if(column.em.type_info.type == 'custom' && column.em.settingsJs != false)
+					return true;
+
 				try
 				{
 					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)
@@ -155,6 +182,7 @@
 
 				return true;
 			},
+
 			/**
 			 * Opens field settgins popups
 			 */
@@ -289,6 +317,32 @@
 
 				if (!result.data.success)
 					return false;
+			},
+
+			/**
+			 * Set show setting for table
+			 * set for default table view name and show props
+			 */
+			async saveTableSettings(table)
+			{
+				// defina default tview
+				// check settings definition
+				// set sibible settings
+				let tview = false;
+				for (var cTview of table.tviews)
+					if (cTview.default === '1')
+						tview = cTview;
+
+				let data = qs.stringify({
+					tviewId : tview.id,
+					params  : {table:{visible:table.visible,name:table.name}}
+				});
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : data,
+					url    : '/el/setTviewSettings/'
+				});
 			},
 
 			/**

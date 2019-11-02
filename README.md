@@ -1,19 +1,17 @@
 # Element CMF
-Admin panel on Phalcon + Vue
+![Current tag](https://img.shields.io/github/v/tag/odvapro/element.svg?color=blueviolet)
+![License](https://img.shields.io/github/license/odvapro/element)
 
-## Run tests
-```
-vendor/bin/codecept run
-vendor/bin/codecept run api CatalogCest:getProducts
-vendor/bin/codecept run api CatalogCest:getProducts --debug
-```
+Admin panel for everything
+Element is a beautifully designed administration panel for Everything. Carefully crafted by the O₂ team to make you the most productive developer in the galaxy.
 
-## Migrations
-Generate
+[Site](/documentation)
+
+[Documentation](/documentation)
+
+[Demo](https://element-demo.odva.pro/element/)
+
 ```
-vendor/bin/phalcon.php migration generate
-```
-Run
-```
-vendor/bin/phalcon.php migration run
+login: admin
+password: adminpass
 ```

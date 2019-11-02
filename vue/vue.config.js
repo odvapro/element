@@ -1,7 +1,8 @@
 module.exports = {
 	outputDir:'../public/',
 	publicPath: process.env.BASE_URL,
-	chainWebpack: config => {
+	chainWebpack: config =>
+	{
 		const oneOfsMap = config.module.rule('scss').oneOfs.store
 		oneOfsMap.forEach(item => {
 			item
@@ -12,7 +13,14 @@ module.exports = {
 				})
 				.end()
 		})
-
+	},
+	configureWebpack:
+	{
+		resolve:
+		{
+			extensions: ['.js', '.vue', '.json'],
+			alias: {'vue$': 'vue/dist/vue.esm.js', }
+		}
 	}
 }
 

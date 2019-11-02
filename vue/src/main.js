@@ -16,6 +16,8 @@ Vue.use(VueCookie);
 Vue.use(Meta)
 Vue.use(Popup)
 Vue.config.productionTip = false;
+window.Vue = Vue;
+window.importStyles = [];
 
 router.beforeEach(async function(to, from, next)
 {

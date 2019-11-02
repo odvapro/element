@@ -29,6 +29,7 @@ CREATE TABLE `block_type` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(50) DEFAULT 'text',
   `name` varchar(50) DEFAULT NULL,
+  `node` int(11) DEFAULT NULL,
   `file` text,
   `text` text,
   `date` date DEFAULT NULL,
@@ -108,7 +109,8 @@ VALUES
   (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL),
   (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
   (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
-  (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL);
+  (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL),
+  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
