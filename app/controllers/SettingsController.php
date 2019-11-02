@@ -175,6 +175,7 @@ class SettingsController extends ControllerBase
 	 */
 	public function updateAction()
 	{
+		set_time_limit(0);
 		// достаем разницу тегов
 		// проходимся по файлам
 		// фильтруем нужные
@@ -210,16 +211,22 @@ class SettingsController extends ControllerBase
 			},false);
 			if($needIgnore) continue;
 
-			$fileContent = file_get_contents($fileArr['raw_url']);
 			switch ($fileArr['status'])
 			{
 				case 'modified':
+					$fileContent = file_get_contents($fileArr['raw_url']);
 					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'added':
+					$fileContent = file_get_contents($fileArr['raw_url']);
 					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
-				case 'deleted':
+				case 'renamed':
+					$fileContent = file_get_contents($fileArr['raw_url']);
+					@rename(ROOT.'/'.$fileArr['previous_filename'], ROOT.'/'.$fileArr['filename']);
+					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
+				break;
+				case 'removed':
 					@unlink(ROOT.'/'.$fileArr['filename']);
 				break;
 			}
