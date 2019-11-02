@@ -7,7 +7,7 @@ Element is a beautifully designed administration panel for Everything. Carefully
 
 [Site](/documentation)
 
-[Documentation](/documentation)
+[Documentation](https://element.odva.pro/docs/)
 
 [Demo](https://element-demo.odva.pro/element/)
 
