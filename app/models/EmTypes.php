@@ -7,6 +7,7 @@ class EmTypes extends ModelBase
 	 * @var String
 	 */
 	protected $settings;
+	public $required;
 
 	/**
 	 * Конвертирование настроек в массив
@@ -14,7 +15,20 @@ class EmTypes extends ModelBase
 	 */
 	public function getSettings()
 	{
+		if(empty($this->settings))
+			return [];
 		return json_decode($this->settings, true);
+	}
+
+	/**
+	 * Gets field name
+	 * @return string
+	 */
+	public function getName()
+	{
+		if(!empty($this->name))
+			return $this->name;
+		return $this->field;
 	}
 
 	/**
