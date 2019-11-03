@@ -82,6 +82,9 @@
 					<div class="table-empty-col"></div>
 				</div>
 			</div>
+			<div class="table-row table-row__empty" v-if="!tableContent.items.length">
+				<span class="el-empty">Empty Table - <span @click="addElement()" class="table-row__add-bnt">Add Element</span></span>
+			</div>
 		</div>
 		<Pagination
 			v-if="tableContent.total_pages > 1"
@@ -446,6 +449,11 @@
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
 				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode].value }});
+			},
+
+			addElement()
+			{
+				this.$router.push(`/table/${this.table.code}/add/`);
 			}
 		},
 		/**
@@ -535,6 +543,12 @@
 				background-color: #fff;
 			}
 		}
+	}
+	.table-row__empty{padding:30px;}
+	.table-row__add-bnt
+	{
+		text-decoration: underline;
+		&:hover{text-decoration: none;}
 	}
 	.table-item-image-col
 	{

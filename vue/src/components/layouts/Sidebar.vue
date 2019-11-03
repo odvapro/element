@@ -341,7 +341,7 @@
 	}
 	.sidebar-footer
 	{
-		padding: 40px 0;
+		padding: 20px 0;
 		position: sticky;
 		bottom: 0px;
 		width: 100%;
