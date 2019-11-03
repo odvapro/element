@@ -62,9 +62,7 @@ class SettingsController extends ControllerBase
 
 		$field = EmTypes::findFirst([
 			'table = ?0 and field = ?1',
-			'bind' => [
-				$tableName, $columnName
-			]
+			'bind' => [$tableName, $columnName]
 		]);
 		if (!$field)
 			$field = new EmTypes();
@@ -80,9 +78,8 @@ class SettingsController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'no such field']);
 
 		$emType     = $this->element->emTypes[$fieldType];
-		$fieldClass = new $emType['fieldComponent']('', $field->settings);
+		$fieldClass = new $emType['fieldComponent']('', $field->getSettings());
 		$emSettings = [
-			'name'      => $field->name,
 			'type'      => $field->type,
 			'type_info' => $this->element->emTypes[$field->type],
 			'settings'  => $fieldClass->getSettings(),

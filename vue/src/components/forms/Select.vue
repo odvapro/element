@@ -119,6 +119,7 @@
 		border:1px solid rgba(103,115,135,0.4);
 		border-radius:2px;
 		cursor: pointer;
+		background: #fff;
 	}
 	.select__trigger:hover
 	{

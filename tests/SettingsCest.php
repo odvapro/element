@@ -78,6 +78,20 @@ class SettingsCest
 			'fieldType' => 'EmString'
 		]);
 		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/settings/changeFieldType', [
+			'tableName' => 'block_type',
+			'columnName' => 'id',
+			'fieldType' => 'em_check'
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/settings/changeFieldType', [
+			'tableName' => 'block_type',
+			'columnName' => 'id',
+			'fieldType' => 'em_primary'
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
 	}
 
 	public function setFieldSettings(ApiTester $I)

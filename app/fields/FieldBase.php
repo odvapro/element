@@ -7,11 +7,11 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	protected $fieldValue = '';
 	protected $row        = [];
 	protected $settings   = [];
-	public function __construct($fieldValue = '', $settings = [], $row = [])
+	public function __construct($fieldValue = '', array $settings = [], array $row = [])
 	{
 		$this->fieldValue = $fieldValue;
-		$this->settings = $settings;
-		$this->row = $row;
+		$this->settings   = $settings;
+		$this->row        = $row;
 	}
 	abstract function getValue();
 	abstract function saveValue();
@@ -42,7 +42,8 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 
 		$settings['fieldComponent'] = get_class($this);
 		$settings['code']           = basename($dir);
-		$settings                   = array_merge($settings, $this->settings);
+		if(is_array($this->settings))
+			$settings = array_merge($settings, $this->settings);
 
 		return $settings;
 	}
