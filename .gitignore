@@ -38,7 +38,6 @@ app/logs/
 !app/logs/.gitkeep
 config.php
 .phalcon/migration-version
-app/fields/
 !app/fields/em_*
 
 # PROJECT
