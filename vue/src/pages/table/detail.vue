@@ -31,9 +31,12 @@
 			</div>
 		</div>
 		<div class="detail-feild" v-for="(column,columnCode) in selectedElement">
-			<div class="detail-field-name">
-				<span>{{ columnCode }}</span>
-				<small>{{ columnCode }}</small>
+			<div class="detail-field__name-wrap">
+				<img class="detail-field__icon-image" :src="require(`@/assets${columnEmSettings(columnCode).type_info.iconPath}`)">
+				<div class="detail-field-name">
+					<span>{{ columnCode }}</span>
+					<small>{{ columnCode }}</small>
+				</div>
 			</div>
 			<div class="detail-field-box">
 				<MainField
@@ -117,6 +120,19 @@
 			changeFieldValue(fieldValue)
 			{
 				this.selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+			},
+
+			/**
+			 * Return em object of column
+			 */
+			columnEmSettings(columnCode)
+			{
+				for(let colCode in this.columns)
+				{
+					if(colCode == columnCode)
+						return this.columns[colCode].em;
+				}
+				throw new Error(`No column with code ${columnCode}`);
 			},
 
 			/**
@@ -247,9 +263,12 @@
 	.detail-feild
 	{
 		min-height: 50px;
+		margin-bottom:10px;
 		display: flex;
 		align-items: flex-start;
 	}
+	.detail-field__name-wrap {display: flex; margin-top: 10px;}
+	.detail-field__icon-image{margin-right: 15px;}
 	.detail-field-name
 	{
 		width:200px;
@@ -260,7 +279,7 @@
 			font-size: 12px;
 			line-height: normal;
 			color: #191C21;
-
+			text-transform: capitalize;
 		}
 		small
 		{
@@ -273,7 +292,7 @@
 	.detail-field-box
 	{
 		position: relative;
-		min-width: 200px;
+		min-width: 400px;
 		min-height: 49px;
 	}
 	.detail-head__buttons
