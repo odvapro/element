@@ -15,10 +15,15 @@ class EmDateCest
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'date' => null]);
 
-		// check correct date
-		$this->saveField($I, date('Y-m-d',time()), 1);
+		// check correct date field type
+		$this->saveField($I, date('Y-m-d H:i',time()), 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'date' => date('Y-m-d',time()) ]);
+
+		// check correct datetime field type
+		$this->saveField($I, date('Y-m-d H:i',time()), 1, 'datetime');
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'datetime' => date('Y-m-d H:i:\\0\\0',time()) ]);
 
 		// save empty date
 		$this->saveField($I, '', 1);
@@ -41,14 +46,14 @@ class EmDateCest
 	}
 
 
-	protected function saveField(ApiTester $I, $newValue, Int $id)
+	protected function saveField(ApiTester $I, $newValue, Int $id, $fieldName='date')
 	{
 		$I->sendPOST('/el/update/',
 		[
 			'update' =>
 			[
 				'table' => 'block_type',
-				'set' => ['date' => $newValue ],
+				'set' => [$fieldName => $newValue ],
 				'where' => [
 					'operation' => 'and',
 					'fields'    => [['code' => 'id', 'operation' => 'IS', 'value' => $id]]
