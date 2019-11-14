@@ -7,6 +7,10 @@
 				placeholder="Empty"
 			>
 				<div slot="beforeCalendarHeader" class="em-date__clear">
+					<div class="em-date__time">
+						<input type="number" class="em-date__time-input" v-model="localHours" @change="changeTime" min="0" max="24">
+						<input type="number" class="em-date__time-input" v-model="localMinutes" @change="changeTime" min="0" max="59">
+					</div>
 					<button @click="clear()">Clear</button>
 				</div>
 			</Datepicker>
@@ -27,11 +31,18 @@
 		{
 			return {
 				localFieldValue:'',
+				localHours: 0,
+				localMinutes: 0
 			}
 		},
 		mounted()
 		{
-			this.localFieldValue = this.fieldValue;
+			if(!!this.fieldValue)
+			{
+				this.localFieldValue = new Date(this.fieldValue);
+				this.localHours = this.localFieldValue.getHours();
+				this.localMinutes = this.localFieldValue.getMinutes();
+			}
 		},
 		methods:
 		{
@@ -48,18 +59,31 @@
 				month = (+month + 1).toString();
 				month = (month.length == 1) ? '0' + month : month;
 				day   = (day.length == 1) ? '0' + day : day;
-				var fullDate =  `${year}-${month}-${day}`;
+
+				let hours = (+this.localHours < 10 ? ('0' + this.localHours) : this.localHours),
+					minutes = (+this.localMinutes < 10 ? ('0' + this.localMinutes) : this.localMinutes),
+					fullDate =  `${year}-${month}-${day} ${hours}:${minutes}`;
+
 				this.$emit('onChange', {
 					value     : fullDate,
 					settings  : this.fieldSettings
 				});
 			},
+
+			changeTime()
+			{
+				this.localFieldValue.setHours(this.localHours);
+				this.localFieldValue.setMinutes(this.localMinutes);
+			},
+
 			/**
 			 * Clear value
 			 */
 			clear()
 			{
 				this.localFieldValue = '';
+				this.localHours = 0;
+				this.localMinutes = 0;
 				this.$el.querySelector('input').blur()
 				this.$emit('onChange', {
 					value     : '',
@@ -99,7 +123,7 @@
 			box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
 			padding: 21px;
 			color: #191C21;
-			padding-bottom: 50px;
+			padding-bottom: 100px;
 			left:-15px;
 			top:44px;
 			margin:0 auto;
@@ -121,10 +145,11 @@
 		bottom:0px;
 		width:100%;
 		left:0px;
-		height: 40px;
+		height: 73px;
 		border-top:1px solid rgba(103, 115, 135, 0.1);
 		text-align:center;
 		padding-top: 3px;
+
 		button
 		{
 			background: none;
@@ -137,5 +162,20 @@
 			text-align: center;
 			padding:10px 0;
 		}
+	}
+	.em-date .em-date__time
+	{
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.em-date .em-date__time-input
+	{
+		border: 1px solid #ccc;
+		height: 40px;
+		padding: 5px 10px;
+		line-height: 50px;
+		width: 50px;
 	}
 </style>
