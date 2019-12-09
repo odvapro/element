@@ -20,7 +20,7 @@
 - style.css - все стили кастомизированного филда
 - info.json - ифнормация о филде
 
-### CustomExampleField.php
+## CustomExampleField.php
 Пример бэка кастомизированного филда
 ```
 <?php
@@ -49,7 +49,7 @@ class CustomExampleField extends FieldBase
 }
 ```
 
-### Field.js
+## Field.js
 Пример Vue компонента кастомизированного филда
 ```
 Vue.component('custom_example', {
@@ -90,7 +90,7 @@ Vue.component('custom_example', {
 });
 ```
 
-### Settings.js
+## Settings.js
 Пример филда настроек кастомизированного филда
 
 ```
@@ -200,7 +200,7 @@ Vue.component('custom_date', {
 });
 ```
 
-### info.json
+## info.json
 Пример кастомизированного json файла
 
 ```
@@ -211,6 +211,6 @@ Vue.component('custom_date', {
 }
 ```
 
-### Контроллеры
+## Контроллеры
 Контроллеры доступны по следующему пути
 `/element/fld/<feld_code>/<field_controller_name>/<action>/`

@@ -20,7 +20,7 @@ Create the following architecture
 - style.css - all styles
 - info.json - information about field
 
-### CustomExampleField.php
+## CustomExampleField.php
 Custom back part example
 ```
 <?php
@@ -49,7 +49,7 @@ class CustomExampleField extends FieldBase
 }
 ```
 
-### Field.js
+## Field.js
 Custom Vue Component Field Example
 ```
 Vue.component('custom_example', {
@@ -90,7 +90,7 @@ Vue.component('custom_example', {
 });
 ```
 
-### Settings.js
+## Settings.js
 Custom field settings example field
 
 ```
@@ -197,7 +197,7 @@ Vue.component('custom_date', {
 });
 ```
 
-### info.json
+## info.json
 Custom json file example
 
 ```
@@ -208,6 +208,6 @@ Custom json file example
 }
 ```
 
-### Controllers
+## Controllers
 Controllers are available by the following path
 `/element/fld/<feld_code>/<field_controller_name>/<action>/`
