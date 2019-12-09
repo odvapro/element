@@ -1,12 +1,12 @@
-# Кaстомизированный филд
-Для создания своего филда который не будет удаляться при обновлении системы нужно
-Создать следующую архитектуру
+# Custom Field
+To create your own field that will not be deleted on system update , you need to
+Create the following architecture
 ```
 /app/fields/
 |- /custom_example
-	|- /controllers/ (опционально)
-		|- IndexFController.php (опционально)
-		|- ... (необходимые контроллеры опционально)
+	|- /controllers/ (optional)
+		|- IndexFController.php (optional)
+		|- ... (oterh controllers optional)
 	|- CustomExampleField.php
 	|- Field.js
 	|- Settings.js
@@ -14,14 +14,14 @@
 	|- info.json
 ```
 
-- CustomExampleField.php - бэк часть филда описывает события сохраниени и получение данных филда
-- Field.js - Vue компонент
-- Settings.js - Vue компонент для настроек
-- style.css - все стили кастомизированного филда
-- info.json - ифнормация о филде
+- CustomExampleField.php - the back part of the field describes - the events of saving and receiving field data
+- Field.js - Vue component
+- Settings.js - Vue component for settings
+- style.css - all styles
+- info.json - information about field
 
 ### CustomExampleField.php
-Пример бэка кастомизированного филда
+Custom back part example
 ```
 <?php
 
@@ -30,7 +30,7 @@ class CustomExampleField extends FieldBase
 	protected $fieldValue = '';
 
 	/**
-	 * Достать значение поля
+	 * Get gield value
 	 */
 	public function getValue()
 	{
@@ -38,7 +38,7 @@ class CustomExampleField extends FieldBase
 	}
 
 	/**
-	 * Сохранить значение
+	 * Save field value
 	 */
 	public function saveValue()
 	{
@@ -50,7 +50,7 @@ class CustomExampleField extends FieldBase
 ```
 
 ### Field.js
-Пример Vue компонента кастомизированного филда
+Custom Vue Component Field Example
 ```
 Vue.component('custom_example', {
 	template: `<div class="em-string">
@@ -91,7 +91,7 @@ Vue.component('custom_example', {
 ```
 
 ### Settings.js
-Пример филда настроек кастомизированного филда
+Custom field settings example field
 
 ```
 Vue.component('custom_date', {
@@ -152,14 +152,14 @@ Vue.component('custom_date', {
 	methods:
 	{
 		/**
-		 * Удалить значение поля
+		 * Remove field value
 		 */
 		removeValue(fieldIndex)
 		{
 			this.localSettings.list.splice(fieldIndex, 1);
 		},
 		/**
-		 * Добавить значения в список значений филда
+		 * Add values to the field value list
 		 */
 		addValues()
 		{
@@ -184,9 +184,6 @@ Vue.component('custom_date', {
 			this.$emit('save', formData);
 		}
 	},
-	/**
-	 * Хук при загрузке страницы
-	 */
 	mounted()
 	{
 		for(var index in this.localSettings)
@@ -201,7 +198,7 @@ Vue.component('custom_date', {
 ```
 
 ### info.json
-Пример кастомизированного json файла
+Custom json file example
 
 ```
 {
@@ -211,6 +208,6 @@ Vue.component('custom_date', {
 }
 ```
 
-### Контроллеры
-Контроллеры доступны по следующему пути
+### Controllers
+Controllers are available by the following path
 `/element/fld/<feld_code>/<field_controller_name>/<action>/`
