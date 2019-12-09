@@ -8,8 +8,8 @@
 			>
 				<div slot="beforeCalendarHeader" class="em-date__clear">
 					<div class="em-date__time">
-						<input type="number" class="em-date__time-input" v-model="localHours" @change="changeTime" min="0" max="24">
-						<input type="number" class="em-date__time-input" v-model="localMinutes" @change="changeTime" min="0" max="59">
+						<input type="text" class="em-date__time-input" v-model="localHours" @change="changeTime" >
+						<input type="text" class="em-date__time-input" v-model="localMinutes" @change="changeTime">
 					</div>
 					<button @click="clear()">Clear</button>
 				</div>
