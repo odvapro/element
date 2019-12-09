@@ -6,12 +6,24 @@
 				@selected="changeValue"
 				placeholder="Empty"
 			>
-				<div slot="beforeCalendarHeader" class="em-date__clear">
+				<div slot="beforeCalendarHeader" class="">
 					<div class="em-date__time">
-						<input type="number" class="em-date__time-input" v-model="localHours" @change="changeTime" min="0" max="24">
-						<input type="number" class="em-date__time-input" v-model="localMinutes" @change="changeTime" min="0" max="59">
+						<!-- <input type="number" class="em-date__time-input" v-model="localHours" @change="changeTime" min="0" max="24">
+						<input type="number" class="em-date__time-input" v-model="localMinutes" @change="changeTime" min="0" max="59"> -->
 					</div>
-					<button @click="clear()">Clear</button>
+					<div class="em-date__top">
+						<div class="em-date-time">
+							<div class="em-date-time__full-date">
+								14 May 2020
+							</div>
+							<div class="em-date-time__time-date">
+								18:30
+							</div>
+						</div>
+					</div>
+					<div class="em-date__bottom">
+						<button class="em-date__clear" @click="clear()">Clear</button>
+					</div>
 				</div>
 			</Datepicker>
 		</template>
@@ -127,6 +139,49 @@
 			left:-15px;
 			top:44px;
 			margin:0 auto;
+
+			width: 360px;
+			padding-top: 83px;
+			.day__month_btn,
+			.month__year_btn
+			{
+				border-radius: 2px;
+			}
+			header
+			{
+				font-size: 13px;
+				line-height: 1.7;
+				padding-top: 4px;
+				width: 50%;
+				height: 40px;
+				.next,
+				.prev
+				{
+					width: 22px;
+					height: 22px;
+					border-radius: 2px;
+					&:hover
+					{
+						&:after
+						{
+							border-left-color: #677387;
+							border-top-color: #677387;
+						}
+					}
+					&:after
+					{
+						top: 30%;
+						transform: translateX(-50%) translateY(-50%);
+						width: 7px;
+						height: 7px;
+						border: 1px solid transparent;
+						border-left-color: rgba(103, 115, 135, 0.4);
+						border-top-color: rgba(103, 115, 135, 0.4);
+					}
+				}
+				.next:after{transform: rotate(135deg) skew(-3deg, -3deg); margin-left: -6px;}
+				.prev:after{transform: rotate(-45deg) skew(-3deg, -3deg); margin-left: -2px;}
+			}
 		}
 		.vdp-datepicker__calendar .cell{font-size:13px;}
 		.vdp-datepicker__calendar .cell.selected {background: rgba(124, 119, 145, 0.7); border-radius: 2px; color: #fff; }
@@ -139,31 +194,16 @@
 			cursor:pointer;
 		}
 	}
-	.em-date__clear
+	.em-date__top
 	{
 		position: absolute;
-		bottom:0px;
-		width:100%;
-		left:0px;
-		height: 73px;
-		border-top:1px solid rgba(103, 115, 135, 0.1);
-		text-align:center;
-		padding-top: 3px;
-
-		button
-		{
-			background: none;
-			border:none;
-			font-size: 12px;
-			cursor: pointer;
-			&:hover{background: #F0F1F3;}
-			display: block;
-			width:100%;
-			text-align: center;
-			padding:10px 0;
-		}
+		width: 100%;
+		top: 0;
+		left: 0;
+		padding-left: 19px;
+		padding-top: 20px;
 	}
-	.em-date .em-date__time
+	.em-date__time
 	{
 		display: flex;
 		flex-wrap: nowrap;
@@ -177,5 +217,54 @@
 		padding: 5px 10px;
 		line-height: 50px;
 		width: 50px;
+	}
+	.em-date-time
+	{
+		max-width: 320px;
+		width: 100%;
+		display: flex;
+		background-color: rgba(240, 241, 243, 0.5);
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		border-radius: 2px;
+		font-family: $rMedium;
+		color: rgba(25, 28, 33, 0.7);
+		font-size: 11px;
+		line-height: 13px;
+		padding: 14px 10px;
+	}
+	.em-date-time__full-date
+	{
+		border-right: 1px solid rgba(103, 115, 135, 0.1);
+		padding-right: 15px;
+		margin-right: 15px;
+	}
+	.em-date__bottom
+	{
+		border-top: 1px solid rgba(103, 115, 135, 0.1);
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+	}
+	.em-date__clear
+	{
+		bottom:0px;
+		width:100%;
+		height: 73px;
+		border-top:1px solid rgba(103, 115, 135, 0.1);
+		text-align:center;
+		padding-top: 3px;
+
+		/*button
+		{*/
+			background: none;
+			border:none;
+			font-size: 12px;
+			cursor: pointer;
+			display: block;
+			text-align: center;
+			padding: 10px 0;
+			&:hover{background: #F0F1F3;}
+		/*}*/
 	}
 </style>
