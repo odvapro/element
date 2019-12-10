@@ -1,0 +1,13 @@
+{
+	"name"    :"Расширение для разработки",
+	"links":[
+		{
+			"name" :"Dev link",
+			"link" :"ext/rokoko/index/"
+		},
+		{
+			"name" :"Dev link2",
+			"link" :"ext/rokoko/timeline/"
+		}
+	]
+}

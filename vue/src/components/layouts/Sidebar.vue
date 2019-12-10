@@ -21,6 +21,27 @@
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
+			<div class="sidebar-table-head" v-if="extensionsLinks.length" >Extensions</div>
+			<ul class="sidebar-tables-list">
+				<li v-for="extLink in extensionsLinks">
+					<a href="javascript:void(0)">
+						<div class="sidebar-points">
+							<svg>
+								<use xlink:href="#points"></use>
+							</svg>
+						</div>
+						<div class="sidebar-tableicon-wrapper">
+							<svg width="14" height="13">
+								<use xlink:href="#tableicon"></use>
+							</svg>
+						</div>
+						<div class="sidebar-name-wrapper">
+							<div class="sidebar-overide-table-name">{{extLink.name}}</div>
+							<div class="sidebar-real-table-name">{{extLink.link}}</div>
+						</div>
+					</a>
+				</li>
+			</ul>
 			<div class="sidebar-table-head" v-if="tables.length > 0">Tables</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables" v-if="table.visible">
@@ -32,11 +53,6 @@
 						<div class="sidebar-points">
 							<svg>
 								<use xlink:href="#points"></use>
-							</svg>
-						</div>
-						<div class="sidebar-arrow">
-							<svg width="7" height="13">
-								<use xlink:href="#arrow"></use>
 							</svg>
 						</div>
 						<div class="sidebar-tableicon-wrapper">
@@ -68,6 +84,12 @@
 <script>
 	export default
 	{
+		data()
+		{
+			return {
+				extensionsLinks:[]
+			}
+		},
 		computed:
 		{
 			/**
@@ -127,6 +149,11 @@
 				let url = `/table/${table.code}/tview/${tview.id}/page/1/`;
 				this.$router.push(url);
 			}
+		},
+		async mounted()
+		{
+			var result = await this.$axios.get('/extensions/getLinks/');
+			this.extensionsLinks = result.data.links;
 		}
 	}
 </script>
@@ -298,18 +325,6 @@
 	{
 		color: rgba(103, 115, 135, 0.4);
 		font-size: 10px;
-	}
-	.sidebar-arrow
-	{
-		margin-right: 16px;
-		width: 7px;
-		height: 14px;
-		cursor: pointer;
-		img
-		{
-			width: 100%;
-			height: 100%;
-		}
 	}
 	.sidebar-tableicon-wrapper
 	{
