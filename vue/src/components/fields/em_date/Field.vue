@@ -1,35 +1,48 @@
 <template>
 	<div class="em-date">
-		<template v-if="mode == 'edit'">
+		<template v-if="mode == 'edit' && fieldIsEdit">
 			<Datepicker
 				v-model="localFieldValue"
-				@selected="changeValue"
 				placeholder="Empty"
+				@selected="changeValue"
+				:inline="true"
+				@closeCalendar="closeFieldEdit"
 			>
 				<div slot="beforeCalendarHeader" class="">
-					<div class="em-date__time">
-						<!-- <input type="number" class="em-date__time-input" v-model="localHours" @change="changeTime" min="0" max="24">
-						<input type="number" class="em-date__time-input" v-model="localMinutes" @change="changeTime" min="0" max="59"> -->
-					</div>
 					<div class="em-date__top">
 						<div class="em-date-time">
 							<div class="em-date-time__full-date">
-								14 May 2020
+								{{ formatedFieldValue }}
 							</div>
-							<div class="em-date-time__time-date">
-								18:30
+							<div v-show="isTimeAllow" class="em-date-time__time">
+								<input
+									class="em-date-time__time-input"
+									type="text"
+									v-model="localTime"
+									@change="changeTime"
+									@click="focusInput"
+								>
 							</div>
 						</div>
 					</div>
 					<div class="em-date__bottom">
-						<button class="em-date__clear" @click="clear()">Clear</button>
+						<div class="em-date__time-allow">
+							<div class="em-date__time-allow-label">Include Time</div>
+							<div
+								class="em-date__time-allow-select"
+								:class="{'em-date__time-allow-select_active': isTimeAllow}"
+								@click="toggleTimeAllow"
+							></div>
+						</div>
+						<div class="em-date__clear" @click="clear()">Clear</div>
 					</div>
 				</div>
 			</Datepicker>
 		</template>
 		<template v-else>
-			{{ fieldValue }}
-			<span v-if="!fieldValue" class="el-empty">Empty</span>
+			<div class="em-date__not-edit-wr" @click="openFieldEdit">
+				<div class="em-date__not-edit">{{ formatedFieldValue }}</div>
+			</div>
 		</template>
 	</div>
 </template>
@@ -44,7 +57,10 @@
 			return {
 				localFieldValue:'',
 				localHours: 0,
-				localMinutes: 0
+				localMinutes: 0,
+				localTime: 0,
+				isTimeAllow: false,
+				fieldIsEdit: false,
 			}
 		},
 		mounted()
@@ -54,10 +70,81 @@
 				this.localFieldValue = new Date(this.fieldValue);
 				this.localHours = this.localFieldValue.getHours();
 				this.localMinutes = this.localFieldValue.getMinutes();
+				this.initTime();
 			}
+		},
+		computed:
+		{
+			formatedFieldValue()
+			{
+				if (!this.fieldValue)
+					return 'Empty';
+
+				let dateFieldValue = new Date(this.fieldValue),
+					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
+					month = this.getMonth(dateFieldValue.getMonth()),
+					year = dateFieldValue.getFullYear();
+
+				return `${day} ${month} ${year}`;
+			},
+
 		},
 		methods:
 		{
+			openFieldEdit()
+			{
+				this.fieldIsEdit = true;
+			},
+			closeFieldEdit()
+			{
+				this.fieldIsEdit = false;
+			},
+			initTime()
+			{
+				if (this.localHours || this.localMinutes)
+					this.isTimeAllow = true;
+
+				if (!this.localHours)
+					this.localHours = 0;
+
+				if (!this.localMinutes)
+					this.localMinutes = 0;
+
+				this.localTime = this.localHours >= 10 ? this.localHours + ':': '0' + this.localHours + ':';
+
+				this.localTime += this.localMinutes >= 10 ? this.localMinutes : '0' + this.localMinutes;
+
+			},
+			toggleTimeAllow()
+			{
+				this.isTimeAllow = !this.isTimeAllow;
+			},
+			focusInput()
+			{
+				event.target.focus();
+			},
+			getMonth(monthIndex)
+			{
+				let months =
+				[
+					'January',
+					'February',
+					'March',
+					'April',
+					'May',
+					'June',
+					'July',
+					'August',
+					'September',
+					'October',
+					'November',
+					'December'
+				];
+				if (!monthIndex || monthIndex > 11)
+					return months[0].substr(0,3);
+
+				return months[monthIndex].substr(0,3);
+			},
 			/**
 			 * Send change current value
 			 */
@@ -72,8 +159,8 @@
 				month = (month.length == 1) ? '0' + month : month;
 				day   = (day.length == 1) ? '0' + day : day;
 
-				let hours = (+this.localHours < 10 ? ('0' + this.localHours) : this.localHours),
-					minutes = (+this.localMinutes < 10 ? ('0' + this.localMinutes) : this.localMinutes),
+				let hours = this.localHours,
+					minutes = this.localMinutes,
 					fullDate =  `${year}-${month}-${day} ${hours}:${minutes}`;
 
 				this.$emit('onChange', {
@@ -84,8 +171,19 @@
 
 			changeTime()
 			{
-				this.localFieldValue.setHours(this.localHours);
-				this.localFieldValue.setMinutes(this.localMinutes);
+				let tempTime = this.localTime.replace(/\D/g,'').substr(0,4) || '0000';
+
+				this.localHours = tempTime.substr(0,2);
+				this.localMinutes = tempTime.substr(2,2);
+
+				if(this.localHours > 24 || this.localHours < 0 || typeof +this.localHours !== 'number')
+					this.localHours = '00';
+
+				if(this.localMinutes > 59 || this.localMinutes < 0 || typeof +this.localMinutes !== 'number')
+					this.localMinutes = '00';
+
+				this.localTime = `${tempTime.substr(0,2)}:${tempTime.substr(2,2)}`;
+
 			},
 
 			/**
@@ -96,7 +194,7 @@
 				this.localFieldValue = '';
 				this.localHours = 0;
 				this.localMinutes = 0;
-				this.$el.querySelector('input').blur()
+				this.$el.querySelector('input').blur();
 				this.$emit('onChange', {
 					value     : '',
 					settings  : this.fieldSettings
@@ -108,7 +206,7 @@
 <style lang="scss">
 	.em-date
 	{
-	    width:100%;
+	    /*width:100%;*/
 	    position: absolute;
 	    top:0px;
 	    left:0px;
@@ -127,7 +225,7 @@
 			vertical-align: top;
 			&::placeholder {color: rgba(103, 115, 135, 0.4); }
 		}
-		// .vdp-datepicker{width:100%;}
+		.vdp-datepicker{z-index: 10;}
 		.vdp-datepicker__calendar
 		{
 			border: 1px solid rgba(103, 115, 135, 0.1);
@@ -194,6 +292,17 @@
 			cursor:pointer;
 		}
 	}
+	.em-date__not-edit-wr
+	{
+		width: 100%;
+		height: 100%;
+	}
+	.em-date__not-edit
+	{
+		font-size: 12px;
+		color: #677387;
+		padding-top: 18px;
+	}
 	.em-date__top
 	{
 		position: absolute;
@@ -230,13 +339,13 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 11px;
 		line-height: 13px;
-		padding: 14px 10px;
+		padding: 8px 10px;
+		height: 33px;
 	}
 	.em-date-time__full-date
 	{
-		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		padding-right: 15px;
 		margin-right: 15px;
+		padding-top: 1px;
 	}
 	.em-date__bottom
 	{
@@ -245,26 +354,74 @@
 		bottom: 0;
 		left: 0;
 		width: 100%;
+		padding-bottom: 20px;
+		padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 15px;
+	}
+	.em-date-time__time
+	{
+		height: 15px;
+		width: 100px;
+		padding-left: 15px;
+		border-left: 1px solid rgba(103, 115, 135, 0.1);
+		.em-date-time__time-input
+		{
+			padding-top: 0;
+			padding-bottom: 0;
+			height: 100%;
+			width: 100%;
+			line-height: 13px;
+			font-size: 11px;
+			color: rgba(25, 28, 33, 0.7);
+			font-family: $rMedium;
+		}
+	}
+	.em-date__time-allow
+	{
+		margin-bottom: 16px;
+		display: flex;
+		justify-content: space-between;
+	}
+	.em-date__time-allow-label
+	{
+		font-size: 12px;
+	}
+	.em-date__time-allow-select
+	{
+		width: 38px;
+		height: 20px;
+		background-color: rgba(103, 115, 135, 0.4);
+		border-radius: 20px;
+		transition: all .25s;
+		position: relative;
+		cursor: pointer;
+		&:after
+		{
+			content: '';
+			position: absolute;
+			background-color: #fff;
+			border-radius: 50%;
+			width: 16px;
+			height: 16px;
+			top: 2px;
+			left: 2px;
+			transition: all .25s;
+		}
+		&_active
+		{
+			background-color: rgb(46, 170, 220);
+			&:after
+			{
+				left: calc(100% - 2px);
+				transform: translateX(-100%);
+			}
+		}
 	}
 	.em-date__clear
 	{
-		bottom:0px;
-		width:100%;
-		height: 73px;
-		border-top:1px solid rgba(103, 115, 135, 0.1);
-		text-align:center;
-		padding-top: 3px;
-
-		/*button
-		{*/
-			background: none;
-			border:none;
-			font-size: 12px;
-			cursor: pointer;
-			display: block;
-			text-align: center;
-			padding: 10px 0;
-			&:hover{background: #F0F1F3;}
-		/*}*/
+		font-size: 12px;
+		cursor: pointer;
+		/*&:hover{background: #F0F1F3;}*/
 	}
 </style>
