@@ -82,7 +82,7 @@
 					<div class="table-empty-col"></div>
 				</div>
 			</div>
-			<div class="table-row table-row__empty" v-if="!tableContent.items.length">
+			<div class="table-row table-row__empty" v-if="!hasTableItems">
 				<span class="el-empty">Empty Table - <span @click="addElement()" class="table-row__add-bnt">Add Element</span></span>
 			</div>
 		</div>
@@ -126,6 +126,18 @@
 			tableContent()
 			{
 				return this.$store.state.tables.tableContent;
+			},
+
+			/**
+			 * @return bool
+			 */
+			hasTableItems()
+			{
+				if(typeof this.$store.state.tables.tableContent.items == 'undefined')
+					return false;
+				if(this.$store.state.tables.tableContent.items.length > 0)
+					return true;
+				return false;
 			},
 
 			/**

@@ -182,7 +182,7 @@
 				if(this.localMinutes > 59 || this.localMinutes < 0 || typeof +this.localMinutes !== 'number')
 					this.localMinutes = '00';
 
-				this.localTime = `${tempTime.substr(0,2)}:${tempTime.substr(2,2)}`;
+				this.localTime = `${this.localHours}:${this.localMinutes}`;
 
 			},
 
