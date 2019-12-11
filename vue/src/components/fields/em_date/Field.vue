@@ -1,6 +1,29 @@
 <template>
-	<div class="em-date">
-		<template v-if="mode == 'edit' && fieldIsEdit">
+	<div class="em-date-wr">
+		<div class="em-date-wr__static-field" @click="openFieldEdit">
+			<div class="em-date-wr__static-field-value">{{ formatedFieldValue }}</div>
+		</div>
+		<div
+			class="em-date"
+			v-click-outside="closeFieldEdit"
+			v-if="fieldIsEdit"
+		>
+			<div class="em-date__top">
+				<div class="em-date-time">
+					<div class="em-date-time__full-date">
+						{{ formatedFieldValue }}
+					</div>
+					<div v-show="isTimeAllow" class="em-date-time__time">
+						<input
+							class="em-date-time__time-input"
+							type="text"
+							v-model="localTime"
+							@change="changeTime"
+							@click="focusInput"
+						>
+					</div>
+				</div>
+			</div>
 			<Datepicker
 				v-model="localFieldValue"
 				placeholder="Empty"
@@ -8,42 +31,18 @@
 				:inline="true"
 				@closeCalendar="closeFieldEdit"
 			>
-				<div slot="beforeCalendarHeader" class="">
-					<div class="em-date__top">
-						<div class="em-date-time">
-							<div class="em-date-time__full-date">
-								{{ formatedFieldValue }}
-							</div>
-							<div v-show="isTimeAllow" class="em-date-time__time">
-								<input
-									class="em-date-time__time-input"
-									type="text"
-									v-model="localTime"
-									@change="changeTime"
-									@click="focusInput"
-								>
-							</div>
-						</div>
-					</div>
-					<div class="em-date__bottom">
-						<div class="em-date__time-allow">
-							<div class="em-date__time-allow-label">Include Time</div>
-							<div
-								class="em-date__time-allow-select"
-								:class="{'em-date__time-allow-select_active': isTimeAllow}"
-								@click="toggleTimeAllow"
-							></div>
-						</div>
-						<div class="em-date__clear" @click="clear()">Clear</div>
-					</div>
-				</div>
 			</Datepicker>
-		</template>
-		<template v-else>
-			<div class="em-date__not-edit-wr" @click="openFieldEdit">
-				<div class="em-date__not-edit">{{ formatedFieldValue }}</div>
+			<div class="em-date__bottom">
+				<div class="em-date__time-allow" @click="toggleTimeAllow">
+					<div class="em-date__time-allow-label">Include Time</div>
+					<div
+						class="em-date__time-allow-select"
+						:class="{'em-date__time-allow-select_active': isTimeAllow}"
+					></div>
+				</div>
+				<div class="em-date__clear" @click="clear()">Clear</div>
 			</div>
-		</template>
+		</div>
 	</div>
 </template>
 <script>
@@ -183,7 +182,6 @@
 					this.localMinutes = '00';
 
 				this.localTime = `${this.localHours}:${this.localMinutes}`;
-
 			},
 
 			/**
@@ -194,7 +192,6 @@
 				this.localFieldValue = '';
 				this.localHours = 0;
 				this.localMinutes = 0;
-				this.$el.querySelector('input').blur();
 				this.$emit('onChange', {
 					value     : '',
 					settings  : this.fieldSettings
@@ -204,42 +201,34 @@
 	}
 </script>
 <style lang="scss">
+	.em-date-wr
+	{
+		padding-right: 10px;
+		padding-left: 10px;
+	}
 	.em-date
 	{
-	    /*width:100%;*/
 	    position: absolute;
-	    top:0px;
-	    left:0px;
-	    padding-right: 10px;
-	    padding-left: 10px;
-		input
-		{
-			border: 0px;
-			width: 100%;
-			height: 100%;
-			background: none;
-			line-height: 49px;
-			font-size: 12px;
-			color: #677387;
-			height: 49px;
-			vertical-align: top;
-			&::placeholder {color: rgba(103, 115, 135, 0.4); }
-		}
-		.vdp-datepicker{z-index: 10;}
+		top: 0px;
+		left: 0px;
+		background-color: #fff;
+		z-index: 10;
+
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		border-radius: 2px;
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		padding: 20px 0;
+		width: 360px;
+		.vdp-datepicker{position: static;}
 		.vdp-datepicker__calendar
 		{
-			border: 1px solid rgba(103, 115, 135, 0.1);
-			border-radius: 2px;
-			box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-			padding: 21px;
 			color: #191C21;
-			padding-bottom: 100px;
 			left:-15px;
 			top:44px;
-			margin:0 auto;
-
-			width: 360px;
-			padding-top: 83px;
+			margin: 0 auto 30px;
+			width: calc(100% - 40px);
+			border: unset;
+			background-color: transparent;
 			.day__month_btn,
 			.month__year_btn
 			{
@@ -292,25 +281,21 @@
 			cursor:pointer;
 		}
 	}
-	.em-date__not-edit-wr
+	.em-date-wr__static-field
 	{
 		width: 100%;
-		height: 100%;
+		height: 100%wr__static-field-value;
 	}
-	.em-date__not-edit
+	.em-date-wr__static-field-value
 	{
 		font-size: 12px;
 		color: #677387;
-		padding-top: 18px;
 	}
 	.em-date__top
 	{
-		position: absolute;
 		width: 100%;
-		top: 0;
-		left: 0;
 		padding-left: 19px;
-		padding-top: 20px;
+		margin-bottom: 20px;
 	}
 	.em-date__time
 	{
@@ -326,6 +311,7 @@
 		padding: 5px 10px;
 		line-height: 50px;
 		width: 50px;
+
 	}
 	.em-date-time
 	{
@@ -350,11 +336,8 @@
 	.em-date__bottom
 	{
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
-		position: absolute;
-		bottom: 0;
-		left: 0;
+
 		width: 100%;
-		padding-bottom: 20px;
 		padding-left: 20px;
 		padding-right: 20px;
 		padding-top: 15px;
@@ -375,6 +358,9 @@
 			font-size: 11px;
 			color: rgba(25, 28, 33, 0.7);
 			font-family: $rMedium;
+			border: unset;
+			background-color: transparent;
+			&::placeholder {color: rgba(103, 115, 135, 0.4); }
 		}
 	}
 	.em-date__time-allow
@@ -422,6 +408,5 @@
 	{
 		font-size: 12px;
 		cursor: pointer;
-		/*&:hover{background: #F0F1F3;}*/
 	}
 </style>
