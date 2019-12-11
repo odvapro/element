@@ -1,15 +1,16 @@
 <template>
-	<div>
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
 			:fieldSettings="params.settings"
 			:mode="mode"
 			:view="view"
+			:isEditFieldPopup="isEditFieldPopup"
 			@onChange="changeValue"
 			@openEdit="openEdit"
+			@closeEditFieldPopup="closeEditFieldPopup"
+			@openEditFieldPopup="openEditFieldPopup"
 		></component>
-	</div>
 </template>
 <script>
 	import Vue from 'vue';
@@ -43,6 +44,12 @@
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},
+		data()
+		{
+			return {
+				isEditFieldPopup: false,
+			}
+		},
 		methods:
 		{
 			/**
@@ -63,6 +70,14 @@
 			openEdit()
 			{
 				this.$emit('openEdit');
+			},
+			closeEditFieldPopup()
+			{
+				this.isEditFieldPopup = false;
+			},
+			openEditFieldPopup()
+			{
+				this.isEditFieldPopup = true;
 			}
 		}
 	}

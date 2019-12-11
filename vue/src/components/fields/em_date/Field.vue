@@ -1,17 +1,20 @@
 <template>
 	<div class="em-date-wr">
 		<div class="em-date-wr__static-field" @click="openFieldEdit">
-			<div class="em-date-wr__static-field-value">{{ formatedFieldValue }}</div>
+			<div
+				class="em-date-wr__static-field-value"
+				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
+			>{{ formatedDateValue }} <span v-if="isTimeAllow">{{ formatedLocalTime }}</span></div>
 		</div>
 		<div
 			class="em-date"
 			v-click-outside="closeFieldEdit"
-			v-if="fieldIsEdit"
+			v-if="isEditFieldPopup"
 		>
 			<div class="em-date__top">
 				<div class="em-date-time">
 					<div class="em-date-time__full-date">
-						{{ formatedFieldValue }}
+						{{ formatedDateValue }}
 					</div>
 					<div v-show="isTimeAllow" class="em-date-time__time">
 						<input
@@ -29,7 +32,6 @@
 				placeholder="Empty"
 				@selected="changeValue"
 				:inline="true"
-				@closeCalendar="closeFieldEdit"
 			>
 			</Datepicker>
 			<div class="em-date__bottom">
@@ -49,7 +51,7 @@
 	import Datepicker from 'vuejs-datepicker';
 	export default
 	{
-		props: ['fieldValue','fieldSettings','mode', 'view'],
+		props: ['fieldValue', 'fieldSettings', 'mode', 'view', 'isEditFieldPopup'],
 		components:{Datepicker},
 		data()
 		{
@@ -57,7 +59,7 @@
 				localFieldValue:'',
 				localHours: 0,
 				localMinutes: 0,
-				localTime: 0,
+				localTime: '',
 				isTimeAllow: false,
 				fieldIsEdit: false,
 			}
@@ -74,7 +76,7 @@
 		},
 		computed:
 		{
-			formatedFieldValue()
+			formatedDateValue()
 			{
 				if (!this.fieldValue)
 					return 'Empty';
@@ -84,39 +86,67 @@
 					month = this.getMonth(dateFieldValue.getMonth()),
 					year = dateFieldValue.getFullYear();
 
-				return `${day} ${month} ${year}`;
+					return `${day} ${month} ${year}`;
 			},
+			formatedLocalTime()
+			{
+				let hours = Number(this.localHours) >= 10 ? Number(this.localHours) : '0' + Number(this.localHours),
+					minutes = Number(this.localMinutes) >= 10 ? Number(this.localMinutes) : '0' + Number(this.localMinutes);
 
+				return `${hours}:${minutes}`
+			}
 		},
 		methods:
 		{
 			openFieldEdit()
 			{
-				this.fieldIsEdit = true;
+				this.$emit('openEditFieldPopup');
 			},
 			closeFieldEdit()
 			{
-				this.fieldIsEdit = false;
+				this.$emit('closeEditFieldPopup');
 			},
 			initTime()
 			{
-				if (this.localHours || this.localMinutes)
+				if (this.localFieldValue.getSeconds())
+				{
 					this.isTimeAllow = true;
 
-				if (!this.localHours)
+					if (!this.localHours)
+						this.localHours = 0;
+
+					if (!this.localMinutes)
+						this.localMinutes = 0;
+				}
+				else
+				{
 					this.localHours = 0;
-
-				if (!this.localMinutes)
 					this.localMinutes = 0;
+				}
 
-				this.localTime = this.localHours >= 10 ? this.localHours + ':': '0' + this.localHours + ':';
 
-				this.localTime += this.localMinutes >= 10 ? this.localMinutes : '0' + this.localMinutes;
+				this.localTime = this.formatedLocalTime;
 
 			},
 			toggleTimeAllow()
 			{
-				this.isTimeAllow = !this.isTimeAllow;
+
+				if (this.localFieldValue)
+				{
+					this.isTimeAllow = !this.isTimeAllow;
+					if (this.isTimeAllow && this.localFieldValue)
+					{
+						this.localTime = this.formatedLocalTime;
+						this.localFieldValue.setSeconds(1);
+					}
+					else
+					{
+						this.localTime = '';
+						this.localFieldValue.setSeconds(0);
+						this.localMinutes = 0;
+						this.localHours = 0;
+					}
+				}
 			},
 			focusInput()
 			{
@@ -150,17 +180,22 @@
 			changeValue(newDate)
 			{
 				newDate = new Date(newDate);
-				let day = newDate.getDate().toString(),
-				month   = newDate.getMonth().toString(),
-				year    = newDate.getFullYear().toString();
+
+				let day 	= newDate.getDate().toString(),
+					month   = newDate.getMonth().toString(),
+					year    = newDate.getFullYear().toString(),
+					hours   = this.localHours,
+					minutes = this.localMinutes,
+					fullDate;
 
 				month = (+month + 1).toString();
 				month = (month.length == 1) ? '0' + month : month;
 				day   = (day.length == 1) ? '0' + day : day;
 
-				let hours = this.localHours,
-					minutes = this.localMinutes,
+				if (this.isTimeAllow)
 					fullDate =  `${year}-${month}-${day} ${hours}:${minutes}`;
+				else
+					fullDate =  `${year}-${month}-${day}`;
 
 				this.$emit('onChange', {
 					value     : fullDate,
@@ -175,13 +210,13 @@
 				this.localHours = tempTime.substr(0,2);
 				this.localMinutes = tempTime.substr(2,2);
 
-				if(this.localHours > 24 || this.localHours < 0 || typeof +this.localHours !== 'number')
+				if(this.localHours > 23 || this.localHours < 0 || typeof +this.localHours !== 'number')
 					this.localHours = '00';
 
 				if(this.localMinutes > 59 || this.localMinutes < 0 || typeof +this.localMinutes !== 'number')
 					this.localMinutes = '00';
 
-				this.localTime = `${this.localHours}:${this.localMinutes}`;
+				this.localTime = this.formatedLocalTime;
 			},
 
 			/**
@@ -205,11 +240,13 @@
 	{
 		padding-right: 10px;
 		padding-left: 10px;
+		width: 100%;
+		height: 100%;
 	}
 	.em-date
 	{
 	    position: absolute;
-		top: 0px;
+		top: 100%;
 		left: 0px;
 		background-color: #fff;
 		z-index: 10;
@@ -284,12 +321,20 @@
 	.em-date-wr__static-field
 	{
 		width: 100%;
-		height: 100%wr__static-field-value;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
 	}
 	.em-date-wr__static-field-value
 	{
 		font-size: 12px;
 		color: #677387;
+		white-space: nowrap;
+		&_empty
+		{
+			color: rgba(103, 115, 135, 0.4);
+		}
 	}
 	.em-date__top
 	{
