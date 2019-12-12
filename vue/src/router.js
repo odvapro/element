@@ -43,7 +43,7 @@ var router = new Router({
 			component: () => import('./pages/update.vue')
 		},
 		{
-			path: '/ext/',
+			path: '/ext/:extname/*',
 			name: 'extenstion',
 			component: () => import('./pages/extension.vue')
 		},
