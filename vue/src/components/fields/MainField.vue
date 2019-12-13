@@ -1,16 +1,15 @@
 <template>
+	<div>
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
 			:fieldSettings="params.settings"
 			:mode="mode"
 			:view="view"
-			:isEditFieldPopup="isEditFieldPopup"
 			@onChange="changeValue"
 			@openEdit="openEdit"
-			@closeEditFieldPopup="closeEditFieldPopup"
-			@openEditFieldPopup="openEditFieldPopup"
 		></component>
+	</div>
 </template>
 <script>
 	import Vue from 'vue';
@@ -34,20 +33,11 @@
 					document.getElementsByTagName("head")[0].appendChild(newSS);
 					window.importStyles.push(this.fieldName);
 				}
-
 				if(this.params.settings.type == 'custom')
 					return eval(this.params.settings.fieldJs);
-
 				if (typeof this.fieldName == 'undefined' ||  this.fieldName === false)
 					return false;
-
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
-			}
-		},
-		data()
-		{
-			return {
-				isEditFieldPopup: false,
 			}
 		},
 		methods:
@@ -63,21 +53,12 @@
 			{
 				this.$emit('onChange', value);
 			},
-
 			/**
 			 * Opens edit page
 			 */
 			openEdit()
 			{
 				this.$emit('openEdit');
-			},
-			closeEditFieldPopup()
-			{
-				this.isEditFieldPopup = false;
-			},
-			openEditFieldPopup()
-			{
-				this.isEditFieldPopup = true;
 			}
 		}
 	}

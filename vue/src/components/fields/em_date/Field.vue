@@ -4,7 +4,7 @@
 			<div
 				class="em-date-wr__static-field-value"
 				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
-			>{{ formatedDateValue }} <span v-if="isTimeAllow">{{ formatedLocalTime }}</span></div>
+			>{{ formatedLocalFullDateStr }} <span v-if="isTimeInclude">{{ localTimeStr }}</span></div>
 		</div>
 		<div
 			class="em-date"
@@ -14,32 +14,31 @@
 			<div class="em-date__top">
 				<div class="em-date-time">
 					<div class="em-date-time__full-date">
-						{{ formatedDateValue }}
+						{{ formatedLocalFullDateStr }}
 					</div>
-					<div v-show="isTimeAllow" class="em-date-time__time">
+					<div v-show="isTimeInclude" class="em-date-time__time">
 						<input
 							class="em-date-time__time-input"
 							type="text"
-							v-model="localTime"
-							@change="changeTime"
-							@click="focusInput"
+							v-model="localTimeStr"
+							@change="changeLocalTimeStr"
 						>
 					</div>
 				</div>
 			</div>
 			<Datepicker
-				v-model="localFieldValue"
+				v-model="localFullDate"
 				placeholder="Empty"
-				@selected="changeValue"
+				@selected="changeLocalFieldValue"
 				:inline="true"
 			>
 			</Datepicker>
 			<div class="em-date__bottom">
-				<div class="em-date__time-allow" @click="toggleTimeAllow">
+				<div class="em-date__time-allow" @click="toggleTimeInclude">
 					<div class="em-date__time-allow-label">Include Time</div>
 					<div
 						class="em-date__time-allow-select"
-						:class="{'em-date__time-allow-select_active': isTimeAllow}"
+						:class="{'em-date__time-allow-select_active': isTimeInclude}"
 					></div>
 				</div>
 				<div class="em-date__clear" @click="clear()">Clear</div>
@@ -51,106 +50,73 @@
 	import Datepicker from 'vuejs-datepicker';
 	export default
 	{
-		props: ['fieldValue', 'fieldSettings', 'mode', 'view', 'isEditFieldPopup'],
+		props: ['fieldValue', 'fieldSettings', 'mode', 'view'],
 		components:{Datepicker},
 		data()
 		{
 			return {
-				localFieldValue:'',
-				localHours: 0,
-				localMinutes: 0,
-				localTime: '',
-				isTimeAllow: false,
-				fieldIsEdit: false,
+				isEditFieldPopup: false,
+				localFullDate: false,
+				isTimeInclude: false,
+				localTimeStr: false,
+				localHours: false,
+				localMinutes: false,
+				localFieldValue: false,
 			}
 		},
 		mounted()
 		{
-			if(!!this.fieldValue)
-			{
-				this.localFieldValue = new Date(this.fieldValue);
-				this.localHours = this.localFieldValue.getHours();
-				this.localMinutes = this.localFieldValue.getMinutes();
-				this.initTime();
-			}
+			this.initFullDate();
 		},
-		computed:
+		watch:
 		{
-			formatedDateValue()
+			isTimeInclude(newValue)
 			{
-				if (!this.fieldValue)
-					return 'Empty';
+				if (newValue && this.localFullDate)
+				{
+					if (this.localHours === false)
+						this.localHours = 0;
+					if (this.localMinutes === false)
+						this.localMinutes = 0;
 
-				let dateFieldValue = new Date(this.fieldValue),
-					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
-					month = this.getMonth(dateFieldValue.getMonth()),
-					year = dateFieldValue.getFullYear();
-
-					return `${day} ${month} ${year}`;
+					this.localTimeStr = this.formatedLocalTimeStr;
+					this.changeLocalFieldValue(this.localFullDate);
+				}
+				else
+				{
+					this.localHours = false;
+					this.localMinutes = false;
+					this.localTimeStr = false;
+				}
 			},
-			formatedLocalTime()
+			localFullDate()
 			{
-				let hours = Number(this.localHours) >= 10 ? Number(this.localHours) : '0' + Number(this.localHours),
-					minutes = Number(this.localMinutes) >= 10 ? Number(this.localMinutes) : '0' + Number(this.localMinutes);
-
-				return `${hours}:${minutes}`
+				if (this.localFullDate)
+				{
+					if (this.isTimeInclude)
+						this.localFullDate.setSeconds(1);
+					else
+						this.localFullDate.setSeconds(0);
+				}
 			}
 		},
 		methods:
 		{
 			openFieldEdit()
 			{
-				this.$emit('openEditFieldPopup');
+				this.isEditFieldPopup = true;
 			},
 			closeFieldEdit()
 			{
-				this.$emit('closeEditFieldPopup');
-			},
-			initTime()
-			{
-				if (this.localFieldValue.getSeconds())
-				{
-					this.isTimeAllow = true;
+				this.isEditFieldPopup = false;
 
-					if (!this.localHours)
-						this.localHours = 0;
-
-					if (!this.localMinutes)
-						this.localMinutes = 0;
-				}
-				else
-				{
-					this.localHours = 0;
-					this.localMinutes = 0;
-				}
-
-
-				this.localTime = this.formatedLocalTime;
-
-			},
-			toggleTimeAllow()
-			{
-
-				if (this.localFieldValue)
-				{
-					this.isTimeAllow = !this.isTimeAllow;
-					if (this.isTimeAllow && this.localFieldValue)
-					{
-						this.localTime = this.formatedLocalTime;
-						this.localFieldValue.setSeconds(1);
-					}
-					else
-					{
-						this.localTime = '';
-						this.localFieldValue.setSeconds(0);
-						this.localMinutes = 0;
-						this.localHours = 0;
-					}
-				}
-			},
-			focusInput()
-			{
-				event.target.focus();
+				let fieldDate = this.localFullDate
+				? this.localFieldValue
+				: '';
+				this.$emit('onChange', {
+					value     : fieldDate,
+					settings  : this.fieldSettings
+				});
 			},
 			getMonth(monthIndex)
 			{
@@ -174,65 +140,123 @@
 
 				return months[monthIndex].substr(0,3);
 			},
-			/**
-			 * Send change current value
-			 */
-			changeValue(newDate)
+			initFullDate(date = false)
 			{
-				newDate = new Date(newDate);
+				let dateToInit = date === false
+				? this.fieldValue
+				: date;
 
-				let day 	= newDate.getDate().toString(),
-					month   = newDate.getMonth().toString(),
-					year    = newDate.getFullYear().toString(),
-					hours   = this.localHours,
-					minutes = this.localMinutes,
-					fullDate;
-
-				month = (+month + 1).toString();
-				month = (month.length == 1) ? '0' + month : month;
-				day   = (day.length == 1) ? '0' + day : day;
-
-				if (this.isTimeAllow)
-					fullDate =  `${year}-${month}-${day} ${hours}:${minutes}`;
+				if (dateToInit)
+				{
+					this.localFullDate = new Date(dateToInit);
+					this.localFieldValue = dateToInit;
+				}
 				else
-					fullDate =  `${year}-${month}-${day}`;
-
-				this.$emit('onChange', {
-					value     : fullDate,
-					settings  : this.fieldSettings
-				});
+				{
+					this.localFullDate = '';
+					this.localFieldValue = false;
+				}
+					this.initTime(this.localFullDate);
 			},
-
-			changeTime()
+			initTime(date)
 			{
-				let tempTime = this.localTime.replace(/\D/g,'').substr(0,4) || '0000';
+				if (date === '')
+				{
+					this.isTimeInclude = false;
+					this.localHours = false;
+					this.localMinutes = false;
+					this.localTimeStr = false;
+				}
+				else
+				{
+					if (date.getSeconds())
+					{
+						this.isTimeInclude = true;
+						if (this.localHours === false)
+							this.localHours = date.getHours();
+						if (this.localMinutes === false)
+							this.localMinutes = date.getMinutes();
+
+						this.localTimeStr = this.formatedLocalTimeStr;
+					}
+					else
+					{
+						this.isTimeInclude = false;
+					}
+				}
+			},
+			toggleTimeInclude()
+			{
+				if (this.localFullDate !== '')
+					this.isTimeInclude = !this.isTimeInclude;
+			},
+			changeLocalFieldValue(newDate)
+			{
+				let currentData = new Date(newDate);
+
+				let day           = this.formatToDoubleDigit(currentData.getDate()),
+					month         = this.formatToDoubleDigit(currentData.getMonth() + 1),
+					year          = currentData.getFullYear(),
+					hours         = this.formatToDoubleDigit(this.localHours),
+					minutes       = this.formatToDoubleDigit(this.localMinutes),
+					isTimeInclude = this.formatToDoubleDigit(Number(this.isTimeInclude));
+
+				if (this.isTimeInclude)
+					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}:${isTimeInclude}`;
+				else
+					this.localFieldValue = `${year}-${month}-${day}`;
+
+				this.initFullDate(this.localFieldValue);
+
+			},
+			formatToDoubleDigit(dig)
+			{
+				if (dig < 10)
+					return '0' + dig;
+				return dig;
+			},
+			changeLocalTimeStr()
+			{
+				let tempTime = this.localTimeStr.replace(/\D/g,'').substr(0,4) || '0000';
 
 				this.localHours = tempTime.substr(0,2);
 				this.localMinutes = tempTime.substr(2,2);
 
 				if(this.localHours > 23 || this.localHours < 0 || typeof +this.localHours !== 'number')
-					this.localHours = '00';
+					this.localHours = 0;
 
 				if(this.localMinutes > 59 || this.localMinutes < 0 || typeof +this.localMinutes !== 'number')
-					this.localMinutes = '00';
+					this.localMinutes = 0;
 
-				this.localTime = this.formatedLocalTime;
+				this.localTimeStr = this.formatedLocalTimeStr;
 			},
-
-			/**
-			 * Clear value
-			 */
 			clear()
 			{
-				this.localFieldValue = '';
-				this.localHours = 0;
-				this.localMinutes = 0;
-				this.$emit('onChange', {
-					value     : '',
-					settings  : this.fieldSettings
-				});
+				this.initFullDate('');
+			},
+		},
+		computed:
+		{
+			formatedLocalFullDateStr()
+			{
+				if (!this.localFullDate)
+					return 'Empty';
+
+				let dateFieldValue = new Date(this.localFullDate),
+					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
+					month = this.getMonth(dateFieldValue.getMonth()),
+					year = dateFieldValue.getFullYear();
+
+					return `${day} ${month} ${year}`;
+			},
+			formatedLocalTimeStr()
+			{
+				let hours = Number(this.localHours) >= 10 ? Number(this.localHours) : '0' + Number(this.localHours),
+					minutes = Number(this.localMinutes) >= 10 ? Number(this.localMinutes) : '0' + Number(this.localMinutes);
+
+				return `${hours}:${minutes}`
 			}
-		}
+		},
 	}
 </script>
 <style lang="scss">
@@ -242,6 +266,9 @@
 		padding-left: 10px;
 		width: 100%;
 		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
 	}
 	.em-date
 	{
