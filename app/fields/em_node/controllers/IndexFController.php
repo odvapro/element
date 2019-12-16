@@ -12,9 +12,6 @@ class IndexFController extends ControllerBase
 	 */
 	public function autoCompleteAction()
 	{
-		// if(!$this->request->isAjax())
-		// 	return $this->jsonResult(['success' => false, 'message' => 'only xhttp requests']);
-
 		$nodeField  = $this->request->getPost('nodeFieldCode');
 		$nodeTable  = $this->request->getPost('nodeTableCode');
 		$nodeSearch = $this->request->getPost('nodeSearchCode');
