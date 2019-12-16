@@ -37,7 +37,7 @@
 				if(this.params.settings.type == 'custom')
 					return eval(this.params.settings.fieldJs);
 
-				if (typeof this.fieldName == 'undefined' ||  this.fieldName === false)
+				if (typeof this.fieldName == 'undefined' || this.fieldName === false)
 					return false;
 
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
