@@ -33,13 +33,11 @@
 					document.getElementsByTagName("head")[0].appendChild(newSS);
 					window.importStyles.push(this.fieldName);
 				}
-
 				if(this.params.settings.type == 'custom')
 					return eval(this.params.settings.fieldJs);
 
 				if (typeof this.fieldName == 'undefined' || this.fieldName === false)
 					return false;
-
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},
@@ -56,7 +54,6 @@
 			{
 				this.$emit('onChange', value);
 			},
-
 			/**
 			 * Opens edit page
 			 */

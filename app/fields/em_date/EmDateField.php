@@ -3,12 +3,14 @@
 class EmDateField extends FieldBase
 {
 	protected $fieldValue = '';
+	protected $settings = [];
 	/**
 	 * Конструктор принимает значение поля
 	 */
-	public function __construct($fieldValue = '')
+	public function __construct($fieldValue = '', array $settings = [])
 	{
 		$this->fieldValue = $fieldValue;
+		$this->settings = $settings;
 	}
 
 	/**
