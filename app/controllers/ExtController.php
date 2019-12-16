@@ -63,4 +63,25 @@ class ExtController extends ControllerBase
 		}
 		return  $this->jsonResult(['success'=>true, 'links'=>$links]);
 	}
+
+	/**
+	 * Returns Exnesion js vue component
+	 * @return string
+	 */
+	public function getCodeAction()
+	{
+		$config        = $this->di->get('config');
+		$extensionName = $this->request->get('extension');
+		$extensionPath = "{$config->application->extDir}$extensionName/Extension.js";
+		if(!file_exists($extensionPath))
+			return $this->jsonResult(['success'=>false,'msg'=>'no Extension.js file']);
+		$exCode = file_get_contents($extensionPath);
+
+		$stylesPath = "{$config->application->extDir}$extensionName/style.css";
+		$styles = false;
+		if(file_exists($stylesPath))
+			$styles = file_get_contents($stylesPath);
+
+		return $this->jsonResult(['success'=>true,'code'=>$exCode, 'styles'=>$styles]);
+	}
 }

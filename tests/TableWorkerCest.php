@@ -41,7 +41,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['n? +ame', 'id', 'col'],
-				'from' => 'testTable',
+				'from' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -85,7 +85,7 @@ class TableWorkerCest
 		// тест
 		$I->sendGET('/el/select',
 		[
-			'select' => ['from' => 'testTable']
+			'select' => ['from' => 'test_table']
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -97,7 +97,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['name', 'id', 'col'],
-				'from' => 'testTable'
+				'from' => 'test_table'
 			]
 		]);
 		$I->seeResponseCodeIs(200);
@@ -110,7 +110,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['name', 'id'],
-				'from' => 'testTable',
+				'from' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -151,7 +151,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['name', 'id'],
-				'from' => 'testTable',
+				'from' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -193,7 +193,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['name', 'id'],
-				'from' => 'testTable',
+				'from' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -223,7 +223,7 @@ class TableWorkerCest
 			'select' =>
 			[
 				'fields' => ['name', 'id', 'col'],
-				'from' => 'testTable',
+				'from' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -245,7 +245,7 @@ class TableWorkerCest
 		// тест
 		$I->sendGET('/el/select',
 		[
-			'select' => ['from' => 'testTable']
+			'select' => ['from' => 'test_table']
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -274,7 +274,7 @@ class TableWorkerCest
 		[
 			'update' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'set' => [
 					'email' => 3,
 					'col'   => 5
@@ -298,7 +298,7 @@ class TableWorkerCest
 
 		$I->sendPOST('/el/update/', [
 			'update' => [
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'set' => [
 					'email' => 'rrrrr',
 					'col'   => '222222'
@@ -313,14 +313,14 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('testTable', ['id' => 2, 'email' => 'rrrrr', 'col'=>'222222']);
+		$I->seeInDatabase('test_table', ['id' => 2, 'email' => 'rrrrr', 'col'=>'222222']);
 
 
 		$I->sendPOST('/el/update/',
 		[
 			'update' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'set' => ["name"=> 'ggапфффыввфывg' ],
 				'where' =>
 				[
@@ -340,7 +340,7 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/', [
-			'update' => ['table' => 'testTable']
+			'update' => ['table' => 'test_table']
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => false]);
@@ -363,7 +363,7 @@ class TableWorkerCest
 		[
 			'insert' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'columns' => ['name', 'email', 'col', 'avat'],
 				'values' => ['11', 'qwe', '222222', '222211211']
 			]
@@ -376,7 +376,7 @@ class TableWorkerCest
 		[
 			'insert' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'columns' => ['name', 'avat'],
 				'values' => ['11', 'qwe', '222222', '222211211']
 			]
@@ -389,7 +389,7 @@ class TableWorkerCest
 		[
 			'insert' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'values' => ['33', 'qwe', '222222', '222211211']
 			]
 		]);
@@ -401,7 +401,7 @@ class TableWorkerCest
 		[
 			'insert' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'values' => ['44']
 			]
 		]);
@@ -411,7 +411,7 @@ class TableWorkerCest
 
 		$I->sendPOST('/el/insert/',
 		[
-			'insert' => ['table' => 'testTable']
+			'insert' => ['table' => 'test_table']
 		]);
 
 		$I->seeResponseCodeIs(200);
@@ -440,7 +440,7 @@ class TableWorkerCest
 		[
 			'delete' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'and',
@@ -463,7 +463,7 @@ class TableWorkerCest
 		[
 			'delete' =>
 			[
-				'table' => 'testTable',
+				'table' => 'test_table',
 				'where' =>
 				[
 					'operation' => 'or',
@@ -499,7 +499,7 @@ class TableWorkerCest
 		$I->dontSeeInDatabase('products', ['id' => 22]);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/el/delete/', ['delete' => ['table' => 'testTable'] ]);
+		$I->sendPOST('/el/delete/', ['delete' => ['table' => 'test_table'] ]);
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/delete/', ['delete' => [] ]);

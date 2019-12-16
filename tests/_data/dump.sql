@@ -167,7 +167,7 @@ VALUES
   (18, 'Default view', 'field_types', '[]', '[]', 1, '[]'),
   (19, 'Default view', 'pages', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Pages\"}}'),
   (20, 'Default view', 'products', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Products\"}}'),
-  (21, 'Default view', 'testtable', '[]', '[]', 1, '[]');
+  (21, 'Default view', 'test_table', '[]', '[]', 1, '[]');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -447,12 +447,12 @@ VALUES
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
-# Дамп таблицы testtable
+# Дамп таблицы test_table
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `testtable`;
+DROP TABLE IF EXISTS `test_table`;
 
-CREATE TABLE `testtable` (
+CREATE TABLE `test_table` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) DEFAULT NULL,
   `email` varchar(222) DEFAULT NULL,
@@ -461,16 +461,16 @@ CREATE TABLE `testtable` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `testtable` WRITE;
-/*!40000 ALTER TABLE `testtable` DISABLE KEYS */;
+LOCK TABLES `test_table` WRITE;
+/*!40000 ALTER TABLE `test_table` DISABLE KEYS */;
 
-INSERT INTO `testtable` (`id`, `name`, `email`, `col`, `avat`)
+INSERT INTO `test_table` (`id`, `name`, `email`, `col`, `avat`)
 VALUES
   (1,'1','q','что то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]'),
   (2,'2','rew','где то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]'),
   (3,'1','4','когда то','[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]');
 
-/*!40000 ALTER TABLE `testtable` ENABLE KEYS */;
+/*!40000 ALTER TABLE `test_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
