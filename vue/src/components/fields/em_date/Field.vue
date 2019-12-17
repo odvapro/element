@@ -4,7 +4,7 @@
 			<div
 				class="em-date-wr__static-field-value"
 				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
-			>{{ formatedLocalFullDateStr }} <span v-if="isTimeInclude">{{ localTimeStr }}</span></div>
+			>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
 		</div>
 		<div
 			class="em-date"
@@ -16,7 +16,7 @@
 					<div class="em-date-time__full-date">
 						{{ formatedLocalFullDateStr }}
 					</div>
-					<div v-show="isTimeInclude" class="em-date-time__time">
+					<div v-if="includeTime && localFullDate" class="em-date-time__time">
 						<input
 							class="em-date-time__time-input"
 							type="text"
@@ -34,13 +34,6 @@
 			>
 			</Datepicker>
 			<div class="em-date__bottom">
-				<div class="em-date__time-allow" @click="toggleTimeInclude">
-					<div class="em-date__time-allow-label">Include Time</div>
-					<div
-						class="em-date__time-allow-select"
-						:class="{'em-date__time-allow-select_active': isTimeInclude}"
-					></div>
-				</div>
 				<div class="em-date__clear" @click="clear()">Clear</div>
 			</div>
 		</div>
@@ -57,48 +50,17 @@
 			return {
 				isEditFieldPopup: false,
 				localFullDate: false,
-				isTimeInclude: false,
 				localTimeStr: false,
 				localHours: false,
 				localMinutes: false,
 				localFieldValue: false,
+				includeTime: false,
 			}
 		},
 		mounted()
 		{
+			this.includeTime = this.fieldSettings.includeTime == "true";
 			this.initFullDate();
-		},
-		watch:
-		{
-			isTimeInclude(newValue)
-			{
-				if (newValue && this.localFullDate)
-				{
-					if (this.localHours === false)
-						this.localHours = 0;
-					if (this.localMinutes === false)
-						this.localMinutes = 0;
-
-					this.localTimeStr = this.formatedLocalTimeStr;
-					this.changeLocalFieldValue(this.localFullDate);
-				}
-				else
-				{
-					this.localHours = false;
-					this.localMinutes = false;
-					this.localTimeStr = false;
-				}
-			},
-			localFullDate()
-			{
-				if (this.localFullDate)
-				{
-					if (this.isTimeInclude)
-						this.localFullDate.setSeconds(1);
-					else
-						this.localFullDate.setSeconds(0);
-				}
-			}
 		},
 		methods:
 		{
@@ -113,6 +75,7 @@
 				let fieldDate = this.localFullDate
 				? this.localFieldValue
 				: '';
+
 				this.$emit('onChange', {
 					value     : fieldDate,
 					settings  : this.fieldSettings
@@ -160,35 +123,24 @@
 			},
 			initTime(date)
 			{
-				if (date === '')
+				if (this.includeTime)
 				{
-					this.isTimeInclude = false;
-					this.localHours = false;
-					this.localMinutes = false;
-					this.localTimeStr = false;
-				}
-				else
-				{
-					if (date.getSeconds())
+					if (date === '')
 					{
-						this.isTimeInclude = true;
-						if (this.localHours === false)
-							this.localHours = date.getHours();
-						if (this.localMinutes === false)
-							this.localMinutes = date.getMinutes();
-
-						this.localTimeStr = this.formatedLocalTimeStr;
+						this.localHours = 0;
+						this.localMinutes = 0;
 					}
 					else
 					{
-						this.isTimeInclude = false;
+						this.localHours = date.getHours();
+						this.localMinutes = date.getMinutes();
 					}
+					this.localTimeStr = this.formatedLocalTimeStr;
 				}
-			},
-			toggleTimeInclude()
-			{
-				if (this.localFullDate !== '')
-					this.isTimeInclude = !this.isTimeInclude;
+				else
+				{
+					this.localHours = this.localMinutes = this.localTimeStr = false;
+				}
 			},
 			changeLocalFieldValue(newDate)
 			{
@@ -198,11 +150,10 @@
 					month         = this.formatToDoubleDigit(currentData.getMonth() + 1),
 					year          = currentData.getFullYear(),
 					hours         = this.formatToDoubleDigit(this.localHours),
-					minutes       = this.formatToDoubleDigit(this.localMinutes),
-					isTimeInclude = this.formatToDoubleDigit(Number(this.isTimeInclude));
+					minutes       = this.formatToDoubleDigit(this.localMinutes);
 
-				if (this.isTimeInclude)
-					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}:${isTimeInclude}`;
+				if (this.includeTime)
+					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}`;
 				else
 					this.localFieldValue = `${year}-${month}-${day}`;
 

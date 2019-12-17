@@ -26,7 +26,6 @@
 				localSettings:
 				{
 					includeTime: false,
-					required: true,
 				}
 			}
 		},
