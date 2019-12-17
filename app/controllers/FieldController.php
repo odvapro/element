@@ -2,7 +2,7 @@
 class FieldController extends ControllerBase
 {
 	/**
-	 * Роутинг полей
+	 * Fields routing
 	 * /fld/<имя типа поля>/<имя контроллера>/<имя действия>/<параметры/.../>
 	 */
 	public function indexAction($fldName, $fldController, $fldAction = 'index')
@@ -25,7 +25,7 @@ class FieldController extends ControllerBase
 			return false;
 		}
 
-		$args = func_get_args();
+		$args       = func_get_args();
 		$actionArgs = array_slice($args, 3);
 
 		require_once($fldControllerPath);
@@ -39,21 +39,6 @@ class FieldController extends ControllerBase
 			global $loader;
 			$loader->registerDirs([$fldModelsDir])->register();
 		}
-
-		//############################################################
-		// VIEWS
-		// определяем view по умолчанию
-		// <адрес поля>/views/<имя контроллера>/<имя действия>.volt
-		$fldController = strtolower($fldController);
-		$fldViewsPath  = $fldPath . 'views/'.$fldController . '/';
-		$fldTplPath    = $fldViewsPath.$fldAction;
-
-		if(!is_dir($fldViewsPath) || !file_exists($fldTplPath . '.volt'))
-			$fldTplPath = '';
-
-		$fldTplPathPublic = str_replace($config->application->appDir, '', $fldTplPath);
-		$this->view->setVar('fldTplPath', $fldTplPathPublic);
-		$this->view->setMainView($fldTplPathPublic);
 
 		$contr = new $fldControllerName();
 		call_user_func_array([$contr, $fldAction . 'Action'], $actionArgs);

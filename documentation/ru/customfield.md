@@ -214,3 +214,5 @@ Vue.component('custom_date', {
 ## Контроллеры
 Контроллеры доступны по следующему пути
 `/element/fld/<feld_code>/<field_controller_name>/<action>/`
+
+И ваши vue компоненты могут отправлять на них запросы

@@ -1,4 +1,5 @@
 tests/ export-ignore
+app/extensions/dev_ext/ export-ignore
 vue/ export-ignore
 documentation/ export-ignore
 codeceptionSample.yml export-ignore

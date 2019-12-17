@@ -1,0 +1,13 @@
+{
+	"name"    :"Расширение для разработки",
+	"links":[
+		{
+			"name" :"Dev link",
+			"link" :"/ext/dev_ext/"
+		},
+		{
+			"name" :"Dev link2",
+			"link" :"/ext/dev_ext/params1/param2/param3"
+		}
+	]
+}

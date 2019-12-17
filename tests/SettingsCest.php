@@ -113,7 +113,7 @@ class SettingsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/settings/setFieldSettings', [
-			'tableName'      => 'testTable',
+			'tableName'      => 'test_table',
 			'columnName'     => 'avat',
 			'fieldType'      => 'em_file',
 			'settings'       => [
@@ -124,7 +124,7 @@ class SettingsCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/settings/setFieldSettings', [
-			'tableName'      => 'testTable',
+			'tableName'      => 'test_table',
 			'columnName'     => '',
 			'fieldType'      => 'em_file',
 			'settings'       => [
