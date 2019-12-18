@@ -41,7 +41,6 @@
 						</div>
 						<div class="sidebar-name-wrapper">
 							<div class="sidebar-overide-table-name">{{extLink.name}}</div>
-							<div class="sidebar-real-table-name">{{extLink.link}}</div>
 						</div>
 					</a>
 				</li>
@@ -371,6 +370,7 @@
 		height: 14px;
 		cursor: pointer;
 		margin-right: 13px;
+		line-height: 1em;
 		img
 		{
 			width: 100%;

@@ -34,7 +34,7 @@
 			<div class="detail-field__name-wrap">
 				<img class="detail-field__icon-image" :src="require(`@/assets${columnEmSettings(columnCode).type_info.iconPath}`)">
 				<div class="detail-field-name">
-					<span>{{ columnCode }}</span>
+					<span>{{ getColumnName(columnCode) }}</span>
 					<small>{{ columnCode }}</small>
 				</div>
 			</div>
@@ -127,12 +127,19 @@
 			 */
 			columnEmSettings(columnCode)
 			{
-				for(let colCode in this.columns)
-				{
-					if(colCode == columnCode)
-						return this.columns[colCode].em;
-				}
+				if(typeof this.columns[columnCode] != 'undefined')
+					return this.columns[columnCode].em;
 				throw new Error(`No column with code ${columnCode}`);
+			},
+
+			/**
+			 * Returns column name or code
+			 */
+			getColumnName(columnCode)
+			{
+				if(!this.columnEmSettings(columnCode).name)
+					return columnCode;
+				return this.columnEmSettings(columnCode).name
 			},
 
 			/**
