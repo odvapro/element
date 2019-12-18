@@ -241,4 +241,38 @@ class EmFileField extends FieldBase
 
 		return $imageSizes;
 	}
+
+	/**
+	 * Gets collations
+	 * @return array
+	 */
+	public function getCollations()
+	{
+		return [
+			['name'=>'Is Not Empty','code'=>'IS NOT EMPTY'],
+			['name'=>'Is Empty','code'=>'IS EMPTY']
+		];
+	}
+
+	/**
+	 * Return collation SQL Where
+	 * @var $whereArray = ['code' => id, 'operation' => IS_NOT_EMPTY 'value' =>]
+	 * @return string
+	 */
+	public function getCollationSql($whereArray)
+	{
+		switch ($whereArray['operation'])
+		{
+			case 'IS EMPTY':
+				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
+				break;
+
+			case 'IS NOT EMPTY':
+				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
+				break;
+		}
+		return '';
+	}
+
+
 }

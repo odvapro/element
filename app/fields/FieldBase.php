@@ -26,7 +26,7 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 			['name'=>'Is Not Empty','code'=>'IS NOT EMPTY'],
 			['name'=>'Is Empty','code'=>'IS EMPTY'],
 			['name'=>'Is','code'=>'IS'],
-			['name'=>'Is Not','code'=>'IS Not'],
+			['name'=>'Is Not','code'=>'IS NOT'],
 			['name'=>'Contains','code'=>'CONTAINS'],
 			['name'=>'Does Not Contain','code'=>'DOES NOT CONTAIN'],
 			['name'=>'Start With','code'=>'START WITH'],

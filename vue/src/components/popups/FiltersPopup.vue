@@ -31,7 +31,11 @@
 							:class="{active:filterItem.operation == operation.code}"
 						>{{ operation.name }}</SelectOption>
 					</Select>
-					<input type="text" v-model="filterItem.value" class="filters-popup__filter-input el-inp" placeholder="Value">
+					<MainFilterField
+						:filter="filterItem"
+						:columns="columns"
+						@onChange="changeFilterValue"
+					></MainFilterField>
 				</div>
 				<div class="filters-popup__delete-row-icon-wrapper" @click.stop="deleteRowFilter(index)">
 					<div class="filters-popup__delete-row-icon">
@@ -48,10 +52,11 @@
 <script>
 	import Select from '@/components/forms/Select.vue';
 	import SelectOption from '@/components/forms/SelectOption.vue';
+	import MainFilterField from '@/components/fields/MainFilterField.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		components: { Select, SelectOption },
+		components: { Select, SelectOption, MainFilterField },
 		props: ['columns', 'tview'],
 		/**
 		 * Глобальные переменные страницы
@@ -251,6 +256,10 @@
 
 					this.filter.push(JSON.parse(JSON.stringify(filters[filterIndex])));
 				}
+			},
+			changeFilterValue(e)
+			{
+				e.filter.value = e.value;
 			}
 		},
 
