@@ -15,7 +15,7 @@ class ElController extends ControllerBase
 		if (empty($delete))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultDelete = $this->eldb->delete($delete);
+		$resultDelete = $this->element->delete($delete);
 
 		if ($resultDelete === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
@@ -81,9 +81,9 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
 		// Define count of element
-		$itemsCount = $this->eldb->count($select);
+		$itemsCount = $this->element->count($select);
 		$paginator = new ElPagination([
-			'count'  => $itemsCount,
+			'count' => $itemsCount,
 			'limit' => $limit,
 			'page'  => $page,
 		]);

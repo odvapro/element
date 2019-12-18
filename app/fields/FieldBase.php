@@ -17,6 +17,67 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	abstract function saveValue();
 
 	/**
+	 * Gets collations
+	 * @return array
+	 */
+	public function getCollations()
+	{
+		return [
+			['name'=>'Is Not Empty','code'=>'IS NOT EMPTY'],
+			['name'=>'Is Empty','code'=>'IS EMPTY'],
+			['name'=>'Is','code'=>'IS'],
+			['name'=>'Is Not','code'=>'IS Not'],
+			['name'=>'Contains','code'=>'CONTAINS'],
+			['name'=>'Does Not Contain','code'=>'DOES NOT CONTAIN'],
+			['name'=>'Start With','code'=>'START WITH'],
+			['name'=>'Ends With','code'=>'ENDS WITH'],
+		];
+	}
+
+	/**
+	 * Return collation SQL Where
+	 * @var $whereArray = ['code' => id, 'operation' => IS_NOT_EMPTY 'value' =>]
+	 * @return string
+	 */
+	public function getCollationSql($whereArray)
+	{
+		switch ($whereArray['operation']) {
+			case 'IS':
+				return $whereArray['code'] . ' = ' . "'" . $whereArray['value'] . "'";
+				break;
+
+			case 'IS NOT':
+				return $whereArray['code'] . ' <> ' . "'" . $whereArray['value'] . "'";
+				break;
+
+			case 'CONTAINS':
+				return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "%'";
+				break;
+
+			case 'DOES NOT CONTAIN':
+				return $whereArray['code'] . ' NOT LIKE ' . "'%" . $whereArray['value'] . "%'";
+				break;
+
+			case 'START WITH':
+				return $whereArray['code'] . ' LIKE ' . "'" . $whereArray['value'] . "%'";
+				break;
+
+			case 'ENDS WITH':
+				return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "'";
+				break;
+
+			case 'IS EMPTY':
+				return $whereArray['code'] . ' = ' . '""';
+				break;
+
+			case 'IS NOT EMPTY':
+				return $whereArray['code'] . ' <> ' . '""';
+				break;
+		}
+		return '';
+	}
+
+	/**
 	 * Gets field path
 	 * @return string
 	 */

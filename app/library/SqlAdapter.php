@@ -36,51 +36,12 @@ class SqlAdapter extends PdoAdapter
 	 */
 	private function buildWhere($whereArray)
 	{
-		$sqlWhere = '';
-
 		if(empty($whereArray['fields']))
-		{
-			switch ($whereArray['operation']) {
-				case 'IS':
-					return $whereArray['code'] . ' = ' . "'" . $whereArray['value'] . "'";
-					break;
-
-				case 'IS NOT':
-					return $whereArray['code'] . ' <> ' . "'" . $whereArray['value'] . "'";
-					break;
-
-				case 'CONTAINS':
-					return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "%'";
-					break;
-
-				case 'DOES NOT CONTAIN':
-					return $whereArray['code'] . ' NOT LIKE ' . "'%" . $whereArray['value'] . "%'";
-					break;
-
-				case 'START WITH':
-					return $whereArray['code'] . ' LIKE ' . "'" . $whereArray['value'] . "%'";
-					break;
-
-				case 'ENDS WITH':
-					return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "'";
-					break;
-
-				case 'IS EMPTY':
-					return $whereArray['code'] . ' = ' . '""';
-					break;
-
-				case 'IS NOT EMPTY':
-					return $whereArray['code'] . ' <> ' . '""';
-					break;
-			}
-		}
+			return $whereArray['code'];
 
 		$fieldsSqls = [];
-
 		foreach ($whereArray['fields'] as $field)
-		{
 			$fieldsSqls[] = $this->buildWhere($field);
-		}
 		$fieldsSqls = '(' . implode(' ' . $whereArray['operation'] . ' ', $fieldsSqls) . ')';
 		return $fieldsSqls;
 	}

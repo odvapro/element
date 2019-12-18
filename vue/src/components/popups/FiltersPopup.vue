@@ -18,18 +18,18 @@
 					<Select class="filters-popup__select" :defaultText="filterItem.name ? filterItem.name : filterItem.code">
 						<SelectOption
 							v-for="column in columns"
-							@click.native="selectField(filterItem,column)"
+							@click.native="selectColumn(filterItem,column)"
 							:key="column.field"
 							:class="{active:filterItem.code == column.field}"
 						>{{column.em.name ? column.em.name : column.field}}</SelectOption>
 					</Select>
-					<Select class="filters-popup__select" :defaultText="filterItem.operation">
+					<Select class="filters-popup__select" :defaultText="getColumnCollationName(filterItem.code,filterItem.operation)">
 						<SelectOption
-							v-for="operationValue in operations"
-							@click.native="selectOperation(filterItem,operationValue)"
-							:key="operationValue"
-							:class="{active:filterItem.operation == operationValue}"
-						>{{ operationValue }}</SelectOption>
+							v-for="operation in getColumnCollations(filterItem.code)"
+							@click.native="selectOperation(filterItem,operation)"
+							:key="operation.code"
+							:class="{active:filterItem.operation == operation.code}"
+						>{{ operation.name }}</SelectOption>
 					</Select>
 					<input type="text" v-model="filterItem.value" class="filters-popup__filter-input el-inp" placeholder="Value">
 				</div>
@@ -52,7 +52,6 @@
 	export default
 	{
 		components: { Select, SelectOption },
-		mixins: [TableWork],
 		props: ['columns', 'tview'],
 		/**
 		 * Глобальные переменные страницы
@@ -62,29 +61,23 @@
 			return {
 				select:
 				{
-					columnSelect: false,
-					operationSelect: false,
-					binSelect: false
+					columnSelect    : false,
+					operationSelect : false,
+					binSelect       : false
 				},
-				operations:
-				[
-					'IS', 'IS NOT', 'CONTAINS', 'DOES NOT CONTAIN', 'START WITH', 'ENDS WITH', 'IS EMPTY', 'IS NOT EMPTY'
-				],
-				binOperations: ['AND', 'OR'],
-				defaultOper: 'AND',
-				filter: [],
-				newFilters: [],
-				sourceFilters: [],
-				sendRequest: true,
+				operations    : [],
+				binOperations : ['AND', 'OR'],
+				defaultOper   : 'AND',
+				filter        : [],
+				newFilters    : [],
+				sourceFilters : [],
+				sendRequest   : true,
 			}
 		},
 		watch:
 		{
 			'filter':
 			{
-				/**
-				 * Следить за изменениями фильтров
-				 */
 				handler: function()
 				{
 					this.newFilters = [];
@@ -111,27 +104,25 @@
 		methods:
 		{
 			/**
-			 * Выбор филда для фильтрации
+			 * Select column for filtering
 			 */
-			selectField(filterItem,column)
+			selectColumn(filterItem,column)
 			{
 				filterItem.code = column.field;
 				filterItem.name = column.em.name;
+				this.operations = column.em.collations;
 			},
-			/**
-			 * Выбор операции
-			 */
-			selectOperation(filterItem,operationValue)
+
+			selectOperation(filterItem,operation)
 			{
-				filterItem.operation = operationValue
+				filterItem.operation = operation.code
 			},
+
 			selectLogic(oper)
 			{
 				this.defaultOper = oper;
 			},
-			/**
-			 * Сохранить фильтры
-			 */
+
 			async saveFilters()
 			{
 				let self = this;
@@ -151,9 +142,9 @@
 				}});
 
 				let resultSaveFilters = await this.$axios({
-					method: 'GET',
-					url: '/tview/saveFilters/',
-					params: data,
+					method : 'GET',
+					url    : '/tview/saveFilters/',
+					params : data,
 					/**
 					 * сериализовать отправляемые данные
 					 */
@@ -166,6 +157,7 @@
 				if (!resultSaveFilters.data.success)
 					return false;
 			},
+
 			/**
 			 * Построить новый объект фильтров
 			 */
@@ -179,6 +171,7 @@
 				for (let filter of filters)
 					newFilters[0].fields.push({code: filter.code, operation: filter.operation, value: filter.value});
 			},
+
 			/**
 			 * достать первый элемент массива/объекта
 			 */
@@ -187,32 +180,53 @@
 				for (let item in items)
 					return items[item]
 			},
+
 			/**
-			 * Добавить строку фильтра
+			 * Adds filter line
 			 */
 			addFilterRow()
 			{
-				this.filter.push({code: this.getFirstElement(this.columns).field, operation: this.operations[0], value: '', select: JSON.parse(JSON.stringify(this.select))});
+				let firstColumn = this.getFirstElement(this.columns);
+				this.filter.push({
+					code      : firstColumn.field,
+					operation : firstColumn.em.collations[0].code,
+					value     : '',
+					select    : JSON.parse(JSON.stringify(this.select))
+				});
 			},
-			/**
-			 * Удалить строку фильтра
-			 */
+
 			deleteRowFilter(indexRow)
 			{
 				this.filter.splice(indexRow, 1);
 			},
-			/**
-			 * Достать название колонки по коду
-			 */
-			getColumnNameByCode(columns, code)
+
+			getColumnNameByCode(code)
 			{
-				for (let column in columns)
-				{
-					if (columns[column].field == code)
-						return columns[column].em.name;
-				}
+				if(typeof this.columns[code] != 'undefined' && typeof this.columns[code].em.name != 'undefined')
+					return this.columns[code].em.name;
 				return code;
 			},
+
+			getColumnCollations(columnCode)
+			{
+				if(typeof this.columns[columnCode] != 'undefined' && typeof this.columns[columnCode].em.collations != 'undefined')
+					return this.columns[columnCode].em.collations;
+				return [];
+			},
+
+			getColumnCollationName(columnCode,collationCode)
+			{
+				if(typeof this.columns[columnCode] == 'undefined' || typeof this.columns[columnCode].em.collations == 'undefined')
+				{
+					throw new Error(`No collation with code ${columnCode}`);
+					return 'no collation';
+				}
+				let collations = this.columns[columnCode].em.collations;
+				for(let collation of collations)
+					if(collation.code == collationCode)
+						return collation.name;
+			},
+
 			/**
 			 * Распарсить фильтры/преобразовать
 			 */
@@ -233,15 +247,13 @@
 						continue;
 					}
 					this.$set(filters[filterIndex], 'select', JSON.parse(JSON.stringify(this.select)));
-					this.$set(filters[filterIndex], 'name', this.getColumnNameByCode(this.columns, filters[filterIndex].code));
+					this.$set(filters[filterIndex], 'name', this.getColumnNameByCode(filters[filterIndex].code));
 
 					this.filter.push(JSON.parse(JSON.stringify(filters[filterIndex])));
 				}
 			}
 		},
-		/**
-		 * При загрузке компонента
-		 */
+
 		mounted()
 		{
 			this.parseFilers(this.tview.filter);

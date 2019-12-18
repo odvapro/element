@@ -28,6 +28,14 @@ class TableWorkerCest
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.table');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.name');
 		$I->seeResponseJsonMatchesJsonPath('$.tables.*.tviews.*.default');
+
+		// check first table architecture
+		$result = $I->grabResponse();
+		$result = json_decode($result, true);
+		$I->assertEquals($result['tables'][0]['code'],'block_type');
+		$I->assertisArray($result['tables'][0]['columns']);
+		$I->assertisArray($result['tables'][0]['columns']['date']['em']);
+		$I->assertisArray($result['tables'][0]['columns']['date']['em']['collations']);
 	}
 
 	public function select(ApiTester $I)
