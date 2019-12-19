@@ -79,8 +79,8 @@
 			{
 				this.localFieldValue = listItem;
 				this.$emit('onChange', {
-					value: this.localFieldValue,
-					settings: this.fieldSettings
+					value    : this.localFieldValue,
+					settings : this.fieldSettings
 				});
 			},
 

@@ -265,11 +265,11 @@ class EmFileField extends FieldBase
 		{
 			case 'IS EMPTY':
 				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
-				break;
+			break;
 
 			case 'IS NOT EMPTY':
 				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
-				break;
+			break;
 		}
 		return '';
 	}
