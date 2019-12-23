@@ -9,6 +9,7 @@
 			</template>
 			<ListOption
 				v-for="listItem in list"
+				:key="listItem.code"
 				@select="selectItem(listItem)"
 			>{{ listItem.name }}</ListOption>
 		</List>
