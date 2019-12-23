@@ -5,6 +5,7 @@
 	>
 		<ListOption
 			v-for="listItem in list"
+			:key="listItem.code"
 		>{{ listItem.name }}</ListOption>
 	</List>
 </template>
