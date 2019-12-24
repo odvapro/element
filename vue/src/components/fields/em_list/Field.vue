@@ -6,11 +6,13 @@
 			<template v-slot:selected>
 				<ListOption
 					v-for="listItem in selectedItems"
+					:key="listItem.key"
 					@remove="removeItem(listItem)"
 				>{{ listItem.value }}</ListOption>
 			</template>
 			<ListOption
 				v-for="listItem in itemsList"
+				:key="listItem.key"
 				@select="selectItem(listItem)"
 			>{{ listItem.value }}</ListOption>
 		</List>
