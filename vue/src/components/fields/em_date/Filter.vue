@@ -1,54 +1,44 @@
 <template>
 	<div>
-		<!-- <input
-			type="text"
-			v-if="showInput"
-			class="filters-popup__filter-input el-inp"
-			placeholder="Value"
-			@keyup="changeValue"
-			:value="filter.value"
-		/> -->
 		<div
 			class="em-date-filter-wr"
 			v-if="showInput"
 		>
-			<div class="em-date-wr">
-				<div class="em-date-wr__static-field" @click="openFieldEdit">
-					<div
-						class="em-date-wr__static-field-value"
-						:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
-					>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
-				</div>
+			<div class="em-date-filter-wr__static-field" @click="openFieldEdit">
 				<div
-					class="em-date"
-					v-click-outside="closeFieldEdit"
-					v-if="isEditFieldPopup"
-				>
-					<div class="em-date__top">
-						<div class="em-date-time">
-							<div class="em-date-time__full-date">
-								{{ formatedLocalFullDateStr }}
-							</div>
-							<div v-if="includeTime && localFullDate" class="em-date-time__time">
-								<input
-									class="em-date-time__time-input"
-									type="text"
-									v-model="localTimeStr"
-									@change="changeLocalTimeStr"
-								>
-							</div>
+					class="em-date-filter-wr__static-field-value"
+					:class="{'em-date-filter-wr__static-field-value_empty': !localFieldValue}"
+				>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
+			</div>
+			<div
+				class="em-date-filter"
+				v-click-outside="closeFieldEdit"
+				v-if="isEditFieldPopup"
+			>
+				<div class="em-date-filter__top">
+					<div class="em-date-filter-time">
+						<div class="em-date-filter-time__full-date">
+							{{ formatedLocalFullDateStr }}
+						</div>
+						<div v-if="includeTime && localFullDate" class="em-date-filter-time__time">
+							<input
+								class="em-date-filter-time__time-input"
+								type="text"
+								v-model="localTimeStr"
+								@change="changeLocalTimeStr"
+							>
 						</div>
 					</div>
-					<Datepicker
-						v-model="localFullDate"
-						placeholder="Empty"
-						@selected="changeLocalFieldValue"
-						:inline="true"
-					>
-					</Datepicker>
-					<div class="em-date__bottom">
-						<div class="em-date__clear" @click="clear()">Clear</div>
-					</div>
+				</div>
+				<Datepicker
+					v-model="localFullDate"
+					placeholder="Select an Option"
+					@selected="changeLocalFieldValue"
+					:inline="true"
+				>
+				</Datepicker>
+				<div class="em-date-filter__bottom">
+					<div class="em-date-filter__clear" @click="clear()">Clear</div>
 				</div>
 			</div>
 		</div>
@@ -91,7 +81,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					return 'Empty';
+					return 'Select an Option';
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
@@ -103,13 +93,6 @@
 		},
 		methods:
 		{
-			/**
-			 * Send change current value
-			 */
-			changeValue(event)
-			{
-				this.$emit('onChange', event.target.value);
-			},
 			getMonth(monthIndex)
 			{
 				let months =
@@ -135,12 +118,17 @@
 			closeFieldEdit()
 			{
 				this.isEditFieldPopup = false;
+			},
+			changeValue()
+			{
 
-				let fieldDate = this.localFullDate
+				let fieldDate = this.localFieldValue
 				? this.localFieldValue
 				: '';
 
 				this.$emit('onChange', fieldDate);
+
+				this.initFullDate(this.localFieldValue);
 			},
 			openFieldEdit()
 			{
@@ -199,6 +187,8 @@
 					this.localMinutes = 0;
 
 				this.localTimeStr = this.formatedLocalTimeStr;
+
+				this.changeLocalFieldValue(this.localFieldValue);
 			},
 			changeLocalFieldValue(newDate)
 			{
@@ -215,17 +205,19 @@
 				else
 					this.localFieldValue = `${year}-${month}-${day}`;
 
-				this.initFullDate(this.localFieldValue);
+				this.changeValue();
 			},
 			formatToDoubleDigit(dig)
 			{
-				if (dig < 10)
-					return '0' + dig;
-				return dig;
+				let number = Number(dig);
+				if (number < 10)
+					return '0' + number;
+				return number;
 			},
 			clear()
 			{
-				this.initFullDate('');
+				this.localFieldValue = '';
+				this.changeValue();
 			},
 		},
 		mounted()
@@ -249,11 +241,175 @@
 		margin-right: 10px;
 		min-width: 150px;
 		&:hover{border: 1px solid rgba(103,115,135,0.7);}
-		.em-date
+	}
+	.em-date-filter
+	{
+	    position: absolute;
+		top: calc(100% + 1px);
+		right: -1px;
+		background-color: #fff;
+		z-index: 10;
+
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		border-radius: 2px;
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		padding: 20px 0;
+		width: 360px;
+		.vdp-datepicker{position: static;}
+		.vdp-datepicker__calendar
 		{
-			left: unset;
-			right: -1px;
-			top: calc(100% + 1px);
+			color: #191C21;
+			left:-15px;
+			top:44px;
+			margin: 0 auto 30px;
+			width: calc(100% - 40px);
+			border: unset;
+			background-color: transparent;
+			.day__month_btn,
+			.month__year_btn
+			{
+				border-radius: 2px;
+			}
+			header
+			{
+				font-size: 13px;
+				line-height: 1.7;
+				padding-top: 4px;
+				width: 50%;
+				height: 40px;
+				.next,
+				.prev
+				{
+					width: 22px;
+					height: 22px;
+					border-radius: 2px;
+					&:hover
+					{
+						&:after
+						{
+							border-left-color: #677387;
+							border-top-color: #677387;
+						}
+					}
+					&:after
+					{
+						top: 30%;
+						transform: translateX(-50%) translateY(-50%);
+						width: 7px;
+						height: 7px;
+						border: 1px solid transparent;
+						border-left-color: rgba(103, 115, 135, 0.4);
+						border-top-color: rgba(103, 115, 135, 0.4);
+					}
+				}
+				.next:after{transform: rotate(135deg) skew(-3deg, -3deg); margin-left: -6px;}
+				.prev:after{transform: rotate(-45deg) skew(-3deg, -3deg); margin-left: -2px;}
+			}
 		}
+		.vdp-datepicker__calendar .cell{font-size:13px;}
+		.vdp-datepicker__calendar .cell.selected {background: rgba(124, 119, 145, 0.7); border-radius: 2px; color: #fff; }
+		.vdp-datepicker__calendar .cell.selected:hover{background: rgba(124, 119, 145, 0.7); }
+		.vdp-datepicker__calendar .cell{height: 38px; line-height: 38px; }
+		.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover, .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover, .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover
+		{
+			border: 1px solid rgba(124, 119, 145, 0.1);
+			border-radius: 2px;
+			cursor:pointer;
+		}
+	}
+	.em-date-filter-wr__static-field
+	{
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+	.em-date-filter-wr__static-field-value
+	{
+		font-size: 12px;
+		color: #677387;
+		white-space: nowrap;
+		&_empty
+		{
+			color: rgba(103, 115, 135, 0.4);
+		}
+	}
+	.em-date-filter__top
+	{
+		width: 100%;
+		padding-left: 19px;
+		margin-bottom: 20px;
+	}
+	.em-date-filter__time
+	{
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.em-date-filter .em-date-filter__time-input
+	{
+		border: 1px solid #ccc;
+		height: 40px;
+		padding: 5px 10px;
+		line-height: 50px;
+		width: 50px;
+
+	}
+	.em-date-filter-time
+	{
+		max-width: 320px;
+		width: 100%;
+		display: flex;
+		background-color: rgba(240, 241, 243, 0.5);
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		border-radius: 2px;
+		font-family: $rMedium;
+		color: rgba(25, 28, 33, 0.7);
+		font-size: 11px;
+		line-height: 13px;
+		padding: 8px 10px;
+		height: 33px;
+	}
+	.em-date-filter-time__full-date
+	{
+		margin-right: 15px;
+		padding-top: 1px;
+	}
+	.em-date-filter__bottom
+	{
+		border-top: 1px solid rgba(103, 115, 135, 0.1);
+
+		width: 100%;
+		padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 15px;
+	}
+	.em-date-filter-time__time
+	{
+		height: 15px;
+		width: 100px;
+		padding-left: 15px;
+		border-left: 1px solid rgba(103, 115, 135, 0.1);
+		.em-date-filter-time__time-input
+		{
+			padding-top: 0;
+			padding-bottom: 0;
+			height: 100%;
+			width: 100%;
+			line-height: 13px;
+			font-size: 11px;
+			color: rgba(25, 28, 33, 0.7);
+			font-family: $rMedium;
+			border: unset;
+			background-color: transparent;
+			&::placeholder {color: rgba(103, 115, 135, 0.4); }
+		}
+	}
+	.em-date-filter__clear
+	{
+		font-size: 12px;
+		cursor: pointer;
 	}
 </style>
