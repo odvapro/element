@@ -71,6 +71,15 @@
 			this.checkAndSetPickerLang();
 
 			this.includeTime = this.fieldSettings.includeTime == "true";
+			if (this.includeTime && this.fieldValue)
+			{
+				if (!this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
+					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]  + ' 00:00')
+			}
+			else if (!this.includeTime && this.fieldValue)
+				if (this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
+					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]);
+
 			this.initFullDate();
 		},
 		methods:
@@ -91,10 +100,17 @@
 			closeFieldEdit()
 			{
 				this.isEditFieldPopup = false;
-
-				let fieldDate = this.localFullDate
-				? this.localFieldValue
-				: '';
+				this.changeValue();
+			},
+			changeValue(newValue)
+			{
+				let fieldDate;
+				if (typeof newValue === 'undefined')
+					fieldDate = this.localFullDate
+					? this.localFieldValue
+					: '';
+				else
+					fieldDate = newValue;
 
 				this.$emit('onChange', {
 					value     : fieldDate,

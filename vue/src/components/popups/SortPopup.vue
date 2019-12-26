@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<button class="el-gbtn" @click="addSortRow">Add sort</button>
+		<button class="el-gbtn" @click="addSortRow">{{$t('popups.sortPopup.add_sort')}}</button>
 	</div>
 </template>
 <script>

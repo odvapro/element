@@ -5,7 +5,7 @@
 				{{ $t('fieldEmCheck.settings.required') }}
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" :placeholder="$t('fieldEmCheck.settings.enter_email')" v-model="required">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_email')" v-model="required">
 			</div>
 		</div>
 		<div class="popup__field">

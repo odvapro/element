@@ -83,7 +83,7 @@
 				</div>
 			</div>
 		</div>
-		<button @click="openAddUser()" class="el-gbtn">{{$t('settingsUser.add_user')}}</button>
+		<button @click="openAddUser()" class="el-gbtn">{{$t('add_user')}}</button>
 		<Popup
 			:visible.sync="addPopupVisible"
 		>

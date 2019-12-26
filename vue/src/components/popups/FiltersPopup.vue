@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<button class="el-gbtn" @click="addFilterRow">Add filter</button>
+		<button class="el-gbtn" @click="addFilterRow">{{$t('popups.filtersPopup.add_filter')}}</button>
 	</div>
 </template>
 <script>

@@ -7,7 +7,6 @@ export default
 			required: 'Required',
 			checked_status_in_db: 'Checked status in DB',
 			unchecked_status_in_db: 'Unchecked status in DB',
-			enter_email: 'Enter email',
 			enter_checked_string: 'Enter checked string',
 			enter_unchecked_string: 'Enter unchecked string',
 		}
@@ -77,10 +76,6 @@ export default
 	{
 		no_tables: 'No tables',
 	},
-	settingsUser:
-	{
-		add_user: 'Add user'
-	},
 	sidebar:
 	{
 		extensions: 'Extensions',
@@ -88,7 +83,6 @@ export default
 	},
 	tviews:
 	{
-		add_element: 'Add Element',
 		empty_table: 'Empty Table',
 	},
 	pages:
@@ -105,6 +99,11 @@ export default
 			system_has_been_updated_successfully: 'System has been updated successfully',
 			check_version: 'Check version',
 			update_to: 'Update to',
+		},
+		table:
+		{
+			edit_element: 'Edit element',
+			new_element: 'New Element',
 		}
 	},
 	auth:
@@ -125,6 +124,27 @@ export default
 		empty_email: 'Empty email',
 		invalid_email_format: 'Invalid email format',
 	},
+	popups:
+	{
+		filtersPopup:
+		{
+			add_filter: 'Add filter',
+		},
+		sortPopup:
+		{
+			add_sort: 'Add sort',
+		},
+		confirmPopup:
+		{
+			are_you_sure: 'Are you sure?'
+		},
+		addUser:
+		{
+			this_field_required: 'This field required'
+		}
+	},
+	yes: 'Yes',
+	no: 'No',
 	remove: 'Remove',
 	delete: 'Delete',
 	edit: 'Edit',
@@ -152,12 +172,25 @@ export default
 	password: 'Password',
 	update: 'Update',
 	log_out: 'log out',
+	save: 'Save',
+	create: 'Create',
+	properties: 'Properties',
+	sort: 'Sort',
+	filter: 'Filter',
+	add_element: 'Add Element',
+	add_user: 'Add user',
+	add: 'Add',
+	enter_something: 'Enter ',
 	elMessages:
 	{
 		password_saved: 'Password saved.',
 		user_saved: 'User saved.',
 		settings_saved: '😎 Settings saved!',
 		something_goes_wrong: 'Something goes wrong!',
+		element_saved: '👌 Element saved!',
+		element_created: 'Element created!',
+		element_removed: 'Element removed!',
+		cant_create_element: 'Cant create element!',
 	},
 	months:
 	[

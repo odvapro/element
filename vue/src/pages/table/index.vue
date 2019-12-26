@@ -19,7 +19,7 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						Properties
+						{{$t('properties')}}
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
@@ -32,7 +32,7 @@
 						class="index__menu-item"
 						@click="openPopup('isSortPopupShow')"
 					>
-						Sort
+						{{$t('sort')}}
 						<SortPopup
 							v-if="popups.isSortPopupShow"
 							:columns="table.columns"
@@ -45,7 +45,7 @@
 						@click="openPopup('isFiltersPopupShow')"
 						class="index__menu-item"
 					>
-						Filter
+						{{$t('filter')}}
 						<FiltersPopup
 							v-if="popups.isFiltersPopupShow"
 							:columns="table.columns"
@@ -58,7 +58,7 @@
 					<svg width="12" height="12">
 						<use xlink:href="#plus"></use>
 					</svg>
-					Add Element
+					{{$t('add_element')}}
 				</button>
 			</div>
 		</div>

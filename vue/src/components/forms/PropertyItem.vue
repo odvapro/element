@@ -11,8 +11,8 @@
 			</div>
 		</div>
 		<div class="property-item-names-wrapper">
-			<div class="property-item-overide-name">{{column.field}}</div>
-			<div class="property-item-real-name">{{column.field}}</div>
+			<div class="property-item-overide-name">{{ getColName(column) }}</div>
+			<div class="property-item-real-name">{{ column.field }}</div>
 		</div>
 		<div class="property-item-checkbox-wrapper">
 			<Checkbox :checked.sync="column.visible"></Checkbox>
@@ -24,7 +24,16 @@
 	export default
 	{
 		props: ['column'],
-		components:{Checkbox}
+		components:{Checkbox},
+		methods:
+		{
+			getColName(column)
+			{
+				if(typeof column.em == 'undefined' || !column.em.name)
+					return column.field;
+				return column.em.name;
+			}
+		}
 	}
 </script>
 <style lang="scss">
@@ -68,6 +77,7 @@
 		color: #677387;
 		font-size: 12px;
 		padding-right: 20px;
+	    text-transform: capitalize;
 	}
 	.property-item-real-name
 	{
