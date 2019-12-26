@@ -2,6 +2,7 @@
 	<div class="em-list">
 		<List
 			:searchText.sync="searchText"
+			:settings="{placeholder: $t('empty')}"
 		>
 			<template v-slot:selected>
 				<ListOption

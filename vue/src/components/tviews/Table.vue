@@ -14,7 +14,7 @@
 					</svg>
 					<div class="table__many-modal" v-if="openedEditRowIndex === 'all'" v-click-outside="closeEditModal">
 						<ul>
-							<li @click="removeSelected()" class="table__many-delete">Delete</li>
+							<li @click="removeSelected()" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
 				</div>
@@ -54,8 +54,8 @@
 					</svg>
 					<div class="table__many-modal" v-if="openedEditRowIndex === rowIndex" v-click-outside="closeEditModal">
 						<ul>
-							<li @click="openDetail(row,rowIndex)">Edit</li>
-							<li @click="remove(row,rowIndex)" class="table__many-delete">Delete</li>
+							<li @click="openDetail(row,rowIndex)">{{$t('edit')}}</li>
+							<li @click="remove(row,rowIndex)" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
 				</div>
@@ -83,7 +83,7 @@
 				</div>
 			</div>
 			<div class="table-row table-row__empty" v-if="!hasTableItems">
-				<span class="el-empty">Empty Table - <span @click="addElement()" class="table-row__add-bnt">Add Element</span></span>
+				<span class="el-empty">{{$t('tviews.empty_table')}} - <span @click="addElement()" class="table-row__add-bnt">{{$t('tviews.add_element')}}</span></span>
 			</div>
 		</div>
 		<Pagination

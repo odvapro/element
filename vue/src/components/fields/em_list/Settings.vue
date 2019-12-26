@@ -1,8 +1,8 @@
 <template>
 	<div class="em-list-settings">
 		<div class="em-list-settings__line">
-			<div class="em-list-settings__key-block">Key</div>
-			<div class="em-list-settings__key-block">Value</div>
+			<div class="em-list-settings__key-block">{{$t('fieldEmList.settings.key')}}</div>
+			<div class="em-list-settings__key-block">{{$t('value')}}</div>
 		</div>
 		<div
 			class="em-list-settings__line"
@@ -14,7 +14,7 @@
 					type="text"
 					class="el-inp-noborder"
 					v-model="listItem.key"
-					placeholder="Enter key"
+					:placeholder="$t('fieldEmList.settings.enter_key')"
 				/>
 			</div>
 			<div class="em-list-settings__value-block">
@@ -22,7 +22,7 @@
 					type="text"
 					class="el-inp-noborder"
 					v-model="listItem.value"
-					placeholder="Enter value"
+					:placeholder="$t('fieldEmList.settings.enter_value')"
 				/>
 			</div>
 			<div class="em-list-settings__remove-block">
@@ -34,11 +34,11 @@
 			</div>
 		</div>
 		<div class="em-list-settings__add-line">
-			<button class="el-gbtn" @click="addValues()">Add option</button>
+			<button class="el-gbtn" @click="addValues()">{{$t('fieldEmList.settings.add_option')}}</button>
 		</div>
 		<div class="popup__buttons">
-			<button @click="cancel()" class="el-gbtn">Cancel</button>
-			<button @click="save()" class="el-btn">Save settigns</button>
+			<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
+			<button @click="save()" class="el-btn">{{$t('save_settings')}}</button>
 		</div>
 	</div>
 </template>

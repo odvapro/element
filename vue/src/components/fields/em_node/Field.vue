@@ -1,6 +1,10 @@
 <template>
 	<div class="em-node">
-		<List :searchText.sync="query" @onopen="getNodes()">
+		<List
+			:searchText.sync="query"
+			@onopen="getNodes()"
+			:settings="{placeholder: $t('empty')}"
+		>
 			<template v-slot:selected>
 				<ListOption
 					v-if="localFieldValue.id"

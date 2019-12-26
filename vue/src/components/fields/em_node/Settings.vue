@@ -2,7 +2,7 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Table
+				{{$t('table')}}
 				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
@@ -17,7 +17,7 @@
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Node field
+				{{$t('fieldEmNode.settings.node_field')}}
 				<small v-if="errors.nodeFieldCode" class="popup__field-error">{{ errors.nodeFieldCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Search field
+				{{$t('fieldEmNode.settings.search_field')}}
 				<small v-if="errors.nodeSearchCode" class="popup__field-error">{{ errors.nodeSearchCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
@@ -48,8 +48,8 @@
 			</div>
 		</div>
 		<div class="popup__buttons">
-			<button @click="cancel()" class="el-gbtn">Cancel</button>
-			<button @click="save()" class="el-btn">Save settigns</button>
+			<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
+			<button @click="save()" class="el-btn">{{$t('save_settings')}}</button>
 		</div>
 	</div>
 </template>
@@ -102,7 +102,7 @@
 					table = this.$store.getters.getTable(this.localSettings.nodeTableCode)
 
 				if(table === false)
-					return 'Select table'
+					return this.$t('fieldEmNode.settings.select_table');
 
 				return table.name;
 
@@ -118,7 +118,7 @@
 					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeFieldCode)
 
 				if(field === false)
-					return 'Select field'
+					return this.$t('fieldEmNode.settings.select_field');
 
 				return (field.em.name) ? field.em.name : field.field;
 			},
@@ -133,7 +133,7 @@
 					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeSearchCode)
 
 				if(field === false)
-					return 'Select field'
+					return this.$t('fieldEmNode.settings.select_field');
 
 				return (field.em.name) ? field.em.name : field.field;
 			},

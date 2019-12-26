@@ -6,7 +6,7 @@
 				:editorToolbar="toolbarOptions"
 				v-model="localValue"
 				@text-change="changeValue"
-				placeholder="Empty"
+				:placeholder="$t('empty')"
 			></vue-editor>
 		</template>
 		<template v-else>
@@ -15,7 +15,7 @@
 				class="el-inp-noborder"
 				@change="changeValue"
 				:value="fieldValue"
-				placeholder="Empty"
+				:placeholder="$t('empty')"
 			/>
 		</template>
 	</div>

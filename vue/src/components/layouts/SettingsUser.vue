@@ -3,10 +3,10 @@
 		<div class="settings-users-head">
 			<div class="settings-users-row-data">
 				<div class="settings-users-item">
-					<div class="settings-users-item-title">Login</div>
+					<div class="settings-users-item-title">{{$t('login')}}</div>
 				</div>
 				<div class="settings-users-item">
-					<div class="settings-users-item-title">Name</div>
+					<div class="settings-users-item-title">{{$t('name')}}</div>
 				</div>
 				<div class="settings-users-item"></div>
 			</div>
@@ -20,7 +20,7 @@
 					</div>
 					<div class="settings-users-item">{{ user.name }}</div>
 					<div class="settings-users-item">
-						<a @click="removeUser(user)" class="settings-users__remove-user" href="#">remove</a>
+						<a @click="removeUser(user)" class="settings-users__remove-user" href="#">{{$t('remove')}}</a>
 					</div>
 				</div>
 				<div class="settings-users-row-setting">
@@ -33,52 +33,57 @@
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
-						<div class="settings-users-item"> name </div>
+						<div class="settings-users-item"> {{$t('name')}} </div>
 						<div class="settings-users-item">
 							<input
 								type="text"
 								class="settings-users-input"
 								v-model="user.name"
 								@change="updateUser(user)"
-								placeholder="Set name"
+								:placeholder="$t('set_something') + $t('name')"
 							/>
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
-						<div class="settings-users-item"> login </div>
+						<div class="settings-users-item"> {{$t('login')}} </div>
 						<div class="settings-users-item">
 							<input
 								type="text"
 								class="settings-users-input"
 								v-model="user.login"
 								@change="updateUser(user)"
-								placeholder="Set login"
+								:placeholder="$t('set_something') + $t('login')"
 							/>
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
-						<div class="settings-users-item"> email </div>
+						<div class="settings-users-item"> Email </div>
 						<div class="settings-users-item">
 							<input
 								type="text"
 								class="settings-users-input"
 								v-model="user.email"
 								@change="updateUser(user)"
-								placeholder="Set email"
+								:placeholder="$t('set_something') + 'Email'"
 							/>
 						</div>
 					</div>
 					<div class="settings-users-row-setting-item" :class="{active: user.isShow}">
-						<div class="settings-users-item"> password </div>
+						<div class="settings-users-item"> {{$t('password')}} </div>
 						<div class="settings-users-item settings-users__password-field">
-							<input type="password" class="settings-users-input" v-model="user.newPassword" placeholder="Set password">
+							<input
+								type="password"
+								class="settings-users-input"
+								v-model="user.newPassword"
+								:placeholder="$t('set_something') + $t('password')"
+							>
 							<button @click="updatePassword(user)" v-if="user.newPassword != ''" class="settings-users-btn">change</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<button @click="openAddUser()" class="el-gbtn">Add User</button>
+		<button @click="openAddUser()" class="el-gbtn">{{$t('settingsUser.add_user')}}</button>
 		<Popup
 			:visible.sync="addPopupVisible"
 		>
@@ -128,7 +133,7 @@
 
 				var result = await this.$axios.post('/users/updateUser/',updateData);
 				if(result.data.success)
-					this.ElMessage('User saved.');
+					this.ElMessage(this.$t('elMessages.user_saved'));
 			},
 
 			/**
@@ -144,7 +149,7 @@
 				var result = await this.$axios.post('/users/updateUser/',updateData);
 				if(result.data.success)
 				{
-					this.ElMessage('Password saved.');
+					this.ElMessage(this.$t('elMessages.password_saved'));
 					user.newPassword = '';
 				}
 			},

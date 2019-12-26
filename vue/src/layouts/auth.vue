@@ -6,54 +6,54 @@
 		<div class="auth-form" v-if="activeForm == 'login'">
 			<form @submit.prevent="authUser">
 				<label class="auth-label">
-					<div class="auth-label-title">Login</div>
+					<div class="auth-label-title">{{$t('login')}}</div>
 					<input
 						class="auth-form-input el-inp"
 						type="text"
-						placeholder="Enter your login or email"
+						:placeholder="$t('auth.enter_your_login_or_email')"
 						v-model="user.login.value"
 						:class="{'el-inp--error': user.login.error}"
 					>
 					<span class="auth__error-text">{{user.login.error}}</span>
 				</label>
 				<label class="auth-label">
-					<div class="auth-label-title">Password</div>
+					<div class="auth-label-title">{{$t('password')}}</div>
 					<input
 						class="auth-form-input el-inp"
 						type="password"
-						placeholder="Enter your password"
+						:placeholder="$t('auth.enter_your_password')"
 						v-model="user.password.value"
 						:class="{'el-inp--error': user.password.error}"
 					>
 					<span class="auth__error-text">{{user.password.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn" @click="authUser()">Log In</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'forgot'">Forgot your password?</a>
+					<button class="auth-fill-btn el-btn" @click="authUser()">{{$t('auth.log_in')}}</button>
+					<a class="auth-transpar-btn" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
 				</div>
 			</form>
 		</div>
 		<div class="auth-form" v-if="activeForm == 'forgot'">
 			<form @submit="forgotPass">
 				<label class="auth-label">
-					<div class="auth-label-title">Forgot password</div>
+					<div class="auth-label-title">{{$t('auth.forgot_password')}}</div>
 					<input
 						type="text"
 						v-model="forgot.email.value"
-						placeholder="Enter your Email"
+						:placeholder="$t('auth.enter_your_email')"
 						class="auth-form-input el-inp"
 						:class="{'el-inp--error': forgot.email.error}"
 					>
 					<span class="auth__error-text">{{forgot.email.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn">Reset Password</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'login'">Return to Log In page?</a>
+					<button class="auth-fill-btn el-btn">{{$t('auth.reset_password')}}</button>
+					<a class="auth-transpar-btn" @click="activeForm = 'login'">{{$t('auth.return_to_log_in_page')}}</a>
 				</div>
 			</form>
 		</div>
 		<div class="auth-form auth-form-fix-heigth" v-if="activeForm == 'sended'">
-			New password was sended to your email.
+			{{$t('auth.new_password_was_sended_to_your_email')}}
 		</div>
 	</div>
 </template>
@@ -94,13 +94,13 @@ export default
 
 			if (this.user.login.value == '')
 			{
-				this.user.login.error = 'Incorrect login';
+				this.user.login.error = this.$t('auth.incorrect_login');
 				isValid = false;
 			}
 
 			if (this.user.password.value == '')
 			{
-				this.user.password.error = 'Incorrect password';
+				this.user.password.error = this.$t('auth.incorrect_password');
 				isValid = false;
 			}
 
@@ -123,8 +123,8 @@ export default
 
 			if (!result.data.success)
 			{
-				this.user.login.error = 'Incorrect login or password';
-				this.user.password.error = 'Incorrect login or password';
+				this.user.login.error = this.$t('auth.incorrect_login_or_password');
+				this.user.password.error = this.$t('auth.incorrect_login_or_password');
 				return false;
 			}
 
@@ -143,12 +143,12 @@ export default
 
 			if(this.forgot.email.value == '')
 			{
-				this.forgot.email.error = 'Empty email';
+				this.forgot.email.error = this.$t('auth.empty_email');
 				isValid = false;
 			}
 			else if(!/^\w.+@\w+\.\w{2,4}$/i.test(this.forgot.email.value))
 			{
-				this.forgot.email.error = 'Invalid email format';
+				this.forgot.email.error = this.$t('auth.invalid_email_format');
 				isValid = false;
 			}
 
@@ -172,7 +172,7 @@ export default
 
 			if(!result.data.success)
 			{
-				this.forgot.email.error = 'Incorrect email.'
+				this.forgot.email.error = this.$t('auth.incorrect_email');
 				return false;
 			}
 

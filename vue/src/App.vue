@@ -6,6 +6,7 @@
 </template>
 
 <script>
+	import Vue from 'vue';
 	import Auth from './layouts/auth';
 	import Content from './layouts/content';
 	import Setup from './layouts/setup';
@@ -45,6 +46,10 @@
 
 				return 'Content';
 			}
+		},
+		created()
+		{
+			this.$store.commit('setLanguage', this.$store.state.languages.list[1]);
 		}
 	}
 </script>
