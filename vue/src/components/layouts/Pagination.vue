@@ -4,7 +4,7 @@
 			<li v-for="item in getPaginatorArr" :class="{active: current == item, points: item == '...'}" @click="setPage(item)">{{(item != '...') ? item : ''}}</li>
 		</ul>
 		<div class="pagination__text">
-			Elements per page - <span contenteditable="true" @input="setLimit">{{currentLimit}}</span>*
+			{{$t('pagination.elements_per_page')}}<span contenteditable="true" @input="setLimit">{{currentLimit}}</span>*
 		</div>
 	</div>
 </template>

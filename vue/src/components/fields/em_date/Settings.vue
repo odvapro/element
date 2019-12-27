@@ -1,7 +1,7 @@
 <template>
 	<div class="">
 		<div class="popup__field">
-			<div class="popup__field-name">Include Time</div>
+			<div class="popup__field-name">{{$t('fieldEmDate.settings.include_time')}}</div>
 			<div class="popup__field-input">
 				<Checkbox
 					:checked.sync="localSettings.includeTime"
@@ -9,8 +9,8 @@
 			</div>
 		</div>
 		<div class="popup__buttons">
-			<button @click="cancel" class="el-gbtn">Cancel</button>
-			<button @click="save" class="el-btn">Save settigns</button>
+			<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
+			<button @click="save" class="el-btn">{{$t('save_settings')}}</button>
 		</div>
 	</div>
 </template>

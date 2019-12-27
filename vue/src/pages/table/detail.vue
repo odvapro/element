@@ -9,23 +9,23 @@
 				</div>
 				<template v-if="$route.name != 'tableAddElement'">
 					<div class="detail-name-wrapper">
-						<div class="detail-head-label">Edit element</div>
+						<div class="detail-head-label">{{$t('pages.table.edit_element')}}</div>
 						<div class="detail-head-descr">{{ tableCode }}</div>
 					</div>
 					<div class="detail-head__buttons">
-						<button @click="cancel" class="el-gbtn">Cancel</button>
-						<button @click="remove" class="el-gbtn">Remove</button>
-						<button @click="saveElement" class="el-btn">Save</button>
+						<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
+						<button @click="remove" class="el-gbtn">{{$t('remove')}}</button>
+						<button @click="saveElement" class="el-btn">{{$t('save')}}</button>
 					</div>
 				</template>
 				<template v-else>
 					<div class="detail-name-wrapper">
-						<div class="detail-head-label">New Element</div>
+						<div class="detail-head-label">{{$t('pages.table.new_element')}}</div>
 						<div class="detail-head-descr">{{ tableCode }}</div>
 					</div>
 					<div class="detail-head__buttons">
-						<button @click="cancel" class="el-gbtn">Cancel</button>
-						<button @click="createElement" class="el-btn">Create</button>
+						<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
+						<button @click="createElement" class="el-btn">{{$t('create')}}</button>
 					</div>
 				</template>
 			</div>
@@ -152,7 +152,7 @@
 					tableCode       : this.tableCode
 				}).then(()=>
 				{
-					this.ElMessage('👌 Element saved!');
+					this.ElMessage(this.$t('elMessages.element_saved'));
 				});
 			},
 
@@ -183,10 +183,10 @@
 				if(result.data.success == true)
 				{
 					this.$router.push({name:'tableDetail', params:{tableCode:this.tableCode, id:result.data.lastid }});
-					this.ElMessage('Element created!');
+					this.ElMessage(this.$t('elMessages.element_created'));
 				}
 				else
-					this.ElMessage.error('Cant create element!');
+					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
 
 			/**
@@ -222,7 +222,7 @@
 				}).then(()=>
 				{
 					this.cancel();
-					this.ElMessage('Element removed!');
+					this.ElMessage(this.$t('elMessages.element_removed'));
 				});
 			}
 		}

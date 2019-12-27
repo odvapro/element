@@ -14,14 +14,14 @@
 						</div>
 						<span>{{ $store.state.users.authUser.name }}</span>
 					</a>
-					<div class="sidebar__user-logout" @click="logOut()">log out</div>
+					<div class="sidebar__user-logout" @click="logOut()">{{$t('log_out')}}</div>
 				</li>
-				<li :class="{active: getActiveMenuItem == 'update'}"><router-link to="/update/">Update</router-link></li>
-				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">Settings & Users</router-link></li>
+				<li :class="{active: getActiveMenuItem == 'update'}"><router-link to="/update/">{{$t('update')}}</router-link></li>
+				<li :class="{active: getActiveMenuItem == 'settings'}"><router-link to="/settings/">{{$t('sidebar.settings_and_users')}}</router-link></li>
 			</ul>
 		</div>
 		<div class="sidebar-tables-wrapper">
-			<div class="sidebar-table-head" v-if="extensionsLinks.length" >Extensions</div>
+			<div class="sidebar-table-head" v-if="extensionsLinks.length" >{{$t('sidebar.extensions')}}</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="extLink in extensionsLinks">
 					<a
@@ -45,7 +45,7 @@
 					</a>
 				</li>
 			</ul>
-			<div class="sidebar-table-head" v-if="tables.length > 0">Tables</div>
+			<div class="sidebar-table-head" v-if="tables.length > 0">{{$t('tables')}}</div>
 			<ul class="sidebar-tables-list">
 				<li v-for="table in tables" v-if="table.visible">
 					<a
@@ -73,7 +73,7 @@
 		</div>
 		<div class="sidebar-footer">
 			<a href="https://odva.pro" target="_blank" class="sidebar-develop-wrapper">
-				<span class="sidebar-develop-label">Developed by</span>
+				<span class="sidebar-develop-label">{{$t('developed_by')}}</span>
 				<div class="sidebar-develop-img">
 					<svg width="38" height="31" fill="none">
 						<use xlink:href="#logo-dev"></use>

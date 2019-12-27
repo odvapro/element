@@ -8,7 +8,7 @@
 			<img :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
 		</div>
 		<template v-if="countFiels == 0">
-			<span class="el-empty">Empty</span>
+			<span class="el-empty">{{$t('empty')}}</span>
 		</template>
 		<div class="em-file__edit" v-if="showPopup" v-click-outside="closePopup">
 			<div
@@ -17,14 +17,14 @@
 				v-if="!item.noShow"
 			>
 				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
-				<a href="javascript:void(0);" @click="removeFile(index)">remove</a>
+				<a href="javascript:void(0);" @click="removeFile(index)">{{$t('remove')}}</a>
 			</div>
 			<template v-if="countFiels == 0">
 				<div class="em-file__empty-pop">
-					<span class="el-empty">No files</span>
+					<span class="el-empty">{{$t('fieldEmFile.no_files')}}</span>
 				</div>
 			</template>
-			<button class="el-gbtn" @click="openSubPopup()">Add file</button>
+			<button class="el-gbtn" @click="openSubPopup()">{{$t('fieldEmFile.add_file')}}</button>
 			<div class="em-file__upload-popup"
 				v-if="showSubPopup"
 				v-click-outside="closeSubPopup"
@@ -39,22 +39,22 @@
 						>{{item.name}}</div>
 					</div>
 					<div class="em-file__upload-tabs-content-wrapper">
-						<div class="em-file__file-tab" v-if="activeTab == 'Upload'">
+						<div class="em-file__file-tab" v-if="activeTab == $t('upload')">
 							<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
-							<label class="el-btn" for="file">Choose File</label>
+							<label class="el-btn" for="file">{{$t('fieldEmFile.choose_file')}}</label>
 						</div>
 						<div
 							class="em-file__link-tab"
-							v-if="activeTab == 'Upload by link'"
+							v-if="activeTab == $t('upload_by_link')"
 						>
 							<input
 								class="el-inp em-file__embed-input"
 								type="text"
-								placeholder="Paste link"
+								:placeholder="$t('paste_link')"
 								v-model="link"
 								@change="uploadFile('link')"
 							/>
-							<button class="el-btn">Embed Link</button>
+							<button class="el-btn">{{$t('fieldEmFile.embed_link')}}</button>
 						</div>
 					</div>
 				</div>
@@ -77,10 +77,10 @@
 				showSubPopup : false,
 				tabs:
 				[
-					{ name: 'Upload', active: true },
-					{ name: 'Upload by link', active: false },
+					{ name: this.$t('upload'), active: true },
+					{ name: this.$t('upload_by_link'), active: false },
 				],
-				activeTab: 'Upload',
+				activeTab: this.$t('upload'),
 				link: ''
 			}
 		},

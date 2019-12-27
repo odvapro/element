@@ -2,45 +2,36 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Required
+				{{ $t('fieldEmCheck.settings.checked_status_in_db') }}
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter email" v-model="required">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('fieldEmCheck.settings.enter_checked_string')" v-model="checkedString">
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Checked status in DB
+				{{ $t('fieldEmCheck.settings.unchecked_status_in_db') }}
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter checked string" v-model="checkedString">
-			</div>
-		</div>
-		<div class="popup__field">
-			<div class="popup__field-name">
-				Unchecked status in DB
-			</div>
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter unchecked string" v-model="uncheckedString">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('fieldEmCheck.settings.enter_unchecked_string')" v-model="uncheckedString">
 			</div>
 		</div>
 		<div class="popup__buttons">
-			<button @click="cancel()" class="el-gbtn">Cancel</button>
-			<button @click="save()" class="el-btn">Save settigns</button>
+			<button @click="cancel()" class="el-gbtn">{{ $t('cancel') }}</button>
+			<button @click="save()" class="el-btn">{{ $t('save_settings') }}</button>
 		</div>
 	</div>
 </template>
 <script>
 	export default
 	{
-		props: ['settings','isRequired'],
+		props: ['settings'],
 		/**
 		 * Глобальные переменные странциы
 		 */
 		data()
 		{
 			return {
-				required: false,
 				checkedString:'1',
 				uncheckedString:'0'
 			}
@@ -61,7 +52,6 @@
 			save()
 			{
 				let formData = {
-					required: this.required,
 					checkedString: this.checkedString,
 					uncheckedString: this.uncheckedString,
 				}

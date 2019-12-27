@@ -28,19 +28,22 @@
 			</div>
 			<Datepicker
 				v-model="localFullDate"
-				placeholder="Empty"
+				placeholder="$('empty')"
 				@selected="changeLocalFieldValue"
 				:inline="true"
+				:language="curentLang"
 			>
 			</Datepicker>
 			<div class="em-date__bottom">
-				<div class="em-date__clear" @click="clear()">Clear</div>
+				<div class="em-date__clear" @click="clear()">{{$t('clear')}}</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 	import Datepicker from 'vuejs-datepicker';
+	import {en, ru} from 'vuejs-datepicker/dist/locale';
+
 	export default
 	{
 		props: ['fieldValue', 'fieldSettings', 'mode', 'view'],
@@ -55,10 +58,18 @@
 				localMinutes: false,
 				localFieldValue: false,
 				includeTime: false,
+				curentLang: en,
+				datePickerLocales:
+				{
+					en: en,
+					ru: ru
+				}
 			}
 		},
 		mounted()
 		{
+			this.checkAndSetPickerLang();
+
 			this.includeTime = this.fieldSettings.includeTime == "true";
 			if (this.includeTime && this.fieldValue)
 			{
@@ -73,6 +84,15 @@
 		},
 		methods:
 		{
+			checkAndSetPickerLang()
+			{
+				for (let lang in this.datePickerLocales)
+					if (lang === this.$store.state.languages.currentLang.short)
+					{
+						this.curentLang = this.datePickerLocales[lang];
+						break;
+					}
+			},
 			openFieldEdit()
 			{
 				this.isEditFieldPopup = true;
@@ -99,21 +119,7 @@
 			},
 			getMonth(monthIndex)
 			{
-				let months =
-				[
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-					'August',
-					'September',
-					'October',
-					'November',
-					'December'
-				];
+				let months = this.$t('months');
 				if (!monthIndex || monthIndex > 11)
 					return months[0].substr(0,3);
 
@@ -207,7 +213,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					return 'Empty';
+					return this.$t('empty');
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),

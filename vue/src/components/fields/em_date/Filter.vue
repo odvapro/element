@@ -32,13 +32,14 @@
 				</div>
 				<Datepicker
 					v-model="localFullDate"
-					placeholder="Select an Option"
+					:placeholder="$t('select_an_option')"
 					@selected="changeLocalFieldValue"
 					:inline="true"
+					:language="curentLang"
 				>
 				</Datepicker>
 				<div class="em-date-filter__bottom">
-					<div class="em-date-filter__clear" @click="clear()">Clear</div>
+					<div class="em-date-filter__clear" @click="clear()">{{$t('clear')}}</div>
 				</div>
 			</div>
 		</div>
@@ -46,6 +47,7 @@
 </template>
 <script>
 	import Datepicker from 'vuejs-datepicker';
+	import {en, ru} from 'vuejs-datepicker/dist/locale';
 	export default
 	{
 		props: ['filter', 'settings'],
@@ -60,6 +62,12 @@
 				localTimeStr: false,
 				localHours: false,
 				localMinutes: false,
+				curentLang: en,
+				datePickerLocales:
+				{
+					en: en,
+					ru: ru
+				}
 			}
 		},
 		computed:
@@ -81,7 +89,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					return 'Select an Option';
+					return this.$t('select_an_option');
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
@@ -93,23 +101,18 @@
 		},
 		methods:
 		{
+			checkAndSetPickerLang()
+			{
+				for (let lang in this.datePickerLocales)
+					if (lang === this.$store.state.languages.currentLang.short)
+					{
+						this.curentLang = this.datePickerLocales[lang];
+						break;
+					}
+			},
 			getMonth(monthIndex)
 			{
-				let months =
-				[
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-					'August',
-					'September',
-					'October',
-					'November',
-					'December'
-				];
+				let months = this.$t('months');
 				if (!monthIndex || monthIndex > 11)
 					return months[0].substr(0,3);
 
@@ -222,6 +225,8 @@
 		},
 		mounted()
 		{
+			this.checkAndSetPickerLang();
+
 			this.includeTime = this.settings.includeTime == "true";
 			this.initFullDate();
 		}

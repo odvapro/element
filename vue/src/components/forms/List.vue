@@ -11,7 +11,7 @@
 					v-if="!hasSelectedSlot"
 					class="el-inp-noborder"
 					type="text"
-					placeholder="Search for an option..."
+					:placeholder="$t('forms.list.search_for_an_option')"
 					v-model="localSearchText"
 				/>
 				<slot name="selected"></slot>
@@ -35,7 +35,7 @@
 				showPopup: false,
 				localSearchText:'',
 				localSelected:this.selected,
-				placeholder:'Empty'
+				placeholder:this.$t('empty')
 			}
 		},
 		watch:

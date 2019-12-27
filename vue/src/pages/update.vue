@@ -4,23 +4,23 @@
 			<div class="update-head-name">
 				<div class="update-icon-wrapper"> ⚙️ </div>
 				<div class="update-name-wrapper">
-					<div class="update-head-label">Update</div>
-					<div class="update-head-descr">Check and update element</div>
+					<div class="update-head-label">{{$t('update')}}</div>
+					<div class="update-head-descr">{{$t('pages.update.check_and_update_element')}}</div>
 				</div>
 			</div>
 		</div>
 		<div class="update-content">
 			<div class="update-version">
-				Current version: <em>{{ currentVersion }}</em>
-				<div v-if="showLatestIsInstalled && !showLoader"> You have the latest version</div>
+				{{$t('pages.update.current_version')}} <em>{{ currentVersion }}</em>
+				<div v-if="showLatestIsInstalled && !showLoader">{{$t('pages.update.you_have_the_latest_version')}}</div>
 			</div>
 			<template v-if="successUpdate">
-				<div class="update-success">System has been updated successfully</div>
+				<div class="update-success">{{$t('pages.update.system_has_been_updated_successfully')}}</div>
 			</template>
 			<Loader class="update__loader" v-if="showLoader" />
 			<div class="update-buttons" v-if="!successUpdate">
-				<button @click="checkVersion()" class="el-gbtn">Check version</button>
-				<button @click="update()" v-if="canUpdate" class="el-btn">Update to {{ newVersion }}</button>
+				<button @click="checkVersion()" class="el-gbtn">{{$t('pages.update.check_version')}}</button>
+				<button @click="update()" v-if="canUpdate" class="el-btn">{{$t('pages.update.update_to')}} {{ newVersion }}</button>
 			</div>
 		</div>
 	</div>
@@ -52,7 +52,7 @@
 				let result = await this.$axios.get('/settings/checkVersion/');
 				this.showLoader = false;
 				if(typeof result.data.success == 'undefined')
-					return this.ElMessage.error('Something goes wrong!');
+					return this.ElMessage.error(this.$t('elMessages.something_goes_wrong'));
 				if(result.data.result == true)
 				{
 					this.canUpdate = true;

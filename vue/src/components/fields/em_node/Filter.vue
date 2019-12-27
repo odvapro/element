@@ -4,7 +4,7 @@
 		v-if="showInput"
 	>
 		<List
-			:settings="{placeholder:'Select an Option'}"
+			:settings="{placeholder: $t('select_an_option') }"
 		>
 			<template v-slot:selected>
 				<ListOption

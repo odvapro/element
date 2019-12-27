@@ -1,18 +1,18 @@
 <template>
 	<div class="settings-table-wrapper">
 		<div class="settings-empty-tables" v-if="tables.length < 1">
-			No tables
+			{{$t('settingsTable.no_tables')}}
 		</div>
 		<div class="settings-table-head" v-if="tables.length > 0">
 			<div class="settings-table-row-data">
 				<div class="settings-table-item">
-					<div class="settings-table-item-title">Code</div>
+					<div class="settings-table-item-title">{{$t('code')}}</div>
 				</div>
 				<div class="settings-table-item">
-					<div class="settings-table-item-title">Name</div>
+					<div class="settings-table-item-title">{{$t('name')}}</div>
 				</div>
 				<div class="settings-table-item">
-					<div class="settings-table-item-title">Show</div>
+					<div class="settings-table-item-title">{{$t('show')}}</div>
 				</div>
 				<div class="settings-table-item"></div>
 			</div>
@@ -36,7 +36,7 @@
 								type="text"
 								@change="saveTableSettings(table)"
 								v-model="table.name"
-								placeholder="Set Name"
+								:placeholder="$t('set_something') + $t('name')"
 							/>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 					<div class="settings-table-row-setting-item active" v-for="column in table.columns">
 						<div class="settings-table-item"> {{column.field}} </div>
 						<div class="settings-table-item category-font">
-							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" placeholder="Set Name">
+							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" :placeholder="$t('set_something') + $t('name')">
 						</div>
 						<div class="settings-table-item centered">
 							<Select
@@ -72,14 +72,14 @@
 								class="settings-table__open-settings"
 								@click="openSettingsPopup(table,column)"
 								v-if="checkSettingComponent(table,column)"
-							>settings</button>
+							>{{$t('settings')}}</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<Popup :visible.sync="settingsPopup">
-			<div class="popup__name">{{ settingsColumn.field }} settings</div>
+			<div class="popup__name">{{ $t('settings_of', { of_what: settingsColumn.field || '' }) }}</div>
 			<component
 				:is="settingsComponent"
 				:settings="currentSettings"
@@ -225,7 +225,7 @@
 								table.columns[columnCode].em.settings = result.data.settings;
 						}
 					}
-					this.ElMessage('😎 Settings saved!');
+					this.ElMessage(this.$t('elMessages.settings_saved'));
 				}
 			},
 

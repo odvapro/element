@@ -3,7 +3,7 @@
 		<svg width="20" height="20">
 			<use xlink:href="#loader"></use>
 		</svg>
-		<span>Loading...</span>
+		<span>{{$t('forms.loader.loading')}}</span>
 	</div>
 </template>
 <script> export default {} </script>

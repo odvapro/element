@@ -2,7 +2,7 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Folder for save
+				{{$t('fieldEmFile.settings.folder_for_save')}}
 				<small v-if="errors.savePath" class="popup__field-error">{{ errors.savePath.message }}</small>
 			</div>
 			<div class="popup__field-input em-file__settings-path">
@@ -11,32 +11,32 @@
 					type="text"
 					@change="checkPath"
 					v-model="localSettings.savePath"
-					placeholder="Folder for save"
+					:placeholder="$t('fieldEmFile.settings.folder_for_save')"
 				/>
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Resolutions
+				{{$t('fieldEmFile.settings.resolutions')}}
 				<small v-if="errors.nodeFieldCode" class="popup__field-error">{{ errors.nodeFieldCode.message }}</small>
 			</div>
 		</div>
 		<div class="em-file__s-resolutions">
 			<div class="em-file__s-resolution">
-				<div class="em-file__s-code">Code</div>
-				<div class="em-file__s-width">Width</div>
-				<div class="em-file__s-height">Height</div>
+				<div class="em-file__s-code">{{$t('code')}}</div>
+				<div class="em-file__s-width">{{$t('fieldEmFile.settings.width')}}</div>
+				<div class="em-file__s-height">{{$t('fieldEmFile.settings.height')}}</div>
 				<div class="em-file__s-remove"></div>
 			</div>
 			<div class="em-file__s-resolution" v-for="listItem, index in localSettings.resolutions" :key="index">
 				<div class="em-file__s-code">
-					<input type="text" class="el-inp-noborder" v-model="listItem.code" placeholder="Code" :disabled="listItem.required">
+					<input type="text" class="el-inp-noborder" v-model="listItem.code" :placeholder="$t('code')" :disabled="listItem.required">
 				</div>
 				<div class="em-file__s-width">
-					<input type="number" class="el-inp-noborder" v-model.number="listItem.width" placeholder="Width">
+					<input type="number" class="el-inp-noborder" v-model.number="listItem.width" :placeholder="$t('fieldEmFile.settings.width')">
 				</div>
 				<div class="em-file__s-height">
-					<input type="number" class="el-inp-noborder" v-model.number="listItem.height" placeholder="Height">
+					<input type="number" class="el-inp-noborder" v-model.number="listItem.height" :placeholder="$t('fieldEmFile.settings.height')">
 				</div>
 				<div class="em-file__s-remove" v-if="!listItem.required">
 					<div class="em-file__s-remove-button" @click.stop="removeResolution(index)">
@@ -51,10 +51,10 @@
 				>{{ errors.resolutions[index].message }}</small>
 			</div>
 		</div>
-		<button class="el-gbtn" @click="addResolution()">Add resolution</button>
+		<button class="el-gbtn" @click="addResolution()">{{$t('fieldEmFile.settings.add_resolution')}}</button>
 		<div class="popup__buttons">
-			<button @click="cancel()" class="el-gbtn">Cancel</button>
-			<button @click="save()" class="el-btn">Save settigns</button>
+			<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
+			<button @click="save()" class="el-btn">{{$t('save_settings')}}</button>
 		</div>
 	</div>
 </template>
