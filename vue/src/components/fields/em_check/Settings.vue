@@ -2,14 +2,6 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				{{ $t('fieldEmCheck.settings.required') }}
-			</div>
-			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_email')" v-model="required">
-			</div>
-		</div>
-		<div class="popup__field">
-			<div class="popup__field-name">
 				{{ $t('fieldEmCheck.settings.checked_status_in_db') }}
 			</div>
 			<div class="popup__field-input">
@@ -33,14 +25,13 @@
 <script>
 	export default
 	{
-		props: ['settings','isRequired'],
+		props: ['settings'],
 		/**
 		 * Глобальные переменные странциы
 		 */
 		data()
 		{
 			return {
-				required: false,
 				checkedString:'1',
 				uncheckedString:'0'
 			}
@@ -61,7 +52,6 @@
 			save()
 			{
 				let formData = {
-					required: this.required,
 					checkedString: this.checkedString,
 					uncheckedString: this.uncheckedString,
 				}

@@ -4,7 +4,6 @@ export default
 	{
 		settings:
 		{
-			required: 'Required',
 			checked_status_in_db: 'Checked status in DB',
 			unchecked_status_in_db: 'Unchecked status in DB',
 			enter_checked_string: 'Enter checked string',
@@ -181,17 +180,6 @@ export default
 	add_user: 'Add user',
 	add: 'Add',
 	enter_something: 'Enter ',
-	elMessages:
-	{
-		password_saved: 'Password saved.',
-		user_saved: 'User saved.',
-		settings_saved: '😎 Settings saved!',
-		something_goes_wrong: 'Something goes wrong!',
-		element_saved: '👌 Element saved!',
-		element_created: 'Element created!',
-		element_removed: 'Element removed!',
-		cant_create_element: 'Cant create element!',
-	},
 	months:
 	[
 		'January',
@@ -206,5 +194,16 @@ export default
 		'October',
 		'November',
 		'December'
-	]
+	],
+	elMessages:
+	{
+		password_saved: 'Password saved.',
+		user_saved: 'User saved.',
+		settings_saved: '😎 Settings saved!',
+		something_goes_wrong: 'Something goes wrong!',
+		element_saved: '👌 Element saved!',
+		element_created: 'Element created!',
+		element_removed: 'Element removed!',
+		cant_create_element: 'Cant create element!',
+	},
 };

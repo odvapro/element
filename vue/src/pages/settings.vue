@@ -12,7 +12,10 @@
 			</div>
 		</div>
 		<div class="settings-tab-wrapper">
-			<div class="settings-tabs-head">
+			<div
+				class="settings-tabs-head"
+				:class="settingsTabsHeadClass"
+			>
 				<div
 					class="settings-tab-item"
 					@click="setActiveTab(item)"
@@ -73,6 +76,13 @@
 					item.active = false;
 			}
 		},
+		computed:
+		{
+			settingsTabsHeadClass()
+			{
+				return 'settings-tabs-head_' + this.$store.state.languages.currentLang.short;
+			}
+		},
 		watch:
 		{
 			'$store.state.languages.currentLang'()
@@ -131,10 +141,18 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 258px;
+		width: 265px;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
+		&_ru
+		{
+			width: 294px;
+		}
+		&_en
+		{
+			width: 265px;
+		}
 	}
 	.settings-tab-item
 	{
