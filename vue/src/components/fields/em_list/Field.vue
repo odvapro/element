@@ -20,11 +20,8 @@
 	</div>
 </template>
 <script>
-	import List from '@/components/forms/List.vue';
-	import ListOption from '@/components/forms/ListOption.vue';
 	export default
 	{
-		components: { List, ListOption },
 		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Глобальные переменные страницы

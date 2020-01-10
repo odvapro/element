@@ -50,13 +50,11 @@
 	</div>
 </template>
 <script>
-	import Select from '@/components/forms/Select.vue';
-	import SelectOption from '@/components/forms/SelectOption.vue';
 	import MainFilterField from '@/components/fields/MainFilterField.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
-		components: { Select, SelectOption, MainFilterField },
+		components: { MainFilterField },
 		props: ['columns', 'tview'],
 		/**
 		 * Глобальные переменные страницы

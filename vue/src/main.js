@@ -7,6 +7,11 @@ import scsssStyle from './assets/style.scss'
 import './plugins/axios.js'
 import './plugins/message.js'
 import Popup from './plugins/popup/index.js'
+import Checkbox from './components/forms/Checkbox.js'
+import List from './components/forms/List.js'
+import ListOption from './components/forms/ListOption.js'
+import Select from './components/forms/Select.js'
+import SelectOption from './components/forms/SelectOption.js'
 import fonts from './assets/fonts.scss'
 import App from './App.vue'
 import store from './store/index.js'
@@ -15,6 +20,11 @@ import VueCookie from 'vue-cookie';
 Vue.use(VueCookie);
 Vue.use(Meta)
 Vue.use(Popup)
+Vue.use(Checkbox);
+Vue.use(List);
+Vue.use(ListOption);
+Vue.use(Select);
+Vue.use(SelectOption);
 Vue.config.productionTip = false;
 window.Vue = Vue;
 window.importStyles = [];

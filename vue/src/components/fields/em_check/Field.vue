@@ -7,10 +7,8 @@
 	</div>
 </template>
 <script>
-	import Checkbox from '@/components/forms/Checkbox.vue';
 	export default
 	{
-		components: {Checkbox},
 		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Checke status
