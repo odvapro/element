@@ -16,6 +16,8 @@ const users =
 		setAuthUser(state, user)
 		{
 			state.authUser = user;
+			if (state.authUser && typeof state.authUser.language === 'string')
+				state.authUser.language = JSON.parse(state.authUser.language);
 		}
 	}
 }

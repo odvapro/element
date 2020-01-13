@@ -41,6 +41,7 @@
 		{
 			changeLang(newLang)
 			{
+				this.$store.dispatch('setLanguage', {newLang, id: this.$store.state.users.authUser.id});
 				this.$store.commit('setLanguage', newLang);
 			}
 		}
