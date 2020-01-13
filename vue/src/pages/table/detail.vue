@@ -269,11 +269,7 @@
 		text-transform: lowercase;
 	}
 	.detail-name-wrapper{padding-left:7px; }
-	.detail-feilds
-	{
-		padding-left: 56px;
-		border-top: 1px solid rgba(103, 115, 135, 0.1);
-	}
+	.detail-feilds{border-top: 1px solid rgba(103, 115, 135, 0.1);}
 	.detail-feild
 	{
 		min-height: 40px;
@@ -309,7 +305,7 @@
 		min-width: 400px;
 		min-height: 40px;
 		border-left: 1px solid rgba(103, 115, 135, 0.1);
-		padding-left: 76px;
+		padding-left: 14px;
 		display: flex;
 		align-items: center;
 		.em-string,

@@ -36,7 +36,6 @@ export default
 	{
 		settings:
 		{
-			key: 'Key',
 			add_option: 'Add option',
 			enter_key: 'Enter key',
 			enter_value: 'Enter value',
@@ -163,6 +162,7 @@ export default
 	paste_link: 'Paste link',
 	code: 'Code',
 	name: 'Name',
+	name2: 'Name',
 	show: 'Show',
 	settings: 'Settings',
 	settings_of: '{of_what} Settings',
@@ -180,6 +180,7 @@ export default
 	add_user: 'Add user',
 	add: 'Add',
 	enter_something: 'Enter ',
+	key: 'Key',
 	months:
 	[
 		'January',
