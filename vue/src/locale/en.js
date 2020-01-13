@@ -117,7 +117,7 @@ export default
 		enter_your_password: 'Enter your password',
 		enter_your_email: 'Enter your Email',
 		incorrect_login: 'Incorrect login',
-		incorrect_login: 'Incorrect password',
+		incorrect_password: 'Incorrect password',
 		incorrect_email: 'Incorrect email',
 		incorrect_login_or_password: 'Incorrect login or password',
 		empty_email: 'Empty email',

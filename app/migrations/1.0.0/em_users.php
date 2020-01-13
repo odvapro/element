@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
@@ -59,6 +59,16 @@ class EmUsersMigration_100 extends Migration
                         'notNull' => true,
                         'size' => 200,
                         'after' => 'password'
+                    )
+                ),
+                new Column(
+                    'language',
+                    array(
+                        'type'    => Column::TYPE_VARCHAR,
+                        'notNull' => true,
+                        'size'    => 200,
+                        'after'   => 'email',
+                        'default' => '{"short":"en","long":"English"}'
                     )
                 )
             ),

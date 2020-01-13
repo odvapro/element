@@ -61,6 +61,29 @@ class UsersController extends ControllerBase
 
 		return $this->jsonResult(['success' => true]);
 	}
+	/**
+	 * Сменить язык
+	 * @return json
+	 */
+	public function setLanguageAction()
+	{
+		$userId = $this->request->getPost('id');
+		$newLanguage = $this->request->getPost('language');
+
+		if (empty($userId))
+			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
+
+		$user = EmUsers::findFirstById($userId);
+
+		if (empty($user))
+			return $this->jsonResult(['success' => false, 'message' => 'user is not found']);
+		$user->language = json_encode($newLanguage);
+
+		if(!$user->save())
+			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
+
+		return $this->jsonResult(['success' => true]);
+	}
 
 	/**
 	 * Удалить пользователя
@@ -94,6 +117,7 @@ class UsersController extends ControllerBase
 		$login      = $this->request->getPost('login');
 		$email      = $this->request->getPost('email');
 		$password   = $this->request->getPost('password');
+		$language   = $this->request->getPost('language');
 
 		if (empty($name) || empty($login) || empty($email) || empty($password))
 			return $this->jsonResult(['success' => false, 'message' => 'fill all fields']);
@@ -111,6 +135,7 @@ class UsersController extends ControllerBase
 		$user->name      = $name;
 		$user->email     = $email;
 		$user->login     = $login;
+		$user->language  = json_encode($language);
 		$user->password  = md5($password);
 
 		if(!$user->save())

@@ -115,11 +115,15 @@ export default
 				return false;
 
 			var data = new FormData();
-
+			let user;
 			data.append('login', this.user.login.value);
 			data.append('password', this.user.password.value);
 
 			var result = await this.$axios.post('/auth/index/', data);
+			user = result.data.user;
+
+			if (typeof user.language === 'string')
+				user.language = JSON.parse(user.language);
 
 			if (!result.data.success)
 			{
@@ -128,9 +132,14 @@ export default
 				return false;
 			}
 
-			this.$cookie.set('user', JSON.stringify(result.data.user), 12);
-
+			this.$cookie.set('user', JSON.stringify(user), 12);
+			await this.setLanguage(user.language);
 			this.$router.push('/');
+		},
+		async setLanguage(lang)
+		{
+			await this.$store.dispatch('setLanguage', {newLang: lang});
+			this.$store.commit('setLanguage', lang);
 		},
 		/**
 		 * Проверка данных для востановления пароля
