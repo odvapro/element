@@ -97,14 +97,13 @@
 </template>
 <script>
 	import MainField from '@/components/fields/MainField.vue';
-	import Checkbox from '@/components/forms/Checkbox.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
 		mixins: [TableWork],
-		components: {MainField, Pagination, Checkbox},
+		components: {MainField, Pagination},
 		/**
 		 * Глобальные переменные страницы
 		 */

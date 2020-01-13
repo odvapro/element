@@ -91,14 +91,10 @@
 </template>
 <script>
 	import qs from 'qs';
-	import Select from '@/components/forms/Select.vue';
-	import SelectOption from '@/components/forms/SelectOption.vue';
-	import Checkbox from '@/components/forms/Checkbox.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: {Select, Checkbox, SelectOption},
 		/**
 		 * Глобальные переменные страницы
 		 */

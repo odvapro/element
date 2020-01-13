@@ -28,12 +28,9 @@
 	</div>
 </template>
 <script>
-	import List from '@/components/forms/List.vue';
-	import ListOption from '@/components/forms/ListOption.vue';
 	export default
 	{
 		props: ['filter', 'settings'],
-		components: { List, ListOption },
 		data()
 		{
 			return {

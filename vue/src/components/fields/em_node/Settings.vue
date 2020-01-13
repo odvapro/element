@@ -54,12 +54,9 @@
 	</div>
 </template>
 <script>
-	import Select from '@/components/forms/Select.vue';
-	import SelectOption from '@/components/forms/SelectOption.vue';
 	export default
 	{
 		props: ['settings'],
-		components:{Select,SelectOption},
 		/**
 		 * Глобальные переменные странциы
 		 */
