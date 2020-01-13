@@ -64,10 +64,11 @@ class EmUsersMigration_100 extends Migration
                 new Column(
                     'language',
                     array(
-                        'type' => Column::TYPE_VARCHAR,
+                        'type'    => Column::TYPE_VARCHAR,
                         'notNull' => true,
-                        'size' => 200,
-                        'after' => 'email'
+                        'size'    => 200,
+                        'after'   => 'email',
+                        'default' => '{"short":"en","long":"English"}'
                     )
                 )
             ),
