@@ -74,6 +74,7 @@ body{
 	line-height: 49px;
 	font-size: 12px;
 	color: #677387;
+	padding: 0;
 	&:focus,&:active{color: #191C21;}
 	&::placeholder{color: rgba(103, 115, 135, 0.4);}
 	&:focus::placeholder{color: transparent;}

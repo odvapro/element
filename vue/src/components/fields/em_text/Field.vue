@@ -76,13 +76,13 @@
 		}
 		.ql-editor
 		{
-			padding:10px;
-			background: rgba(103, 115, 135, 0.05);
+			/*background: rgba(13, 115, 135, 0.05);*/
+			padding-top: 11px;
 			border-radius: 2px;
 			color: rgba(25, 28, 33, 0.7);
 			font-family: $mainFont;
 			font-size: 12px;
-			line-height: 12px;
+			line-height: 14px;
 			overflow:visible;
 		}
 		.ql-tooltip{
@@ -94,10 +94,10 @@
 		{
 			font-style: normal;
 			font-weight: normal;
-			font-size: 10px;
+			font-size: 12px;
 			line-height: 12px;
-			color: rgba(25, 28, 33, 0.4);
-			left:10px;
+			color: rgba(103, 115, 135, 0.4);
+			left:0px;
 		}
 	}
 

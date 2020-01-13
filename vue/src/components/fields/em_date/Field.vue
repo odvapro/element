@@ -3,7 +3,7 @@
 		<div class="em-date-wr__static-field" @click="openFieldEdit">
 			<div
 				class="em-date-wr__static-field-value"
-				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
+				:class="{'el_empty': !localFieldValue}"
 			>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
 		</div>
 		<div
@@ -243,6 +243,10 @@
 		left: 0;
 		top: 0;
 	}
+	.detail-field-box .em-date-wr
+	{
+		padding: 0;
+	}
 	.em-date
 	{
 	    position: absolute;
@@ -331,7 +335,7 @@
 		font-size: 12px;
 		color: #677387;
 		white-space: nowrap;
-		&_empty
+		&.el_empty
 		{
 			color: rgba(103, 115, 135, 0.4);
 		}
