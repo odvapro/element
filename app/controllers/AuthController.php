@@ -2,6 +2,18 @@
 
 class AuthController extends ControllerBase
 {
+	public static function checkCurrentLanguage()
+	{
+		$session = Phalcon\Di::getDefault()->get('session');
+		$auth = $session->get('auth');
+		if (!empty($auth))
+		{
+			$user = EmUsers::findFirstById($auth);
+			$session->set('currentLanguage', json_decode($user->language)->short);
+		}
+		elseif (empty($session->get('currentLanguage')) && empty($auth))
+			$session->set('currentLanguage', 'en');
+	}
 	/**
 	 * Авторизация пользователя
 	 */
@@ -77,9 +89,13 @@ class AuthController extends ControllerBase
 	{
 		$auth = $this->session->get('auth');
 		if(empty($auth))
-			return $this->jsonResult(['success' => false, 'message' => 'no auth']);
+		{
+			AuthController::checkCurrentLanguage();
+			return $this->jsonResult(['success' => false, 'message' => 'no auth', 'language' => $this->session->get('currentLanguage')]);
+		}
+		AuthController::checkCurrentLanguage();
 
-		return $this->jsonResult(['success' => true, 'userid' => $auth]);
+		return $this->jsonResult(['success' => true, 'userid' => $auth, 'language' => $this->session->get('currentLanguage')]);
 	}
 
 	/**
