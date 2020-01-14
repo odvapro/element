@@ -91,11 +91,11 @@ class AuthController extends ControllerBase
 		if(empty($auth))
 		{
 			AuthController::checkCurrentLanguage();
-			return $this->jsonResult(['success' => false, 'message' => 'no auth', 'language' => $this->session->get('currentLanguage')]);
+			return $this->jsonResult(['success' => false, 'message' => 'no auth']);
 		}
 		AuthController::checkCurrentLanguage();
 
-		return $this->jsonResult(['success' => true, 'userid' => $auth, 'language' => $this->session->get('currentLanguage')]);
+		return $this->jsonResult(['success' => true, 'userid' => $auth]);
 	}
 
 	/**
