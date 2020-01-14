@@ -104,6 +104,8 @@ class AuthController extends ControllerBase
 	public function logOutAction()
 	{
 		$this->session->remove('auth');
+		$this->session->remove('currentLanguage');
+		AuthController::checkCurrentLanguage();
 		return $this->jsonResult(['success' => true]);
 	}
 }
