@@ -73,6 +73,7 @@
 			height: 100%;
 			padding-left: 10px;
     		padding-right: 10px;
+    		margin-top: 0;
 		}
 		.ql-editor
 		{
@@ -81,7 +82,6 @@
 			border-radius: 2px;
 			color: rgba(25, 28, 33, 0.7);
 			font-family: $mainFont;
-			font-size: 12px;
 			line-height: 14px;
 			overflow:visible;
 		}

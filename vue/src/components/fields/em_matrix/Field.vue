@@ -1,6 +1,6 @@
 <template>
 	<div class="em-matrix">
-		<div class="em-matrix-fields" v-if="view=='detail'">
+		<div class="em-matrix-table" v-if="view=='detail'">
 			<div class="em-matrix-row-head">
 				<div class="em-matrix-head-field em-matrix-head-field__name">{{$t('name2')}}</div>
 				<div class="em-matrix-head-field em-matrix-head-field__key">{{$t('key')}}</div>
@@ -13,11 +13,15 @@
 				<input class="em-matrix-field em-matrix-field__edit" value="Eve Leroy">
 				<div class="em-matrix-field em-matrix-field__remove">{{$t('remove')}}</div>
 			</div>
-			<div class="em-matrix-add">
-				<svg width="12" height="12">
-					<use xlink:href="#plus"></use>
-				</svg>
-				New
+			<div class="em-matrix-row-add">
+				<div class="em-matrix-row-add__icon">
+					<svg width="9" height="9">
+						<use xlink:href="#plus-gray"></use>
+					</svg>
+				</div>
+				<div class="em-matrix-row-add__text">
+					New
+				</div>
 			</div>
 		</div>
 		<div v-else>
@@ -102,9 +106,23 @@
 		opacity: 0;
 		transition: all .125s;
 	}
-	.em-matrix-add
+	.em-matrix-row-add
+	{
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		padding-left: 13px;
+		min-height: 31px;
+	}
+	.em-matrix-row-add__icon
+	{
+		line-height: 0;
+		font-size: 0;
+		margin-right: 6px;
+	}
+	.em-matrix-row-add__text
 	{
 		color: #677387;
-		cursor: pointer;
+		font-size: 10px;
 	}
 </style>
