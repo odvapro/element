@@ -2,17 +2,17 @@
 
 class AuthController extends ControllerBase
 {
-	public static function checkCurrentLanguage()
+	public static function setLangInUserSettings()
 	{
-		$session = Phalcon\Di::getDefault()->get('session');
-		$auth = $session->get('auth');
+		$auth = Phalcon\Di::getDefault()->get('session')->get('auth');
+		$config = Phalcon\Di::getDefault()->get('config');
 		if (!empty($auth))
 		{
 			$user = EmUsers::findFirstById($auth);
-			$session->set('currentLanguage', json_decode($user->language)->short);
+			$config->application->userSettings['language'] = json_decode($user->language)->short;
 		}
-		elseif (empty($session->get('currentLanguage')) && empty($auth))
-			$session->set('currentLanguage', 'en');
+		elseif (empty($config->userSettings['language']) && empty($auth))
+			$config->application->userSettings['language'] = 'en';
 	}
 	/**
 	 * Авторизация пользователя
@@ -90,10 +90,10 @@ class AuthController extends ControllerBase
 		$auth = $this->session->get('auth');
 		if(empty($auth))
 		{
-			AuthController::checkCurrentLanguage();
+			AuthController::setLangInUserSettings();
 			return $this->jsonResult(['success' => false, 'message' => 'no auth']);
 		}
-		AuthController::checkCurrentLanguage();
+		AuthController::setLangInUserSettings();
 
 		return $this->jsonResult(['success' => true, 'userid' => $auth]);
 	}
@@ -104,8 +104,6 @@ class AuthController extends ControllerBase
 	public function logOutAction()
 	{
 		$this->session->remove('auth');
-		$this->session->remove('currentLanguage');
-		AuthController::checkCurrentLanguage();
 		return $this->jsonResult(['success' => true]);
 	}
 }
