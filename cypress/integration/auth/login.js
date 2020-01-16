@@ -1,4 +1,4 @@
-describe('incorrectAuthData', ()=>
+describe('authTest', ()=>
 {
 	function logIn(login, psw)
 	{
