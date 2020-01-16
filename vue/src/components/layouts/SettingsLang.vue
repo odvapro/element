@@ -36,9 +36,13 @@
 		},
 		methods:
 		{
-			changeLang(newLang)
+			async changeLang(newLang)
 			{
-				this.$store.dispatch('setLanguage', {newLang, id: this.$store.state.users.authUser.id});
+				let user = JSON.parse(this.$cookie.get('user'));
+				user.language = newLang;
+				this.$cookie.set('user', JSON.stringify(user), 12);
+
+				await this.$store.dispatch('setLanguage', {newLang, id: this.$store.state.users.authUser.id});
 				this.$store.commit('setLanguage', newLang);
 			}
 		}

@@ -2,6 +2,18 @@
 
 class AuthController extends ControllerBase
 {
+	public static function setLangInUserSettings()
+	{
+		$auth = Phalcon\Di::getDefault()->get('session')->get('auth');
+		$config = Phalcon\Di::getDefault()->get('config');
+		if (!empty($auth))
+		{
+			$user = EmUsers::findFirstById($auth);
+			$config->application->userSettings['language'] = json_decode($user->language)->short;
+		}
+		elseif (empty($config->userSettings['language']) && empty($auth))
+			$config->application->userSettings['language'] = 'en';
+	}
 	/**
 	 * Авторизация пользователя
 	 */
@@ -77,7 +89,11 @@ class AuthController extends ControllerBase
 	{
 		$auth = $this->session->get('auth');
 		if(empty($auth))
+		{
+			AuthController::setLangInUserSettings();
 			return $this->jsonResult(['success' => false, 'message' => 'no auth']);
+		}
+		AuthController::setLangInUserSettings();
 
 		return $this->jsonResult(['success' => true, 'userid' => $auth]);
 	}

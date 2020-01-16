@@ -82,6 +82,8 @@ class UsersController extends ControllerBase
 		if(!$user->save())
 			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
 
+		AuthController::setLangInUserSettings();
+
 		return $this->jsonResult(['success' => true]);
 	}
 

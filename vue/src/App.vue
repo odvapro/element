@@ -55,6 +55,7 @@
 				this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 				if (!this.$store.state.users.authUser || !++this.$store.state.users.authUser.id)
 				{
+					console.log('cant set user value');
 					await this.$store.dispatch('setLanguage', {newLang: this.$store.state.languages.list[0]});
 					this.$store.commit('setLanguage', this.$store.state.languages.list[0])
 					return;
@@ -62,9 +63,11 @@
 			}
 
 			if (this.$store.state.users.authUser.language)
-			{
-				await this.$store.dispatch('setLanguage', {newLang: this.$store.state.users.authUser.language});
 				this.$store.commit('setLanguage', this.$store.state.users.authUser.language);
+			else
+			{
+				await this.$store.dispatch('setLanguage', {newLang: this.$store.state.languages.list[0]});
+				this.$store.commit('setLanguage', this.$store.state.languages.list[0]);
 			}
 		}
 	}
