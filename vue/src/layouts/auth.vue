@@ -8,7 +8,7 @@
 				<label class="auth-label">
 					<div class="auth-label-title">{{$t('login')}}</div>
 					<input
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__login el-inp"
 						type="text"
 						:placeholder="$t('auth.enter_your_login_or_email')"
 						v-model="user.login.value"
@@ -19,7 +19,7 @@
 				<label class="auth-label">
 					<div class="auth-label-title">{{$t('password')}}</div>
 					<input
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__password el-inp"
 						type="password"
 						:placeholder="$t('auth.enter_your_password')"
 						v-model="user.password.value"
@@ -41,7 +41,7 @@
 						type="text"
 						v-model="forgot.email.value"
 						:placeholder="$t('auth.enter_your_email')"
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__forgot-password el-inp"
 						:class="{'el-inp--error': forgot.email.error}"
 					>
 					<span class="auth__error-text">{{forgot.email.error}}</span>
@@ -122,15 +122,15 @@ export default
 			var result = await this.$axios.post('/auth/index/', data);
 			user = result.data.user;
 
-			if (typeof user.language === 'string')
-				user.language = JSON.parse(user.language);
-
 			if (!result.data.success)
 			{
 				this.user.login.error = this.$t('auth.incorrect_login_or_password');
 				this.user.password.error = this.$t('auth.incorrect_login_or_password');
 				return false;
 			}
+
+			if (typeof user.language === 'string')
+				user.language = JSON.parse(user.language);
 
 			this.$cookie.set('user', JSON.stringify(user), 12);
 			await this.setLanguage(user.language);
