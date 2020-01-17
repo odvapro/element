@@ -6,13 +6,16 @@
 					⚙️
 				</div>
 				<div class="settings-name-wrapper">
-					<div class="settings-head-label">Settings</div>
-					<div class="settings-head-descr">User & table settings</div>
+					<div class="settings-head-label">{{$t('settings')}}</div>
+					<div class="settings-head-descr">{{$t('pages.settings.user_and_table_settings')}}</div>
 				</div>
 			</div>
 		</div>
 		<div class="settings-tab-wrapper">
-			<div class="settings-tabs-head">
+			<div
+				class="settings-tabs-head"
+				:class="settingsTabsHeadClass"
+			>
 				<div
 					class="settings-tab-item"
 					@click="setActiveTab(item)"
@@ -21,12 +24,15 @@
 				>{{item.name}}</div>
 			</div>
 			<div class="settings-tabs-content-wrapper">
-				<div class="settings-tab-content" v-if="activeTab == 'Tables'">
+				<div class="settings-tab-content" v-if="activeTab == $t('tables')">
 					<SettingsTable/>
 				</div>
-				<div class="settings-tab-content" v-if="activeTab == 'Users'">
+				<div class="settings-tab-content" v-if="activeTab == $t('users')">
 					<SettingsUser/>
 				</div>
+			</div>
+			<div class="settings-tab-content" v-if="activeTab == $t('languages')">
+				<SettingsLang/>
 			</div>
 		</div>
 	</div>
@@ -34,9 +40,11 @@
 <script>
 	import SettingsTable from '@/components/layouts/SettingsTable.vue';
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
+	import SettingsLang from '@/components/layouts/SettingsLang.vue';
+
 	export default
 	{
-		components: { SettingsTable, SettingsUser},
+		components: { SettingsTable, SettingsUser, SettingsLang },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -46,8 +54,8 @@
 		data()
 		{
 			return {
-				tabs: [{ name: 'Tables', active: true }, { name: 'Users', active: false } ],
-				activeTab: 'Tables'
+				tabs: [{ name: this.$t('tables'), active: true }, { name: this.$t('users'), active: false }, { name: this.$t('languages'), active: false } ],
+				activeTab: this.$t('tables'),
 			}
 		},
 		methods:
@@ -57,11 +65,33 @@
 			 */
 			setActiveTab(tab)
 			{
-				for (var item of this.tabs)
-					item.active = false;
+				this.clearAllTabsActive();
 
 				tab.active = true;
 				this.activeTab = tab.name;
+			},
+			clearAllTabsActive()
+			{
+				for (var item of this.tabs)
+					item.active = false;
+			}
+		},
+		computed:
+		{
+			settingsTabsHeadClass()
+			{
+				return 'settings-tabs-head_' + this.$store.state.languages.currentLang.short;
+			}
+		},
+		watch:
+		{
+			'$store.state.languages.currentLang'()
+			{
+				this.tabs[0].name = this.$t('tables');
+				this.tabs[1].name = this.$t('users');
+				this.tabs[2].name = this.$t('languages');
+
+				this.setActiveTab(this.tabs[this.tabs.length-1]);
 			}
 		},
 		mounted()
@@ -111,10 +141,18 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 152px;
+		width: 265px;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
+		&_ru
+		{
+			width: 294px;
+		}
+		&_en
+		{
+			width: 265px;
+		}
 	}
 	.settings-tab-item
 	{

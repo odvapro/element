@@ -6,12 +6,12 @@
 				class="el-inp-noborder"
 				@change="changeValue"
 				:value="fieldValue"
-				placeholder="Empty"
+				:placeholder="$t('empty')"
 			/>
 		</template>
 		<template v-else>
 			{{ fieldValue }}
-			<span v-if="!fieldValue" class="el-empty">Empty</span>
+			<span v-if="!fieldValue" class="el-empty">{{$t('empty')}}</span>
 		</template>
 	</div>
 </template>

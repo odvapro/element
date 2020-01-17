@@ -2,26 +2,26 @@
 	<div class="em-list">
 		<List
 			:searchText.sync="searchText"
+			:settings="{placeholder: $t('empty')}"
 		>
 			<template v-slot:selected>
 				<ListOption
 					v-for="listItem in selectedItems"
+					:key="listItem.key"
 					@remove="removeItem(listItem)"
 				>{{ listItem.value }}</ListOption>
 			</template>
 			<ListOption
 				v-for="listItem in itemsList"
+				:key="listItem.key"
 				@select="selectItem(listItem)"
 			>{{ listItem.value }}</ListOption>
 		</List>
 	</div>
 </template>
 <script>
-	import List from '@/components/forms/List.vue';
-	import ListOption from '@/components/forms/ListOption.vue';
 	export default
 	{
-		components: { List, ListOption },
 		props: ['fieldValue','fieldSettings','mode', 'view'],
 		/**
 		 * Глобальные переменные страницы

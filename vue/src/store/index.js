@@ -3,14 +3,21 @@ import Vuex from 'vuex';
 import tables from './tables.js';
 import users from './users.js';
 import settings from './settings.js';
+import languages from './languages.js';
+import vuexI18n from 'vuex-i18n';
+import translationsEn from '../locale/en';
+import translationsRu from '../locale/ru';
+
 
 Vue.use(Vuex)
-export default new Vuex.Store({
+
+const store = new Vuex.Store({
 	modules:
 	{
 		tables: tables,
 		settings: settings,
-		users: users
+		users: users,
+		languages: languages
 	},
 	state:
 	{
@@ -54,3 +61,9 @@ export default new Vuex.Store({
 		}
 	}
 })
+
+Vue.use(vuexI18n.plugin, store);
+Vue.i18n.add('en', translationsEn);
+Vue.i18n.add('ru', translationsRu);
+
+export default store;

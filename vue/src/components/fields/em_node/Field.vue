@@ -1,6 +1,10 @@
 <template>
 	<div class="em-node">
-		<List :searchText.sync="query" @onopen="getNodes()">
+		<List
+			:searchText.sync="query"
+			@onopen="getNodes()"
+			:settings="{placeholder: $t('empty')}"
+		>
 			<template v-slot:selected>
 				<ListOption
 					v-if="localFieldValue.id"
@@ -9,17 +13,15 @@
 			</template>
 			<ListOption
 				v-for="listItem in list"
+				:key="listItem.code"
 				@select="selectItem(listItem)"
 			>{{ listItem.name }}</ListOption>
 		</List>
 	</div>
 </template>
 <script>
-	import List from '@/components/forms/List.vue';
-	import ListOption from '@/components/forms/ListOption.vue';
 	export default
 	{
-		components: { List, ListOption },
 		props: ['fieldValue','fieldSettings','mode','view'],
 		data()
 		{
@@ -79,8 +81,8 @@
 			{
 				this.localFieldValue = listItem;
 				this.$emit('onChange', {
-					value: this.localFieldValue,
-					settings: this.fieldSettings
+					value    : this.localFieldValue,
+					settings : this.fieldSettings
 				});
 			},
 

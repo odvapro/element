@@ -1,7 +1,7 @@
 <template>
 	<div class="list" v-click-outside="closePopup">
 		<div class="list__shown" @click="openPopup()">
-			<span v-if="!hasSelectedSlot" class="el-empty">Empty</span>
+			<span v-if="!hasSelectedSlot" class="el-empty">{{ placeholder }}</span>
 			<slot name="selected"></slot>
 		</div>
 		<div class="list__search" v-if="showPopup">
@@ -11,7 +11,7 @@
 					v-if="!hasSelectedSlot"
 					class="el-inp-noborder"
 					type="text"
-					placeholder="Search for an option..."
+					:placeholder="$t('forms.list.search_for_an_option')"
 					v-model="localSearchText"
 				/>
 				<slot name="selected"></slot>
@@ -25,7 +25,7 @@
 <script>
 	export default
 	{
-		props:['searchText'],
+		props:['searchText','settings'],
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -34,7 +34,8 @@
 			return {
 				showPopup: false,
 				localSearchText:'',
-				localSelected:this.selected
+				localSelected:this.selected,
+				placeholder:this.$t('empty')
 			}
 		},
 		watch:
@@ -85,6 +86,13 @@
 			{
 				this.showPopup = false;
 			},
+		},
+		mounted()
+		{
+			if(typeof this.settings == 'undefined')
+				return true;
+			if(typeof this.settings.placeholder != 'undefined')
+				this.placeholder = this.settings.placeholder;
 		}
 	}
 </script>

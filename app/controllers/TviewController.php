@@ -42,4 +42,60 @@ class TviewController extends ControllerBase
 
 		return $this->jsonResult(['success' => true]);
 	}
+
+	public function exportCsvAction()
+	{
+		$tviewId = $this->request->get('tviewId');
+
+		if (empty($tviewId))
+			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
+
+		$tview = EmViews::findFirstById($tviewId);
+		if(!$tview)
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
+
+		$allFieldsData = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
+		foreach ($allFieldsData as $fieldDataKey => &$fieldDataValue)
+			$fieldDataValue['fieldName'] = $fieldDataKey;
+
+		$fieldsAlias = json_decode(json_encode(EmTypes::findByTable($tview->table)));
+		foreach ($fieldsAlias as $alias)
+			foreach ($allFieldsData as &$actualFieldData)
+				if ($alias->field === $actualFieldData['fieldName'] && !empty($alias->name))
+					$actualFieldData['fieldName'] = $alias->name;
+
+		$select = [
+			'from'   => $tview->table,
+			'fields' => array_keys($allFieldsData)
+		];
+
+		$allFields  = $this->element->select($select);
+
+		$lastItem = end($allFieldsData);
+		$fileContent = "";
+		foreach ($allFieldsData as $fieldData)
+			if ($fieldData['fieldName'] === $lastItem['fieldName'])
+				$fileContent .= "'" . $fieldData['fieldName'] . "'\n";
+			else
+				$fileContent .= "'" . $fieldData['fieldName'] . "',";
+
+		foreach ($allFields as $fieldDate)
+		{
+			$lastColumn = end($fieldDate);
+			foreach ($fieldDate as $rowDate)
+			{
+				$valueToContent = empty($rowDate['value'])
+				? ""
+				: $rowDate['value'];
+				if ($rowDate !== $lastColumn)
+					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
+				else
+					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . "\n";
+			}
+		}
+		$fileName = "{$tview->table}.csv";
+		header("Content-type: text/csv");
+		header("Content-disposition: attachment; filename = {$fileName}");
+		echo $fileContent;
+	}
 }

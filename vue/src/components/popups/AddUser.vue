@@ -1,22 +1,22 @@
 <template>
 	<div>
-		<div class="popup__name">Add User</div>
+		<div class="popup__name">{{$t('add_user')}}</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Name
+				{{$t('name')}}
 				<small class="popup__field-error" v-if="errors.name">{{ errors.name }}</small>
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter name" v-model="name">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_something') + $t('name')" v-model="name">
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Login
+				{{$t('login')}}
 				<small class="popup__field-error" v-if="errors.login">{{ errors.login }}</small>
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter login" v-model="login">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_something') + $t('login')" v-model="login">
 			</div>
 		</div>
 		<div class="popup__field">
@@ -25,21 +25,21 @@
 				<small class="popup__field-error" v-if="errors.email">{{ errors.email }}</small>
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter email" v-model="email">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_something') + 'Email'" v-model="email">
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				Password
+				{{$t('password')}}
 				<small class="popup__field-error" v-if="errors.password">{{ errors.password }}</small>
 			</div>
 			<div class="popup__field-input">
-				<input type="text" class="el-inp-noborder" placeholder="Enter password" v-model="password">
+				<input type="text" class="el-inp-noborder" :placeholder="$t('enter_something') + $t('password')" v-model="password">
 			</div>
 		</div>
 		<div class="popup__buttons">
-			<button @click="cancel()" class="el-gbtn">Cancel</button>
-			<button @click="addUser()" class="el-btn">Add</button>
+			<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
+			<button @click="addUser()" class="el-btn">{{$t('add')}}</button>
 		</div>
 	</div>
 </template>
@@ -75,7 +75,7 @@
 				{
 					if(this[nedInp] == '')
 					{
-						this.errors[nedInp] = 'This field required';
+						this.errors[nedInp] = this.$t('addUser.this_field_required');
 						isValid = false;
 					}
 					else
@@ -95,7 +95,8 @@
 					name     :this.name,
 					login    :this.login,
 					email    :this.email,
-					password :this.password
+					password :this.password,
+					language :this.$store.state.users.authUser.language
 				}
 				let data = qs.stringify(formData);
 				formData.isShow = false;

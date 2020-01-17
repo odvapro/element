@@ -19,7 +19,7 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						Properties
+						{{$t('properties')}}
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
@@ -32,7 +32,7 @@
 						class="index__menu-item"
 						@click="openPopup('isSortPopupShow')"
 					>
-						Sort
+						{{$t('sort')}}
 						<SortPopup
 							v-if="popups.isSortPopupShow"
 							:columns="table.columns"
@@ -45,7 +45,7 @@
 						@click="openPopup('isFiltersPopupShow')"
 						class="index__menu-item"
 					>
-						Filter
+						{{$t('filter')}}
 						<FiltersPopup
 							v-if="popups.isFiltersPopupShow"
 							:columns="table.columns"
@@ -53,12 +53,24 @@
 							v-click-outside:isFiltersPopupShow="closePopup"
 						/>
 					</li>
+					<li
+						:class="{active: popups.isExportPopupShow}"
+						class="index__menu-item index__menu-item-more"
+						@click="openPopup('isExportPopupShow')"
+					>
+						...
+						<ExportPopup
+							v-if="popups.isExportPopupShow"
+							v-click-outside:isExportPopupShow="closePopup"
+							:tview="activeTview"
+						/>
+					</li>
 				</ul>
 				<button class="index__add-btn el-btn" @click="addElement()">
 					<svg width="12" height="12">
 						<use xlink:href="#plus"></use>
 					</svg>
-					Add Element
+					{{$t('add_element')}}
 				</button>
 			</div>
 		</div>
@@ -68,13 +80,14 @@
 <script>
 	import Table from '@/components/tviews/Table.vue';
 	import FiltersPopup from '@/components/popups/FiltersPopup.vue';
+	import ExportPopup from '@/components/popups/ExportPopup.vue';
 	import SortPopup from '@/components/popups/SortPopup.vue';
 	import Properties from '@/components/popups/Properties.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		mixins: [TableWork],
-		components: { Table, Properties, FiltersPopup, SortPopup },
+		components: { Table, Properties, FiltersPopup, ExportPopup, SortPopup },
 		/**
 		 * Head параметры страницы
 		 */
@@ -96,7 +109,8 @@
 				{
 					isPropertiesPopupShow : false,
 					isFiltersPopupShow    : false,
-					isSortPopupShow       : false
+					isSortPopupShow       : false,
+					isExportPopupShow     : false,
 				},
 				propertiesPopupData: {}
 			}
@@ -228,6 +242,13 @@
 		cursor: pointer;
 		position: relative;
 		padding: 5px 8px;
+		&-more
+		{
+			font-size: 15px;
+			line-height: 1;
+			height: 23px;
+			padding: 0px 2px;
+		}
 		&.active, &:hover
 		{
 			background-color: rgba(103, 115, 135, 0.1);

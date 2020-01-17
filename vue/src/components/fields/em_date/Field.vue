@@ -4,7 +4,7 @@
 			<div
 				class="em-date-wr__static-field-value"
 				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
-			>{{ formatedLocalFullDateStr }} <span v-if="isTimeInclude">{{ localTimeStr }}</span></div>
+			>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
 		</div>
 		<div
 			class="em-date"
@@ -16,7 +16,7 @@
 					<div class="em-date-time__full-date">
 						{{ formatedLocalFullDateStr }}
 					</div>
-					<div v-show="isTimeInclude" class="em-date-time__time">
+					<div v-if="includeTime && localFullDate" class="em-date-time__time">
 						<input
 							class="em-date-time__time-input"
 							type="text"
@@ -28,26 +28,22 @@
 			</div>
 			<Datepicker
 				v-model="localFullDate"
-				placeholder="Empty"
+				placeholder="$('empty')"
 				@selected="changeLocalFieldValue"
 				:inline="true"
+				:language="curentLang"
 			>
 			</Datepicker>
 			<div class="em-date__bottom">
-				<div class="em-date__time-allow" @click="toggleTimeInclude">
-					<div class="em-date__time-allow-label">Include Time</div>
-					<div
-						class="em-date__time-allow-select"
-						:class="{'em-date__time-allow-select_active': isTimeInclude}"
-					></div>
-				</div>
-				<div class="em-date__clear" @click="clear()">Clear</div>
+				<div class="em-date__clear" @click="clear()">{{$t('clear')}}</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 	import Datepicker from 'vuejs-datepicker';
+	import {en, ru} from 'vuejs-datepicker/dist/locale';
+
 	export default
 	{
 		props: ['fieldValue', 'fieldSettings', 'mode', 'view'],
@@ -57,51 +53,46 @@
 			return {
 				isEditFieldPopup: false,
 				localFullDate: false,
-				isTimeInclude: false,
 				localTimeStr: false,
 				localHours: false,
 				localMinutes: false,
 				localFieldValue: false,
+				includeTime: false,
+				curentLang: en,
+				datePickerLocales:
+				{
+					en: en,
+					ru: ru
+				}
 			}
 		},
 		mounted()
 		{
-			this.initFullDate();
-		},
-		watch:
-		{
-			isTimeInclude(newValue)
-			{
-				if (newValue && this.localFullDate)
-				{
-					if (this.localHours === false)
-						this.localHours = 0;
-					if (this.localMinutes === false)
-						this.localMinutes = 0;
+			this.checkAndSetPickerLang();
 
-					this.localTimeStr = this.formatedLocalTimeStr;
-					this.changeLocalFieldValue(this.localFullDate);
-				}
-				else
-				{
-					this.localHours = false;
-					this.localMinutes = false;
-					this.localTimeStr = false;
-				}
-			},
-			localFullDate()
+			this.includeTime = this.fieldSettings.includeTime == "true";
+			if (this.includeTime && this.fieldValue)
 			{
-				if (this.localFullDate)
-				{
-					if (this.isTimeInclude)
-						this.localFullDate.setSeconds(1);
-					else
-						this.localFullDate.setSeconds(0);
-				}
+				if (!this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
+					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]  + ' 00:00')
 			}
+			else if (!this.includeTime && this.fieldValue)
+				if (this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
+					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]);
+
+			this.initFullDate();
 		},
 		methods:
 		{
+			checkAndSetPickerLang()
+			{
+				for (let lang in this.datePickerLocales)
+					if (lang === this.$store.state.languages.currentLang.short)
+					{
+						this.curentLang = this.datePickerLocales[lang];
+						break;
+					}
+			},
 			openFieldEdit()
 			{
 				this.isEditFieldPopup = true;
@@ -109,10 +100,18 @@
 			closeFieldEdit()
 			{
 				this.isEditFieldPopup = false;
+				this.changeValue();
+			},
+			changeValue(newValue)
+			{
+				let fieldDate;
+				if (typeof newValue === 'undefined')
+					fieldDate = this.localFullDate
+					? this.localFieldValue
+					: '';
+				else
+					fieldDate = newValue;
 
-				let fieldDate = this.localFullDate
-				? this.localFieldValue
-				: '';
 				this.$emit('onChange', {
 					value     : fieldDate,
 					settings  : this.fieldSettings
@@ -120,21 +119,7 @@
 			},
 			getMonth(monthIndex)
 			{
-				let months =
-				[
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-					'August',
-					'September',
-					'October',
-					'November',
-					'December'
-				];
+				let months = this.$t('months');
 				if (!monthIndex || monthIndex > 11)
 					return months[0].substr(0,3);
 
@@ -160,35 +145,24 @@
 			},
 			initTime(date)
 			{
-				if (date === '')
+				if (this.includeTime)
 				{
-					this.isTimeInclude = false;
-					this.localHours = false;
-					this.localMinutes = false;
-					this.localTimeStr = false;
-				}
-				else
-				{
-					if (date.getSeconds())
+					if (date === '')
 					{
-						this.isTimeInclude = true;
-						if (this.localHours === false)
-							this.localHours = date.getHours();
-						if (this.localMinutes === false)
-							this.localMinutes = date.getMinutes();
-
-						this.localTimeStr = this.formatedLocalTimeStr;
+						this.localHours = 0;
+						this.localMinutes = 0;
 					}
 					else
 					{
-						this.isTimeInclude = false;
+						this.localHours = date.getHours();
+						this.localMinutes = date.getMinutes();
 					}
+					this.localTimeStr = this.formatedLocalTimeStr;
 				}
-			},
-			toggleTimeInclude()
-			{
-				if (this.localFullDate !== '')
-					this.isTimeInclude = !this.isTimeInclude;
+				else
+				{
+					this.localHours = this.localMinutes = this.localTimeStr = false;
+				}
 			},
 			changeLocalFieldValue(newDate)
 			{
@@ -198,11 +172,10 @@
 					month         = this.formatToDoubleDigit(currentData.getMonth() + 1),
 					year          = currentData.getFullYear(),
 					hours         = this.formatToDoubleDigit(this.localHours),
-					minutes       = this.formatToDoubleDigit(this.localMinutes),
-					isTimeInclude = this.formatToDoubleDigit(Number(this.isTimeInclude));
+					minutes       = this.formatToDoubleDigit(this.localMinutes);
 
-				if (this.isTimeInclude)
-					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}:${isTimeInclude}`;
+				if (this.includeTime)
+					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}`;
 				else
 					this.localFieldValue = `${year}-${month}-${day}`;
 
@@ -240,7 +213,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					return 'Empty';
+					return this.$t('empty');
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),

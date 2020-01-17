@@ -95,7 +95,8 @@ class Element
 				'required'     => $emFieldsTypes->getRequired(),
 				'fieldJs'      => $fieldClass->getFieldJs(),
 				'settingsJs'   => $fieldClass->getSettingsJs(),
-				'stylesCss' => $fieldClass->getStylesCss()
+				'stylesCss'    => $fieldClass->getStylesCss(),
+				'collations'   => $fieldClass->getCollations(),
 			];
 			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;
 		}
@@ -110,16 +111,76 @@ class Element
 			$defaultType = ($tableColumn['key'] == 'PRI')?$this->emTypes['em_primary']:$this->emTypes['em_string'];
 			$fieldClass = new $defaultType['fieldComponent']();
 			$emFieldArray = [
-				'name'      => '',
-				'type'      => $tableColumn['type'],
-				'type_info' => $defaultType,
-				'settings'  => $fieldClass->getSettings(),
-				'required'  => false,
+				'name'       => '',
+				'type'       => $tableColumn['type'],
+				'type_info'  => $defaultType,
+				'settings'   => $fieldClass->getSettings(),
+				'collations' => $fieldClass->getCollations(),
+				'required'   => false,
 			];
 			$tableColumn['em'] = $emFieldArray;
 		}
 
 		return $tableColumns;
+	}
+
+	/**
+	 * Prepare where paremetrs of select array
+	 * change where array
+	 * @return modified selectParams
+	 */
+	private function _prepareRequestParams($selectParams)
+	{
+		if(empty($selectParams['where']) || empty($selectParams['where']['fields']))
+			return $selectParams;
+
+		$tableName = (!empty($selectParams['from']))?$selectParams['from']:$selectParams['table'];
+		$tableColumns = $this->getColumns($tableName);
+
+		$selectParams['where']['fields'] = array_map(function ($wherePart) use ($tableColumns)
+		{
+			if(empty($wherePart['code']))
+				return $wherePart;
+			$fieldCode = $wherePart['code'];
+			if(empty($tableColumns[$fieldCode]))
+				return $wherePart;
+
+			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+			$settings   = $tableColumns[$fieldCode]['em']['settings'];
+
+			if (class_exists($fieldClass))
+				$field = new $fieldClass('',$settings);
+			else
+				$field = new EmStringField('',$settings);
+
+			$wherePart['code'] = $field->getCollationSql($wherePart);
+			return $wherePart;
+
+		}, $selectParams['where']['fields']);
+
+		return $selectParams;
+	}
+
+	/**
+	 * Selects count of elemets
+	 * @param  array $selectParams
+	 * @return int
+	 */
+	public function count($selectParams)
+	{
+		$selectParams = $this->_prepareRequestParams($selectParams);
+		return $this->eldb->count($selectParams);
+	}
+
+	/**
+	 * Delete elements by params
+	 * @param  array $deleteParams
+	 * @return boolean
+	 */
+	public function delete($deleteParams)
+	{
+		$deleteParams = $this->_prepareRequestParams($deleteParams);
+		return $this->eldb->delete($deleteParams);
 	}
 
 	/**
@@ -133,6 +194,7 @@ class Element
 			return false;
 
 		$tableColumns = $this->getColumns($selectParams['from']);
+		$selectParams = $this->_prepareRequestParams($selectParams);
 		$selectResult = $this->eldb->select($selectParams);
 
 		if ($selectResult === false)
@@ -173,6 +235,7 @@ class Element
 			return false;
 
 		$tableColumns = $this->getColumns($updateParams['table']);
+		$updateParams = $this->_prepareRequestParams($updateParams);
 
 		$set = [];
 		foreach ($updateParams['set'] as $fieldCode => $fieldValue)
