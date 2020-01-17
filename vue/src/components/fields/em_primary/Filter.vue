@@ -4,7 +4,7 @@
 			type="text"
 			v-if="showInput"
 			class="filters-popup__filter-input el-inp"
-			placeholder="$t('value')"
+			:placeholder="$t('value')"
 			@keyup="changeValue"
 			:value="filter.value"
 		/>
