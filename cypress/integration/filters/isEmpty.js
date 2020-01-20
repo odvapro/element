@@ -1,18 +1,50 @@
-describe('emptyFilterTest', ()=>
+describe('isEmptyFilterTest', ()=>
 {
 	let fieldsData =
 	{
-		primary_key: 0,
-		date:        0,
-		file:        17,
-		flag:        0,
-		node:        10,
-		text:        14,
-		list:        11,
-		string:      12
+		primary_key:
+		{
+			classForFilter: '.em-primary',
+			correctResult: 0,
+		},
+		date:
+		{
+			classForFilter: '.em-date-wr',
+			correctResult: 0,
+		},
+		file:
+		{
+			classForFilter: '.em-file-item-col',
+			correctResult: 17,
+		},
+		flag:
+		{
+			classForFilter: '.em-check-wrapper',
+			correctResult: 0,
+		},
+		node:
+		{
+			classForFilter: '.em-node',
+			correctResult: 10,
+		},
+		text:
+		{
+			classForFilter: '.em-text.em-text__table',
+			correctResult: 14,
+		},
+		list:
+		{
+			classForFilter: '.em-list',
+			correctResult: 11,
+		},
+		string:
+		{
+			classForFilter: '.em-string',
+			correctResult: 12
+		},
 	};
 
-	function checkField(name, correctResult)
+	function checkField(name, item)
 	{
 
 		cy.get('.filters-popup__wrapper').contains('Add filter').click();
@@ -23,7 +55,7 @@ describe('emptyFilterTest', ()=>
 		cy.get('.select__trigger').contains('Is Not Empty').click();
 		cy.get('.select__dropdown').contains('Is Empty').click();
 
-		cy.get('.table-row').eq(correctResult).get('.filters-popup__delete-row-icon-wrapper').click();
+		cy.get(item.classForFilter).eq(item.correctResult).get('.filters-popup__delete-row-icon-wrapper').click({ multiple: true });
 
 	};
 	it('visit a page', ()=>
@@ -43,8 +75,6 @@ describe('emptyFilterTest', ()=>
 		cy.get('.index__menu-item').contains('Filter').click();
 	});
 
-		// for(let field of fieldsData)
-		// 	checkField(field.name, field.correctResult);
 	it('checking primary_key', ()=>
 	{
 		checkField('primary_key', fieldsData.primary_key);
@@ -84,10 +114,4 @@ describe('emptyFilterTest', ()=>
 	{
 		checkField('string', fieldsData.string);
 	});
-		// fieldsData.
-		// fieldsData.
-		// fieldsData.
-		// fieldsData.
-		// fieldsData.
-		// fieldsData.
 });
