@@ -4,7 +4,7 @@
 			<a
 				class="export-popup-btn"
 				target="blank"
-				:href="'/api/tview/exportCsv?tviewId=' + tview.id"
+				:href="'/element/api/tview/exportCsv?tviewId=' + tview.id"
 			>
 				Export to CSV
 			</a>
