@@ -54,45 +54,45 @@ class TviewController extends ControllerBase
 		if(!$tview)
 			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
 
-		$sql = "SELECT *
-				FROM $tview->table";
-		$tableData = $this->db->fetchAll(
-			$sql,
-			\Phalcon\Db::FETCH_ASSOC
-		);
+		$allFieldsData = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
+		foreach ($allFieldsData as $fieldDataKey => &$fieldDataValue)
+			$fieldDataValue['fieldName'] = $fieldDataKey;
 
 		$fieldsAlias = json_decode(json_encode(EmTypes::findByTable($tview->table)));
-		$visibleFields = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
+		foreach ($fieldsAlias as $alias)
+			foreach ($allFieldsData as &$actualFieldData)
+				if ($alias->field === $actualFieldData['fieldName'] && !empty($alias->name))
+					$actualFieldData['fieldName'] = $alias->name;
 
-		foreach ($fieldsAlias as $visFieldAliasData)
-			if (!empty($visibleFields[$visFieldAliasData->field]))
-				if (!empty($visFieldAliasData->name))
-					$visibleFields[$visFieldAliasData->field]['name'] = $visFieldAliasData->name;
+		$select = [
+			'from'   => $tview->table,
+			'fields' => array_keys($allFieldsData)
+		];
 
-		foreach ($visibleFields as $visibleFieldsKey => &$visibleFieldsVal)
-			if (!isset($visibleFieldsVal['name']) || empty($visibleFieldsVal['name']))
-				$visibleFieldsVal['name'] = $visibleFieldsKey;
+		$allFields  = $this->element->select($select);
 
+		$lastItem = end($allFieldsData);
 		$fileContent = "";
-		foreach ($visibleFields as $visField)
-		{
-			if (end($visibleFields)['name'] !== $visField['name'])
-				$fileContent .= "'{$visField['name']}',";
+		foreach ($allFieldsData as $fieldData)
+			if ($fieldData['fieldName'] === $lastItem['fieldName'])
+				$fileContent .= "'" . $fieldData['fieldName'] . "'\n";
 			else
-				$fileContent .= "{$visField['name']}'\n";
-		}
-		$tableDataRowLastKey = '';
-		foreach (array_keys($tableData[0]) as $tableDataRowLastKeyName)
-			$tableDataRowLastKey = $tableDataRowLastKeyName;
+				$fileContent .= "'" . $fieldData['fieldName'] . "',";
 
-		foreach ($tableData as $tableDataRow)
-			foreach ($tableDataRow as $tableDataRowFieldKey => $tableDataRowFieldVal)
+		foreach ($allFields as $fieldDate)
+		{
+			$lastColumn = end($fieldDate);
+			foreach ($fieldDate as $rowDate)
 			{
-				if ($tableDataRowFieldKey !== $tableDataRowLastKey)
-					$fileContent .= "'$tableDataRowFieldVal',";
+				$valueToContent = empty($rowDate['value'])
+				? ""
+				: $rowDate['value'];
+				if ($rowDate !== $lastColumn)
+					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
 				else
-					$fileContent .= "'$tableDataRowFieldVal'\n";
+					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . "\n";
 			}
+		}
 		$fileName = "{$tview->table}.csv";
 		header("Content-type: text/csv");
 		header("Content-disposition: attachment; filename = {$fileName}");
