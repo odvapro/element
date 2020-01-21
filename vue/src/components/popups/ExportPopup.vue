@@ -4,7 +4,7 @@
 			<a
 				class="export-popup-btn"
 				target="blank"
-				:href="'/api/tview/exportCsv?tviewId=' + tview.id"
+				:href="'/element/api/tview/exportCsv?tviewId=' + tview.id"
 			>
 				Export to CSV
 			</a>
@@ -12,8 +12,6 @@
 	</div>
 </template>
 <script>
-	import qs from 'qs';
-	import axios from 'axios';
 	export default
 	{
 		props: ['tview'],
