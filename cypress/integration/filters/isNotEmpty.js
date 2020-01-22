@@ -60,22 +60,27 @@ describe('isNotEptyFilterTest', ()=>
 	Cypress.Commands.add('checkField', field=>
 	{
 		let emptys = 0;
-		cy.get(field.cssClass).then(fields=>
+		cy.wait(4000).get(field.cssClass).then(fields=>
 		{
 			let fieldData = Array.from(fields);
 
-			console.log(fieldData);
-
 			for(let field of fieldData)
-				if (field.innerHTML.match(/Empty/))
+			{
+				if (field.innerHTML.match(/Empty/) && !field.innerHTML.match(/placeholder="Empty"/))
 					emptys++;
-
+				else
+					if(field.querySelector('input'))
+						if(!field.querySelector('input').value)
+							emptys++;
+			}
 			cy.addFilter(field.name);
 
-			cy.wait(1000).get(field.cssClass).then(fieldsAfterFilter=>
+
+
+			cy.wait(5000).get(field.cssClass).then(fieldsAfterFilter=>
 			{
 				if (fieldsAfterFilter.length !== (fieldData.length - emptys))
-					throw new Error(`Incorrect result. Expected ${fieldData.length - emptys} ${field.name} fields, have ${fieldData.length}.`);
+					throw new Error(`Incorrect result for '${field.name}'. Expected ${fieldData.length - emptys} fields, have ${fieldData.length}.`);
 			});
 			cy.removeFilter();
 		});
