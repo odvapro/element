@@ -1,35 +1,40 @@
 describe('isNotEptyFilterTest', ()=>
 {
 	let fieldsData =
-	{
-		primary_key: 20,
-		date:        20,
-		file:        2,
-		flag:        20,
-		node:        10,
-		text:        6,
-		list:        9,
-		string:      8
-	};
-
-	function checkField(name, correctResult)
-	{
-		cy.get('.filters-popup__wrapper').contains('Add filter').click();
-
-		cy.get('.select__trigger').contains('primary_key').click();
-		cy.get('.select__dropdown').contains(name).click();
-
-		cy.wait(500).get('.table-row').eq(correctResult);
-		cy.get('.filters-popup__delete-row-icon-wrapper').click();
-
-	};
-	it('visit a page', ()=>
-	{
-		cy.visit('localhost:8080/element');
-	});
+	[
+		{
+			cssClass: '.em-primary',
+			name: 'primary_key'
+		},
+		{
+			cssClass: '.em-date-wr',
+			name: 'date'
+		},
+		{
+			cssClass: '.em-file-item-col',
+			name: 'file'
+		},
+		{
+			cssClass: '.em-node',
+			name: 'node'
+		},
+		{
+			cssClass: '.em-text',
+			name: 'text'
+		},
+		{
+			cssClass: '.em-list',
+			name: 'list'
+		},
+		{
+			cssClass: '.em-string',
+			name: 'string'
+		},
+	];
 
 	it('log in', ()=>
 	{
+		cy.visit('localhost:8080/element');
 		cy.get('.auth-form-input__login').type('admin');
 		cy.get('.auth-form-input__password').type('adminpass');
 		cy.get('.auth-fill-btn.el-btn').click();
@@ -40,43 +45,46 @@ describe('isNotEptyFilterTest', ()=>
 		cy.get('.index__menu-item').contains('Filter').click();
 	});
 
-	it('checking primary_key', ()=>
+	Cypress.Commands.add('addFilter', fieldName=>
 	{
-		checkField('primary_key', fieldsData.primary_key);
+		cy.contains('Add filter').closest('button').click();
+		cy.get('.filters-popup__wrapper').contains('primary_key').closest('button').click();
+		cy.get('.select__dropdown').contains(fieldName).click();
 	});
 
-	it('checking date', ()=>
+	Cypress.Commands.add('removeFilter', ()=>
 	{
-		checkField('date', fieldsData.date);
+		cy.get('.filters-popup__delete-row-icon-wrapper').click({ multiple: true });
 	});
 
-	it('checking file', ()=>
+	Cypress.Commands.add('checkField', field=>
 	{
-		checkField('file', fieldsData.file);
+		let emptys = 0;
+		cy.get(field.cssClass).then(fields=>
+		{
+			let fieldData = Array.from(fields);
+
+			console.log(fieldData);
+
+			for(let field of fieldData)
+				if (field.innerHTML.match(/Empty/))
+					emptys++;
+
+			cy.addFilter(field.name);
+
+			cy.wait(1000).get(field.cssClass).then(fieldsAfterFilter=>
+			{
+				if (fieldsAfterFilter.length !== (fieldData.length - emptys))
+					throw new Error(`Incorrect result. Expected ${fieldData.length - emptys} ${field.name} fields, have ${fieldData.length}.`);
+			});
+			cy.removeFilter();
+		});
+
 	});
 
-	it('checking flag', ()=>
+	it('check all', ()=>
 	{
-		checkField('flag', fieldsData.flag);
-	});
-
-	it('checking node', ()=>
-	{
-		checkField('node', fieldsData.node);
-	});
-
-	it('checking text', ()=>
-	{
-		checkField('text', fieldsData.text);
-	});
-
-	it('checking list', ()=>
-	{
-		checkField('list', fieldsData.list);
-	});
-
-	it('checking string', ()=>
-	{
-		checkField('string', fieldsData.string);
+		for(let field of fieldsData)
+			cy.checkField(field);
 	});
 });
