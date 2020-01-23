@@ -4,7 +4,7 @@
 			<div
 				class="em-date-wr__static-field-value"
 				:class="{'em-date-wr__static-field-value_empty': !localFieldValue}"
-			>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate">{{ localTimeStr }}</span></div>
+			>{{ formatedLocalFullDateStr }} <span v-if="includeTime && localFullDate && isTimeSet">{{ localTimeStr }}</span></div>
 		</div>
 		<div
 			class="em-date"
@@ -53,12 +53,13 @@
 			return {
 				isEditFieldPopup: false,
 				localFullDate: false,
-				localTimeStr: false,
+				localTimeStr: '',
 				localHours: false,
 				localMinutes: false,
 				localFieldValue: false,
 				includeTime: false,
 				curentLang: en,
+				isTimeSet: false,
 				datePickerLocales:
 				{
 					en: en,
@@ -71,14 +72,9 @@
 			this.checkAndSetPickerLang();
 
 			this.includeTime = this.fieldSettings.includeTime == "true";
-			if (this.includeTime && this.fieldValue)
-			{
-				if (!this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
-					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]  + ' 00:00')
-			}
-			else if (!this.includeTime && this.fieldValue)
-				if (this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
-					this.changeValue(this.fieldValue.match(/\d{4}-\d{2}-\d{2}/)[0]);
+
+			if (this.fieldValue.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/))
+				this.isTimeSet = true;
 
 			this.initFullDate();
 		},
@@ -145,7 +141,7 @@
 			},
 			initTime(date)
 			{
-				if (this.includeTime)
+				if (this.includeTime && this.isTimeSet)
 				{
 					if (date === '')
 					{
@@ -161,7 +157,8 @@
 				}
 				else
 				{
-					this.localHours = this.localMinutes = this.localTimeStr = false;
+					this.localHours = this.localMinutes = false;
+					this.localTimeStr = '';
 				}
 			},
 			changeLocalFieldValue(newDate)
