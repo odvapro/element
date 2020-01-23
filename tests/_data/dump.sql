@@ -492,12 +492,12 @@ VALUES
 (11, '2020-01-11', NULL, 1, 'val3', '<p>Text, no string</p>\r\n', NULL, NULL),
 (12, '2020-01-12', NULL, NULL, 'val2', NULL, NULL, 'Small string'),
 (13, '2020-01-13', NULL, NULL, NULL, NULL, NULL, NULL),
-(14, '2020-01-14', NULL, NULL, 'val2', NULL, 'val2', NULL),
+(14, NULL, NULL, NULL, 'val2', NULL, 'val2', NULL),
 (15, '2020-01-15', NULL, 1, NULL, NULL, 'val2', NULL),
-(16, '2020-01-16', NULL, NULL, 'val1', '<p>Str... text</p>\r\n', NULL, NULL),
+(16, NULL, NULL, NULL, 'val1', '<p>Str... text</p>\r\n', NULL, NULL),
 (17, '2020-01-17', NULL, NULL, 'val4', '<p>Have<br>tags</p>\r\n', NULL, NULL),
 (18, '2020-01-18', NULL, NULL, 'val2', NULL, NULL, 'So'),
-(19, '2020-01-19', NULL, 1, NULL, NULL, NULL, NULL),
+(19, NULL, NULL, 1, NULL, NULL, NULL, NULL),
 (20, '2020-01-20', NULL, NULL, NULL, '<p>Done</p>\r\n', 'val1', 'Enough');
 /*!40000 ALTER TABLE `cypressTest` ENABLE KEYS */;
 UNLOCK TABLES;
