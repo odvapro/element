@@ -4,7 +4,7 @@
 			<a
 				class="export-popup-btn"
 				target="blank"
-				:href="'/element/api/tview/exportCsv?tviewId=' + tview.id"
+				:href="linkToDownloadCsv"
 			>
 				Export to CSV
 			</a>
@@ -15,6 +15,13 @@
 	export default
 	{
 		props: ['tview'],
+		computed:
+		{
+			linkToDownloadCsv()
+			{
+				return process.env.VUE_APP_API_ENDPOINT + 'tview/exportCsv?tviewId=' + this.tview.id;
+			}
+		}
 	}
 </script>
 <style lang="scss">
