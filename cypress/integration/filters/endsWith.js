@@ -1,4 +1,4 @@
-describe('startWithFilterTest', ()=>
+describe('endsWithFilterTest', ()=>
 {
 	let fieldsData =
 	[
@@ -10,7 +10,7 @@ describe('startWithFilterTest', ()=>
 
 		{
 			selectorForSearch: '.em-text',
-			searchText: '<p>Text',
+			searchText: 'text</p>',
 			name: 'text'
 		},
 
@@ -42,7 +42,7 @@ describe('startWithFilterTest', ()=>
 		cy.get('.select__dropdown').contains(field.name).click();
 
 		cy.get('.filters-popup__wrapper').contains('Is Not Empty').closest('button').click();
-		cy.get('.select__dropdown').contains(/Start With/).click();
+		cy.get('.select__dropdown').contains(/Ends With/).click();
 
 		if(!field.hasOwnProperty('selectData'))
 			cy.get('.filters-popup__filter-input.el-inp').type(field.searchText);
@@ -69,7 +69,7 @@ describe('startWithFilterTest', ()=>
 				if (fieldDom.innerHTML.match(/<input/))
 				{
 
-					if (fieldDom.querySelector('input').value.match(new RegExp('^' + field.searchText, 'i')))
+					if (fieldDom.querySelector('input').value.match(new RegExp(field.searchText + '$', 'i')))
 						coincidence++;
 				}
 				else
@@ -78,8 +78,8 @@ describe('startWithFilterTest', ()=>
 						innerHTML = fieldDom.innerHTML.replace(/\t/, "").replace(/\n/, "").replace(/<!---->/, "");
 
 
-					if (   innerHTML.match(new RegExp('^' + field.searchText))
-						|| innerHTML.replace(/\s/, "").match(new RegExp('^' + field.searchText)))
+					if (   innerHTML.match(new RegExp(field.searchText + '$'))
+						|| innerHTML.replace(/\s/, "").match(new RegExp(field.searchText + '$')))
 						coincidence++;
 				}
 			};
