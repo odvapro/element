@@ -76,12 +76,15 @@ describe('isNotEptyFilterTest', ()=>
 			cy.addFilter(field.name);
 
 
+			if(emptys === fieldData.length)
+				cy.get('.table-row').should('have.length', 2).should('be.visible');
+			else
+				cy.wait(5000).get(field.cssClass).then(fieldsAfterFilter=>
+				{
+					if (fieldsAfterFilter.length !== (fieldData.length - emptys))
+						throw new Error(`Incorrect result for '${field.name}'. Expected ${fieldData.length - emptys} fields, have ${fieldData.length}.`);
+				});
 
-			cy.wait(5000).get(field.cssClass).then(fieldsAfterFilter=>
-			{
-				if (fieldsAfterFilter.length !== (fieldData.length - emptys))
-					throw new Error(`Incorrect result for '${field.name}'. Expected ${fieldData.length - emptys} fields, have ${fieldData.length}.`);
-			});
 			cy.removeFilter();
 		});
 
