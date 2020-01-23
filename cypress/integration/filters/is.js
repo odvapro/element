@@ -2,12 +2,12 @@ describe('isFilterTest', ()=>
 {
 	let fieldsData =
 	[
-		// {
-		// 	selectorForSearch: '.em-primary',
-		// 	selectorWithValue: '.em-primary',
-		// 	searchText: '6',
-		// 	name: 'primary_key'
-		// },
+		{
+			selectorForSearch: '.em-primary',
+			selectorWithValue: '.em-primary',
+			searchText: '6',
+			name: 'primary_key'
+		},
 
 		{
 			selectorForSearch: '.em-date-wr',
@@ -19,47 +19,45 @@ describe('isFilterTest', ()=>
 				month: 'Jan',
 				year:  '2020'
 			},
-			searchText: '08 Jan 2020',
+			searchText: '08 Jan 2020 ',
 			name: 'date'
 		},
 
-		// {
-		// 	selectorForSearch: '.em-node',
-		// 	selectorWithValue: '.list-option span',
-		// 	searchText: 'val1',
-		// 	selectData:
-		// 	{
-		// 		select: listSelect,
-		// 		value: 'val1',
-		// 	},
-		// 	name: 'node'
-		// },
+		{
+			selectorForSearch: '.em-node',
+			selectorWithValue: 'span',
+			searchText: 'val1',
+			selectData:
+			{
+				select: listSelect,
+				value: 'val1',
+			},
+			name: 'node'
+		},
 
-		// {
-		// 	selectorForSearch: '.em-text',
-		// 	selectorWithValue: '.em-text.em-text__table input',
-		// 	searchText: '<p>Text</p>',
-		// 	name: 'text'
-		// },
+		{
+			selectorForSearch: '.em-text',
+			searchText: '<p>Text</p>',
+			name: 'text'
+		},
 
-		// {
-		// 	selectorForSearch: '.em-list',
-		// 	selectorWithValue: '.list-option span',
-		// 	searchText: 'val2',
-		// 	selectData:
-		// 	{
-		// 		select: listSelect,
-		// 		value: 'val2',
-		// 	},
-		// 	name: 'list'
-		// },
+		{
+			selectorForSearch: '.em-list',
+			selectorWithValue: 'span',
+			searchText: 'val2',
+			selectData:
+			{
+				select: listSelect,
+				value: 'val2',
+			},
+			name: 'list'
+		},
 
-		// {
-		// 	selectorForSearch: '.em-string',
-		// 	selectorWithValue: 'input',
-		// 	searchText: 'String',
-		// 	name: 'string'
-		// },
+		{
+			selectorForSearch: '.em-string',
+			searchText: 'String',
+			name: 'string'
+		},
 	];
 
 
@@ -125,7 +123,7 @@ describe('isFilterTest', ()=>
 		cy.wait(4000).get(field.selectorForSearch).then(fields=>
 		{
 			let fieldData = Array.from(fields);
-			console.log(fieldData);
+
 			for(let fieldDom of fieldData)
 			{
 				if (fieldDom.innerHTML.match(/<input/))
@@ -137,70 +135,39 @@ describe('isFilterTest', ()=>
 				}
 				else
 				{
-					// let innerHTML = fieldDom.innerHTML.replace(/\s/, "").replace(/\n/, "").replace(/\t/, "");
-					// reg = new RegExp('<span>' + field.searchText);
-					// console.log('"' + fieldDom.innerHTML + '"', '"' + innerHTML + '"');
-					// if (   innerHTML.match(reg)
-					// 	|| innerHTML.match(new RegExp('^' + field.searchText + '$')))
-					// 	coincidence++;
+					let innerHTML;
+
+					if (field.selectorWithValue === field.selectorForSearch)
+					{
+						innerHTML = fieldDom.innerHTML.replace(/\t/, "").replace(/\n/, "").replace(/<!---->/, "");
+					}
+
+					else
+					{
+						if(fieldDom.innerHTML.match())
+							innerHTML = fieldDom.querySelector(field.selectorWithValue).innerHTML.replace(/\t/, "").replace(/\n/, "").replace(/<(.*?)$/, "");
+					}
+
+
+					if (   innerHTML.match(new RegExp('^' + field.searchText + '$'))
+						|| innerHTML.replace(/\s/, "").match(new RegExp('^' + field.searchText + '$')))
+						coincidence++;
 				}
 			};
 
-			console.log(coincidence);
-			// cy.addFilter(field);
-			// if (coincidence === 0)
-			// 	cy.get('.table-row').should('have.length', 2).should('be.visible');
-			// else
-			// 	cy.wait(5000).get(field.selectorForSearch).then(fieldsAfterFilter=>
-			// 	{
-			// 		if (fieldsAfterFilter.length !== coincidence)
-			// 			throw new Error(`Incorrect result for '${field.name}'. Expected ${coincidence} fields, have ${fieldsAfterFilter.length}.`);
-			// 	});
 
-			// cy.removeFilter();
+			cy.addFilter(field);
+			if (coincidence === 0)
+				cy.get('.table-row').should('have.length', 2).should('be.visible');
+			else
+				cy.wait(5000).get(field.selectorForSearch).then(fieldsAfterFilter=>
+				{
+					if (fieldsAfterFilter.length !== coincidence)
+						throw new Error(`Incorrect result for '${field.name}'. Expected ${coincidence} fields, have ${fieldsAfterFilter.length}.`);
+				});
+
+			cy.removeFilter();
 		});
-
-
-
-
-
-
-
-
-		// let coincidence = 0,
-		// 	reg = new RegExp(field.searchText, 'i');
-
-		// cy.wait(4000).get(field.selectorForSearch).then(fields=>
-		// {
-		// 	let fieldData = Array.from(fields);
-
-		// 	for(let fieldDom of fieldData)
-		// 	{
-		// 		if (fieldDom.innerHTML.match(/<input/))
-		// 		{
-
-		// 			if (fieldDom.querySelector('input').value.match(reg))
-		// 				coincidence++;
-		// 		}
-		// 		else
-		// 		{
-		// 			if (fieldDom.innerHTML.match(reg))
-		// 				coincidence++;
-		// 		}
-		// 	};
-		// 	cy.addFilter(field);
-
-		// 	if (coincidence === 0)
-		// 		cy.get('.table-row').should('have.length', 2).should('be.visible');
-		// 	else
-		// 		cy.wait(5000).get(field.selectorForSearch).then(fieldsAfterFilter=>
-		// 		{
-		// 			if (fieldsAfterFilter.length !== coincidence)
-		// 				throw new Error(`Incorrect result for '${field.name}'. Expected ${coincidence} fields, have ${fieldsAfterFilter.length}.`);
-		// 		});
-
-		// 	cy.removeFilter();
-		// });
 	});
 
 	it('check all', ()=>
