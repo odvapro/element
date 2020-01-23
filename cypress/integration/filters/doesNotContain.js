@@ -1,33 +1,20 @@
-describe('isEmptyFilterTest', ()=>
+describe('doesNotContainFilterTest', ()=>
 {
 	let fieldsData =
 	[
 		{
 			cssClass: '.em-primary',
+			searchText: '1',
 			name: 'primary_key'
 		},
 		{
-			cssClass: '.em-date-wr',
-			name: 'date'
-		},
-		{
-			cssClass: '.em-file-item-col',
-			name: 'file'
-		},
-		{
-			cssClass: '.em-node',
-			name: 'node'
-		},
-		{
 			cssClass: '.em-text',
+			searchText: 'text',
 			name: 'text'
 		},
 		{
-			cssClass: '.em-list',
-			name: 'list'
-		},
-		{
 			cssClass: '.em-string',
+			searchText: 'string',
 			name: 'string'
 		},
 	];
@@ -45,15 +32,17 @@ describe('isEmptyFilterTest', ()=>
 		cy.get('.index__menu-item').contains('Filter').click();
 	});
 
-	Cypress.Commands.add('addFilter', fieldName=>
+	Cypress.Commands.add('addFilter', field=>
 	{
 		cy.contains('Add filter').closest('button').click();
 
-		cy.get('.filters-popup__wrapper').contains('Is Not Empty').closest('button').click();
-		cy.get('.select__dropdown').contains('Is Empty').click();
-
 		cy.get('.filters-popup__wrapper').contains('primary_key').closest('button').click();
-		cy.get('.select__dropdown').contains(fieldName).click();
+		cy.get('.select__dropdown').contains(field.name).click();
+
+		cy.get('.filters-popup__wrapper').contains('Is Not Empty').closest('button').click();
+		cy.get('.select__dropdown').contains('Does Not Contain').click();
+
+		cy.get('.filters-popup__filter-input.el-inp').type(field.searchText);
 	});
 
 	Cypress.Commands.add('removeFilter', ()=>
@@ -63,34 +52,39 @@ describe('isEmptyFilterTest', ()=>
 
 	Cypress.Commands.add('checkField', field=>
 	{
-		let emptys = 0;
+		let coincidence = 0,
+			reg = new RegExp(field.searchText, 'i');
 		cy.wait(4000).get(field.cssClass).then(fields=>
 		{
 			let fieldData = Array.from(fields);
 
-			for(let field of fieldData)
+			for(let fieldDom of fieldData)
 			{
-				if (field.innerHTML.match(/Empty/) && !field.innerHTML.match(/placeholder="Empty"/))
-					emptys++;
-				else
-					if(field.querySelector('input'))
-						if(!field.querySelector('input').value)
-							emptys++;
-			}
-			cy.addFilter(field.name);
+				if (fieldDom.innerHTML.match(/<input/))
+				{
 
-			if(emptys === 0)
+					if (fieldDom.querySelector('input').value.match(reg))
+						coincidence++;
+				}
+				else
+				{
+					if (fieldDom.innerHTML.match(reg))
+						coincidence++;
+				}
+			};
+			cy.addFilter(field);
+
+			if (coincidence === 20)
 				cy.get('.table-row').should('have.length', 2).should('be.visible');
 			else
 				cy.wait(5000).get(field.cssClass).then(fieldsAfterFilter=>
 				{
-					if (fieldsAfterFilter.length !== (emptys))
-						throw new Error(`Incorrect result for '${field.name}'. Expected ${emptys} fields, have ${fieldsAfterFilter.length}.`);
+					if (fieldsAfterFilter.length !== (fieldData.length - coincidence))
+						throw new Error(`Incorrect result for '${field.name}'. Expected ${fieldData.length - coincidence} fields, have ${fieldsAfterFilter.length}.`);
 				});
 
 			cy.removeFilter();
 		});
-
 	});
 
 	it('check all', ()=>

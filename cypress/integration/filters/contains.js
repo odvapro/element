@@ -80,7 +80,7 @@ describe('containsFilterTest', ()=>
 				cy.wait(5000).get(field.cssClass).then(fieldsAfterFilter=>
 				{
 					if (fieldsAfterFilter.length !== coincidence)
-						throw new Error(`Incorrect result for '${field.name}'. Expected ${coincidence} fields, have ${fieldData.length}.`);
+						throw new Error(`Incorrect result for '${field.name}'. Expected ${coincidence} fields, have ${fieldsAfterFilter.length}.`);
 				});
 
 			cy.removeFilter();
