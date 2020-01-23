@@ -215,6 +215,11 @@ class SettingsController extends ControllerBase
 					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;
 				case 'added':
+					preg_match_all('/(.*?)\//', $fileArr['filename'], $pathToFile);
+					$pathToFile = ROOT . '/' . implode($pathToFile[0]);
+					if (!is_dir($pathToFile))
+						mkdir($pathToFile, 0755, true);
+
 					$fileContent = file_get_contents($fileArr['raw_url']);
 					@file_put_contents(ROOT.'/'.$fileArr['filename'], $fileContent);
 				break;

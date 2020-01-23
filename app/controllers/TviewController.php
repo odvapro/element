@@ -75,22 +75,25 @@ class TviewController extends ControllerBase
 		$fileContent = "";
 		foreach ($allFieldsData as $fieldData)
 			if ($fieldData['fieldName'] === $lastItem['fieldName'])
-				$fileContent .= "'" . $fieldData['fieldName'] . "'\n";
+				$fileContent .= json_encode($fieldData['fieldName'], JSON_UNESCAPED_UNICODE) . "\n";
 			else
-				$fileContent .= "'" . $fieldData['fieldName'] . "',";
+				$fileContent .= json_encode($fieldData['fieldName'], JSON_UNESCAPED_UNICODE) . ",";
 
 		foreach ($allFields as $fieldDate)
 		{
-			$lastColumn = end($fieldDate);
-			foreach ($fieldDate as $rowDate)
+			foreach ($fieldDate as $rowDataKey => &$rowDataValue)
+				$rowDataValue['name'] = $rowDataKey;
+
+			$lastColumn = end($fieldDate)['name'];
+			foreach ($fieldDate as $rowData)
 			{
-				$valueToContent = empty($rowDate['value'])
+				$valueToContent = empty($rowData['value'])
 				? ""
-				: $rowDate['value'];
-				if ($rowDate !== $lastColumn)
-					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
+				: $rowData['value'];
+				if ($rowData['name'] !== $lastColumn)
+					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
 				else
-					$fileContent .= "" . json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . "\n";
+					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . "\n";
 			}
 		}
 		$fileName = "{$tview->table}.csv";
