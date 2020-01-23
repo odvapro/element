@@ -1,4 +1,4 @@
-describe('isNotEptyFilterTest', ()=>
+describe('isEmptyFilterTest', ()=>
 {
 	let fieldsData =
 	[
