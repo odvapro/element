@@ -28,7 +28,6 @@
 				let fieldName = column.em.type_info.code;
 				this.settings = column.em.settings;
 
-				console.log(this, this.params);
 				if(this.settings.type == 'custom')
 					return eval(this.settings.filterJs);
 
