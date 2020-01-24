@@ -4,7 +4,7 @@
 			<a
 				class="export-popup-btn"
 				target="blank"
-				:href="'/api/tview/exportCsv?tviewId=' + tview.id"
+				:href="linkToDownloadCsv"
 			>
 				Export to CSV
 			</a>
@@ -12,11 +12,16 @@
 	</div>
 </template>
 <script>
-	import qs from 'qs';
-	import axios from 'axios';
 	export default
 	{
 		props: ['tview'],
+		computed:
+		{
+			linkToDownloadCsv()
+			{
+				return process.env.VUE_APP_API_ENDPOINT + 'tview/exportCsv?tviewId=' + this.tview.id;
+			}
+		}
 	}
 </script>
 <style lang="scss">
