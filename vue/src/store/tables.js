@@ -174,6 +174,7 @@ const table =
 				fieldCode : primaryKeyCode
 			};
 			settings.fieldJs    = column.em.fieldJs;
+			settings.filterJs   = column.em.filterJs;
 			settings.settingsJs = column.em.settingsJs;
 			settings.stylesCss  = column.em.stylesCss;
 			settings.fieldCode  = column.field;
