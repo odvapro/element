@@ -78,7 +78,6 @@
 	</div>
 </template>
 <script>
-	import Table from '@/components/tviews/Table.vue';
 	import FiltersPopup from '@/components/popups/FiltersPopup.vue';
 	import ExportPopup from '@/components/popups/ExportPopup.vue';
 	import SortPopup from '@/components/popups/SortPopup.vue';
@@ -87,7 +86,7 @@
 	export default
 	{
 		mixins: [TableWork],
-		components: { Table, Properties, FiltersPopup, ExportPopup, SortPopup },
+		components: { Properties, FiltersPopup, ExportPopup, SortPopup },
 		/**
 		 * Head параметры страницы
 		 */
