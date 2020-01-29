@@ -240,6 +240,10 @@
 		left: 0;
 		top: 0;
 	}
+	.detail-field-box .em-date-wr
+	{
+		padding: 0;
+	}
 	.em-date
 	{
 	    position: absolute;
