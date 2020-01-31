@@ -22,15 +22,16 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getCollations()
 	{
+		$locales = json_decode($this->getLocales());
 		return [
-			['name'=>'Is Not Empty','code'=>'IS NOT EMPTY'],
-			['name'=>'Is Empty','code'=>'IS EMPTY'],
-			['name'=>'Is','code'=>'IS'],
-			['name'=>'Is Not','code'=>'IS NOT'],
-			['name'=>'Contains','code'=>'CONTAINS'],
-			['name'=>'Does Not Contain','code'=>'DOES NOT CONTAIN'],
-			['name'=>'Start With','code'=>'START WITH'],
-			['name'=>'Ends With','code'=>'ENDS WITH'],
+			["name"=>$locales->is_not_empty,    "code"=>"IS NOT EMPTY"],
+			["name"=>$locales->is_empty,        "code"=>"IS EMPTY"],
+			["name"=>$locales->is,              "code"=>"IS"],
+			["name"=>$locales->is_not,          "code"=>"IS NOT"],
+			["name"=>$locales->contains,        "code"=>"CONTAINS"],
+			["name"=>$locales->does_not_contain,"code"=>"DOES NOT CONTAIN"],
+			["name"=>$locales->start_with,      "code"=>"START WITH"],
+			["name"=>$locales->ends_with,       "code"=>"ENDS WITH"],
 		];
 	}
 
@@ -122,6 +123,36 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 		return false;
 	}
 
+	/**
+	 * Gets filter VueJs code
+	 * @return string
+	 */
+	public function getFilterJs()
+	{
+		$dir = $this->getFieldFolderPath();
+		$fieldFile = "{$dir}/Filter.js";
+		if(file_exists($fieldFile))
+			return file_get_contents($fieldFile);
+		return false;
+	}
+
+	/**
+	 * Gets translate for files
+	 * @return string
+	 */
+	public function getLocales()
+	{
+		if (empty($this->config->application->userSettings['language']))
+			AuthController::setLangInUserSettings();
+		$lang = $this->config->application->userSettings['language'];
+
+		$fieldFile = "{$this->getFieldFolderPath()}/locale/{$lang}.json";
+		if(file_exists($fieldFile))
+			return file_get_contents($fieldFile);
+
+		$fieldFile = __DIR__ . "/locale/{$lang}.json";
+		return file_get_contents($fieldFile);
+	}
 	/**
 	 * Gets field VueJs code
 	 * @return string

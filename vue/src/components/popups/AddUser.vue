@@ -95,7 +95,8 @@
 					name     :this.name,
 					login    :this.login,
 					email    :this.email,
-					password :this.password
+					password :this.password,
+					language :this.$store.state.users.authUser.language
 				}
 				let data = qs.stringify(formData);
 				formData.isShow = false;

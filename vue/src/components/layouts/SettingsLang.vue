@@ -20,12 +20,9 @@
 	</div>
 </template>
 <script>
-	import List from '@/components/forms/List.vue';
-	import ListOption from '@/components/forms/ListOption.vue';
 
 	export default
 	{
-		components: { List, ListOption },
 		computed:
 		{
 			currentLang()
@@ -39,8 +36,13 @@
 		},
 		methods:
 		{
-			changeLang(newLang)
+			async changeLang(newLang)
 			{
+				let user = JSON.parse(this.$cookie.get('user'));
+				user.language = newLang;
+				this.$cookie.set('user', JSON.stringify(user), 12);
+
+				await this.$store.dispatch('setLanguage', {newLang, id: this.$store.state.users.authUser.id});
 				this.$store.commit('setLanguage', newLang);
 			}
 		}

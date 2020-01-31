@@ -248,9 +248,10 @@ class EmFileField extends FieldBase
 	 */
 	public function getCollations()
 	{
+		$locales = json_decode($this->getLocales());
 		return [
-			['name'=>'Is Not Empty','code'=>'IS NOT EMPTY'],
-			['name'=>'Is Empty','code'=>'IS EMPTY']
+			['name'=>$locales->is_empty,'code'=>'IS EMPTY'],
+			['name'=>$locales->is_not_empty,'code'=>'IS NOT EMPTY']
 		];
 	}
 

@@ -27,6 +27,10 @@
 
 				let fieldName = column.em.type_info.code;
 				this.settings = column.em.settings;
+
+				if(this.settings.type == 'custom')
+					return eval(this.settings.filterJs);
+
 				return () => import(`@/components/fields/${fieldName}/Filter.vue`);
 			}
 		},

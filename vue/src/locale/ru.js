@@ -116,7 +116,7 @@ export default
 		enter_your_password: 'Введите ваш пароль',
 		enter_your_email: 'Введите ваш Email',
 		incorrect_login: 'Неверный логин',
-		incorrect_login: 'Неверный пароль',
+		incorrect_password: 'Неверный пароль',
 		incorrect_email: 'Некорректный Email',
 		incorrect_login_or_password: 'Неверный логин или пароль',
 		empty_email: 'Пустой Email',
