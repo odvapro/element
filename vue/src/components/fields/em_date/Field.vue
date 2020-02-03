@@ -332,7 +332,7 @@
 		font-size: 12px;
 		color: #677387;
 		white-space: nowrap;
-		&_empty
+		&.el_empty
 		{
 			color: rgba(103, 115, 135, 0.4);
 		}

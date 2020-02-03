@@ -36,7 +36,6 @@ export default
 	{
 		settings:
 		{
-			key: 'Ключ',
 			add_option: 'Добавить опцию',
 			enter_key: 'Введите ключ',
 			enter_value: 'Введите значение',
@@ -163,6 +162,7 @@ export default
 	paste_link: 'Вставить ссылку',
 	code: 'Код',
 	name: 'Наименование',
+	name2: 'Название',
 	show: 'Отображать ',
 	settings: 'Настройки',
 	settings_of: 'Настройки {of_what}',
@@ -180,6 +180,7 @@ export default
 	add_user: 'Добавить пользователя',
 	add: 'Добавить',
 	enter_something: 'Введите ',
+	key: 'Ключ',
 	months:
 	[
 		'Январь',
