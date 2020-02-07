@@ -110,13 +110,7 @@ VALUES
   (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
   (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
   (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL),
-  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL),
-  (23, 'cypressTest', 'date', 'em_date', 0, NULL, NULL),
-  (24, 'cypressTest', 'file', 'em_file', 0, NULL, NULL),
-  (25, 'cypressTest', 'flag', 'em_check', 0, '{\"checkedString\":\"1\",\"uncheckedString\":\"0\"}', NULL),
-  (26, 'cypressTest', 'node', 'em_node', 0, '{\"nodeTableCode\":\"cypressTest2\",\"nodeFieldCode\":\"name\",\"nodeSearchCode\":\"name\"}', NULL),
-  (27, 'cypressTest', 'text', 'em_text', 0, '{\"checkedString\":\"1\",\"uncheckedString\":\"0\"}', NULL),
-  (28, 'cypressTest', 'list', 'em_list', 0, '{\"list\":[{\"key\":\"val1\",\"value\":\"val1\"},{\"key\":\"val2\",\"value\":\"val2\"},{\"key\":\"val3\",\"value\":\"val3\"},{\"key\":\"val4\",\"value\":\"val4\"}]}', NULL);
+  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -140,9 +134,9 @@ CREATE TABLE `em_users` (
 LOCK TABLES `em_users` WRITE;
 /*!40000 ALTER TABLE `em_users` DISABLE KEYS */;
 
-INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`, `language`)
+INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
 VALUES
-  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com', '{"short":"en","long":"English"}');
+  (1,'admin','Михаил','25e4ee4e9229397b6b17776bfceaf8e7','axel0726@gmail.com');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -174,9 +168,7 @@ VALUES
   (18, 'Default view', 'field_types', '[]', '[]', 1, '[]'),
   (19, 'Default view', 'pages', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Pages\"}}'),
   (20, 'Default view', 'products', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"Products\"}}'),
-  (21, 'Default view', 'test_table', '[]', '[]', 1, '[]'),
-  (22, 'Default view', 'cypressTest', '[]', '[]', 1, '{\"table\":{\"visible\":\"true\",\"name\":\"cypressTest\"},\"columns\":{\"primary_key\":{\"width\":\"140\",\"visible\":\"true\"},\"date\":{\"width\":\"140\",\"visible\":\"true\"},\"file\":{\"width\":\"140\",\"visible\":\"true\"},\"flag\":{\"width\":\"140\",\"visible\":\"true\"},\"node\":{\"width\":\"140\",\"visible\":\"true\"},\"text\":{\"width\":\"140\",\"visible\":\"true\"},\"list\":{\"width\":\"140\",\"visible\":\"true\"},\"string\":{\"width\":\"140\",\"visible\":\"true\"}}}'),
-  (23, 'Default view', 'cypressTest2', '[]', '[]', 1, '[]');
+  (21, 'Default view', 'test_table', '[]', '[]', 1, '[]');
 
 /*!40000 ALTER TABLE `em_views` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -454,77 +446,6 @@ VALUES
   (109,'Баффы','<p>Бесшовная повязка на голову или шею. У нас можно заказать эту разновидность банданы с нанесением вашего рисунка</p>\r\n','','128',NULL);
 
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
-UNLOCK TABLES;
-
-# Дамп таблицы products
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `cypressTest`;
-
-CREATE TABLE `cypressTest` (
-  `primary_key` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `date` varchar(255) DEFAULT NULL,
-  `file` varchar(255) DEFAULT NULL,
-  `flag` varchar(255) DEFAULT NULL,
-  `node` varchar(255) DEFAULT NULL,
-  `text` text,
-  `list` varchar(255) DEFAULT NULL,
-  `string` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`primary_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `cypressTest` WRITE;
-/*!40000 ALTER TABLE `cypressTest` DISABLE KEYS */;
-
-INSERT INTO `cypressTest` (`primary_key`, `date`, `file`, `flag`, `node`, `text`, `list`, `string`)
-VALUES
-
-(1,  '2020-01-01', '[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]', NULL, NULL, NULL, 'val2', 'String for tests'),
-(2,  '2020-01-02', NULL, 1, 'val1', NULL, 'val3', 'Another string'),
-(3,  '2020-01-03', NULL, NULL, 'val2', NULL, 'val1', NULL),
-(4,  '2020-01-04', NULL, NULL, NULL, '<p>Text</p>\r\n', NULL, 'More string'),
-(5,  '2020-01-05', '[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]', NULL, 'val1', NULL, 'val1', NULL),
-(6,  '2020-01-06', NULL, NULL, NULL, NULL, NULL, 'Also string'),
-(7,  '2020-01-07', '[{\"upName\":\"1013981_329784250488770_1748150030_n.png\",\"type\":\"image\",\"sizes\":{\"small\":\"\\/element\\/public\\/upload\\/20180806\\/small_el5b68ae455cbcf.jpg\",\"thumb\":\"\\/element\\/public\\/upload\\/20180806\\/thumb_el5b68ae455cbcf.jpg\"},\"path\":\"\\/images\\/image.png\"}]', NULL, NULL, '<p>With own editor</p>\r\n', NULL, NULL),
-(8,  '2020-01-08', NULL, 1, 'val1', NULL, 'val1', NULL),
-(9,  '2020-01-09', NULL, NULL, 'val4', NULL, 'val2', 'String'),
-(10, '2020-01-10', NULL, NULL, NULL, NULL, NULL, NULL),
-(11, '2020-01-11', NULL, 1, 'val3', '<p>Text, no string</p>\r\n', NULL, NULL),
-(12, '2020-01-12', NULL, NULL, 'val2', NULL, NULL, 'Small string'),
-(13, '2020-01-13', NULL, NULL, NULL, NULL, NULL, NULL),
-(14, NULL, NULL, NULL, 'val2', NULL, 'val2', NULL),
-(15, '2020-01-15', NULL, 1, NULL, NULL, 'val2', NULL),
-(16, NULL, NULL, NULL, 'val1', '<p>Str... text</p>\r\n', NULL, NULL),
-(17, '2020-01-17', NULL, NULL, 'val4', '<p>Have<br>tags</p>\r\n', NULL, NULL),
-(18, '2020-01-18', NULL, NULL, 'val2', NULL, NULL, 'So'),
-(19, NULL, NULL, 1, NULL, NULL, NULL, NULL),
-(20, '2020-01-20', NULL, NULL, NULL, '<p>Done</p>\r\n', 'val1', 'Enough');
-/*!40000 ALTER TABLE `cypressTest` ENABLE KEYS */;
-UNLOCK TABLES;
-
-# Дамп таблицы products
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `cypressTest2`;
-
-CREATE TABLE `cypressTest2` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `cypressTest2` WRITE;
-/*!40000 ALTER TABLE `cypressTest2` DISABLE KEYS */;
-
-INSERT INTO `cypressTest2` (`id`, `name`)
-VALUES
-
-(1, 'val1'),
-(2, 'val2'),
-(3, 'val3'),
-(4, 'val4'),
-(5, 'val5');
-/*!40000 ALTER TABLE `cypressTest2` ENABLE KEYS */;
 UNLOCK TABLES;
 
 # Дамп таблицы test_table
