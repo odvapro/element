@@ -16,6 +16,8 @@ import List from './components/forms/List.vue';
 import ListOption from './components/forms/ListOption.vue';
 import Select from './components/forms/Select.vue';
 import SelectOption from './components/forms/SelectOption.vue';
+import DateForm from './components/forms/DateForm.vue';
+import Table from './components/tviews/Table.vue';
 
 Vue.use(VueCookie);
 Vue.use(Meta)
@@ -27,6 +29,8 @@ Vue.component('List', List);
 Vue.component('ListOption', ListOption);
 Vue.component('Select', Select);
 Vue.component('SelectOption', SelectOption);
+Vue.component('DateForm', DateForm);
+Vue.component('Table', Table);
 
 window.Vue = Vue;
 window.importStyles = [];

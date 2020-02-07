@@ -22,6 +22,9 @@
 			$route (to, from)
 			{
 				this.paramsString = to.params.pathMatch;
+
+				if (to.params.extname !== from.params.extname)
+					this.getExtCode();
 			}
 		},
 		computed:
@@ -41,30 +44,34 @@
 				let styleLinkCode = `ext${this.extname}`;
 				if(styles != '' && styles !== false && window.importStyles.indexOf(styleLinkCode) == -1)
 				{
-					var newSS       = document.createElement('style');
+					let newSS       = document.createElement('style');
 					newSS.innerHTML = styles;
 					newSS.type      = 'text/css';
 					document.getElementsByTagName("head")[0].appendChild(newSS);
 					window.importStyles.push(styleLinkCode);
 				}
+			},
+			async getExtCode()
+			{
+				this.paramsString = this.$route.params.pathMatch;
+				this.extname      = this.$route.params.extname;
+
+				let result = await this.$axios({
+						method : 'get',
+						url    : '/extensions/getCode/',
+						params : {extension:this.extname},
+					});
+
+				if (!result.data.success)
+					return false;
+
+				this.extCode = result.data.code;
+				this.loadCss(result.data.styles);
 			}
 		},
-		async mounted()
+		mounted()
 		{
-			this.paramsString = this.$route.params.pathMatch;
-			this.extname      = this.$route.params.extname;
-
-			var result = await this.$axios({
-					method : 'get',
-					url    : '/extensions/getCode/',
-					params : {extension:this.extname},
-				});
-
-			if (!result.data.success)
-				return false;
-
-			this.extCode = result.data.code;
-			this.loadCss(result.data.styles);
+			this.getExtCode();
 		}
 	}
 </script>

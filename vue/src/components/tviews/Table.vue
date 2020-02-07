@@ -320,15 +320,15 @@
 				this.$store.commit('showLoader',true);
 				var requestParams = {select : {}, };
 
-				if (typeof this.tview.filter.operation != 'undefined')
+				if (this.tview.filter && typeof this.tview.filter.operation != 'undefined')
 					requestParams.select.where = this.tview.filter;
 
-				if (typeof this.tview.sort != 'undefined')
+				if (this.tview.sort && typeof this.tview.sort != 'undefined')
 					requestParams.select.order = this.tview.sort;
 
-				requestParams.select.from = this.$route.params.tableCode;
-				requestParams.select.page = this.$route.params.page;
-				requestParams.select.tview = this.$route.params.tview;
+				requestParams.select.from  = this.$route.params.tableCode || this.tview.table;
+				requestParams.select.page  = this.$route.params.page      || 1;
+				requestParams.select.tview = this.$route.params.tview     || this.tview.id;
 
 				if(this.$route.params.limit)
 					requestParams.limit = this.$route.params.limit

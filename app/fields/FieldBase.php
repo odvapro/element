@@ -122,6 +122,20 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 			return file_get_contents($fieldFile);
 		return false;
 	}
+
+	/**
+	 * Gets filter VueJs code
+	 * @return string
+	 */
+	public function getFilterJs()
+	{
+		$dir = $this->getFieldFolderPath();
+		$fieldFile = "{$dir}/Filter.js";
+		if(file_exists($fieldFile))
+			return file_get_contents($fieldFile);
+		return false;
+	}
+
 	/**
 	 * Gets translate for files
 	 * @return string
