@@ -21,6 +21,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
+    "cypress": "^4.0.0",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "sass-resources-loader": "^2.0.0",

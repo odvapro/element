@@ -72,9 +72,7 @@ describe('authTest', ()=>
 		resetPswWithEmail('admin', 'Invalid email format');
 
 		resetPswWithEmail('admin@email', 'Invalid email format');
-
 		resetPswWithEmail('admin@email.', 'Invalid email format');
-
 		resetPswWithEmail('test@test.test', 'Incorrect email');
 
 		cy.get('.auth-transpar-btn').click();
