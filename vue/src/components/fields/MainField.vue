@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<keep-alive>
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
@@ -9,13 +9,18 @@
 			@onChange="changeValue"
 			@openEdit="openEdit"
 		></component>
-	</div>
+	</keep-alive>
 </template>
 <script>
 	import Vue from 'vue';
 	export default
 	{
-		props: ['params','mode','view','fieldName'],
+		props: {
+			params:{type: Object, required: true },
+			mode:{type: String, required: true },
+			view:{type: String, required: true },
+			fieldName:{type: String, required: true }
+		},
 		computed:
 		{
 			/**

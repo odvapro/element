@@ -1,6 +1,6 @@
 <template>
 	<div class="table-vertical-scroll"
-		@mousemove="resizeColumn($event, columnDrug.col)"
+		@mousemove="resizeColumn($event)"
 		@mouseup="endResize($event, columnDrug.col)">
 		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
 			<div class="table-row no-hover">
@@ -22,7 +22,7 @@
 					class="table-item"
 					v-for="column in table.columns"
 					v-if="column.visible"
-					:style="{ width: column.width + 'px', 'min-width': column.width + 'px' }"
+					:style="{ width: column.width + 'px'}"
 				>
 					<div class="table-item-img">
 						<img :src="require(`@/assets${column.em.type_info.iconPath}`)" alt="">
@@ -31,7 +31,10 @@
 						<div class="table-item-overide-name">{{getOverideName(column)}}</div>
 						<div class="table-item-real-name">{{column.field}}</div>
 					</div>
-					<div class="drug-col" @mousedown="reginsterEventResize($event, column)"></div>
+					<div
+						class="drug-col"
+						@mousedown="registerEventResize($event, column)"
+					></div>
 				</div>
 				<div class="table-item">
 					<div class="table__add-column-item">
@@ -63,8 +66,8 @@
 					class="table-item"
 					v-for="column, index in table.columns"
 					v-if="column.visible && row[column.field]"
-					:style="{width: column.width + 'px', 'min-width': column.width + 'px'}"
-					:key="`${index}${table.code}`"
+					:key="`${index}${rowIndex}`"
+					:style="{width: column.width + 'px'}"
 				>
 					<MainField
 						mode="edit"
@@ -102,7 +105,6 @@
 	export default
 	{
 		props:['table', 'tview'],
-		mixins: [TableWork],
 		components: {MainField, Pagination},
 		/**
 		 * Глобальные переменные страницы
@@ -110,11 +112,11 @@
 		data()
 		{
 			return {
-				columnDrug: {isDrug: false, posX: 0, start: 0, top: 0, width: 0, col: ''},
+				columnDrug: {isDrug: false, posX: 0, start: 0, width: 0, col: ''},
 				openProperties: false,
 				openedEditRowIndex:false,
 				checkAll:false,
-				selectedRows:{},
+				selectedRows:{}
 			}
 		},
 		computed:
@@ -145,10 +147,12 @@
 			getTableMinWidth()
 			{
 				let sum = 0;
-
 				for (let column in this.table.columns)
-					sum += +this.table.columns[column].width;
-
+				{
+					let columnObject = this.table.columns[column];
+					if(columnObject.visible)
+						sum += +columnObject.width;
+				}
 				return sum + 300;
 			},
 
@@ -163,21 +167,6 @@
 		watch:
 		{
 			/**
-			 * отслеживать изменение колонки
-			 */
-			'table.columns':
-			{
-				/**
-				 * Следить за изменением всего объекта
-				 */
-				handler: function (val, oldVal)
-				{
-					if (this.columnDrug.isDrug == false)
-						this.saveColumnsParams();
-				},
-				deep: true
-			},
-			/**
 			 * Если меняется урл то выполнять
 			 */
 			'$route.fullPath'()
@@ -188,16 +177,6 @@
 		},
 		methods:
 		{
-			/**
-			 * Checkes are
-			 */
-			areSelected(rowIndex)
-			{
-				if(this.selectedRows.indexOf(rowIndex) != -1)
-					return false;
-				return false;
-			},
-
 			/**
 			 * Checkes all rows
 			 */
@@ -340,13 +319,13 @@
 			/**
 			 * Начальные значения для изменения ширины колонки
 			 */
-			reginsterEventResize(event, col)
+			registerEventResize(event, col)
 			{
-				this.columnDrug.start = event.target.getBoundingClientRect().left;
-				this.columnDrug.width = col.width;
+				this.columnDrug.start  = event.target.getBoundingClientRect().left;
+				this.columnDrug.width  = col.width;
 				this.columnDrug.isDrug = true;
-				this.columnDrug.posX = event.pageX;
-				this.columnDrug.col = col;
+				this.columnDrug.posX   = event.pageX;
+				this.columnDrug.col    = col;
 			},
 
 			/**
@@ -363,18 +342,21 @@
 			/**
 			 * Изменять ширину колонки
 			 */
-			resizeColumn(event, col)
+			resizeColumn(event)
 			{
 				if (!this.columnDrug.isDrug)
 					return false;
+				let col = this.columnDrug.col;
+				let newWidth = Math.abs(this.columnDrug.posX - event.pageX - this.columnDrug.width);
+				if (newWidth < 110)
+					newWidth = 110;
 
-				col.width = Math.abs(this.columnDrug.posX - event.pageX - this.columnDrug.width);
+				if (newWidth > 600)
+					newWidth = 600;
+				let diff = Math.abs(col.width - newWidth);
 
-				if (col.width < 110)
-					col.width = 110;
-
-				if (col.width > 600)
-					col.width = 600;
+				if(diff > 2)
+					col.width = newWidth;
 			},
 
 			/**
@@ -591,7 +573,7 @@
 	.table-vertical-scroll
 	{
 		overflow: auto;
-		height: calc(100vh - 100px);
+		height: calc(100vh - 70px);
 	}
 	.table__add-column-item
 	{
