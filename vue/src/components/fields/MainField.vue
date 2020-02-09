@@ -1,5 +1,5 @@
 <template>
-	<keep-alive>
+
 		<component
 			v-bind:is="columnContent"
 			:fieldValue="params.value"
@@ -9,7 +9,7 @@
 			@onChange="changeValue"
 			@openEdit="openEdit"
 		></component>
-	</keep-alive>
+
 </template>
 <script>
 	import Vue from 'vue';

@@ -224,7 +224,7 @@
 	.date-form
 	{
 		position: absolute;
-		top: -3px;
+		top: 95%;
 		left: -3px;
 		background-color: #fff;
 		z-index: 10;

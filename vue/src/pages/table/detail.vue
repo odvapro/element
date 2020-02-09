@@ -231,7 +231,12 @@
 	}
 </script>
 <style lang="scss">
-	.detail {padding: 23px 0 23px 21px; }
+	.detail
+	{
+		padding: 23px 0 0px 21px;
+		height: 100%;
+	    overflow: auto;
+	}
 	.detail-head
 	{
 		display: flex;

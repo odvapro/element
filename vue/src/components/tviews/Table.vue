@@ -167,6 +167,22 @@
 		watch:
 		{
 			/**
+			 * отслеживать изменение колонки
+			 */
+			'table.columns':
+			{
+				/**
+				 * Следить за изменением всего объекта
+				 */
+				handler: function (val, oldVal)
+				{
+					if (this.columnDrug.isDrug == false)
+						this.saveColumnsParams();
+				},
+				deep: true
+			},
+
+			/**
 			 * Если меняется урл то выполнять
 			 */
 			'$route.fullPath'()
