@@ -22,57 +22,20 @@
 			$route (to, from)
 			{
 				this.paramsString = to.params.pathMatch;
-
-				if (to.params.extname !== from.params.extname)
-					this.getExtCode();
 			}
 		},
 		computed:
 		{
 			extComponent()
 			{
-				if(!this.extCode)
-					return false;
+				let componenUrl = this.$route.params.extname + '/';
+				if (this.$route.params.pathMatch)
+					componenUrl += this.$route.params.pathMatch;
 
-				return eval(this.extCode);
+				const component = () => import(`@/components/extensions/${componenUrl}index.vue`).then(m => m.default);
+				return component;
 			}
 		},
-		methods:
-		{
-			loadCss(styles)
-			{
-				let styleLinkCode = `ext${this.extname}`;
-				if(styles != '' && styles !== false && window.importStyles.indexOf(styleLinkCode) == -1)
-				{
-					let newSS       = document.createElement('style');
-					newSS.innerHTML = styles;
-					newSS.type      = 'text/css';
-					document.getElementsByTagName("head")[0].appendChild(newSS);
-					window.importStyles.push(styleLinkCode);
-				}
-			},
-			async getExtCode()
-			{
-				this.paramsString = this.$route.params.pathMatch;
-				this.extname      = this.$route.params.extname;
-
-				let result = await this.$axios({
-						method : 'get',
-						url    : '/extensions/getCode/',
-						params : {extension:this.extname},
-					});
-
-				if (!result.data.success)
-					return false;
-
-				this.extCode = result.data.code;
-				this.loadCss(result.data.styles);
-			}
-		},
-		mounted()
-		{
-			this.getExtCode();
-		}
 	}
 </script>
 <style>
