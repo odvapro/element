@@ -111,32 +111,6 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	}
 
 	/**
-	 * Gets field VueJs code
-	 * @return string
-	 */
-	public function getFieldJs()
-	{
-		$dir = $this->getFieldFolderPath();
-		$fieldFile = "{$dir}/Field.js";
-		if(file_exists($fieldFile))
-			return file_get_contents($fieldFile);
-		return false;
-	}
-
-	/**
-	 * Gets filter VueJs code
-	 * @return string
-	 */
-	public function getFilterJs()
-	{
-		$dir = $this->getFieldFolderPath();
-		$fieldFile = "{$dir}/Filter.js";
-		if(file_exists($fieldFile))
-			return file_get_contents($fieldFile);
-		return false;
-	}
-
-	/**
 	 * Gets translate for files
 	 * @return string
 	 */
@@ -152,30 +126,5 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 
 		$fieldFile = __DIR__ . "/locale/{$lang}.json";
 		return file_get_contents($fieldFile);
-	}
-	/**
-	 * Gets field VueJs code
-	 * @return string
-	 */
-	public function getSettingsJs()
-	{
-		$dir = $this->getFieldFolderPath();
-		$fieldFile = "{$dir}/Settings.js";
-		if(file_exists($fieldFile))
-			return file_get_contents($fieldFile);
-		return false;
-	}
-
-	/**
-	 * Gets field style css file
-	 * @return string
-	 */
-	public function getStylesCss()
-	{
-		$dir = $this->getFieldFolderPath();
-		$fieldFile = "{$dir}/style.css";
-		if(file_exists($fieldFile))
-			return file_get_contents($fieldFile);
-		return false;
 	}
 }

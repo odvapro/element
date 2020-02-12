@@ -43,4 +43,9 @@
 		display: inline-block;
 		&:hover{background: rgba(58, 132, 6, 0.1);}
 	}
+	.detail-field-box .em-primary
+	{
+		padding: 0;
+		background-color: transparent;
+	}
 </style>

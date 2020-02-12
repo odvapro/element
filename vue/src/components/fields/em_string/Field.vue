@@ -62,5 +62,5 @@
 		padding-left: 10px;
 		padding-right: 10px;
 	}
-	.detail-field-box .em-string{padding:0px; }
+	.detail-field-box .em-string{padding:0px;}
 </style>

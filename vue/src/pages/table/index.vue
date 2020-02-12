@@ -177,7 +177,7 @@
 	}
 </script>
 <style lang="scss">
-	.index__wrapper { padding: 23px 20px 23px 21px; }
+	.index__wrapper { padding: 23px 0px 0px 21px; }
 	.index__head
 	{
 		display: flex;

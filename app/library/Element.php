@@ -93,10 +93,6 @@ class Element
 				'type_info'    => $this->emTypes[$emFieldsTypes->type],
 				'settings'     => $fieldClass->getSettings(),
 				'required'     => $emFieldsTypes->getRequired(),
-				'fieldJs'      => $fieldClass->getFieldJs(),
-				'filterJs'     => $fieldClass->getFilterJs(),
-				'settingsJs'   => $fieldClass->getSettingsJs(),
-				'stylesCss'    => $fieldClass->getStylesCss(),
 				'collations'   => $fieldClass->getCollations(),
 			];
 			$tableColumns[$emFieldsTypes->field]['em'] = $emFieldArray;

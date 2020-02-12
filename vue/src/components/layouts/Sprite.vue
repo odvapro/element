@@ -40,6 +40,10 @@
 				<line x1="1" y1="6" x2="11" y2="6"  stroke-width="2" stroke-linecap="round"/>
 				<line x1="6" y1="11" x2="6" y2="1" stroke-width="2" stroke-linecap="round"/>
 			</symbol>
+			<symbol id="plus-gray" viewBox="0 0 9 9">
+				<line x1="0.5" y1="4.5" x2="8.5" y2="4.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/>
+				<line x1="4.5" y1="8.5" x2="4.5" y2="0.5" stroke="#C2C7CF" stroke-linecap="round"/>
+			</symbol>
 			<symbol id="lines" viewBox="0 0 6 5">
 				<g clip-path="url(#clip0)">
 				<line x1="5.5" y1="0.5" x2="0.5" y2="0.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/>

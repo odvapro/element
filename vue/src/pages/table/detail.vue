@@ -30,25 +30,27 @@
 				</template>
 			</div>
 		</div>
-		<div class="detail-feild" v-for="(column,columnCode) in selectedElement">
-			<div class="detail-field__name-wrap">
-				<img class="detail-field__icon-image" :src="require(`@/assets${columnEmSettings(columnCode).type_info.iconPath}`)">
-				<div class="detail-field-name">
-					<span>{{ getColumnName(columnCode) }}</span>
-					<small>{{ columnCode }}</small>
+		<div class="detail-feilds">
+			<div class="detail-feild" v-for="(column,columnCode) in selectedElement">
+				<div class="detail-field__name-wrap">
+					<img class="detail-field__icon-image" :src="require(`@/assets${columnEmSettings(columnCode).type_info.iconPath}`)">
+					<div class="detail-field-name">
+						<span>{{ getColumnName(columnCode) }}</span>
+						<small>{{ columnCode }}</small>
+					</div>
 				</div>
-			</div>
-			<div class="detail-field-box">
-				<MainField
-					mode="edit"
-					view="detail"
-					:fieldName="column.fieldName"
-					:params="{
-						value     : column.value,
-						settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
-					}"
-					@onChange="changeFieldValue"
-				/>
+				<div class="detail-field-box">
+					<MainField
+						mode="edit"
+						view="detail"
+						:fieldName="column.fieldName"
+						:params="{
+							value     : column.value,
+							settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
+						}"
+						@onChange="changeFieldValue"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -229,13 +231,18 @@
 	}
 </script>
 <style lang="scss">
-	.detail {padding: 23px 0 23px 21px; }
+	.detail
+	{
+		padding: 23px 0 0px 21px;
+		height: 100%;
+	    overflow: auto;
+	}
 	.detail-head
 	{
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
-		margin-bottom: 13px;
+		margin-bottom: 28px;
 		padding-right: 95px;
 	}
 	.detail-head-name
@@ -267,18 +274,19 @@
 		text-transform: lowercase;
 	}
 	.detail-name-wrapper{padding-left:7px; }
+	.detail-feilds{border-top: 1px solid rgba(103, 115, 135, 0.1);}
 	.detail-feild
 	{
-		min-height: 50px;
-		margin-bottom:10px;
+		min-height: 40px;
 		display: flex;
 		align-items: flex-start;
+		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.detail-field__name-wrap {display: flex; margin-top: 10px;}
-	.detail-field__icon-image{margin-right: 15px;}
+	.detail-field__name-wrap {display: flex; margin-top: 6px;padding-left: 21px;}
+	.detail-field__icon-image{margin-right: 15px;width: 13px;}
 	.detail-field-name
 	{
-		width:200px;
+		width:90px;
 		flex-shrink:0;
 		span
 		{
@@ -300,7 +308,29 @@
 	{
 		position: relative;
 		min-width: 400px;
-		min-height: 49px;
+		min-height: 40px;
+		border-left: 1px solid rgba(103, 115, 135, 0.1);
+		padding-left: 14px;
+		display: flex;
+		align-items: center;
+		.em-string,
+		.em-list,
+		.em-node,
+		.em-file-item-col,
+		.em-date-wr
+		{
+			max-height: 40px;
+			position: relative;
+		}
+		.em-string
+		{
+			max-height: 16px;
+			line-height: 1.15;
+		}
+		.ql-editor
+		{
+			padding: 0;
+		}
 	}
 	.detail-head__buttons
 	{
