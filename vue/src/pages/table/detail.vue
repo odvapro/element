@@ -71,46 +71,47 @@
 		},
 		mounted()
 		{
-			let requestParams = {
-				select : {},
-				where  : [],
-				order  : [],
-			};
-			requestParams.select.from = this.$route.params.tableCode;
-			let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.$route.params.tableCode);
-			this.columns              = this.$store.getters.getColumns(this.$route.params.tableCode);
-			this.tableCode            = this.$route.params.tableCode;
-			if(this.$route.name != 'tableAddElement')
-			{
-				requestParams.select.where = {
-					operation:'and',
-					fields:[
-						{
-							code      : primaryKeyCode,
-							operation : 'IS',
-							value     : this.$route.params.id
-						}
-					]
-				}
-				this.$store.dispatch('selectElement',requestParams).then(()=>
-				{
-					this.selectedElement = this.$store.state.tables.selectedElement;
-				});
-			}
-			else
-			{
-				for(let columnCode in this.columns)
-				{
-					this.selectedElement[columnCode] = {
-						value     :'',
-						fieldName :this.columns[columnCode].em.type_info.code
-					}
-				}
-			}
-
+			this.updateSelected();
 		},
 		methods:
 		{
+			async updateSelected()
+			{
+				let requestParams = {
+					select : {},
+					where  : [],
+					order  : [],
+				};
+				requestParams.select.from = this.$route.params.tableCode;
+				let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.$route.params.tableCode);
+				this.columns              = this.$store.getters.getColumns(this.$route.params.tableCode);
+				this.tableCode            = this.$route.params.tableCode;
+
+				if(this.$route.name != 'tableAddElement')
+				{
+					requestParams.select.where = {
+						operation:'and',
+						fields:[
+							{
+								code      : primaryKeyCode,
+								operation : 'IS',
+								value     : this.$route.params.id
+							}
+						]
+					};
+
+					await this.$store.dispatch('selectElement',requestParams);
+					this.selectedElement = this.$store.state.tables.selectedElement;
+				}
+				else
+				{
+					for(let columnCode in this.columns)
+						this.selectedElement[columnCode] = {
+							value     :'',
+							fieldName :this.columns[columnCode].em.type_info.code
+						};
+				}
+			},
 			/**
 			 * Триггер изменения значения филда
 			 * Переносим значение в наш стейт
@@ -149,13 +150,18 @@
 			 */
 			async saveElement()
 			{
-				this.$store.dispatch('saveSelectedElement',{
+				let result = await this.$store.dispatch('saveSelectedElement',{
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
-				}).then(()=>
-				{
-					this.ElMessage(this.$t('elMessages.element_saved'));
 				});
+
+				if (result.data.success)
+				{
+					await this.updateSelected();
+					this.ElMessage(this.$t('elMessages.element_saved'));
+				}
+				else
+					this.ElMessage(this.$t('elMessages.something_goes_wrong'));
 			},
 
 			/**
