@@ -7,7 +7,7 @@
 		},
 		{
 			"name" :"Dev link2",
-			"link" :"/ext/dev_ext/params1/param2/param3"
+			"link" :"/ext/dev_ext/params1/param2/param3/"
 		}
 	]
 }
