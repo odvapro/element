@@ -71,45 +71,46 @@
 		},
 		mounted()
 		{
-			let requestParams = {
-				select : {},
-				where  : [],
-				order  : [],
-			};
-			requestParams.select.from = this.tableCode;
-			let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-			this.columns              = this.$store.getters.getColumns(this.tableCode);
-			if(this.name != 'tableAddElement')
-			{
-				requestParams.select.where = {
-					operation:'and',
-					fields:[
-						{
-							code      : primaryKeyCode,
-							operation : 'IS',
-							value     : this.id
-						}
-					]
-				}
-				this.$store.dispatch('selectElement',requestParams).then(()=>
-				{
-					this.selectedElement = this.$store.state.tables.selectedElement;
-				});
-			}
-			else
-			{
-				for(let columnCode in this.columns)
-				{
-					this.$set(this.selectedElement, columnCode,{
-						value     :'',
-						fieldName :this.columns[columnCode].em.type_info.code
-					});
-				}
-			}
-
+			this.selectElement();
 		},
 		methods:
 		{
+			async selectElement()
+			{
+				let requestParams = {
+					select : {},
+					where  : [],
+					order  : [],
+				};
+				requestParams.select.from = this.tableCode;
+				let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
+				this.columns              = this.$store.getters.getColumns(this.tableCode);
+				if(this.name != 'tableAddElement')
+				{
+					requestParams.select.where = {
+						operation:'and',
+						fields:[
+							{
+								code      : primaryKeyCode,
+								operation : 'IS',
+								value     : this.id
+							}
+						]
+					};
+					await this.$store.dispatch('selectElement',requestParams);
+					this.selectedElement = this.$store.state.tables.selectedElement;
+				}
+				else
+				{
+					for(let columnCode in this.columns)
+					{
+						this.$set(this.selectedElement, columnCode,{
+							value     :'',
+							fieldName :this.columns[columnCode].em.type_info.code
+						});
+					}
+				}
+			},
 			/**
 			 * Триггер изменения значения филда
 			 * Переносим значение в наш стейт
@@ -148,13 +149,11 @@
 			 */
 			async saveElement()
 			{
-				this.$store.dispatch('saveSelectedElement',{
+				await this.$emit('saveElement', {
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
-				}).then(()=>
-				{
-					this.ElMessage(this.$t('elMessages.element_saved'));
 				});
+				this.selectElement();
 			},
 
 			/**
@@ -162,32 +161,10 @@
 			 */
 			async createElement()
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in this.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(this.selectedElement[fieldCode].value);
-				}
-
-				var data = qs.stringify({
-					insert:
-					{
-						table   :this.tableCode,
-						columns :setColumns,
-						values  :setValues
-					}
+				this.$emit('createElement', {
+					selectedElement : this.selectedElement,
+					tableCode       : this.tableCode
 				});
-				let result = await this.$axios.post('/el/insert/',data);
-				if(result.data.success == true)
-				{
-					this.$emit('openCreatedDetail', {tableCode:this.tableCode, id:result.data.lastid })
-					this.ElMessage(this.$t('elMessages.element_created'));
-				}
-				else
-					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
 
 			/**
@@ -203,27 +180,9 @@
 			 */
 			async remove()
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-				await this.$store.dispatch('removeRecord', {
-					delete:
-					{
-						table: this.tableCode,
-						where:
-						{
-							operation:'and',
-							fields:[
-								{
-									code      : primaryKeyCode,
-									operation : 'IS',
-									value     : this.selectedElement[primaryKeyCode].value
-								}
-							]
-						}
-					}
-				}).then(()=>
-				{
-					this.cancel();
-					this.ElMessage(this.$t('elMessages.element_removed'));
+				this.$emit('removeElement', {
+					selectedElement : this.selectedElement,
+					tableCode       : this.tableCode
 				});
 			}
 		}
