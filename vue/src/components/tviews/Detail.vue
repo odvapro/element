@@ -71,45 +71,46 @@
 		},
 		mounted()
 		{
-			let requestParams = {
-				select : {},
-				where  : [],
-				order  : [],
-			};
-			requestParams.select.from = this.tableCode;
-			let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-			this.columns              = this.$store.getters.getColumns(this.tableCode);
-			if(this.name != 'tableAddElement')
-			{
-				requestParams.select.where = {
-					operation:'and',
-					fields:[
-						{
-							code      : primaryKeyCode,
-							operation : 'IS',
-							value     : this.id
-						}
-					]
-				}
-				this.$store.dispatch('selectElement',requestParams).then(()=>
-				{
-					this.selectedElement = this.$store.state.tables.selectedElement;
-				});
-			}
-			else
-			{
-				for(let columnCode in this.columns)
-				{
-					this.$set(this.selectedElement, columnCode,{
-						value     :'',
-						fieldName :this.columns[columnCode].em.type_info.code
-					});
-				}
-			}
-
+			this.selectElement();
 		},
 		methods:
 		{
+			async selectElement()
+			{
+				let requestParams = {
+					select : {},
+					where  : [],
+					order  : [],
+				};
+				requestParams.select.from = this.tableCode;
+				let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
+				this.columns              = this.$store.getters.getColumns(this.tableCode);
+				if(this.name != 'tableAddElement')
+				{
+					requestParams.select.where = {
+						operation:'and',
+						fields:[
+							{
+								code      : primaryKeyCode,
+								operation : 'IS',
+								value     : this.id
+							}
+						]
+					};
+					await this.$store.dispatch('selectElement',requestParams);
+					this.selectedElement = this.$store.state.tables.selectedElement;
+				}
+				else
+				{
+					for(let columnCode in this.columns)
+					{
+						this.$set(this.selectedElement, columnCode,{
+							value     :'',
+							fieldName :this.columns[columnCode].em.type_info.code
+						});
+					}
+				}
+			},
 			/**
 			 * Триггер изменения значения филда
 			 * Переносим значение в наш стейт
@@ -148,10 +149,11 @@
 			 */
 			async saveElement()
 			{
-				this.$emit('saveElement', {
+				await this.$emit('saveElement', {
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
 				});
+				this.selectElement();
 			},
 
 			/**
