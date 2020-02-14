@@ -3,7 +3,7 @@
 		<div class="em-date-wr__static-field" @click="openFieldEdit">
 			<div
 				class="em-date-wr__static-field-value"
-				:class="{'em-date-wr__static-field-value_empty': !localValue}"
+				:class="{'em-date-wr__static-field-value_empty': isEmpty}"
 			>{{ localValue }}</div>
 		</div>
 		<DateForm
@@ -26,6 +26,21 @@
 			return {
 				isEditFieldPopup: false,
 				localValue: this.$t('empty'),
+			}
+		},
+		computed:
+		{
+			isEmpty()
+			{
+				if(this.localValue == this.$t('empty'))
+					return true;
+			}
+		},
+		watch:
+		{
+			'fieldValue'()
+			{
+				this.localValue = this.formatDate(this.fieldValue);
 			}
 		},
 		mounted()
@@ -95,6 +110,7 @@
 		position: absolute;
 		left: 0;
 		top: 0;
+		cursor: pointer;
 	}
 	.detail-field-box .em-date-wr
 	{
@@ -113,7 +129,7 @@
 		font-size: 12px;
 		color: #677387;
 		white-space: nowrap;
-		&.el_empty
+		&_empty
 		{
 			color: rgba(103, 115, 135, 0.4);
 		}

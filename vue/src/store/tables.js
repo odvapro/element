@@ -173,10 +173,6 @@ const table =
 				value     : (row) ? row[primaryKeyCode].value : '',
 				fieldCode : primaryKeyCode
 			};
-			settings.fieldJs    = column.em.fieldJs;
-			settings.filterJs   = column.em.filterJs;
-			settings.settingsJs = column.em.settingsJs;
-			settings.stylesCss  = column.em.stylesCss;
 			settings.fieldCode  = column.field;
 			settings.tableCode  = tableCode;
 
@@ -377,6 +373,8 @@ const table =
 				}
 			});
 			let result = await axios.post('/el/update/',data);
+
+			return result;
 		}
 	}
 }

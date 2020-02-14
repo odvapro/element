@@ -33,7 +33,6 @@ Vue.component('DateForm', DateForm);
 Vue.component('Table', Table);
 
 window.Vue = Vue;
-window.importStyles = [];
 
 router.beforeEach(async function(to, from, next)
 {
