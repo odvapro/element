@@ -36,6 +36,13 @@
 					return true;
 			}
 		},
+		watch:
+		{
+			'fieldValue'()
+			{
+				this.localValue = this.formatDate(this.fieldValue);
+			}
+		},
 		mounted()
 		{
 			if (this.fieldValue)
