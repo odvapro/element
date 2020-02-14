@@ -72,6 +72,7 @@
 		width:100%;
 		height: 100%;
 		overflow: auto;
+		z-index: 1;
 	}
 	.popup-block
 	{

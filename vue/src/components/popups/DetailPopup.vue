@@ -1,14 +1,17 @@
 <template>
 	<div class="detail-popup">
 		<Popup
-			:visible.sync="addPopupVisible"
+			:visible.sync="isPopupVisible"
 		>
 			<Detail
 				:tableCode="tableCode"
 				:name="name"
 				:id="id"
 				@cancel="cancel"
-				@openCreatedDetail="openCreatedDetail"
+				@openDetail="openDetail"
+				@saveElement="saveElement"
+				@removeElement="removeElement"
+				@createElement="createElement"
 			/>
 		</Popup>
 	</div>
@@ -17,37 +20,50 @@
 	import Detail from '@/components/tviews/Detail.vue'
 	export default
 	{
-		props: ['tableCode', 'name', 'id', 'isPopupVisible'],
+		props:
+		[
+			'tableCode',
+			'name',
+			'id',
+			'visible'
+		],
 		components: {Detail},
-		data()
+		computed:
 		{
-			return {
-				addPopupVisible: false,
-			}
-		},
-		watch:
-		{
-			'isPopupVisible'(newValue)
+			isPopupVisible:
 			{
-				this.addPopupVisible = newValue;
-			},
-			'addPopupVisible'(newValue)
-			{
-				if (!newValue)
-					this.$emit('close');
+				get()
+				{
+					return this.visible
+				},
+				set(val)
+				{
+					this.$emit('update:visible', val);
+				}
 			}
 		},
 		methods:
 		{
 			cancel()
 			{
-				this.$emit('close');
+				this.isPopupVisible = false;
 			},
-			openCreatedDetail({tableCode,id})
+			openDetail(data)
 			{
-				this.$emit('openCreatedDetail', {tableCode, id})
-				// this.$router.push({name:'tableDetail', params:{tableCode:tableCode, id:id }});
-			}
+				this.$emit('openDetail', data);
+			},
+			saveElement(data)
+			{
+				this.$emit('saveElement', data);
+			},
+			removeElement(data)
+			{
+				this.$emit('removeElement', data);
+			},
+			createElement(data)
+			{
+				this.$emit('createElement', data);
+			},
 		}
 	}
 </script>
