@@ -148,12 +148,9 @@
 			 */
 			async saveElement()
 			{
-				this.$store.dispatch('saveSelectedElement',{
+				this.$emit('saveElement', {
 					selectedElement : this.selectedElement,
 					tableCode       : this.tableCode
-				}).then(()=>
-				{
-					this.ElMessage(this.$t('elMessages.element_saved'));
 				});
 			},
 
@@ -162,32 +159,10 @@
 			 */
 			async createElement()
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in this.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(this.selectedElement[fieldCode].value);
-				}
-
-				var data = qs.stringify({
-					insert:
-					{
-						table   :this.tableCode,
-						columns :setColumns,
-						values  :setValues
-					}
+				this.$emit('createElement', {
+					selectedElement : this.selectedElement,
+					tableCode       : this.tableCode
 				});
-				let result = await this.$axios.post('/el/insert/',data);
-				if(result.data.success == true)
-				{
-					this.$emit('openCreatedDetail', {tableCode:this.tableCode, id:result.data.lastid })
-					this.ElMessage(this.$t('elMessages.element_created'));
-				}
-				else
-					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
 
 			/**
@@ -203,27 +178,9 @@
 			 */
 			async remove()
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.tableCode);
-				await this.$store.dispatch('removeRecord', {
-					delete:
-					{
-						table: this.tableCode,
-						where:
-						{
-							operation:'and',
-							fields:[
-								{
-									code      : primaryKeyCode,
-									operation : 'IS',
-									value     : this.selectedElement[primaryKeyCode].value
-								}
-							]
-						}
-					}
-				}).then(()=>
-				{
-					this.cancel();
-					this.ElMessage(this.$t('elMessages.element_removed'));
+				this.$emit('removeElement', {
+					selectedElement : this.selectedElement,
+					tableCode       : this.tableCode
 				});
 			}
 		}
