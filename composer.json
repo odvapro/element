@@ -1,21 +1,25 @@
 {
-	"name": "odvapro/element",
-	"description": "Element CMF",
-	"verstion":"v0.3.6",
-	"type": "project",
-	"authors": [
-		{
-			"name": "Mihail Dzantiev",
-			"email": "axel0726@gmail.com"
-		}
-	],
-	"prefer-stable": true,
-	"require": {
-		"php": ">=7.0",
-		"phalcon/devtools": "^2.0"
-	},
-	"require-dev": {
-		"codeception/codeception": "^3.0",
-		"flow/jsonpath": "dev-master"
-	}
+    "name": "odvapro/element",
+    "description": "Element CMF",
+    "verstion": "v0.3.6",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Mihail Dzantiev",
+            "email": "axel0726@gmail.com"
+        }
+    ],
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "phalcon/devtools": "^2.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.0",
+        "flow/jsonpath": " ^0.5",
+        "codeception/module-rest": "^1.2",
+        "codeception/module-db": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0",
+        "codeception/module-phpbrowser": "^1.0"
+    }
 }

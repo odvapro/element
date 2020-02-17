@@ -32,7 +32,7 @@ describe('containsFilterTest', ()=>
 		cy.get('.index__menu-item').contains('Filter').click();
 	});
 
-	Cypress.Commands.add('addFilter', field=>
+	/*Cypress.Commands.add('addFilter', field=>
 	{
 		cy.contains('Add filter').closest('button').click();
 
@@ -91,5 +91,5 @@ describe('containsFilterTest', ()=>
 	{
 		for(let field of fieldsData)
 			cy.checkField(field);
-	});
+	});*/
 });

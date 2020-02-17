@@ -6,6 +6,12 @@ Instructions for developers
 vendor/bin/codecept run
 ```
 
+## Run cypress tests
+```
+run vue on localhost:8080
+-> npx cypress open
+```
+
 ## Migrations
 Generate
 ```
