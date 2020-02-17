@@ -60,7 +60,7 @@
 	import qs from 'qs';
 	export default
 	{
-		props: ['tableCode', 'name', 'id'],
+		props: ['tableCode', 'name', 'id', 'element'],
 		components: {MainField},
 		data()
 		{
@@ -85,7 +85,7 @@
 				requestParams.select.from = this.tableCode;
 				let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
 				this.columns              = this.$store.getters.getColumns(this.tableCode);
-				if(this.name != 'tableAddElement')
+				if(this.name != 'tableAddElement' && !this.element)
 				{
 					requestParams.select.where = {
 						operation:'and',
@@ -108,6 +108,8 @@
 							value     :'',
 							fieldName :this.columns[columnCode].em.type_info.code
 						});
+						if (this.element)
+							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode].value);
 					}
 				}
 			},
