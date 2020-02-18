@@ -1,30 +1,10 @@
 describe('authTest', ()=>
 {
-
-	function logIn(login, psw)
-	{
-		cy.get('.auth-form-input__login').clear().type(login);
-		cy.get('.auth-form-input__password').clear().type(psw);
-		cy.get('.auth-fill-btn.el-btn').click();
-	};
-	function logOut()
-	{
-		cy.get('.sidebar__user-logout').invoke('show').click();
-	};
-	function resetPswWithEmail(email, contain)
-	{
-		cy.get('.auth-form-input__forgot-password').clear().type(email);
-		cy.get('.auth-fill-btn.el-btn').click();
-		cy.contains(contain);
-	};
-
-	it('visit a page', () =>
-	{
-		cy.visit('localhost:8080/element');
-	});
+	before(()=>{cy.resetDB()});
 
 	it('empty data', ()=>
 	{
+		cy.visit('/');
 		cy.get('.auth-fill-btn.el-btn').click();
 		cy.get('.auth-form-input__login').should('have.class', 'el-inp--error');
 		cy.get('.auth-form-input__password').should('have.class', 'el-inp--error');
@@ -34,17 +14,17 @@ describe('authTest', ()=>
 
 	it('incorrect data', ()=>
 	{
-		logIn('incorrectLogin', 'incorrectPassword');
+		cy.login('incorrectLogin', 'incorrectPassword');
 		cy.get('.auth-fill-btn.el-btn').click();
 		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
 	});
 
 	it('incorrect one of inputs', ()=>
 	{
-		logIn('incorrectLogin', 'adminpass');
+		cy.login('incorrectLogin', 'adminpass');
 		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
 
-		logIn('admin', 'incorrectPassword');
+		cy.login('admin', 'incorrectPassword');
 		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
 
 		cy.get('.auth-form-input__login').clear();
@@ -60,33 +40,31 @@ describe('authTest', ()=>
 
 	it('log in with name', ()=>
 	{
-		logIn('admin', 'adminpass');
+		cy.login('admin', 'adminpass');
 		cy.url().should('include', '/settings');
-		logOut();
+		cy.logout();
 	});
 
 	it('log in with email', ()=>
 	{
-		logIn('axel0726@gmail.com', 'adminpass');
+		cy.login('axel0726@gmail.com', 'adminpass');
 		cy.wait(3000);
 		cy.url().should('include', '/settings');
-		logOut();
+		cy.logout();
 	});
 
 	it('forgotPsw', ()=>
 	{
-		// TODO need cleanup
-		return true;
 		cy.get('.auth-transpar-btn').click();
 
-		resetPswWithEmail('admin', 'Invalid email format');
-		resetPswWithEmail('admin@email', 'Invalid email format');
-		resetPswWithEmail('admin@email.', 'Invalid email format');
-		resetPswWithEmail('test@test.test', 'Incorrect email');
+		cy.resetPassword('admin', 'Invalid email format');
+		cy.resetPassword('admin@email', 'Invalid email format');
+		cy.resetPassword('admin@email.', 'Invalid email format');
+		cy.resetPassword('test@test.test', 'Incorrect email');
 
 		cy.get('.auth-transpar-btn').click();
 		cy.get('.auth-form-input__login');
 		cy.get('.auth-transpar-btn').click();
-		resetPswWithEmail('axel0726@gmail.com', 'New password was sended to your email.');
+		cy.resetPassword('axel0726@gmail.com', 'New password was sended to your email.');
 	});
 });

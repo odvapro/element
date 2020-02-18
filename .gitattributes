@@ -2,3 +2,5 @@ tests/ export-ignore
 app/extensions/dev_ext/ export-ignore
 documentation/ export-ignore
 codeceptionSample.yml export-ignore
+api/dev.php export-ignore
+/vue/cypress/ export-ignore

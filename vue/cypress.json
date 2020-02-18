@@ -1,1 +1,7 @@
-{}
+{
+	"baseUrl":"http://localhost:8080/element",
+	"env":
+	{
+		"apiUrl": "http://element.local/element/api/"
+	}
+}
