@@ -7,6 +7,7 @@
 				:tableCode="tableCode"
 				:name="name"
 				:id="id"
+				:element="element"
 				@cancel="cancel"
 				@openDetail="openDetail"
 				@saveElement="saveElement"
@@ -25,7 +26,8 @@
 			'tableCode',
 			'name',
 			'id',
-			'visible'
+			'visible',
+			'element'
 		],
 		components: {Detail},
 		computed:

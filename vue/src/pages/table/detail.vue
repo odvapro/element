@@ -47,7 +47,7 @@
 					setValues.push(data.selectedElement[fieldCode].value);
 				}
 
-				var data = qs.stringify({
+				let insertData = qs.stringify({
 					insert:
 					{
 						table   :data.tableCode,
@@ -55,7 +55,7 @@
 						values  :setValues
 					}
 				});
-				let result = await this.$axios.post('/el/insert/',data);
+				let result = await this.$axios.post('/el/insert/',insertData);
 				if(result.data.success == true)
 				{
 					this.openDetail({tableCode:data.tableCode, id:result.data.lastid});
