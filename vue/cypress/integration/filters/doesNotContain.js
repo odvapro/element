@@ -12,13 +12,13 @@ describe('does-not-contain', ()=>
 		// add contains filter
 		cy.contains('Filter').closest('li').click();
 		cy.contains('Add filter').closest('button').click();
-		cy.get('.select.filters-popup__select:nth-child(2)').click();
+		cy.get('.select[data-test="filter-column"]:nth-child(2)').click();
 		cy.contains('Does Not Contain').closest('li').click();
-		cy.get('.filters-popup__filter-input.el-inp').type('1');
+		cy.get('[data-test="filter-value"] input').type('1');
 		cy.wait(3000);
-		cy.get('.table-row').should('have.length', 5).should('be.visible');
-		cy.get('.filters-popup__delete-row-icon').click();
+		cy.get('[data-test="table-row"]').should('have.length', 4).should('be.visible');
+		cy.get('[data-test="filter-delete-icon"]').click();
 		cy.wait(3000);
-		cy.get('.table-row').should('have.length', 6).should('be.visible');
+		cy.get('[data-test="table-row"]').should('have.length', 5).should('be.visible');
 	});
 });

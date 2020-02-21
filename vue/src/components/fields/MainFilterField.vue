@@ -4,6 +4,7 @@
 		:settings="settings"
 		v-bind:is="filterComponent"
 		@onChange="changeValue"
+		data-test="filter-value"
 	></component>
 </template>
 <script>

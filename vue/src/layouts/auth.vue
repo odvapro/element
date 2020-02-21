@@ -10,26 +10,28 @@
 					<input
 						class="auth-form-input auth-form-input__login el-inp"
 						type="text"
+						data-test="input-login"
 						:placeholder="$t('auth.enter_your_login_or_email')"
 						v-model="user.login.value"
 						:class="{'el-inp--error': user.login.error}"
 					>
-					<span class="auth__error-text">{{user.login.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{user.login.error}}</span>
 				</label>
 				<label class="auth-label">
 					<div class="auth-label-title">{{$t('password')}}</div>
 					<input
 						class="auth-form-input auth-form-input__password el-inp"
 						type="password"
+						data-test="input-password"
 						:placeholder="$t('auth.enter_your_password')"
 						v-model="user.password.value"
 						:class="{'el-inp--error': user.password.error}"
 					>
-					<span class="auth__error-text">{{user.password.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{user.password.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn" @click="authUser()">{{$t('auth.log_in')}}</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
+					<button class="auth-fill-btn el-btn" data-test="auth-login" @click="authUser()">{{$t('auth.log_in')}}</button>
+					<a class="auth-transpar-btn" data-test="btn-transpar" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
 				</div>
 			</form>
 		</div>
@@ -44,11 +46,11 @@
 						class="auth-form-input auth-form-input__forgot-password el-inp"
 						:class="{'el-inp--error': forgot.email.error}"
 					>
-					<span class="auth__error-text">{{forgot.email.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{forgot.email.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn">{{$t('auth.reset_password')}}</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'login'">{{$t('auth.return_to_log_in_page')}}</a>
+					<button class="auth-fill-btn el-btn" data-test="auth-login">{{$t('auth.reset_password')}}</button>
+					<a class="auth-transpar-btn" data-test="btn-transpar" @click="activeForm = 'login'">{{$t('auth.return_to_log_in_page')}}</a>
 				</div>
 			</form>
 		</div>
