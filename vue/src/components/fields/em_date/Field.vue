@@ -68,6 +68,8 @@
 			},
 			formatDate(date)
 			{
+				if (date === '')
+					return '';
 				let day   = date.match(/-\d{2}/g)[1].replace(/-/,''),
 					month = this.getMonth(date.match(/-\d{2}/g)[0].replace(/-/,'') - 1),
 					year  = date.match(/\d{4}/)[0];
