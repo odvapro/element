@@ -5,9 +5,9 @@ describe('authTest', ()=>
 	it('empty data', ()=>
 	{
 		cy.visit('/');
-		cy.get('.auth-fill-btn.el-btn').click();
-		cy.get('.auth-form-input__login').should('have.class', 'el-inp--error');
-		cy.get('.auth-form-input__password').should('have.class', 'el-inp--error');
+		cy.get('[data-test="auth-login"]').click();
+		cy.get('[data-test="input-login"]').should('have.class', 'el-inp--error');
+		cy.get('[data-test="input-password"]').should('have.class', 'el-inp--error');
 		cy.contains('Incorrect login');
 		cy.contains('Incorrect password');
 	});
@@ -15,27 +15,27 @@ describe('authTest', ()=>
 	it('incorrect data', ()=>
 	{
 		cy.login('incorrectLogin', 'incorrectPassword');
-		cy.get('.auth-fill-btn.el-btn').click();
-		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
+		cy.get('[data-test="auth-login"]').click();
+		cy.get('[data-test="error-text"]').should('contain', 'Incorrect login or password');
 	});
 
 	it('incorrect one of inputs', ()=>
 	{
 		cy.login('incorrectLogin', 'adminpass');
-		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
+		cy.get('[data-test="error-text"]').should('contain', 'Incorrect login or password');
 
 		cy.login('admin', 'incorrectPassword');
-		cy.get('.auth__error-text').should('contain', 'Incorrect login or password');
+		cy.get('[data-test="error-text"]').should('contain', 'Incorrect login or password');
 
-		cy.get('.auth-form-input__login').clear();
-		cy.get('.auth-form-input__password').clear().type('incorrectPassword');
-		cy.get('.auth-fill-btn.el-btn').click();
-		cy.get('.auth__error-text').should('contain', 'Incorrect login');
+		cy.get('[data-test="input-login"]').clear();
+		cy.get('[data-test="input-password"]').clear().type('incorrectPassword');
+		cy.get('[data-test="auth-login"]').click();
+		cy.get('[data-test="error-text"]').should('contain', 'Incorrect login');
 
-		cy.get('.auth-form-input__login').clear().type('admin');
-		cy.get('.auth-form-input__password').clear();
-		cy.get('.auth-fill-btn.el-btn').click();
-		cy.get('.auth__error-text').should('contain', 'Incorrect password');
+		cy.get('[data-test="input-login"]').clear().type('admin');
+		cy.get('[data-test="input-password"]').clear();
+		cy.get('[data-test="auth-login"]').click();
+		cy.get('[data-test="error-text"]').should('contain', 'Incorrect password');
 	});
 
 	it('log in with name', ()=>
@@ -55,16 +55,16 @@ describe('authTest', ()=>
 
 	it('forgotPsw', ()=>
 	{
-		cy.get('.auth-transpar-btn').click();
+		cy.get('[data-test="btn-transpar"]').click();
 
 		cy.resetPassword('admin', 'Invalid email format');
 		cy.resetPassword('admin@email', 'Invalid email format');
 		cy.resetPassword('admin@email.', 'Invalid email format');
 		cy.resetPassword('test@test.test', 'Incorrect email');
 
-		cy.get('.auth-transpar-btn').click();
-		cy.get('.auth-form-input__login');
-		cy.get('.auth-transpar-btn').click();
+		cy.get('[data-test="btn-transpar"]').click();
+		cy.get('[data-test="input-login"]');
+		cy.get('[data-test="btn-transpar"]').click();
 		cy.resetPassword('axel0726@gmail.com', 'New password was sended to your email.');
 	});
 });

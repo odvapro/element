@@ -38,7 +38,7 @@
 					></MainFilterField>
 				</div>
 				<div class="filters-popup__delete-row-icon-wrapper" @click.stop="deleteRowFilter(index)">
-					<div class="filters-popup__delete-row-icon">
+					<div class="filters-popup__delete-row-icon" data-test="filter-delete-icon">
 						<svg width="12" height="12">
 							<use xlink:href="#plus-white"></use>
 						</svg>

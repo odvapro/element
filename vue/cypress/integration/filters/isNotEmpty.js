@@ -12,13 +12,13 @@ describe('is-not-empty', ()=>
 		// add contains filter
 		cy.contains('Filter').closest('li').click();
 		cy.contains('Add filter').closest('button').click();
-		cy.get('.select.filters-popup__select:nth-child(2)').click();
+		cy.get('.select[data-test="filter-column"]:nth-child(2)').click();
 		cy.contains(/^Is Not Empty$/).closest('li.active').click();
 		cy.wait(3000);
-		cy.get('.table-row').should('have.length', 6).should('be.visible');
+		cy.get('[data-test="table-row"]').should('have.length', 5).should('be.visible');
 		cy.contains('Filter').closest('li').click();
-		cy.get('.filters-popup__delete-row-icon').click();
+		cy.get('[data-test="filter-delete-icon"]').click();
 		cy.wait(3000);
-		cy.get('.table-row').should('have.length', 6).should('be.visible');
+		cy.get('[data-test="table-row"]').should('have.length', 5).should('be.visible');
 	});
 });
