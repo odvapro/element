@@ -76,7 +76,21 @@
 		z-index: 1;
 		.popup-block
 		{
-			min-width: 1000px;
+			min-width: 800px;
+		}
+		.detail
+		{
+			min-height: 600px;
+			max-height: 600px;
+			overflow: unset;
+			display: flex;
+			flex-direction: column;
+			.detail-feilds
+			{
+				overflow: auto;
+				margin-top: auto;
+				margin-bottom: auto;
+			}
 		}
 	}
 </style>

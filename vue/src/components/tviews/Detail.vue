@@ -246,7 +246,7 @@
 	.detail-field__icon-image{margin-right: 15px;width: 13px;}
 	.detail-field-name
 	{
-		width:90px;
+		width:140px;
 		flex-shrink:0;
 		span
 		{
@@ -255,6 +255,9 @@
 			line-height: normal;
 			color: #191C21;
 			text-transform: capitalize;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		small
 		{
@@ -262,6 +265,9 @@
 			font-size: 10px;
 			line-height: normal;
 			color: rgba(103, 115, 135, 0.4);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 	.detail-field-box
