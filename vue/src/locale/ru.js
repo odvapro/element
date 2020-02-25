@@ -100,7 +100,7 @@ export default
 		},
 		table:
 		{
-			edit_element: 'Редактировать элемент',
+			edit_element: 'Редактирование элемента',
 			new_element: 'Новый элемент',
 		}
 	},

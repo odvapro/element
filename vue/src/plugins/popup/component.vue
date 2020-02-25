@@ -32,9 +32,10 @@
 			 */
 			close(e)
 			{
-				let blocklInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-block') === el});
+				let blockInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-block') === el});
+				let closeInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-close') === el});
 
-				if (blocklInPathIndex === -1)
+				if (blockInPathIndex === -1 || closeInPathIndex !== -1)
 					this.$emit('update:visible', false);
 			},
 			keyup(event)
