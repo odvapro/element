@@ -74,14 +74,12 @@
 	{
 		position: absolute;
 		z-index: 1;
-		.popup-block
-		{
-			min-width: 800px;
-		}
+		.popup-close{display: none;}
+		.popup-block {min-width: 800px; }
 		.detail
 		{
-			min-height: 600px;
-			max-height: 600px;
+			padding:0;
+			height:calc(100% - 144px);
 			overflow: unset;
 			display: flex;
 			flex-direction: column;
@@ -92,5 +90,6 @@
 				margin-bottom: auto;
 			}
 		}
+		.detail-head{padding-right: 0px; }
 	}
 </style>
