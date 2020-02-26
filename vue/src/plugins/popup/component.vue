@@ -1,8 +1,8 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
+		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
 			<div
-				v-click-outside="close" class="popup-block">
+				class="popup-block">
 				<div class="popup-close" @click="close">
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>

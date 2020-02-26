@@ -11,6 +11,9 @@
 </template>
 <script>
 	import EditorJS from '@editorjs/editorjs';
+	const Table = require('@editorjs/table');
+	const Header = require('@editorjs/header');
+	import ImageTool from '@editorjs/image';
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
@@ -38,9 +41,12 @@
 
 			}
 		},
-		watch:{
+		watch:
+		{
 			showEditor(show)
 			{
+				var link = document.getElementById('my-link');
+					link.click();
 				if(show == false)
 					this.editor.save().then((outputData) => {
 						this.localValue = outputData;
@@ -62,9 +68,47 @@
 					data = {blocks: [{"type": "paragraph", "data": {"text": this.localValue } } ] };
 				if(typeof this.localValue == 'object')
 					data = this.localValue;
+				let self = this;
 				this.editor = new EditorJS({
 					holderId : 'el-editor',
-					data     : data
+					data     : data,
+					tools: {
+						header: Header,
+						table: {
+							class: Table,
+							inlineToolbar: true,
+							config: {
+								rows: 2,
+								cols: 3,
+							},
+						},
+						image: {
+							class: ImageTool,
+							config: {
+								uploader: {
+									async uploadByFile(file){
+										let formData   = new FormData();
+										formData.append('file', file);
+										let result = await self.$axios({
+											method : 'POST',
+											data   : formData,
+											headers: { 'Content-Type': 'multipart/form-data' },
+											url    : '/field/em_text/file/upload/'
+										});
+										if (!result.data.success)
+											return false;
+
+										return {
+											success: 1,
+											file: {
+												url: process.env.VUE_APP_DOMAIN + result.data.fileName
+											}
+										}
+									}
+								}
+							}
+						}
+					},
 				});
 			}
 		}
