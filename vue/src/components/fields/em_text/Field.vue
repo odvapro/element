@@ -5,7 +5,21 @@
 			<span class="el-empty" v-if="!previewText">{{ $t('empty') }}</span>
 		</div>
 		<Popup class="em-text__popup" :visible.sync="showEditor">
-			<div id="el-editor"></div>
+			<div class="em-text__editor-wrapper">
+				<div class="em-text__popup-head">
+					<div class="em_text__label-wrapper">
+						<div class="em-text__popup-name">{{fieldName}}</div>
+						<div class="em-text__popup-code">{{fieldCode}}</div>
+					</div>
+					<div class="em_text__button-wrapper">
+						<button class="el-gbtn em-text__popup-cancel-btn" @click="showEditor = false">Cancel</button>
+						<button class="el-btn" @click="saveEditorContent()">Save</button>
+					</div>
+				</div>
+				<div class="em_text__editor-scroll">
+					<div id="el-editor"></div>
+				</div>
+			</div>
 		</Popup>
 	</div>
 </template>
@@ -24,6 +38,8 @@
 				localValue:this.fieldValue,
 				showEditor:false,
 				editor:false,
+				fieldCode: '',
+				fieldName: ''
 			}
 		},
 		computed:
@@ -45,24 +61,32 @@
 		{
 			showEditor(show)
 			{
-				var link = document.getElementById('my-link');
-					link.click();
 				if(show == false)
-					this.editor.save().then((outputData) => {
-						this.localValue = outputData;
-						this.$emit('onChange', {
-							value     : this.localValue,
-							settings  : this.fieldSettings
-						});
-					})
+					this.saveEditorContent();
 			}
 		},
 		methods:
 		{
+			saveEditorContent()
+			{
+				this.editor.save().then((outputData) => {
+					this.localValue = outputData;
+					this.$emit('onChange', {
+						value     : this.localValue,
+						settings  : this.fieldSettings
+					});
+				})
+			},
+			getPopupTitle()
+			{
+				let columnSettings = this.$store.getters.getColumn(this.fieldSettings.tableCode, this.fieldSettings.fieldCode);
+				this.fieldName = !!columnSettings.em.name ? columnSettings.em.name : columnSettings.em.settings.name;
+				this.fieldCode = columnSettings.em.settings.name;
+			},
 			openEditor()
 			{
 				this.showEditor = true;
-
+				this.getPopupTitle();
 				let data = {};
 				if(typeof this.localValue == 'string')
 					data = {blocks: [{"type": "paragraph", "data": {"text": this.localValue } } ] };
@@ -138,10 +162,47 @@
 		color: #677387;
 		padding:11px 20px 11px 0;
 		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.em-text__popup .popup-block
 	{
 		width:800px;
 		height:calc(100% - 144px);
+	}
+	.em-text__editor-wrapper
+	{
+		height: 100%;
+		overflow: hidden;
+	}
+	.em_text__editor-scroll
+	{
+		overflow: auto;
+		height: 100%;
+	}
+	.em-text__popup-code
+	{
+		font-size: 10px;
+		line-height: 12px;
+		color: rgba(103, 115, 135, 0.4);
+	}
+	.em-text__popup-name
+	{
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 19px;
+		color: #191C21;
+		margin-bottom: 3px;
+	}
+	.em-text__popup-head
+	{
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 40px;
+	}
+	.em-text__popup-cancel-btn
+	{
+		margin-right: 15px;
 	}
 </style>
