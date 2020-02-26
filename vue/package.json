@@ -18,6 +18,7 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "@editorjs/editorjs": "^2.16.1",
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
     "cypress": "^4.0.0",
