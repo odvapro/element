@@ -13,7 +13,7 @@
 					</div>
 					<div class="em_text__button-wrapper">
 						<button class="el-gbtn em-text__popup-cancel-btn" @click="showEditor = false">Cancel</button>
-						<button class="el-btn" @click="saveEditorContent()">Save</button>
+						<button class="el-btn" @click="closeAndSaveEditor()">Save</button>
 					</div>
 				</div>
 				<div class="em_text__editor-scroll">
@@ -57,14 +57,6 @@
 
 			}
 		},
-		watch:
-		{
-			showEditor(show)
-			{
-				if(show == false)
-					this.saveEditorContent();
-			}
-		},
 		methods:
 		{
 			saveEditorContent()
@@ -82,6 +74,11 @@
 				let columnSettings = this.$store.getters.getColumn(this.fieldSettings.tableCode, this.fieldSettings.fieldCode);
 				this.fieldName = !!columnSettings.em.name ? columnSettings.em.name : columnSettings.em.settings.name;
 				this.fieldCode = columnSettings.em.settings.name;
+			},
+			closeAndSaveEditor()
+			{
+				this.saveEditorContent();
+				this.showEditor = false;
 			},
 			openEditor()
 			{

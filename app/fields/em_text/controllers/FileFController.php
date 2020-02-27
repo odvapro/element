@@ -2,7 +2,7 @@
 
 class FileFController extends ControllerBase
 {
-	private $savedPath = ROOT . '/public/upload/editor/';
+	private $savedPath = ROOT . '/public/upload/';
 	public function uploadAction()
 	{
 		$file = $this->request->getUploadedFiles();

@@ -69,6 +69,9 @@
 		height: 100%;
 		overflow: auto;
 		z-index: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.popup-block
 	{
@@ -76,8 +79,6 @@
 		border-radius: 2px;
 		padding:20px;
 		width:550px;
-		margin:0 auto;
-		margin-top:100px;
 		position: relative;
 		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
 	}
