@@ -173,7 +173,6 @@
 					return;
 
 				this.localSettings.nodeTableCode  = table.code;
-				this.localSettings.keyField  = false;
 				this.localSettings.nodeField = false;
 				this.$delete(this.errors, 'nodeTableCode');
 			},
