@@ -7,10 +7,25 @@ class EmMatrixField extends FieldBase
 	 */
 	public function getValue()
 	{
-		if(empty($this->fieldValue))
+		$select  = [
+			'from'  => $this->settings['nodeTableCode'],
+			'where' => [
+				'operation' => 'and',
+				'fields'    => [[
+					'code'      => $this->settings['nodeField'],
+					'operation' => 'IS',
+					'value'     => $this->fieldValue
+				]]
+			]
+		];
+		$node = $this->element->select($select);
+
+		if(!count($node) )
 			return [];
 
-		return explode(',', $this->fieldValue);
+		return [
+			'matrixValue' => $node
+		];
 	}
 
 	/**
@@ -18,9 +33,18 @@ class EmMatrixField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		if(is_array($this->fieldValue))
-			return implode(',',$this->fieldValue);
-		else
-			return '';
+		if(empty($this->fieldValue))
+			return NULL;
+
+		if(is_numeric($this->fieldValue))
+			return intval($this->fieldValue);
+
+		if(is_string($this->fieldValue))
+			return NULL;
+
+		if(!is_array($this->fieldValue))
+			return intval($this->fieldValue);
+
+		return $this->fieldValue['id'];
 	}
 }
