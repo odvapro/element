@@ -5,6 +5,7 @@ class FileFController extends ControllerBase
 	private $savedPath = ROOT . '/public/upload/';
 	public function uploadAction()
 	{
+		$config = $this->di->get('config');
 		$file = $this->request->getUploadedFiles();
 
 		if (count($file) == 0)
@@ -19,7 +20,12 @@ class FileFController extends ControllerBase
 		$extension = FileHelper::$imageTypes[$file->getRealType()];
 		$fullPath  = $this->savedPath . md5($file->getName() . time()) . $extension;
 		$file->moveTo($fullPath);
-		$fileName  = str_replace(ROOT, '', $fullPath);
-		return $this->jsonResult(['success' => true, 'fileName' => $fileName]);
+		$fileName  = trim(str_replace(ROOT, '', $fullPath),'/');
+
+		if(isset($_SERVER))
+			$domain = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}";
+		else
+			$domain = '';
+		return $this->jsonResult(['success' => true, 'path' => $domain.$config->application->baseUri.$fileName]);
 	}
 }

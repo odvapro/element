@@ -1,5 +1,5 @@
 <template>
-	<div class="em-text" :class="{'em-text__table':(view != 'detail')}">
+	<div class="em-text" :class="{'em-text--table':(view != 'detail')}">
 		<div class="em-text__txt" @click="openEditor()">
 			{{ previewText }}
 			<span class="el-empty" v-if="!previewText">{{ $t('empty') }}</span>
@@ -16,9 +16,7 @@
 						<button class="el-btn" @click="closeAndSaveEditor()">Save</button>
 					</div>
 				</div>
-				<div class="em_text__editor-scroll">
-					<div id="el-editor"></div>
-				</div>
+				<div id="el-editor"></div>
 			</div>
 		</Popup>
 	</div>
@@ -93,21 +91,24 @@
 				this.editor = new EditorJS({
 					holderId : 'el-editor',
 					data     : data,
-					tools: {
+					tools:
+					{
 						header: Header,
-						table: {
+						table:
+						{
 							class: Table,
 							inlineToolbar: true,
-							config: {
-								rows: 2,
-								cols: 3,
-							},
+							config: {rows: 2, cols: 3},
 						},
-						image: {
+						image:
+						{
 							class: ImageTool,
-							config: {
-								uploader: {
-									async uploadByFile(file){
+							config:
+							{
+								uploader:
+								{
+									async uploadByFile(file)
+									{
 										let formData   = new FormData();
 										formData.append('file', file);
 										let result = await self.$axios({
@@ -121,9 +122,7 @@
 
 										return {
 											success: 1,
-											file: {
-												url: process.env.VUE_APP_DOMAIN + result.data.fileName
-											}
+											file: {url: result.data.path }
 										}
 									}
 								}
@@ -139,7 +138,7 @@
 	.em-text
 	{
 		min-width:500px;
-		&.em-text__table
+		&.em-text--table
 		{
 			min-width:auto;
 			position: absolute;
@@ -147,9 +146,9 @@
 			left: 0px;
 			top: 0px;
 			height: 100%;
-			padding-left: 10px;
-			padding-right: 10px;
-			margin-top: 0;
+			display: flex;
+			align-items: center;
+			.em-text__txt{padding-left:10px; padding-right: 10px;}
 		}
 	}
 	.em-text__txt
@@ -171,12 +170,7 @@
 	.em-text__editor-wrapper
 	{
 		height: 100%;
-		overflow: hidden;
-	}
-	.em_text__editor-scroll
-	{
 		overflow: auto;
-		height: 100%;
 	}
 	.em-text__popup-code
 	{
@@ -197,9 +191,14 @@
 		display: flex;
 		justify-content: space-between;
 		margin-bottom: 40px;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: #fff;
 	}
 	.em-text__popup-cancel-btn
 	{
 		margin-right: 15px;
 	}
+	#el-editor *{box-sizing: content-box; }
 </style>
