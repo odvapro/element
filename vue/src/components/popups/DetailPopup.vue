@@ -21,14 +21,7 @@
 	import Detail from '@/components/tviews/Detail.vue'
 	export default
 	{
-		props:
-		[
-			'tableCode',
-			'name',
-			'id',
-			'visible',
-			'element'
-		],
+		props: ['tableCode', 'name', 'id', 'visible', 'element'],
 		components: {Detail},
 		computed:
 		{

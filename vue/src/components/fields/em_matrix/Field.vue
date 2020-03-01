@@ -1,7 +1,7 @@
 <template>
 	<div class="em-matrix">
 		<div class="em-matrix-table" v-if="view=='detail'">
-			<div class="em-matrix-row-head" >
+			<div class="em-matrix-row-head" v-if="tableHead.length">
 				<div class="em-matrix-head-field" v-for="fieldCode in tableHead"><span class="em-matrix-field__content">{{fieldCode}}</span></div>
 				<div class="em-matrix-head-field em-matrix-head-field__remove"></div>
 			</div>
