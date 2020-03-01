@@ -1,13 +1,8 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
+		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
 			<div
-				v-click-outside="close" class="popup-block">
-				<div class="popup-close" @click="close">
-					<svg width="12" height="12">
-						<use xlink:href="#plus-white"></use>
-					</svg>
-				</div>
+				class="popup-block">
 				<slot></slot>
 			</div>
 		</div>
@@ -74,6 +69,9 @@
 		height: 100%;
 		overflow: auto;
 		z-index: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 	.popup-block
 	{
@@ -81,8 +79,6 @@
 		border-radius: 2px;
 		padding:20px;
 		width:550px;
-		margin:0 auto;
-		margin-top:100px;
 		position: relative;
 		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
 	}

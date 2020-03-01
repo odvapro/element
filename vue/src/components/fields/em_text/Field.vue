@@ -1,16 +1,31 @@
 <template>
-	<div class="em-text" :class="{'em-text__table':(view != 'detail')}">
+	<div class="em-text" :class="{'em-text--table':(view != 'detail')}">
 		<div class="em-text__txt" @click="openEditor()">
 			{{ previewText }}
 			<span class="el-empty" v-if="!previewText">{{ $t('empty') }}</span>
 		</div>
 		<Popup class="em-text__popup" :visible.sync="showEditor">
-			<div id="el-editor"></div>
+			<div class="em-text__editor-wrapper">
+				<div class="em-text__popup-head">
+					<div class="em_text__label-wrapper">
+						<div class="em-text__popup-name">{{fieldName}}</div>
+						<div class="em-text__popup-code">{{fieldCode}}</div>
+					</div>
+					<div class="em_text__button-wrapper">
+						<button class="el-gbtn em-text__popup-cancel-btn" @click="showEditor = false">Cancel</button>
+						<button class="el-btn" @click="closeAndSaveEditor()">Save</button>
+					</div>
+				</div>
+				<div id="el-editor"></div>
+			</div>
 		</Popup>
 	</div>
 </template>
 <script>
 	import EditorJS from '@editorjs/editorjs';
+	const Table = require('@editorjs/table');
+	const Header = require('@editorjs/header');
+	import ImageTool from '@editorjs/image';
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
@@ -21,6 +36,8 @@
 				localValue:this.fieldValue,
 				showEditor:false,
 				editor:false,
+				fieldCode: '',
+				fieldName: ''
 			}
 		},
 		computed:
@@ -38,33 +55,80 @@
 
 			}
 		},
-		watch:{
-			showEditor(show)
-			{
-				if(show == false)
-					this.editor.save().then((outputData) => {
-						this.localValue = outputData;
-						this.$emit('onChange', {
-							value     : this.localValue,
-							settings  : this.fieldSettings
-						});
-					})
-			}
-		},
 		methods:
 		{
+			saveEditorContent()
+			{
+				this.editor.save().then((outputData) => {
+					this.localValue = outputData;
+					this.$emit('onChange', {
+						value     : this.localValue,
+						settings  : this.fieldSettings
+					});
+				})
+			},
+			getPopupTitle()
+			{
+				let columnSettings = this.$store.getters.getColumn(this.fieldSettings.tableCode, this.fieldSettings.fieldCode);
+				this.fieldName = !!columnSettings.em.name ? columnSettings.em.name : columnSettings.em.settings.name;
+				this.fieldCode = columnSettings.em.settings.name;
+			},
+			closeAndSaveEditor()
+			{
+				this.saveEditorContent();
+				this.showEditor = false;
+			},
 			openEditor()
 			{
 				this.showEditor = true;
-
+				this.getPopupTitle();
 				let data = {};
 				if(typeof this.localValue == 'string')
 					data = {blocks: [{"type": "paragraph", "data": {"text": this.localValue } } ] };
 				if(typeof this.localValue == 'object')
 					data = this.localValue;
+				let self = this;
 				this.editor = new EditorJS({
 					holderId : 'el-editor',
-					data     : data
+					data     : data,
+					tools:
+					{
+						header: Header,
+						table:
+						{
+							class: Table,
+							inlineToolbar: true,
+							config: {rows: 2, cols: 3},
+						},
+						image:
+						{
+							class: ImageTool,
+							config:
+							{
+								uploader:
+								{
+									async uploadByFile(file)
+									{
+										let formData   = new FormData();
+										formData.append('file', file);
+										let result = await self.$axios({
+											method : 'POST',
+											data   : formData,
+											headers: { 'Content-Type': 'multipart/form-data' },
+											url    : '/field/em_text/file/upload/'
+										});
+										if (!result.data.success)
+											return false;
+
+										return {
+											success: 1,
+											file: {url: result.data.path }
+										}
+									}
+								}
+							}
+						}
+					},
 				});
 			}
 		}
@@ -74,7 +138,7 @@
 	.em-text
 	{
 		min-width:500px;
-		&.em-text__table
+		&.em-text--table
 		{
 			min-width:auto;
 			position: absolute;
@@ -82,9 +146,9 @@
 			left: 0px;
 			top: 0px;
 			height: 100%;
-			padding-left: 10px;
-			padding-right: 10px;
-			margin-top: 0;
+			display: flex;
+			align-items: center;
+			.em-text__txt{padding-left:10px; padding-right: 10px;}
 		}
 	}
 	.em-text__txt
@@ -94,10 +158,47 @@
 		color: #677387;
 		padding:11px 20px 11px 0;
 		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.em-text__popup .popup-block
 	{
 		width:800px;
 		height:calc(100% - 144px);
 	}
+	.em-text__editor-wrapper
+	{
+		height: 100%;
+		overflow: auto;
+	}
+	.em-text__popup-code
+	{
+		font-size: 10px;
+		line-height: 12px;
+		color: rgba(103, 115, 135, 0.4);
+	}
+	.em-text__popup-name
+	{
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 19px;
+		color: #191C21;
+		margin-bottom: 3px;
+	}
+	.em-text__popup-head
+	{
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 40px;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: #fff;
+	}
+	.em-text__popup-cancel-btn
+	{
+		margin-right: 15px;
+	}
+	#el-editor *{box-sizing: content-box; }
 </style>
