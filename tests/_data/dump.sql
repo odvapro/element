@@ -34,6 +34,7 @@ CREATE TABLE `block_type` (
   `text` text,
   `date` date DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
+  `matrix` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -110,7 +111,8 @@ VALUES
   (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
   (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
   (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL),
-  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL);
+  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL),
+  (23, 'block_type', 'matrix', 'em_matrix', 0, NULL, NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;

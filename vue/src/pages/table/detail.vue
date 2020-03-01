@@ -1,16 +1,14 @@
 <template>
-	<div>
-		<Detail
-			:tableCode="$route.params.tableCode"
-			:name="$route.name"
-			:id="$route.params.id"
-			@cancel="cancel"
-			@openDetail="openDetail"
-			@saveElement="saveElement"
-			@removeElement="removeElement"
-			@createElement="createElement"
-		/>
-	</div>
+	<Detail
+		:tableCode="$route.params.tableCode"
+		:name="$route.name"
+		:id="$route.params.id"
+		@cancel="cancel"
+		@openDetail="openDetail"
+		@saveElement="saveElement"
+		@removeElement="removeElement"
+		@createElement="createElement"
+	/>
 </template>
 <script>
 	import Detail from '@/components/tviews/Detail.vue';
