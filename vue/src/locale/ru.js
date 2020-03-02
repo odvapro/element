@@ -165,6 +165,7 @@ export default
 	table: 'Таблица',
 	tables: 'Таблицы',
 	languages: 'Языки',
+	groups: 'Группы',
 	users: 'Пользователи',
 	developed_by: 'Разработано',
 	cancel: 'Отмена',
@@ -192,6 +193,9 @@ export default
 	add: 'Добавить',
 	enter_something: 'Введите ',
 	key: 'Ключ',
+	createGroup: 'Создать группу',
+	members: 'участники',
+	addMember: 'Добавить пользователя',
 	months:
 	[
 		'Январь',

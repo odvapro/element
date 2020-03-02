@@ -34,6 +34,9 @@
 			<div class="settings-tab-content" v-if="activeTab == $t('languages')">
 				<SettingsLang/>
 			</div>
+			<div class="settings-tab-content" v-if="activeTab == $t('groups')">
+				<SettingsGroups/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -41,10 +44,11 @@
 	import SettingsTable from '@/components/layouts/SettingsTable.vue';
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
+	import SettingsGroups from '@/components/layouts/SettingsGroups.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang },
+		components: { SettingsTable, SettingsUser, SettingsLang, SettingsGroups },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -54,7 +58,12 @@
 		data()
 		{
 			return {
-				tabs: [{ name: this.$t('tables'), active: true }, { name: this.$t('users'), active: false }, { name: this.$t('languages'), active: false } ],
+				tabs:[
+					{ name: this.$t('tables'), active: true },
+					{ name: this.$t('users'), active: false },
+					{ name: this.$t('languages'), active: false },
+					{ name: this.$t('groups'), active: false }
+				],
 				activeTab: this.$t('tables'),
 			}
 		},
@@ -141,17 +150,17 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 265px;
+		width: 365px;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
 		&_ru
 		{
-			width: 294px;
+			width: 390px
 		}
 		&_en
 		{
-			width: 265px;
+			width: 365px;
 		}
 	}
 	.settings-tab-item

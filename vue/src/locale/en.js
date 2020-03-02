@@ -165,6 +165,7 @@ export default
 	table: 'Table',
 	tables: 'Tables',
 	languages: 'Languages',
+	groups: 'Groups',
 	users: 'Users',
 	developed_by: 'Developed by',
 	cancel: 'Cancel',
@@ -192,6 +193,9 @@ export default
 	add: 'Add',
 	enter_something: 'Enter ',
 	key: 'Key',
+	createGroup: 'Create Group',
+	members: 'members',
+	addMember: 'Add member',
 	months:
 	[
 		'January',
