@@ -28,6 +28,7 @@
 			:tableCode="detailTableCode"
 			:name="detailName"
 			:id="detailTableId"
+			:element="currentElement"
 			@saveElement="saveElement"
 			@removeElement="removeElement"
 			@createElement="createElement"
@@ -46,6 +47,8 @@
 				detailTableCode: false,
 				detailTableId: false,
 				detailName: false,
+				currentElement: false,
+				detailElement: {}
 			}
 		},
 		components:{DetailPopup},
@@ -93,14 +96,25 @@
 
 			popupForEditMatrixColumn(row, rowIndex)
 			{
+				this.currentElement  = false;
 				let primaryKeyCode   = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 				this.detailTableId   = row[primaryKeyCode].value;
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName      = false;
 				this.showDetail      = true;
 			},
+			bindDefaultColumnValues()
+			{
+				this.currentElement = [];
+				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
+				for (let column in table.columns)
+					this.currentElement[column] = {value: ''};
+
+				this.currentElement[this.fieldSettings.nodeField] = {value: this.detailElement[this.fieldSettings.keyField].value};
+			},
 			popupForCreateMatrixElement()
 			{
+				this.bindDefaultColumnValues();
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
@@ -171,6 +185,10 @@
 					this.removeMatrixTableElement(data.selectedElement);
 				});
 			},
+		},
+		mounted()
+		{
+			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
 		}
 	}
 </script>
