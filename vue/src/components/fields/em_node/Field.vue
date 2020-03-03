@@ -52,6 +52,7 @@
 				query: '',
 				localFieldValue:this.fieldValue,
 				newTag: '',
+				nodesTimeout: '',
 			};
 		},
 		watch:
@@ -129,22 +130,25 @@
 			 */
 			async getNodes()
 			{
-				var data = new FormData();
-				data.append('nodeFieldCode', this.fieldSettings.nodeFieldCode);
-				data.append('nodeTableCode', this.fieldSettings.nodeTableCode);
-				data.append('nodeSearchCode', this.fieldSettings.nodeSearchCode);
-				data.append('q', this.query);
+				clearTimeout(this.nodesTimeout);
+				this.nodesTimeout = setTimeout(async ()=> {
+					var data = new FormData();
+					data.append('nodeFieldCode', this.fieldSettings.nodeFieldCode);
+					data.append('nodeTableCode', this.fieldSettings.nodeTableCode);
+					data.append('nodeSearchCode', this.fieldSettings.nodeSearchCode);
+					data.append('q', this.query);
 
-				let result = await this.$axios({
-					method : 'POST',
-					data   : data,
-					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_node/index/autoComplete/'
-				});
+					let result = await this.$axios({
+						method : 'POST',
+						data   : data,
+						headers: { 'Content-Type': 'multipart/form-data' },
+						url    : '/field/em_node/index/autoComplete/'
+					});
 
-				if (!result.data.success)
-					return false;
-				this.list = result.data.result;
+					if (!result.data.success)
+						return false;
+					this.list = result.data.result;
+				}, 1000);
 			},
 			createItem()
 			{
