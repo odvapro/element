@@ -78,7 +78,6 @@
 			flex-direction: column;
 			.detail-feilds
 			{
-				overflow: auto;
 				margin-top: auto;
 				margin-bottom: auto;
 			}
