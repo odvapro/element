@@ -47,7 +47,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="table-row" v-for="(row, rowIndex) in tableContent.items">
+			<div class="table-row" data-test="table-row" v-for="(row, rowIndex) in tableContent.items">
 				<div class="table-item table__many-box">
 					<Checkbox
 						:checked.sync="selectedRows[rowIndex]"
@@ -85,7 +85,7 @@
 					<div class="table-empty-col"></div>
 				</div>
 			</div>
-			<div class="table-row table-row__empty" v-if="!hasTableItems">
+			<div class="table-row table-row__empty" data-test="table-row" v-if="!hasTableItems">
 				<span class="el-empty">{{$t('tviews.empty_table')}} - <span @click="addElement()" class="table-row__add-bnt">{{$t('add_element')}}</span></span>
 			</div>
 		</div>

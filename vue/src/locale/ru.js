@@ -51,6 +51,17 @@ export default
 			select_table: 'Выберите таблицу'
 		}
 	},
+	fieldEmMatrix:
+	{
+		settings:
+		{
+			key_field: 'Связующее поле',
+			node_table: 'Выберите таблицу',
+			node_field: 'Выберите поле',
+			select_field: 'Выберите поле',
+			select_table: 'Выберите таблицу'
+		}
+	},
 	forms:
 	{
 		list:
@@ -100,7 +111,7 @@ export default
 		},
 		table:
 		{
-			edit_element: 'Редактировать элемент',
+			edit_element: 'Редактирование элемента',
 			new_element: 'Новый элемент',
 		}
 	},

@@ -28,11 +28,8 @@
 		{
 			extComponent()
 			{
-				let componenUrl = this.$route.params.extname + '/';
-				if (this.$route.params.pathMatch)
-					componenUrl += this.$route.params.pathMatch;
-
-				const component = () => import(`@/components/extensions/${componenUrl}index.vue`).then(m => m.default);
+				let componenUrl = this.$route.params.extname ;
+				const component = () => import(`@/components/extensions/${componenUrl}/index.vue`).then(m => m.default);
 				return component;
 			}
 		},

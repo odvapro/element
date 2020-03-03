@@ -60,7 +60,7 @@
 	import qs from 'qs';
 	export default
 	{
-		props: ['tableCode', 'name', 'id'],
+		props: ['tableCode', 'name', 'id', 'element'],
 		components: {MainField},
 		data()
 		{
@@ -85,7 +85,7 @@
 				requestParams.select.from = this.tableCode;
 				let primaryKeyCode        = this.$store.getters.getPrimaryKeyCode(this.tableCode);
 				this.columns              = this.$store.getters.getColumns(this.tableCode);
-				if(this.name != 'tableAddElement')
+				if(this.name != 'tableAddElement' && !this.element)
 				{
 					requestParams.select.where = {
 						operation:'and',
@@ -108,6 +108,8 @@
 							value     :'',
 							fieldName :this.columns[columnCode].em.type_info.code
 						});
+						if (this.element)
+							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode].value);
 					}
 				}
 			},
@@ -244,7 +246,7 @@
 	.detail-field__icon-image{margin-right: 15px;width: 13px;}
 	.detail-field-name
 	{
-		width:90px;
+		width:140px;
 		flex-shrink:0;
 		span
 		{
@@ -253,6 +255,9 @@
 			line-height: normal;
 			color: #191C21;
 			text-transform: capitalize;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		small
 		{
@@ -260,6 +265,9 @@
 			font-size: 10px;
 			line-height: normal;
 			color: rgba(103, 115, 135, 0.4);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 	.detail-field-box

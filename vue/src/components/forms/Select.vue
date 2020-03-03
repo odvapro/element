@@ -1,5 +1,5 @@
 <template>
-	<div class="select">
+	<div class="select" data-test="filter-column">
 		<button
 			class="select__trigger"
 			@click="toggleDropdown"

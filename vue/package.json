@@ -18,8 +18,13 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "@editorjs/editorjs": "^2.16.1",
+    "@editorjs/header": "^2.4.0",
+    "@editorjs/image": "^2.3.3",
+    "@editorjs/table": "^1.2.1",
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
+    "cypress": "^4.0.0",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "sass-resources-loader": "^2.0.0",

@@ -51,6 +51,17 @@ export default
 			select_table: 'Select table'
 		}
 	},
+	fieldEmMatrix:
+	{
+		settings:
+		{
+			key_field: 'Key field',
+			node_table: 'Node table',
+			node_field: 'Node field',
+			select_field: 'Select field',
+			select_table: 'Select table'
+		}
+	},
 	forms:
 	{
 		list:

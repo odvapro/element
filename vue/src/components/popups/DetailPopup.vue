@@ -7,6 +7,7 @@
 				:tableCode="tableCode"
 				:name="name"
 				:id="id"
+				:element="element"
 				@cancel="cancel"
 				@openDetail="openDetail"
 				@saveElement="saveElement"
@@ -20,13 +21,7 @@
 	import Detail from '@/components/tviews/Detail.vue'
 	export default
 	{
-		props:
-		[
-			'tableCode',
-			'name',
-			'id',
-			'visible'
-		],
+		props: ['tableCode', 'name', 'id', 'visible', 'element'],
 		components: {Detail},
 		computed:
 		{
@@ -71,10 +66,22 @@
 	.detail-popup
 	{
 		position: absolute;
-		z-index: 1;
-		.popup-block
+		z-index: 10;
+		.popup-close{display: none;}
+		.popup-block {min-width: 800px; }
+		.detail
 		{
-			min-width: 1000px;
+			padding:0;
+			height:calc(100% - 144px);
+			overflow: unset;
+			display: flex;
+			flex-direction: column;
+			.detail-feilds
+			{
+				margin-top: auto;
+				margin-bottom: auto;
+			}
 		}
+		.detail-head{padding-right: 0px; }
 	}
 </style>

@@ -16,13 +16,13 @@ class EmTextField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval($this->fieldValue);
+		return json_decode($this->fieldValue,true);
 	}
 	/**
 	 * Сохранить значение
 	 */
 	public function saveValue()
 	{
-		return strval($this->fieldValue);
+		return json_encode($this->fieldValue);
 	}
 }

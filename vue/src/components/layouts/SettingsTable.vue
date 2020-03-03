@@ -83,6 +83,7 @@
 			<component
 				:is="settingsComponent"
 				:settings="currentSettings"
+				:currentTable="settingsTable"
 				@save="saveSettings"
 				@cancel="settingsPopup = false"
 			></component>

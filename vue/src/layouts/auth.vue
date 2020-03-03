@@ -8,28 +8,30 @@
 				<label class="auth-label">
 					<div class="auth-label-title">{{$t('login')}}</div>
 					<input
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__login el-inp"
 						type="text"
+						data-test="input-login"
 						:placeholder="$t('auth.enter_your_login_or_email')"
 						v-model="user.login.value"
 						:class="{'el-inp--error': user.login.error}"
 					>
-					<span class="auth__error-text">{{user.login.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{user.login.error}}</span>
 				</label>
 				<label class="auth-label">
 					<div class="auth-label-title">{{$t('password')}}</div>
 					<input
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__password el-inp"
 						type="password"
+						data-test="input-password"
 						:placeholder="$t('auth.enter_your_password')"
 						v-model="user.password.value"
 						:class="{'el-inp--error': user.password.error}"
 					>
-					<span class="auth__error-text">{{user.password.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{user.password.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn" @click="authUser()">{{$t('auth.log_in')}}</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
+					<button class="auth-fill-btn el-btn" data-test="auth-login" @click="authUser()">{{$t('auth.log_in')}}</button>
+					<a class="auth-transpar-btn" data-test="btn-transpar" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
 				</div>
 			</form>
 		</div>
@@ -41,14 +43,14 @@
 						type="text"
 						v-model="forgot.email.value"
 						:placeholder="$t('auth.enter_your_email')"
-						class="auth-form-input el-inp"
+						class="auth-form-input auth-form-input__forgot-password el-inp"
 						:class="{'el-inp--error': forgot.email.error}"
 					>
-					<span class="auth__error-text">{{forgot.email.error}}</span>
+					<span class="auth__error-text" data-test="error-text">{{forgot.email.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn">{{$t('auth.reset_password')}}</button>
-					<a class="auth-transpar-btn" @click="activeForm = 'login'">{{$t('auth.return_to_log_in_page')}}</a>
+					<button class="auth-fill-btn el-btn" data-test="auth-login">{{$t('auth.reset_password')}}</button>
+					<a class="auth-transpar-btn" data-test="btn-transpar" @click="activeForm = 'login'">{{$t('auth.return_to_log_in_page')}}</a>
 				</div>
 			</form>
 		</div>
@@ -122,15 +124,15 @@ export default
 			var result = await this.$axios.post('/auth/index/', data);
 			user = result.data.user;
 
-			if (typeof user.language === 'string')
-				user.language = JSON.parse(user.language);
-
 			if (!result.data.success)
 			{
 				this.user.login.error = this.$t('auth.incorrect_login_or_password');
 				this.user.password.error = this.$t('auth.incorrect_login_or_password');
 				return false;
 			}
+
+			if (typeof user.language === 'string')
+				user.language = JSON.parse(user.language);
 
 			this.$cookie.set('user', JSON.stringify(user), 12);
 			await this.setLanguage(user.language);
