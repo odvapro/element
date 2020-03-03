@@ -66,7 +66,7 @@
 	.detail-popup
 	{
 		position: absolute;
-		z-index: 1;
+		z-index: 10;
 		.popup-close{display: none;}
 		.popup-block {min-width: 800px; }
 		.detail
