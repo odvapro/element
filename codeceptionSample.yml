@@ -14,7 +14,10 @@ suites:
                     password: '#dbpassword#'
                     populate: true
                     cleanup: true
-                    dump: 'tests/_data/dump.sql'
+                    dump:
+                        - 'tests/_data/dump.sql'
+                        - 'tests/_data/block_type_nodes.sql'
+                        - 'tests/_data/em_types.sql'
                 - Asserts
 
 paths:

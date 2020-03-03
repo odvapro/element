@@ -256,12 +256,18 @@ const table =
 				this.commit('setTableContent',curTableCont);
 			}
 
+			return store.dispatch('removeTableRow', recordPrams.delete);
+		},
+		/**
+		 * deleteParams:<sql params for deleting>
+		 */
+		async removeTableRow(store, deleteParams)
+		{
 			var result = await axios({
 				method : 'post',
 				url    : '/el/delete/',
-				data   : qs.stringify({delete:recordPrams.delete}),
+				data   : qs.stringify({delete:deleteParams}),
 			});
-
 			if (!result.data.success)
 				return false;
 		},

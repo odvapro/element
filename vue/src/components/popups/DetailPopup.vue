@@ -21,14 +21,7 @@
 	import Detail from '@/components/tviews/Detail.vue'
 	export default
 	{
-		props:
-		[
-			'tableCode',
-			'name',
-			'id',
-			'visible',
-			'element'
-		],
+		props: ['tableCode', 'name', 'id', 'visible', 'element'],
 		components: {Detail},
 		computed:
 		{
@@ -73,7 +66,7 @@
 	.detail-popup
 	{
 		position: absolute;
-		z-index: 1;
+		z-index: 10;
 		.popup-close{display: none;}
 		.popup-block {min-width: 800px; }
 		.detail
@@ -85,7 +78,6 @@
 			flex-direction: column;
 			.detail-feilds
 			{
-				overflow: auto;
 				margin-top: auto;
 				margin-bottom: auto;
 			}
