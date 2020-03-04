@@ -36,6 +36,8 @@ export default
 	{
 		settings:
 		{
+			key: 'Key',
+			value: 'Value',
 			add_option: 'Add option',
 			enter_key: 'Enter key',
 			enter_value: 'Enter value',

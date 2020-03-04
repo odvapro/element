@@ -10,19 +10,21 @@
 				:element="element"
 				@cancel="cancel"
 				@openDetail="openDetail"
-				@saveElement="saveElement"
-				@removeElement="removeElement"
-				@createElement="createElement"
+				@saveElement="saveDetailElement"
+				@removeElement="removeDetailElement"
+				@createElement="createDetailElement"
 			/>
 		</Popup>
 	</div>
 </template>
 <script>
 	import Detail from '@/components/tviews/Detail.vue'
+	import detailFunctions from '@/mixins/detailFunctions.js';
 	export default
 	{
 		props: ['tableCode', 'name', 'id', 'visible', 'element'],
 		components: {Detail},
+		mixins: [detailFunctions],
 		computed:
 		{
 			isPopupVisible:
@@ -47,18 +49,21 @@
 			{
 				this.$emit('openDetail', data);
 			},
-			saveElement(data)
+			async saveDetailElement(data)
 			{
-				this.$emit('saveElement', data);
+				let result = await this.saveElement(data);
+				this.$emit('saveElement', ...[data, result]);
 			},
-			removeElement(data)
+			async createDetailElement(data)
 			{
-				this.$emit('removeElement', data);
+				let result = await this.createElement(data);
+				this.$emit('createElement', ...[data, result]);
 			},
-			createElement(data)
+			async removeDetailElement(data)
 			{
-				this.$emit('createElement', data);
-			},
+				let result = await this.removeElement(data);
+				this.$emit('removeElement', ...[data, result]);
+			}
 		}
 	}
 </script>
