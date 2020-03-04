@@ -7,7 +7,7 @@
 			</div>
 			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
 				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem.value}}</span></div>
-				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
+				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
 			</div>
 			<div class="em-matrix-row-add">
 				<div class="em-matrix-row-add__icon">
@@ -29,17 +29,18 @@
 			:name="detailName"
 			:id="detailTableId"
 			:element="currentElement"
-			@saveElement="saveElement"
-			@removeElement="removeElement"
-			@createElement="createElement"
+			@saveElement="savePopupMatrixElement"
+			@createElement="createPopupMatrixElement"
+			@removeElement="removePopupMatrixElement"
 		></DetailPopup>
 	</div>
 </template>
 <script>
-	import qs from 'qs';
+	import detailFunctions from '@/mixins/detailFunctions.js';
 	import DetailPopup from '@/components/popups/DetailPopup';
 	export default
 	{
+		mixins: [detailFunctions],
 		data()
 		{
 			return {
@@ -119,38 +120,20 @@
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},
-			saveElement(data)
+			savePopupMatrixElement(data, result)
 			{
-				this.$store.dispatch('saveSelectedElement', data).then(()=>
+				if (result.data.success)
 				{
 					this.updateMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_saved'));
 					this.showDetail = false;
-				});
-			},
-			async createElement(data)
-			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in data.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(data.selectedElement[fieldCode].value);
 				}
-
-				let insertData = qs.stringify({
-					insert:
-					{
-						table   :data.tableCode,
-						columns :setColumns,
-						values  :setValues
-					}
-				});
-				let result = await this.$axios.post('/el/insert/',insertData);
+			},
+			createPopupMatrixElement(data, result)
+			{
 				if(result.data.success == true)
 				{
+					let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 					data.selectedElement[primaryKeyCode].value = result.data.lastid;
 					this.createMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_created'));
@@ -159,32 +142,19 @@
 				else
 					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
-			async removeElement(data)
+			removeMatrixElement(data)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				await this.$store.dispatch('removeRecord', {
-					delete:
-					{
-						table: data.tableCode,
-						where:
-						{
-							operation:'and',
-							fields:[
-								{
-									code      : primaryKeyCode,
-									operation : 'IS',
-									value     : data.selectedElement[primaryKeyCode].value
-								}
-							]
-						}
-					}
-				}).then(()=>
-				{
-					this.showDetail = false;
-					this.ElMessage(this.$t('elMessages.element_removed'));
-					this.removeMatrixTableElement(data.selectedElement);
-				});
+				this.removeElement(data);
+				this.showDetail = false;
+				this.ElMessage(this.$t('elMessages.element_removed'));
+				this.removeMatrixTableElement(data.selectedElement);
 			},
+			removePopupMatrixElement(data, result)
+			{
+				this.showDetail = false;
+				this.ElMessage(this.$t('elMessages.element_removed'));
+				this.removeMatrixTableElement(data.selectedElement);
+			}
 		},
 		mounted()
 		{

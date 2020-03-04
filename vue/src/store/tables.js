@@ -268,8 +268,7 @@ const table =
 				url    : '/el/delete/',
 				data   : qs.stringify({delete:deleteParams}),
 			});
-			if (!result.data.success)
-				return false;
+			return result;
 		},
 
 		/**

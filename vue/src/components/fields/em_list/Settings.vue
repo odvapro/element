@@ -2,7 +2,7 @@
 	<div class="em-list-settings">
 		<div class="em-list-settings__line">
 			<div class="em-list-settings__key-block">{{$t('fieldEmList.settings.key')}}</div>
-			<div class="em-list-settings__key-block">{{$t('value')}}</div>
+			<div class="em-list-settings__key-block">{{$t('fieldEmList.settings.value')}}</div>
 		</div>
 		<div
 			class="em-list-settings__line"

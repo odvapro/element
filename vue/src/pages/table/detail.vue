@@ -5,17 +5,19 @@
 		:id="$route.params.id"
 		@cancel="cancel"
 		@openDetail="openDetail"
-		@saveElement="saveElement"
-		@removeElement="removeElement"
-		@createElement="createElement"
+		@saveElement="saveElementDetail"
+		@removeElement="removeElementDetail"
+		@createElement="createElementDetail"
 	/>
 </template>
 <script>
 	import Detail from '@/components/tviews/Detail.vue';
 	import qs from 'qs';
+	import detailFunctions from '@/mixins/detailFunctions.js';
 	export default
 	{
 		components: {Detail},
+		mixins: [detailFunctions],
 		methods:
 		{
 			cancel()
@@ -26,35 +28,16 @@
 			{
 				this.$router.push({name:'tableDetail', params:{tableCode:tableCode, id:id }});
 			},
-			saveElement(data)
+			saveElementDetail(data)
 			{
-				this.$store.dispatch('saveSelectedElement', data).then(()=>
-				{
+				let result = this.saveElement(data);
+				if (result.data.success)
 					this.ElMessage(this.$t('elMessages.element_saved'));
-				});
 			},
-			async createElement(data)
+			createElementDetail(data)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in data.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(data.selectedElement[fieldCode].value);
-				}
-
-				let insertData = qs.stringify({
-					insert:
-					{
-						table   :data.tableCode,
-						columns :setColumns,
-						values  :setValues
-					}
-				});
-				let result = await this.$axios.post('/el/insert/',insertData);
-				if(result.data.success == true)
+				let result = this.createElement(data);
+				if (result.data.success)
 				{
 					this.openDetail({tableCode:data.tableCode, id:result.data.lastid});
 					this.ElMessage(this.$t('elMessages.element_created'));
@@ -62,30 +45,11 @@
 				else
 					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
-			async removeElement(data)
+			removeElementDetail(data)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				await this.$store.dispatch('removeRecord', {
-					delete:
-					{
-						table: data.tableCode,
-						where:
-						{
-							operation:'and',
-							fields:[
-								{
-									code      : primaryKeyCode,
-									operation : 'IS',
-									value     : data.selectedElement[primaryKeyCode].value
-								}
-							]
-						}
-					}
-				}).then(()=>
-				{
-					this.cancel();
+				let result = this.removeElement(data);
+				if (result.data.success)
 					this.ElMessage(this.$t('elMessages.element_removed'));
-				});
 			}
 		}
 	}
