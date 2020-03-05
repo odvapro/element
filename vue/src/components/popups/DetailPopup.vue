@@ -52,16 +52,23 @@
 			async saveDetailElement(data)
 			{
 				let result = await this.saveElement(data);
+				if(!result.data.success)
+					return this.ElMessage(result.data.message);
 				this.$emit('saveElement', ...[data, result]);
 			},
 			async createDetailElement(data)
 			{
 				let result = await this.createElement(data);
+				if(!result.data.success)
+					return this.ElMessage(result.data.message);
+
 				this.$emit('createElement', ...[data, result]);
 			},
 			async removeDetailElement(data)
 			{
 				let result = await this.removeElement(data);
+				if(!result.data.success)
+					return this.ElMessage(result.data.message);
 				this.$emit('removeElement', ...[data, result]);
 			}
 		}
