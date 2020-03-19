@@ -2,9 +2,11 @@
 	<div class="date-form">
 		<div class="date-form__top">
 			<div class="date-form-time">
-				<div class="date-form-time__full-date">
-					{{ formatedLocalFullDateStr }}
-				</div>
+				<input
+					class="date-form-time__full-date"
+					v-model="inputDate"
+					@keyup.enter="getInputDate"
+				>
 				<div v-if="includeTime && localFullDate" class="date-form-time__time">
 					<input
 						class="date-form-time__time-input"
@@ -16,13 +18,13 @@
 			</div>
 		</div>
 		<Datepicker
-			value="localFullDate"
+			:value="localFullDate"
 			placeholder="$('empty')"
 			@selected="changeLocalFieldValue"
 			:inline="true"
 			:language="curentLang"
-		>
-		</Datepicker>
+			:format="formatedLocalFullDateStr"
+		/>
 		<div class="date-form__bottom">
 			<div class="date-form__clear" @click="clear()">{{$t('clear')}}</div>
 		</div>
@@ -39,6 +41,7 @@
 		data()
 		{
 			return {
+				inputDate: '',
 				localFullDate: false,
 				localTimeStr: '',
 				localHours: false,
@@ -68,6 +71,17 @@
 		},
 		methods:
 		{
+			getInputDate()
+			{
+				let dateArray = this.inputDate.split('.');
+					if(dateArray.length>0)
+					{
+						let sortedArray = [dateArray[1], dateArray[0], dateArray[2]];
+						let newData = sortedArray.join('.')
+						this.localFullDate = newData;
+					}
+				this.inputDate = this.formatedLocalFullDateStr
+			},
 			changeLocalValue()
 			{
 				let newValue = this.formatedLocalFullDateStr;
@@ -144,6 +158,7 @@
 						this.localMinutes = date.getMinutes();
 					}
 					this.localTimeStr = this.formatedLocalTimeStr;
+					this.inputDate    = this.formatedLocalFullDateStr;
 				}
 				else
 				{
@@ -154,7 +169,7 @@
 			changeLocalFieldValue(newDate)
 			{
 				let currentData = new Date(newDate);
-
+				
 				let day           = this.formatToDoubleDigit(currentData.getDate()),
 					month         = this.formatToDoubleDigit(currentData.getMonth() + 1),
 					year          = currentData.getFullYear(),
@@ -167,7 +182,6 @@
 					this.localFieldValue = `${year}-${month}-${day}`;
 
 				this.initFullDate(this.localFieldValue);
-
 			},
 			formatToDoubleDigit(dig)
 			{
@@ -337,6 +351,10 @@
 	{
 		margin-right: 15px;
 		padding-top: 1px;
+		border: none;
+		background: none;
+		max-width: 80px;
+		color: rgba(25, 28, 33, 0.7);
 	}
 	.date-form__bottom
 	{
