@@ -5,7 +5,7 @@
 				<div class="date-form-time__full-date" v-if="!includeTime">
 					{{ formatedLocalFullDateStr }}
 				</div>
-				<input
+				<input 
 					class="date-form-time__full-date"
 					v-model="inputDate"
 					@keyup.enter="getInputDate"
