@@ -2,10 +2,14 @@
 	<div class="date-form">
 		<div class="date-form__top">
 			<div class="date-form-time">
-				<input
+				<div class="date-form-time__full-date" v-if="!includeTime">
+					{{ formatedLocalFullDateStr }}
+				</div>
+				<input 
 					class="date-form-time__full-date"
 					v-model="inputDate"
 					@keyup.enter="getInputDate"
+					v-if="includeTime"
 				>
 				<div v-if="includeTime && localFullDate" class="date-form-time__time">
 					<input
@@ -206,7 +210,8 @@
 			},
 			clear()
 			{
-				this.initFullDate('');
+				let date = new Date()
+				this.initFullDate(date);
 			},
 		},
 		computed:
@@ -214,7 +219,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					return this.$t('empty');
+					this.localFullDate = new Date;
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
