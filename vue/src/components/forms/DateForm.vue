@@ -210,7 +210,6 @@
 			},
 			clear()
 			{
-				
 				this.initFullDate(new Date());
 			},
 		},
