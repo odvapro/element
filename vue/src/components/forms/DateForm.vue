@@ -210,8 +210,8 @@
 			},
 			clear()
 			{
-				let date = new Date()
-				this.initFullDate(date);
+				
+				this.initFullDate(new Date());
 			},
 		},
 		computed:
