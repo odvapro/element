@@ -4,20 +4,18 @@
 			<div
 				class="em-date-wr__static-field-value"
 				:class="{'em-date-wr__static-field-value_empty': isEmpty}"
-			>{{ localValue }}</div>
+			>{{ formatedDateTime }}</div>
 		</div>
 		<DateForm
-			:fieldValue="fieldValue"
-			:fieldSettings="fieldSettings"
-			@changeValue="changeValue"
-			@changeLocalValue="changeLocalValue"
+			:value="localDate"
+			:includeTime="includeTime"
+			@selected="selectDate"
 			v-click-outside="closeFieldEdit"
 			v-if="isEditFieldPopup"
 		/>
 	</div>
 </template>
 <script>
-
 	export default
 	{
 		props: ['fieldValue', 'fieldSettings', 'mode', 'view'],
@@ -25,28 +23,43 @@
 		{
 			return {
 				isEditFieldPopup: false,
-				localValue: this.$t('empty'),
+				localDate:null,
 			}
 		},
 		computed:
 		{
 			isEmpty()
 			{
-				if(this.localValue == this.$t('empty'))
+				if(!this.localDate)
 					return true;
-			}
-		},
-		watch:
-		{
-			'fieldValue'()
+			},
+			includeTime()
 			{
-				this.localValue = this.formatDate(this.fieldValue);
+				return this.fieldSettings.includeTime == 'true';
+			},
+			formatedDateTime()
+			{
+				if(!this.localDate)
+					return this.$t('empty');
+				let day    	   = ('0'+this.localDate.getDate()).slice(-2),
+					monthIndex = this.localDate.getMonth(),
+					year       = this.localDate.getFullYear(),
+					huors      = ('0'+this.localDate.getHours()).slice(-2),
+					minutes    = ('0'+this.localDate.getMinutes()).slice(-2);
+
+				let monthes = this.$t('months');
+				let monthName = monthes[monthIndex].substr(0,3);
+				let dateStr = `${day} ${monthName} ${year}`;
+
+				if(this.includeTime)
+					dateStr = `${dateStr} ${huors}:${minutes}`;
+
+				return dateStr;
 			}
 		},
 		mounted()
 		{
-			if (this.fieldValue)
-				this.localValue = this.formatDate(this.fieldValue);
+			this.localDate = this.convertToJsDate(this.fieldValue);
 		},
 		methods:
 		{
@@ -58,47 +71,22 @@
 			{
 				this.isEditFieldPopup = false;
 			},
-			changeValue(val)
+			selectDate(newDate)
 			{
-				this.$emit('onChange', val);
+				if(!newDate)
+					this.closeFieldEdit();
+				this.localDate = this.convertToJsDate(newDate);
+				this.$emit('onChange', {
+					value     : newDate,
+					settings  : this.fieldSettings
+				});
 			},
-			changeLocalValue(localVal)
+			convertToJsDate(sqlDate)
 			{
-				this.localValue = localVal;
-			},
-			formatDate(date)
-			{
-				if (date === '')
-					return '';
-				let day   = date.match(/-\d{2}/g)[1].replace(/-/,''),
-					month = this.getMonth(date.match(/-\d{2}/g)[0].replace(/-/,'') - 1),
-					year  = date.match(/\d{4}/)[0];
-
-				let newDate = `${day} ${month} ${year}`;
-
-				if (this.fieldSettings.includeTime)
-					if(date.match(/:/))
-					{
-						let hours   = date.match(/\d{2}:/)[0].replace(/:/, ''),
-							minutes = date.match(/:\d{2}/)[0].replace(/:/, '');
-
-						newDate += ` ${hours}:${minutes}`;
-					}
-					else
-					{
-						newDate += ' 00:00';
-					}
-
-				return newDate;
-			},
-			getMonth(monthIndex)
-			{
-				let months = this.$t('months');
-				if (!monthIndex || monthIndex > 11)
-					return months[0].substr(0,3);
-
-				return months[monthIndex].substr(0,3);
-			},
+				if(!sqlDate)
+					return null;
+				return new Date(Date.parse(sqlDate.replace(/-/g, '/')));
+			}
 		},
 	}
 </script>
