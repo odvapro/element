@@ -218,7 +218,7 @@
 			formatedLocalFullDateStr()
 			{
 				if (!this.localFullDate)
-					this.localFullDate = new Date;
+					this.localFullDate = new Date();
 
 				let dateFieldValue = new Date(this.localFullDate),
 					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
