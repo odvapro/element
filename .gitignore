@@ -31,6 +31,8 @@ Temporary Items
 !/vue/public/upload/.gitkeep
 /vue/public/tmp/
 !/vue/public/tmp/.gitkeep
+!/public/tmp/.gitkeep
+!/public/upload/.gitkeep
 app/logs/
 !app/logs/.gitkeep
 config.php

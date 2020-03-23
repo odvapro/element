@@ -2,27 +2,28 @@
 	<div class="date-form">
 		<div class="date-form__top">
 			<div class="date-form-time">
-				<div class="date-form-time__full-date">
-					{{ formatedLocalFullDateStr }}
-				</div>
-				<div v-if="includeTime && localFullDate" class="date-form-time__time">
+				<input
+					v-model="inputDate"
+					class="date-form-time__full-date"
+					@keyup="changeInputDate"
+				/>
+				<div v-if="includeTime" class="date-form-time__time">
 					<input
+						v-model="inputTime"
 						class="date-form-time__time-input"
 						type="text"
-						v-model="localTimeStr"
-						@change="changeLocalTimeStr"
-					>
+						@keyup="changeInputTime"
+					/>
 				</div>
 			</div>
 		</div>
 		<Datepicker
-			value="localFullDate"
 			placeholder="$('empty')"
-			@selected="changeLocalFieldValue"
+			v-model="localDate"
 			:inline="true"
 			:language="curentLang"
-		>
-		</Datepicker>
+			@selected="selectDate"
+		/>
 		<div class="date-form__bottom">
 			<div class="date-form__clear" @click="clear()">{{$t('clear')}}</div>
 		</div>
@@ -31,192 +32,135 @@
 <script>
 	import Datepicker from 'vuejs-datepicker';
 	import {en, ru} from 'vuejs-datepicker/dist/locale';
-
 	export default
 	{
-		props: ['fieldValue', 'fieldSettings'],
+		props:
+		{
+			value:{default: null},
+			includeTime:{type: Boolean, default: false },
+		},
 		components:{Datepicker},
 		data()
 		{
 			return {
-				localFullDate: false,
-				localTimeStr: '',
-				localHours: false,
-				localMinutes: false,
-				localFieldValue: false,
-				includeTime: false,
+				localDate:'',
+				inputDate:'',
+				inputTime:'',
 				curentLang: en,
-				datePickerLocales:
-				{
-					en: en,
-					ru: ru
-				}
 			}
 		},
 		mounted()
 		{
-			this.checkAndSetPickerLang();
-
-			this.includeTime = this.fieldSettings.includeTime == "true";
-
-			this.initFullDate();
-			this.changeLocalValue()
+			if(this.value)
+				this.localDate = this.value;
+			else
+				this.localDate = new Date();
+			this.inputTime = this.formatedTime();
+			this.setLang();
 		},
-		beforeDestroy()
+		watch:
 		{
-			this.changeValue();
+			localDate()
+			{
+				this.inputDate = this.formatedDate();
+			}
 		},
 		methods:
 		{
-			changeLocalValue()
-			{
-				let newValue = this.formatedLocalFullDateStr;
-				if (this.includeTime && newValue !== this.$t('empty'))
-					newValue += ` ${this.formatedLocalTimeStr}`;
-
-				this.$emit('changeLocalValue', newValue);
-			},
-			checkAndSetPickerLang()
-			{
-				for (let lang in this.datePickerLocales)
-					if (lang === this.$store.state.languages.currentLang.short)
-					{
-						this.curentLang = this.datePickerLocales[lang];
-						break;
-					}
-			},
-			changeValue(newValue)
-			{
-				if (this.localFullDate)
-					this.changeLocalFieldValue(this.localFullDate);
-
-				let fieldDate;
-				if (typeof newValue === 'undefined')
-					fieldDate = this.localFullDate
-					? this.localFieldValue
-					: '';
-				else
-					fieldDate = newValue;
-
-				this.$emit('changeValue', {
-					value     : fieldDate,
-					settings  : this.fieldSettings
-				});
-			},
-			getMonth(monthIndex)
-			{
-				let months = this.$t('months');
-				if (!monthIndex || monthIndex > 11)
-					return months[0].substr(0,3);
-
-				return months[monthIndex].substr(0,3);
-			},
-			initFullDate(date = false)
-			{
-				let dateToInit = date === false
-				? this.fieldValue
-				: date;
-
-				if (dateToInit)
-				{
-					this.localFullDate = new Date(dateToInit);
-					this.localFieldValue = dateToInit;
-				}
-				else
-				{
-					this.localFullDate = '';
-					this.localFieldValue = false;
-				}
-					this.initTime(this.localFullDate);
-			},
-			initTime(date)
-			{
-				if (this.includeTime)
-				{
-					if (date === '')
-					{
-						this.localHours = 0;
-						this.localMinutes = 0;
-					}
-					else
-					{
-						this.localHours = date.getHours();
-						this.localMinutes = date.getMinutes();
-					}
-					this.localTimeStr = this.formatedLocalTimeStr;
-				}
-				else
-				{
-					this.localHours = this.localMinutes = false;
-					this.localTimeStr = '';
-				}
-			},
-			changeLocalFieldValue(newDate)
-			{
-				let currentData = new Date(newDate);
-
-				let day           = this.formatToDoubleDigit(currentData.getDate()),
-					month         = this.formatToDoubleDigit(currentData.getMonth() + 1),
-					year          = currentData.getFullYear(),
-					hours         = this.formatToDoubleDigit(this.localHours),
-					minutes       = this.formatToDoubleDigit(this.localMinutes);
-
-				if (this.includeTime)
-					this.localFieldValue = `${year}-${month}-${day} ${hours}:${minutes}`;
-				else
-					this.localFieldValue = `${year}-${month}-${day}`;
-
-				this.initFullDate(this.localFieldValue);
-
-			},
-			formatToDoubleDigit(dig)
-			{
-				if (dig < 10)
-					return '0' + +dig;
-				return +dig;
-			},
-			changeLocalTimeStr()
-			{
-				let tempTime = this.localTimeStr.replace(/\D/g,'').substr(0,4) || '0000';
-
-				this.localHours = tempTime.substr(0,2);
-				this.localMinutes = tempTime.substr(2,2);
-
-				if(this.localHours > 23 || this.localHours < 0 || typeof +this.localHours !== 'number')
-					this.localHours = 0;
-
-				if(this.localMinutes > 59 || this.localMinutes < 0 || typeof +this.localMinutes !== 'number')
-					this.localMinutes = 0;
-
-				this.localTimeStr = this.formatedLocalTimeStr;
-			},
 			clear()
 			{
-				this.initFullDate('');
+				this.localDate = '';
+				this.$emit('selected', '');
 			},
-		},
-		computed:
-		{
-			formatedLocalFullDateStr()
+			setLang()
 			{
-				if (!this.localFullDate)
+				if(this.$store.state.languages.currentLang.short == 'en')
+					this.curentLang = en;
+				else
+					this.curentLang = ru;
+			},
+
+			/**
+			 * Selects date, and covert it to need format
+			 */
+			selectDate(date)
+			{
+				let day     = ('0'+date.getDate()).slice(-2),
+					month   = ('0'+(date.getMonth()+1)).slice(-2),
+					year    = date.getFullYear(),
+					huors   = ('0'+date.getHours()).slice(-2),
+					minutes = ('0'+date.getMinutes()).slice(-2);
+				let newDate = `${year}-${month}-${day}`;
+
+				if(this.includeTime)
+					newDate = `${newDate} ${huors}:${minutes}`;
+				this.$emit('selected', newDate);
+			},
+
+			/**
+			 * Formats date string and change date
+			 */
+			changeInputDate(event)
+			{
+				let newDateStr = event.target.value;
+				let dateArray = newDateStr.split('.');
+				if(dateArray.length != 3 || dateArray[2].length <= 3)
+					return false;
+
+				let sortedArray = [dateArray[1], dateArray[0], dateArray[2]];
+				let newDate = new Date(sortedArray.join('.'));
+				if(!isNaN(newDate.getTime()))
+					this.localDate = newDate;
+				this.selectDate(newDate);
+			},
+
+			/**
+			 * Formats time string and change time
+			 */
+			changeInputTime(event)
+			{
+				let newTimeString = event.target.value;
+				let timeArray = newTimeString.split(':');
+				if(timeArray.length != 2 || timeArray[0].length < 2 || timeArray[1].length < 2)
+					return false;
+				let huors = ('0'+timeArray[0]).slice(-2);
+				if(huors > 23) huors = 23;
+				let minutes = ('0'+timeArray[1]).slice(-2);
+				if(minutes > 59) minutes = 59;
+
+				this.inputTime = `${huors}:${minutes}`;
+				this.localDate.setHours(huors);
+				this.localDate.setMinutes(minutes);
+				this.selectDate(this.localDate);
+			},
+
+			/**
+			 * Return formated date string
+			 */
+			formatedDate()
+			{
+				if(!this.localDate)
 					return this.$t('empty');
+				let day    	   = ('0'+this.localDate.getDate()).slice(-2),
+					month      = ('0'+(this.localDate.getMonth()+1)).slice(-2),
+					year       = this.localDate.getFullYear();
 
-				let dateFieldValue = new Date(this.localFullDate),
-					day = dateFieldValue.getDate() >= 10 ? dateFieldValue.getDate() : '0' + dateFieldValue.getDate(),
-					month = this.getMonth(dateFieldValue.getMonth()),
-					year = dateFieldValue.getFullYear();
-
-					return `${day} ${month} ${year}`;
+				return `${day}.${month}.${year}`;
 			},
-			formatedLocalTimeStr()
-			{
-				let hours = Number(this.localHours) >= 10 ? Number(this.localHours) : '0' + Number(this.localHours),
-					minutes = Number(this.localMinutes) >= 10 ? Number(this.localMinutes) : '0' + Number(this.localMinutes);
 
-				return `${hours}:${minutes}`
+			/**
+			 * Returns formated time 00:00
+			 */
+			formatedTime()
+			{
+				if(!this.localDate)
+					return '00:00';
+				let huors   = ('0'+this.localDate.getHours()).slice(-2),
+					minutes = ('0'+this.localDate.getMinutes()).slice(-2);
+
+				return `${huors}:${minutes}`;
 			}
-		},
+		}
 	}
 </script>
 
@@ -228,20 +172,19 @@
 		left: -3px;
 		background-color: #fff;
 		z-index: 10;
-
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 2px;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
-		padding: 20px 0;
-		width: 360px;
+		padding: 10px 0 4px 0;
+		width: 300px;
 		.vdp-datepicker{position: static;}
 		.vdp-datepicker__calendar
 		{
 			color: #191C21;
 			left:-15px;
 			top:44px;
-			margin: 0 auto 30px;
-			width: calc(100% - 40px);
+			margin: 0 auto 10px;
+			width: calc(100% - 20px);
 			border: unset;
 			background-color: transparent;
 			.day__month_btn,
@@ -254,8 +197,8 @@
 				font-size: 13px;
 				line-height: 1.7;
 				padding-top: 4px;
-				width: 50%;
-				height: 40px;
+				width: 60%;
+				height: 30px;
 				.next,
 				.prev
 				{
@@ -286,6 +229,7 @@
 			}
 		}
 		.vdp-datepicker__calendar .cell{font-size:13px;}
+		.vdp-datepicker__calendar .cell.today{color:#D01246;}
 		.vdp-datepicker__calendar .cell.selected {background: rgba(124, 119, 145, 0.7); border-radius: 2px; color: #fff; }
 		.vdp-datepicker__calendar .cell.selected:hover{background: rgba(124, 119, 145, 0.7); }
 		.vdp-datepicker__calendar .cell{height: 38px; line-height: 38px; }
@@ -299,8 +243,8 @@
 	.date-form__top
 	{
 		width: 100%;
-		padding-left: 19px;
-		margin-bottom: 20px;
+		padding-left: 9px;
+		margin-bottom: 8px;
 	}
 	.date-form__time
 	{
@@ -320,7 +264,7 @@
 	}
 	.date-form-time
 	{
-		max-width: 320px;
+		max-width: 280px;
 		width: 100%;
 		display: flex;
 		background-color: rgba(240, 241, 243, 0.5);
@@ -335,17 +279,17 @@
 	}
 	.date-form-time__full-date
 	{
-		margin-right: 15px;
 		padding-top: 1px;
+		border: none;
+		background: none;
+		max-width: 80px;
+		color: rgba(25, 28, 33, 0.7);
 	}
 	.date-form__bottom
 	{
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
-
 		width: 100%;
-		padding-left: 20px;
-		padding-right: 20px;
-		padding-top: 15px;
+		padding-top: 4px;
 	}
 	.date-form-time__time
 	{
@@ -413,5 +357,8 @@
 	{
 		font-size: 12px;
 		cursor: pointer;
+		padding:10px;
+		padding-left:14px;
+		&:hover{background: rgba(103, 115, 135, 0.05);}
 	}
 </style>

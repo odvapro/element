@@ -108,7 +108,7 @@
 							value     :'',
 							fieldName :this.columns[columnCode].em.type_info.code
 						});
-						if (this.element)
+						if (this.element && typeof this.element[columnCode] != 'undefined')
 							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode].value);
 					}
 				}
@@ -282,6 +282,7 @@
 		.em-string,
 		.em-list,
 		.em-node,
+		.em-user,
 		.em-file-item-col,
 		.em-date-wr
 		{

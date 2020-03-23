@@ -28,15 +28,15 @@
 			{
 				this.$router.push({name:'tableDetail', params:{tableCode:tableCode, id:id }});
 			},
-			saveElementDetail(data)
+			async saveElementDetail(data)
 			{
-				let result = this.saveElement(data);
+				let result = await this.saveElement(data);
 				if (result.data.success)
 					this.ElMessage(this.$t('elMessages.element_saved'));
 			},
-			createElementDetail(data)
+			async createElementDetail(data)
 			{
-				let result = this.createElement(data);
+				let result = await this.createElement(data);
 				if (result.data.success)
 				{
 					this.openDetail({tableCode:data.tableCode, id:result.data.lastid});
@@ -45,11 +45,12 @@
 				else
 					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
-			removeElementDetail(data)
+			async removeElementDetail(data)
 			{
-				let result = this.removeElement(data);
+				let result = await this.removeElement(data);
 				if (result.data.success)
 					this.ElMessage(this.$t('elMessages.element_removed'));
+				this.$router.go(-1);
 			}
 		}
 	}

@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div v-else>
-			...
+			<span class="el-empty">Matrix field</span>
 		</div>
 		<DetailPopup
 			:visible.sync="showDetail"
