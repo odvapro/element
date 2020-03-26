@@ -15,6 +15,7 @@ class FileHelper
 
 	public static $fileTypes = [
 		'application/msword'            => '.doc',
+		'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => '.docx',
 		'text/plain'                    => '.txt',
 		'application/pdf'               => '.pdf',
 		'application/mspowerpoint'      => '.ppt',
@@ -57,10 +58,7 @@ class FileHelper
 		if(array_key_exists($mimeType, self::$imageTypes))
 			return 'image';
 
-		if(array_key_exists($mimeType, self::$fileTypes))
-			return 'file';
-
-		return false;
+		return 'file';
 	}
 
 	/**
