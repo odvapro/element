@@ -5,7 +5,10 @@
 			v-for="item in localValue"
 			v-if="!item.noShow"
 		>
-			<img :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
+			<img v-if="item.type == 'image'" :src="item.sizes.small.path" alt=""/>
+			<svg v-else>
+				<use xlink:href="#attachment"></use>
+			</svg>
 		</div>
 		<template v-if="countFiels == 0">
 			<span class="el-empty">{{$t('empty')}}</span>
@@ -16,7 +19,11 @@
 				v-for="(item, index) in localValue"
 				v-if="!item.noShow"
 			>
-				<img class="em-file__edit-attach" :src="item.type == 'image' ? item.sizes.small.path : '/images/fileicon.png'" alt=""/>
+				<img v-if="item.type == 'image'" class="em-file__edit-attach" :src="item.sizes.small.path" alt=""/>
+				<svg v-else class="em-file__edit-attach">
+					<use xlink:href="#attachment"></use>
+				</svg>
+				<a :href="item.path" target="_blank">Download</a>
 				<a href="javascript:void(0);" @click="removeFile(index)">{{$t('remove')}}</a>
 			</div>
 			<template v-if="countFiels == 0">
@@ -150,9 +157,7 @@
 					return;
 
 				if(this.view == 'table')
-				{
 					formData.append('prepareForSave', true);
-				}
 
 				let result = await this.$axios({
 					method : 'POST',
@@ -162,7 +167,10 @@
 				});
 
 				if(!result.data.success)
+				{
+					this.Elmessage.error(result.data.message);
 					return false;
+				}
 
 				for(var newFile of result.data.value)
 					this.localValue.push(newFile);
@@ -321,6 +329,12 @@
 			height: 100%;
 			object-fit: cover;
 		}
+		svg
+		{
+			width:100%;
+			height:100%;
+			fill: #677387;
+		}
 	}
 	.em-file__upload-popup
 	{
@@ -382,6 +396,7 @@
 		top:-5px;
 		left:-5px;
 		width:calc(100% + 10px);
+		min-width: 169px;
 		min-height: 60px;
 		background: #fff;
 		padding-left:10px;
@@ -402,14 +417,17 @@
 		    color: rgba(25, 28, 33, 0.4);
 		    text-decoration: none;
 		    font-size: 12px;
+		    margin-right:5px;
 		    &:hover{text-decoration: underline;}
 		}
 	}
 	.em-file__edit-attach
 	{
 		width:25px;
+		height: 25px;
 		margin-right: 10px;
 		border:1px solid rgba(103, 115, 135, 0.3);
 		border-radius: 2px;
+		fill:rgba(103, 115, 135, 0.3);
 	}
 </style>

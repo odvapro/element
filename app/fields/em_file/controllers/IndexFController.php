@@ -104,7 +104,7 @@ class IndexFController extends ControllerBase
 			$fileName = basename($tempPath);
 			$fileInfo = [
 				'new'    => true,
-				'upName' => $fileName,
+				'upName' => $file->getName(),
 				'type'   => $fileType,
 				'path'   => '/element' . str_replace(ROOT, '', $tempPath),
 			];

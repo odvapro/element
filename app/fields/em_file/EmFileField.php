@@ -14,7 +14,7 @@ class EmFileField extends FieldBase
 
 		$resArray = json_decode($this->fieldValue, true);
 
-		if(empty($resArray)) return false;
+		if(empty($resArray)) return [];
 
 		foreach ($resArray as &$image)
 		{
