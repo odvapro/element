@@ -1,13 +1,13 @@
 <template>
 	<div class="em-matrix">
 		<div class="em-matrix-table" v-if="view=='detail'">
-			<div class="em-matrix-row-head" >
+			<div class="em-matrix-row-head" v-if="tableHead.length">
 				<div class="em-matrix-head-field" v-for="fieldCode in tableHead"><span class="em-matrix-field__content">{{fieldCode}}</span></div>
 				<div class="em-matrix-head-field em-matrix-head-field__remove"></div>
 			</div>
 			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
 				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem.value}}</span></div>
-				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
+				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
 			</div>
 			<div class="em-matrix-row-add">
 				<div class="em-matrix-row-add__icon">
@@ -21,24 +21,26 @@
 			</div>
 		</div>
 		<div v-else>
-			...
+			<span class="el-empty">Matrix field</span>
 		</div>
 		<DetailPopup
 			:visible.sync="showDetail"
 			:tableCode="detailTableCode"
 			:name="detailName"
 			:id="detailTableId"
-			@saveElement="saveElement"
-			@removeElement="removeElement"
-			@createElement="createElement"
+			:element="currentElement"
+			@saveElement="savePopupMatrixElement"
+			@createElement="createPopupMatrixElement"
+			@removeElement="removePopupMatrixElement"
 		></DetailPopup>
 	</div>
 </template>
 <script>
-	import qs from 'qs';
+	import detailFunctions from '@/mixins/detailFunctions.js';
 	import DetailPopup from '@/components/popups/DetailPopup';
 	export default
 	{
+		mixins: [detailFunctions],
 		data()
 		{
 			return {
@@ -46,6 +48,8 @@
 				detailTableCode: false,
 				detailTableId: false,
 				detailName: false,
+				currentElement: false,
+				detailElement: {}
 			}
 		},
 		components:{DetailPopup},
@@ -93,50 +97,43 @@
 
 			popupForEditMatrixColumn(row, rowIndex)
 			{
+				this.currentElement  = false;
 				let primaryKeyCode   = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 				this.detailTableId   = row[primaryKeyCode].value;
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName      = false;
 				this.showDetail      = true;
 			},
+			bindDefaultColumnValues()
+			{
+				this.currentElement = [];
+				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
+				for (let column in table.columns)
+					this.currentElement[column] = {value: ''};
+
+				this.currentElement[this.fieldSettings.nodeField] = {value: this.detailElement[this.fieldSettings.keyField].value};
+			},
 			popupForCreateMatrixElement()
 			{
+				this.bindDefaultColumnValues();
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},
-			saveElement(data)
+			savePopupMatrixElement(data, result)
 			{
-				this.$store.dispatch('saveSelectedElement', data).then(()=>
+				if (result.data.success)
 				{
 					this.updateMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_saved'));
 					this.showDetail = false;
-				});
-			},
-			async createElement(data)
-			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in data.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(data.selectedElement[fieldCode].value);
 				}
-
-				let insertData = qs.stringify({
-					insert:
-					{
-						table   :data.tableCode,
-						columns :setColumns,
-						values  :setValues
-					}
-				});
-				let result = await this.$axios.post('/el/insert/',insertData);
+			},
+			createPopupMatrixElement(data, result)
+			{
 				if(result.data.success == true)
 				{
+					let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 					data.selectedElement[primaryKeyCode].value = result.data.lastid;
 					this.createMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_created'));
@@ -145,32 +142,23 @@
 				else
 					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
-			async removeElement(data)
+			removeMatrixElement(data)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				await this.$store.dispatch('removeRecord', {
-					delete:
-					{
-						table: data.tableCode,
-						where:
-						{
-							operation:'and',
-							fields:[
-								{
-									code      : primaryKeyCode,
-									operation : 'IS',
-									value     : data.selectedElement[primaryKeyCode].value
-								}
-							]
-						}
-					}
-				}).then(()=>
-				{
-					this.showDetail = false;
-					this.ElMessage(this.$t('elMessages.element_removed'));
-					this.removeMatrixTableElement(data.selectedElement);
-				});
+				this.removeElement(data);
+				this.showDetail = false;
+				this.ElMessage(this.$t('elMessages.element_removed'));
+				this.removeMatrixTableElement(data.selectedElement);
 			},
+			removePopupMatrixElement(data, result)
+			{
+				this.showDetail = false;
+				this.ElMessage(this.$t('elMessages.element_removed'));
+				this.removeMatrixTableElement(data.selectedElement);
+			}
+		},
+		mounted()
+		{
+			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
 		}
 	}
 </script>

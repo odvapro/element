@@ -36,6 +36,8 @@ export default
 	{
 		settings:
 		{
+			key: 'Ключ',
+			value: 'Значение',
 			add_option: 'Добавить опцию',
 			enter_key: 'Введите ключ',
 			enter_value: 'Введите значение',

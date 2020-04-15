@@ -14,18 +14,16 @@ class EmMatrixField extends FieldBase
 				'fields'    => [[
 					'code'      => $this->settings['nodeField'],
 					'operation' => 'IS',
-					'value'     => $this->fieldValue
+					'value'     => $this->row[$this->settings['keyField']]
 				]]
 			]
 		];
 		$node = $this->element->select($select);
 
-		if(!count($node) )
+		if(!count($node))
 			return [];
 
-		return [
-			'matrixValue' => $node
-		];
+		return ['matrixValue' => $node ];
 	}
 
 	/**
@@ -33,18 +31,6 @@ class EmMatrixField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		if(empty($this->fieldValue))
-			return NULL;
-
-		if(is_numeric($this->fieldValue))
-			return intval($this->fieldValue);
-
-		if(is_string($this->fieldValue))
-			return NULL;
-
-		if(!is_array($this->fieldValue))
-			return intval($this->fieldValue);
-
-		return $this->fieldValue['id'];
+		return NULL;
 	}
 }

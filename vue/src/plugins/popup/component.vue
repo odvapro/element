@@ -3,6 +3,11 @@
 		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
 			<div
 				class="popup-block">
+				<div class="popup-close" @click="close">
+					<svg width="12" height="12">
+						<use xlink:href="#plus-white"></use>
+					</svg>
+				</div>
 				<slot></slot>
 			</div>
 		</div>
@@ -72,6 +77,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		flex-flow: wrap;
 	}
 	.popup-block
 	{

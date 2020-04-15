@@ -34,6 +34,7 @@ CREATE TABLE `block_type` (
   `text` text,
   `date` date DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
+  `matrix` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,57 +83,6 @@ VALUES
 
 /*!40000 ALTER TABLE `callbacks` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-# Дамп таблицы em_types
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `em_types`;
-
-CREATE TABLE `em_types` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `table` varchar(200) NOT NULL DEFAULT '',
-  `field` varchar(200) NOT NULL DEFAULT '',
-  `type` varchar(20) NOT NULL DEFAULT '',
-  `required` int(5) NOT NULL DEFAULT '0',
-  `settings` text,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `em_types` WRITE;
-/*!40000 ALTER TABLE `em_types` DISABLE KEYS */;
-
-INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
-VALUES
-  (17,'products','images','em_file',0,'{\"path\":\"public\/images\/",\"required\":\"false\"}',NULL),
-  (18, 'block_type', 'file', 'em_file', 0, '{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}', NULL),
-  (19, 'block_type', 'text', 'em_text', 0, NULL, NULL),
-  (20, 'block_type', 'date', 'em_date', 0, NULL, NULL),
-  (21, 'block_type', 'datetime', 'em_date', 0, NULL, NULL),
-  (22, 'block_type', 'node', 'em_node', 0, '{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}', NULL);
-
-/* Группы */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `em_groups`;
-
-CREATE TABLE `em_groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `em_groups` WRITE;
-/*!40000 ALTER TABLE `em_groups` DISABLE KEYS */;
-
-INSERT INTO `em_groups` (`id`, `name`)
-VALUES
-  (1,'Administrators');
-
-/*!40000 ALTER TABLE `em_groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 # Дамп таблицы em_users
 # ------------------------------------------------------------

@@ -43,8 +43,9 @@
 			 */
 			selectedItems()
 			{
-				if(this.localFieldValue.length == 0)
+				if (typeof this.localFieldValue != 'object')
 					return [];
+
 				return this.fieldSettings.list.filter(listItem=>{
 					if(this.localFieldValue.indexOf(listItem.key) !== -1)
 						return true;
