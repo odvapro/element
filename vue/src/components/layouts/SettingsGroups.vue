@@ -1,43 +1,57 @@
 <template>
-<div class="settings-groups__wrapper">
-	<div class="settings-groups__head">
-		<button @click="addGroup" class="el-btn">{{$t('createGroup')}}</button>
-	</div>
-	<div class="settings-groups__content">
-		<ul class="settings-groups__groups-content">
-			<li class="settings-groups__group-wrapper" v-for="group, groupIndex in groups">
-				<div class="settings-groups__group-head">
-					<div class="settings-groups__group-info">
-						<div class="settings-groups__group-name" :class="{disabled: group.name == 'Administrators'}"><input type="text" v-model="group.name"></div>
-						<div class="settings-groups__member-info">{{group.members.length}} {{$t('members')}}</div>
-					</div>
-					<div class="settings-groups__remove-btn" @click="removeGroup(groupIndex)">{{$t('remove')}}</div>
-				</div>
-				<ul class="settings-groups__members">
-					<li class="settings-groups__member" v-for="member, memberIndex in group.members">
-						<div class="settings-groups__member-name-wrapper">
-							<div class="settings-groups__member-avatar">
-								<img :src="member.avatar" alt="">
+	<div class="settings-groups__wrapper">
+		<div class="settings-groups__head">
+			<button @click="addGroup" class="el-btn">{{$t('createGroup')}}</button>
+		</div>
+		<div class="settings-groups__content">
+			<ul class="settings-groups__groups-content">
+				<li class="settings-groups__group-wrapper" v-for="group, groupIndex in $store.state.groups.groups">
+					<div class="settings-groups__group-head">
+						<div class="settings-groups__group-info">
+							<div
+								class="settings-groups__group-name"
+								:class="{disabled: group.name == 'Administrators'}"
+								contenteditable="true"
+								@blur="changeGroupName($event,group)"
+							>
+								{{ group.name }}
 							</div>
-							<div class="settings-groups__member-name">{{member.name}}</div>
+							<div class="settings-groups__member-info">{{group.members.length}} {{$t('members')}}</div>
 						</div>
-						<div class="settings-groups__remove-btn" @click="removeMemberFromGroup(groupIndex, memberIndex)">{{$t('remove')}}</div>
-					</li>
-					<li class="settings-groups__add-member-wrapper">
-						<div class="settings-groups__icon"></div>
-						<div class="settings-groups__add-member-btn" @click="showAddMemberPopup()">{{$t('addMember')}}</div>
-					</li>
-				</ul>
-			</li>
-		</ul>
+						<button v-if="group.name != 'Administrators'" class="settings-groups__remove-btn" @click="removeGroup(group)">{{$t('remove')}}</button>
+					</div>
+					<ul class="settings-groups__members">
+						<li class="settings-groups__member" v-for="member, memberIndex in group.members">
+							<div class="settings-groups__member-name-wrapper">
+								<img class="settings-groups__avatar" :src="member.avatar" alt="">
+								<div class="settings-groups__member-name">{{member.name}}</div>
+							</div>
+							<button class="settings-groups__remove-btn" @click="removeMemberFromGroup(groupIndex, memberIndex)">{{$t('remove')}}</button>
+						</li>
+						<li class="settings-groups__add-member-wrapper">
+							<div class="settings-groups__icon"></div>
+							<button class="settings-groups__add-member-btn" @click="showAddMemberPopup()">{{$t('addMember')}}</button>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<Popup class="settings-groups__add-popup" :visible.sync="showPopupAddMember">
+			<input class="settings-groups__add-search" type="text" placeholder="Search for person">
+			<div class="settings-groups__user-line">
+				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
+				Morris Wilson
+			</div>
+			<div class="settings-groups__user-line">
+				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
+				Courtney Mckinney
+			</div>
+			<div class="settings-groups__user-line">
+				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
+				Mitchell Lane
+			</div>
+		</Popup>
 	</div>
-	<Popup :visible.sync="showPopupAddMember">
-		<select name="" id="">
-			<option value="">sad</option>
-			<option value="">sad</option>
-		</select>
-	</Popup>
-</div>
 </template>
 <script>
 	export default
@@ -46,44 +60,41 @@
 		{
 			return {
 				showPopupAddMember: false,
-				groups: [
-					{
-						name: 'Administrators',
-						members: [
-							{name: 'Eugene Ford'},
-							{name: 'Eugene Ford'},
-							{name: 'Eugene Ford'},
-						]
-					}
-				],
 			}
 		},
 		methods:
 		{
-			removeGroup(groupIndex)
+			async removeGroup(group)
 			{
-				console.log(groupIndex);
+				await this.$store.dispatch('removeGroup',group.id);
 			},
 			removeMemberFromGroup(groupIndex, memberIndex)
 			{
 				console.log(groupIndex, memberIndex);
 			},
-			addGroup()
+			async addGroup()
 			{
-				this.groups.push({name: 'New group', members: []});
+				await this.$store.dispatch('addGroup');
 			},
 			showAddMemberPopup()
 			{
-				showPopupAddMember = true;
+				this.showPopupAddMember = true;
 			},
 			addMember(group)
 			{
-				group.members.push({name: 'new user'});
+				// group.members.push({name: 'new user'});
 			},
 			async getGroups()
 			{
 				await this.$store.dispatch('getGroups');
-				this.groups = this.$store.state.groups.groups;
+			},
+			async changeGroupName(event,group)
+			{
+				await this.$store.dispatch('setGroupName',{
+					id   : group.id,
+					name : event.target.innerText
+				});
+				console.log(event.target.innerText);
 			}
 		},
 		mounted()
@@ -99,8 +110,7 @@
 		height: 9px;
 		position: relative;
 		margin-right: 7px;
-		&:before,
-		&:after
+		&:before, &:after
 		{
 			position: absolute;
 			content: '';
@@ -111,14 +121,11 @@
 			background-color: #C2C7CF;
 			transform: rotate(90deg);
 		}
-		&:before
-		{
-			transform: rotate(0deg);
-		}
+		&:before {transform: rotate(0deg); }
 	}
 	.settings-groups__add-member-wrapper
 	{
-		display: flex;
+		display: inline-flex;
 		align-items: center;
 	}
 	.settings-groups__add-member-btn
@@ -127,6 +134,10 @@
 		font-size: 11px;
 		line-height: 13px;
 		color: #677387;
+		border:0px;
+		padding:0px;
+		cursor: pointer;
+		background: none;
 	}
 	.settings-groups__members
 	{
@@ -146,24 +157,19 @@
 		line-height: 13px;
 		color: #191C21;
 	}
-	.settings-groups__member-avatar
+	.settings-groups__avatar
 	{
 		width: 15px;
 		height: 15px;
 		border-radius: 50%;
 		overflow: hidden;
 		margin-right: 6px;
-		img
-		{
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
+		object-fit: cover;
 	}
 	.settings-groups__member-name-wrapper
 	{
 		display: flex;
-		align-items: center;
+
 	}
 	.settings-groups__head
 	{
@@ -177,14 +183,7 @@
 		line-height: 14px;
 		color: #191C21;
 		margin-right: 18px;
-		input
-		{
-			border: none;
-		}
-		&.disabled
-		{
-			pointer-events: none;
-		}
+		&.disabled {pointer-events: none;}
 	}
 	.settings-groups__member-info
 	{
@@ -216,9 +215,43 @@
 		font-size: 11px;
 		line-height: 13px;
 		color: #191C21;
+		border:0px;
+		padding:0px;
+		cursor: pointer;
 	}
-	.settings-groups__content
+	.settings-groups__content {padding-top: 29px; }
+	.settings-groups__add-popup .popup-close{display: none;}
+	.settings-groups__add-search
 	{
-		padding-top: 29px;
+		height: 43px;
+		background: rgba(103, 115, 135, 0.1);
+		border:0px;
+		border-radius: 3px;
+		width:100%;
+		padding-left: 24px;
+		font-size: 11px;
+		margin-bottom: 15px;
+		&::placeholder{color: rgba(103, 115, 135, 0.7);}
+	}
+	.settings-groups__user-line
+	{
+		display: flex;
+		align-items: center;
+		font-size:11px;
+		color: #191C21;
+		height: 30px;
+		cursor: pointer;
+		margin-left: -20px;
+		margin-right: -20px;
+		padding-left: 20px;
+		img
+		{
+			width:15px;
+			height: 15px;
+			object-fit: cover;
+			border-radius: 50%;
+			margin-right: 7px;
+		}
+		&:hover{background: rgba(103, 115, 135, 0.1);}
 	}
 </style>

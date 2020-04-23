@@ -1,6 +1,6 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
+		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" tabindex="1">
 			<div
 				class="popup-block">
 				<div class="popup-close" @click="close">
@@ -41,7 +41,7 @@
 			keyup(event)
 			{
 				if (event.keyCode === 27)
-					this.close();
+					this.close(event);
 			}
 		},
 		mounted()

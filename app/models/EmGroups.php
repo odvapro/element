@@ -8,12 +8,24 @@ class EmGroups extends ModelBase
 			'alias' => 'members'
 		]);
 	}
+
+	public function beforeDelete()
+	{
+		// delete all relations with this group
+		$groupRelations = EmGroupsUsers::findByGroupId($this->id);
+		if(count($groupRelations))
+			$groupRelations->delete();
+	}
+
 	public function toArray($columns='')
 	{
 		$groups = parent::toArray();
 		$groups['members'] = [];
 		foreach ($this->members as $member)
-			$groups['members'][] = $member->toArray();
+			$groups['members'][] = [
+				'name'   => $member->name,
+				'avatar' => $member->getAvatar(),
+			];
 		return $groups;
 	}
 }

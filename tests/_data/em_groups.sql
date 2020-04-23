@@ -11,7 +11,8 @@ LOCK TABLES `em_groups` WRITE;
 
 INSERT INTO `em_groups` (`id`, `name`)
 VALUES
-  (1,'Administrators');
+	(1, 'Administrators'),
+	(2, 'Untiteled');
 
 /*!40000 ALTER TABLE `em_groups` ENABLE KEYS */;
 UNLOCK TABLES;
