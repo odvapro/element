@@ -46,6 +46,41 @@ const groups =
 					break;
 				}
 			}
+		},
+
+		/**
+		 * Add user to the group
+		 * params = {user (object),groupId (int)}
+		 */
+		addUser(state, params)
+		{
+			for(const [groupIndex, group] of state.groups.entries())
+			{
+				if(group.id == params.groupId)
+				{
+					state.groups[groupIndex].members.push(params.user);
+					break;
+				}
+			}
+		},
+
+		/**
+		 * Removes user from the group
+		 * params = {userId (int),groupId (int)}
+		 */
+		removeGroupUser(state, params)
+		{
+			const groupIndex = state.groups.reduce((acc,group,groupIndex)=>{
+				if(group.id == params.groupId)
+					return groupIndex;
+			});
+
+			const memberIndex = state.groups[groupIndex].members.reduce((acc,member,memberIndex)=>{
+				if(member.id == params.userId)
+					return memberIndex;
+			});
+
+			state.groups[groupIndex].members.splice(memberIndex,1);
 		}
 	},
 	actions:
@@ -63,6 +98,40 @@ const groups =
 				return false;
 
 			store.commit('addGroup', result.data.group);
+		},
+
+		/**
+		 * params = {user (object),groupId (int)}
+		 */
+		async addUser(store,params)
+		{
+			let data = qs.stringify({id:params.user.id, group:params.groupId});
+			let result = await axios({
+				method : 'POST',
+				url    : '/groups/addUser/',
+				data   : data
+			});
+			if(!result.data.success)
+				return false;
+
+			store.commit('addUser', params);
+		},
+
+		/**
+		 * params = {userId (int),groupId (int)}
+		 */
+		async removeGroupUser(store,params)
+		{
+			let data = qs.stringify({id:params.userId, group:params.groupId});
+			let result = await axios({
+				method : 'POST',
+				url    : '/groups/removeUser/',
+				data   : data
+			});
+			if(!result.data.success)
+				return false;
+
+			store.commit('removeGroupUser', params);
 		},
 
 		async setGroupName(store,params)

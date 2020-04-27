@@ -23,6 +23,7 @@ class EmGroups extends ModelBase
 		$groups['members'] = [];
 		foreach ($this->members as $member)
 			$groups['members'][] = [
+				'id'     => $member->id,
 				'name'   => $member->name,
 				'avatar' => $member->getAvatar(),
 			];

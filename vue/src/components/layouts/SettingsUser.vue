@@ -254,6 +254,7 @@
 	{
 		display: flex;
 		word-break: break-word;
+		white-space: nowrap;
 		align-items: center;
 		height: 39px;
 		overflow: hidden;

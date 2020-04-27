@@ -26,40 +26,29 @@
 								<img class="settings-groups__avatar" :src="member.avatar" alt="">
 								<div class="settings-groups__member-name">{{member.name}}</div>
 							</div>
-							<button class="settings-groups__remove-btn" @click="removeMemberFromGroup(groupIndex, memberIndex)">{{$t('remove')}}</button>
+							<button class="settings-groups__remove-btn" @click="removeMemberFromGroup(group.id, member.id)">{{$t('remove')}}</button>
 						</li>
 						<li class="settings-groups__add-member-wrapper">
 							<div class="settings-groups__icon"></div>
-							<button class="settings-groups__add-member-btn" @click="showAddMemberPopup()">{{$t('addMember')}}</button>
+							<button class="settings-groups__add-member-btn" @click="showAddMemberPopup(group.id)">{{$t('addMember')}}</button>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
-		<Popup class="settings-groups__add-popup" :visible.sync="showPopupAddMember">
-			<input class="settings-groups__add-search" type="text" placeholder="Search for person">
-			<div class="settings-groups__user-line">
-				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
-				Morris Wilson
-			</div>
-			<div class="settings-groups__user-line">
-				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
-				Courtney Mckinney
-			</div>
-			<div class="settings-groups__user-line">
-				<img src="https://www.gravatar.com/avatar/28ff2f48655820e1aaf15687dc5e6be5?d=image.png&s=40" alt="">
-				Mitchell Lane
-			</div>
-		</Popup>
+		<SelectUser @selectUser="selectUser" :visible.sync="showPopupAddMember"></SelectUser>
 	</div>
 </template>
 <script>
+	import SelectUser from '@/components/popups/SelectUser.vue'
 	export default
 	{
+		components:{SelectUser},
 		data()
 		{
 			return {
 				showPopupAddMember: false,
+				addGroupId:false
 			}
 		},
 		methods:
@@ -68,21 +57,28 @@
 			{
 				await this.$store.dispatch('removeGroup',group.id);
 			},
-			removeMemberFromGroup(groupIndex, memberIndex)
+			async removeMemberFromGroup(groupId, userId)
 			{
-				console.log(groupIndex, memberIndex);
+				await this.$store.dispatch('removeGroupUser',{
+					userId  : userId,
+					groupId : groupId
+				});
 			},
 			async addGroup()
 			{
 				await this.$store.dispatch('addGroup');
 			},
-			showAddMemberPopup()
+			showAddMemberPopup(groupId)
 			{
+				this.addGroupId         = groupId;
 				this.showPopupAddMember = true;
 			},
-			addMember(group)
+			async selectUser(user)
 			{
-				// group.members.push({name: 'new user'});
+				await this.$store.dispatch('addUser',{
+					user    : user,
+					groupId : this.addGroupId
+				});
 			},
 			async getGroups()
 			{
@@ -94,12 +90,12 @@
 					id   : group.id,
 					name : event.target.innerText
 				});
-				console.log(event.target.innerText);
 			}
 		},
 		mounted()
 		{
 			this.getGroups();
+			this.$store.dispatch('getUsers');
 		}
 	}
 </script>
@@ -220,38 +216,4 @@
 		cursor: pointer;
 	}
 	.settings-groups__content {padding-top: 29px; }
-	.settings-groups__add-popup .popup-close{display: none;}
-	.settings-groups__add-search
-	{
-		height: 43px;
-		background: rgba(103, 115, 135, 0.1);
-		border:0px;
-		border-radius: 3px;
-		width:100%;
-		padding-left: 24px;
-		font-size: 11px;
-		margin-bottom: 15px;
-		&::placeholder{color: rgba(103, 115, 135, 0.7);}
-	}
-	.settings-groups__user-line
-	{
-		display: flex;
-		align-items: center;
-		font-size:11px;
-		color: #191C21;
-		height: 30px;
-		cursor: pointer;
-		margin-left: -20px;
-		margin-right: -20px;
-		padding-left: 20px;
-		img
-		{
-			width:15px;
-			height: 15px;
-			object-fit: cover;
-			border-radius: 50%;
-			margin-right: 7px;
-		}
-		&:hover{background: rgba(103, 115, 135, 0.1);}
-	}
 </style>
