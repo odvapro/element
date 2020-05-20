@@ -48,7 +48,10 @@
 							></Checkbox>
 						</div>
 					</div>
-					<div class="settings-table-item"></div>
+					<div class="settings-table-item centered">
+						<button @click="showTableGroups(table)" class="settings-table__open-settings">groups</button>
+						<TableGroups v-click-outside="hideTableGroups" v-if="table.code == showTableGroupsCode"/>
+					</div>
 				</div>
 				<div class="settings-table-row-setting" id="settings-table-row" :style="table.showSettings">
 					<div class="settings-table-row-setting-item active" v-for="column in table.columns">
@@ -67,7 +70,7 @@
 								>{{ field.name }}</SelectOption>
 							</Select>
 						</div>
-						<div class="settings-table-item centered">
+						<div class="settings-table-item">
 							<button
 								class="settings-table__open-settings"
 								@click="openSettingsPopup(table,column)"
@@ -93,9 +96,11 @@
 <script>
 	import qs from 'qs';
 	import TableWork from '@/mixins/tableWork.js';
+	import TableGroups from '@/components/forms/TableGroups.vue';
 	export default
 	{
 		mixins: [TableWork],
+		components:{TableGroups},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -111,6 +116,7 @@
 				currentSettings:false,
 				settingsTable:false,
 				settingsColumn:false,
+				showTableGroupsCode:false,
 			}
 		},
 		computed:
@@ -337,6 +343,17 @@
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
 				}
 				this.$store.commit('showLoader',false);
+			},
+			/**
+			 * Shows table group settgins
+			 */
+			showTableGroups(table)
+			{
+				this.showTableGroupsCode = table.code;
+			},
+			hideTableGroups()
+			{
+				this.showTableGroupsCode = false;
 			}
 		},
 		/**
@@ -459,8 +476,19 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
+		position: relative;
 		&.table-item {height: 49px; }
-		&:last-child {border-right: none; }
+		&:nth-child(3n)
+		{
+			min-width: 130px;
+			width: 130px;
+		}
+		&:last-child
+		{
+			border-right: none;
+			min-width: 100px;
+			width: 100px;
+		}
 		&.centered {justify-content: center; }
 		&.category-font {color: #191C21; }
 		.settings-table__open-settings
@@ -469,6 +497,7 @@
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
+			text-transform: lowercase;
 			&:hover{text-decoration: underline;}
 		}
 	}

@@ -1,7 +1,7 @@
 <template>
 	<div class="index__wrapper">
-		<div class="index__head">
-			<div class="index__head-name" v-if="table">
+		<div class="index__head" v-if="table">
+			<div class="index__head-name">
 				<div class="index__icon-wrapper">
 					<svg width="14" height="13">
 						<use xlink:href="#tableicon"></use>
@@ -74,7 +74,11 @@
 				</button>
 			</div>
 		</div>
-		<Table :table="table" :tview="activeTview" v-if="table && activeTview" />
+		<Table
+			:table="table"
+			:tview="activeTview"
+			v-if="table && activeTview"
+		/>
 	</div>
 </template>
 <script>
@@ -163,6 +167,10 @@
 		mounted()
 		{
 			this.activeTable();
+			this.$store.subscribe((mutation, state) => {
+				if(mutation.type == 'setTables')
+					this.activeTable();
+			});
 		},
 		watch:
 		{

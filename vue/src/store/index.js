@@ -23,10 +23,11 @@ const store = new Vuex.Store({
 	},
 	state:
 	{
-		drugPosition: 400,
-		isAuth: true,
-		isIntallDb: true,
-		showLoader: false
+		drugPosition   : 400,
+		isAuth         : false,
+		isIntallDb     : false,
+		showLoader     : false,
+		layoutSelected : false
 	},
 	mutations:
 	{
@@ -44,6 +45,7 @@ const store = new Vuex.Store({
 		setAuth(state, status)
 		{
 			state.isAuth = status;
+			state.layoutSelected = true;
 		},
 
 		/**

@@ -24,7 +24,10 @@
 		data()
 		{
 			return {
-				sidebar: {},
+				sidebar:
+				{
+					gridTemplateColumns:'400px auto'
+				},
 				points:
 				{
 					isDrug: false,
@@ -73,17 +76,13 @@
 		 */
 		async mounted()
 		{
-			await this.$store.dispatch('getTables');
-
 			if (this.$cookie.get('drugPosition') >= 200)
 				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
-			else
-				this.sidebar['gridTemplateColumns'] = '400px auto';
-
 
 			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-
 			this.initEventScale();
+
+			await this.$store.dispatch('getTables');
 		}
 	}
 </script>
