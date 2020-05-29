@@ -18,6 +18,7 @@
 			</div>
 		</div>
 		<Datepicker
+			:monday-first="$store.state.languages.currentLang.short === 'ru'"
 			placeholder="$('empty')"
 			v-model="localDate"
 			:inline="true"
