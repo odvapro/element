@@ -26,7 +26,6 @@ Temporary Items
 # PHALCON
 /api/app/cache/
 !/api/app/cache/readme.md
-/public/
 /vue/public/upload/
 !/vue/public/upload/.gitkeep
 /vue/public/tmp/
