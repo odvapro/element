@@ -34,7 +34,11 @@ class ElController extends ControllerBase
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$resultInsert = $this->element->insert($insert);
+		try {
+			$resultInsert = $this->element->insert($insert);
+		} catch (Exception $e) {
+			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
+		}
 
 		if ($resultInsert === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
@@ -58,6 +62,12 @@ class ElController extends ControllerBase
 
 		if (empty($update))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
+
+		try {
+			$resultUpdate = $this->element->update($update);
+		} catch (Exception $e) {
+			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
+		}
 
 		$resultUpdate = $this->element->update($update);
 
