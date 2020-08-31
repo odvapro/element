@@ -35,7 +35,8 @@
 					:placeholder="$t('select_an_option')"
 					@selected="changeLocalFieldValue"
 					:inline="true"
-					:language="curentLang"
+					:language="currentLang"
+					:monday-first="this.$store.getters.lang === 'ru'"
 				>
 				</Datepicker>
 				<div class="em-date-filter__bottom">
@@ -47,7 +48,7 @@
 </template>
 <script>
 	import Datepicker from 'vuejs-datepicker';
-	import {en, ru} from 'vuejs-datepicker/dist/locale';
+	import * as locales from 'vuejs-datepicker/dist/locale';
 	export default
 	{
 		props: ['filter', 'settings'],
@@ -62,12 +63,7 @@
 				localTimeStr: false,
 				localHours: false,
 				localMinutes: false,
-				curentLang: en,
-				datePickerLocales:
-				{
-					en: en,
-					ru: ru
-				}
+				currentLang: locales.en
 			}
 		},
 		computed:
@@ -103,12 +99,10 @@
 		{
 			checkAndSetPickerLang()
 			{
-				for (let lang in this.datePickerLocales)
-					if (lang === this.$store.state.languages.currentLang.short)
-					{
-						this.curentLang = this.datePickerLocales[lang];
-						break;
-					}
+				if (locales[this.$store.getters.lang])
+					this.currentLang = locales[this.$store.getters.lang];
+				else
+					this.currentLang = locales.en;
 			},
 			getMonth(monthIndex)
 			{
