@@ -7,13 +7,13 @@
 			<div class="settings-lang-list">
 				<List>
 					<template v-slot:selected>
-						<ListOption>{{ currentLang }}</ListOption>
+						<ListOption>{{ $store.getters.langStr }}</ListOption>
 					</template>
 					<ListOption
-						v-for="(lang, langIndex) in languages"
+						v-for="(lang, langIndex) in $store.getters.langList"
 						:key="langIndex"
-						@select="changeLang(lang)"
-					>{{ lang.long }}</ListOption>
+						@select="changeLang(langIndex)"
+					>{{ lang }}</ListOption>
 				</List>
 			</div>
 		</div>
@@ -23,27 +23,16 @@
 
 	export default
 	{
-		computed:
-		{
-			currentLang()
-			{
-				return this.$store.state.languages.currentLang.long;
-			},
-			languages()
-			{
-				return this.$store.state.languages.list;
-			}
-		},
 		methods:
 		{
-			async changeLang(newLang)
+			async changeLang(language)
 			{
 				let user = JSON.parse(this.$cookie.get('user'));
-				user.language = newLang;
+				user.language = language;
 				this.$cookie.set('user', JSON.stringify(user), 12);
 
-				await this.$store.dispatch('setLanguage', {newLang, id: this.$store.state.users.authUser.id});
-				this.$store.commit('setLanguage', newLang);
+				await this.$store.dispatch('setLanguage', {language, id: this.$store.state.users.authUser.id});
+				this.$store.commit('setLanguage', language);
 			}
 		}
 	}

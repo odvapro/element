@@ -21,8 +21,9 @@
 			placeholder="$('empty')"
 			v-model="localDate"
 			:inline="true"
-			:language="curentLang"
+			:language="currentLang"
 			@selected="selectDate"
+			:monday-first="this.$store.getters.lang === 'ru'"
 		/>
 		<div class="date-form__bottom">
 			<div class="date-form__clear" @click="clear()">{{$t('clear')}}</div>
@@ -31,7 +32,7 @@
 </template>
 <script>
 	import Datepicker from 'vuejs-datepicker';
-	import {en, ru} from 'vuejs-datepicker/dist/locale';
+	import * as locales from 'vuejs-datepicker/dist/locale';
 	export default
 	{
 		props:
@@ -46,7 +47,7 @@
 				localDate:'',
 				inputDate:'',
 				inputTime:'',
-				curentLang: en,
+				currentLang: locales.en,
 			}
 		},
 		mounted()
@@ -74,10 +75,8 @@
 			},
 			setLang()
 			{
-				if(this.$store.state.languages.currentLang.short == 'en')
-					this.curentLang = en;
-				else
-					this.curentLang = ru;
+				if (locales[this.$store.getters.lang])
+					this.currentLang = locales[this.$store.getters.lang];
 			},
 
 			/**

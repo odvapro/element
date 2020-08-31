@@ -49,15 +49,16 @@ CREATE TABLE `em_users` (
   `name` varchar(200) NOT NULL DEFAULT '',
   `password` varchar(200) NOT NULL DEFAULT '',
   `email` varchar(200) NOT NULL DEFAULT '',
+  `language` varchar(200) NOT NULL DEFAULT 'en',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `em_users` WRITE;
 /*!40000 ALTER TABLE `em_users` DISABLE KEYS */;
 
-INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`)
+INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`, `language`)
 VALUES
-	(1,'admin','Untiteld','25e4ee4e9229397b6b17776bfceaf8e7','admin@email.com');
+	(1,'admin','Untiteld','25e4ee4e9229397b6b17776bfceaf8e7','admin@email.com', 'en');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;

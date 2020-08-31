@@ -6,39 +6,42 @@ const languages =
 	state:
 	{
 		list:
-		[
-			{
-				short: 'en',
-				long: 'English'
-			},
-			{
-				short: 'ru',
-				long: 'Русский'
-			}
-		],
+		{
+			en: 'English',
+			ru: 'Русский'
+		},
 		currentLang: '',
+	},
+	getters:
+	{
+		lang:     state => state.currentLang,
+		langStr:  state => state.list[state.currentLang],
+		langList: state => state.list,
 	},
 	mutations:
 	{
 		setLanguage(state, newLang)
 		{
-			state.currentLang = newLang;
-			Vue.i18n.set(state.currentLang.short);
+			if (state.list[newLang])
+				state.currentLang = newLang;
+			else
+				state.currentLang = 'en';
+
+			Vue.i18n.set(state.currentLang);
 		}
 	},
 	actions:
 	{
-		async setLanguage(state, {newLang, id})
+		async setLanguage(state, {language, id})
 		{
-			if (id && newLang)
+			if (id && language)
 			{
-				let data = qs.stringify({id: id, language: newLang});
-				let result = await axios.post('/users/setLanguage', data);
+				let result = await axios.post('/users/setLanguage', qs.stringify({id, language}));
 
 				if (!result.data.success)
 					return message.error(result.data.message);
 			}
-			else if (!id && !newLang)
+			else
 				return message.error('Something wrong');
 		}
 	}
