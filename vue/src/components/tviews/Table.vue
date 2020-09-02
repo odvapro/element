@@ -429,7 +429,7 @@
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
 
 				let result = await this.$store.dispatch('duplicateRecord', {
-					table: this.table.code,
+					from: this.table.code,
 					where:
 					{
 						operation:'and',

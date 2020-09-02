@@ -22,38 +22,42 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDelete]);
 	}
+	/**
+	 * принимает стандартный селект элемента для запроса с id записи
+	 * находит эту запись, затем insert ее значения в таблицу
+	 * @param  array $duplicateSelect
+	 * @return json
+	 */
 	public function duplicateAction()
 	{
-		$duplicate = $this->request->getPost('duplicate');
+		$duplicateSelect = $this->request->getPost('duplicate');
 
-		if (empty($duplicate))
+		if (empty($duplicateSelect))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
-		$select = [
-			'from'  => $duplicate['table'],
-			'where' => $duplicate['where']
+
+		$record = $this->element->select($duplicateSelect);
+
+		if (empty($record))
+			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
+
+		$record = $record[0];
+
+		$insertParams = [
+			'table'   => $duplicateSelect['from'],
+			'columns' => [],
+			'values'  => []
 		];
-		$records = $this->element->select($select);
-
-
-		foreach ($records as $record)
+		foreach ($record as $propertyKey => $property)
 		{
-			$insertParams = [
-				'table'   => $duplicate['table'],
-				'columns' => [],
-				'values'  => []
-			];
-			foreach ($record as $propertyKey => $property) {
-				if ($property['fieldName'] === 'em_primary')
-					continue;
-				$insertParams['columns'][] = $propertyKey;
-				$insertParams['values'][]  = $property['value'];
-			}
-
-			$resultDuplicate = $this->eldb->insert($insertParams);
-
-			if ($resultDuplicate === false)
-				return $this->jsonResult(['success' => false, 'message' => 'some error']);
+			if ($property['fieldName'] === 'em_primary')
+				continue;
+			$insertParams['columns'][] = $propertyKey;
+			$insertParams['values'][]  = $property['value'];
 		}
+		$resultDuplicate = $this->eldb->insert($insertParams);
+
+		if ($resultDuplicate === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);
 	}
