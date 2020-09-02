@@ -9,7 +9,7 @@ class AuthController extends ControllerBase
 		if (!empty($auth))
 		{
 			$user = EmUsers::findFirstById($auth);
-			$config->application->userSettings['language'] = json_decode($user->language)->short;
+			$config->application->userSettings['language'] = $user->language;
 		}
 		elseif (empty($config->userSettings['language']) && empty($auth))
 			$config->application->userSettings['language'] = 'en';

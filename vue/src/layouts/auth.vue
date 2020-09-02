@@ -131,17 +131,20 @@ export default
 				return false;
 			}
 
-			if (typeof user.language === 'string')
-				user.language = JSON.parse(user.language);
+			if (user.language)
+				user.language = user.language;
+			else
+				user.language = 'en';
 
 			this.$cookie.set('user', JSON.stringify(user), 12);
-			await this.setLanguage(user.language);
+
+			await this.setLanguage(user.language, user.id);
 			this.$router.push('/');
 		},
-		async setLanguage(lang)
+		async setLanguage(language, id)
 		{
-			await this.$store.dispatch('setLanguage', {newLang: lang});
-			this.$store.commit('setLanguage', lang);
+			await this.$store.dispatch('setLanguage', {language, id});
+			this.$store.commit('setLanguage', language);
 		},
 		/**
 		 * Проверка данных для востановления пароля

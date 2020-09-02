@@ -89,12 +89,12 @@
 		{
 			settingsTabsHeadClass()
 			{
-				return 'settings-tabs-head_' + this.$store.state.languages.currentLang.short;
+				return 'settings-tabs-head_' + this.$store.getters.lang;
 			}
 		},
 		watch:
 		{
-			'$store.state.languages.currentLang'()
+			'$store.getters.lang'()
 			{
 				this.tabs[0].name = this.$t('tables');
 				this.tabs[1].name = this.$t('users');

@@ -77,7 +77,7 @@ class UsersController extends ControllerBase
 
 		if (empty($user))
 			return $this->jsonResult(['success' => false, 'message' => 'user is not found']);
-		$user->language = json_encode($newLanguage);
+		$user->language = $newLanguage;
 
 		if(!$user->save())
 			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
