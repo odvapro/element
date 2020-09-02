@@ -22,7 +22,41 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDelete]);
 	}
+	public function duplicateAction()
+	{
+		$duplicate = $this->request->getPost('duplicate');
 
+		if (empty($duplicate))
+			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
+		$select = [
+			'from'  => $duplicate['table'],
+			'where' => $duplicate['where']
+		];
+		$records = $this->element->select($select);
+
+
+		foreach ($records as $record)
+		{
+			$insertParams = [
+				'table'   => $duplicate['table'],
+				'columns' => [],
+				'values'  => []
+			];
+			foreach ($record as $propertyKey => $property) {
+				if ($property['fieldName'] === 'em_primary')
+					continue;
+				$insertParams['columns'][] = $propertyKey;
+				$insertParams['values'][]  = $property['value'];
+			}
+
+			$resultDuplicate = $this->eldb->insert($insertParams);
+
+			if ($resultDuplicate === false)
+				return $this->jsonResult(['success' => false, 'message' => 'some error']);
+		}
+
+		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);
+	}
 	/**
 	 * insert method SQL
 	 * @return json
