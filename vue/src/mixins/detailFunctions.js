@@ -11,20 +11,17 @@ export default
 		async createElement(data)
 		{
 			let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-			let setColumns  = [];
-			let setValues  = [];
+			let setValues  = {};
 			for(let fieldCode in data.selectedElement)
 			{
 				if(primaryKeyCode == fieldCode) continue;
-				setColumns.push(fieldCode);
-				setValues.push(data.selectedElement[fieldCode].value);
+				setValues[fieldCode] = data.selectedElement[fieldCode].value;
 			}
 
 			let insertData = qs.stringify({
 				insert:
 				{
 					table   :data.tableCode,
-					columns :setColumns,
 					values  :setValues
 				}
 			});

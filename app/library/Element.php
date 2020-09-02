@@ -262,18 +262,14 @@ class Element
 	 */
 	public function insert($insertParams)
 	{
-		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['columns']) || empty($insertParams['values']))
-			return false;
-
-		if(count($insertParams['columns']) != count($insertParams['values']))
+		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values']))
 			return false;
 
 		$tableColumns = $this->getColumns($insertParams['table']);
 
 		$valuesSet = [];
-		foreach ($insertParams['columns'] as $fieldIndex => $fieldCode)
+		foreach ($insertParams['values'] as $fieldCode => $fieldValue)
 		{
-			$fieldValue = $insertParams['values'][$fieldIndex];
 			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
 			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
@@ -285,7 +281,8 @@ class Element
 			$fieldSaveValue = $field->saveValue();
 			$valuesSet[]    = $fieldSaveValue;
 		}
-		$insertParams['values'] = $valuesSet;
+		$insertParams['columns'] = array_keys($insertParams['values']);
+		$insertParams['values']  = $valuesSet;
 
 		return $this->eldb->insert($insertParams);
 	}

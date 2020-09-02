@@ -98,7 +98,7 @@
 						]
 					};
 					await this.$store.dispatch('selectElement',requestParams);
-					this.selectedElement = this.$store.state.tables.selectedElement;
+					this.$set(this, 'selectedElement', this.$store.state.tables.selectedElement);
 				}
 				else
 				{

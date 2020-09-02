@@ -18,6 +18,7 @@
 			</div>
 		</div>
 		<Datepicker
+			:monday-first="mondayFirst"
 			placeholder="$('empty')"
 			v-model="localDate"
 			:inline="true"
@@ -64,6 +65,13 @@
 			localDate()
 			{
 				this.inputDate = this.formatedDate();
+			}
+		},
+		computed:
+		{
+			mondayFirst()
+			{
+				return $store.state.languages.currentLang.short === 'ru';
 			}
 		},
 		methods:
