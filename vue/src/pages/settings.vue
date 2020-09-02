@@ -101,7 +101,7 @@
 	}
 </script>
 <style lang="scss">
-	.settings-wrapper {padding: 23px 0 23px 21px; }
+	.settings-wrapper {padding: 23px 0 23px 21px; height: 100%;}
 	.settings-head
 	{
 		display: flex;
