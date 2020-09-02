@@ -22,7 +22,45 @@ class ElController extends ControllerBase
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDelete]);
 	}
+	/**
+	 * принимает стандартный селект элемента для запроса с id записи
+	 * находит эту запись, затем insert ее значения в таблицу
+	 * @param  array $duplicateSelect
+	 * @return json
+	 */
+	public function duplicateAction()
+	{
+		$duplicateSelect = $this->request->getPost('duplicate');
 
+		if (empty($duplicateSelect))
+			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
+
+		$record = $this->element->select($duplicateSelect);
+
+		if (empty($record))
+			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
+
+		$record = $record[0];
+
+		$insertParams = [
+			'table'   => $duplicateSelect['from'],
+			'columns' => [],
+			'values'  => []
+		];
+		foreach ($record as $propertyKey => $property)
+		{
+			if ($property['fieldName'] === 'em_primary')
+				continue;
+			$insertParams['columns'][] = $propertyKey;
+			$insertParams['values'][]  = $property['value'];
+		}
+		$resultDuplicate = $this->eldb->insert($insertParams);
+
+		if ($resultDuplicate === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);
+	}
 	/**
 	 * insert method SQL
 	 * @return json

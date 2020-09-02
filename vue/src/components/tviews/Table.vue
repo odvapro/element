@@ -58,6 +58,7 @@
 					<div class="table__many-modal" v-if="openedEditRowIndex === rowIndex" v-click-outside="closeEditModal">
 						<ul>
 							<li @click="openDetail(row,rowIndex)">{{$t('edit')}}</li>
+							<li @click="duplicate(row)">{{$t('duplicate')}}</li>
 							<li @click="remove(row,rowIndex)" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
@@ -423,7 +424,27 @@
 				this.openedEditRowIndex	= false;
 				this.checkAll = false;
 			},
+			async duplicate(row)
+			{
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
 
+				let result = await this.$store.dispatch('duplicateRecord', {
+					from: this.table.code,
+					where:
+					{
+						operation:'and',
+						fields:[
+							{
+								code      : `${primaryKeyCode} = ${row[primaryKeyCode].value}`,
+								operation : 'IS',
+								value     : row[primaryKeyCode].value
+							}
+						]
+					}
+				});
+				this.openedEditRowIndex = false;
+				this.getTableContent();
+			},
 			/**
 			 * Удаляет запись
 			 */
@@ -636,7 +657,7 @@
 		top:40px;
 		border:1px solid #E2E4E8;
 		border-radius: 2px;
-		width:80px;
+		min-width:80px;
 		text-align:left;
 		padding:10px;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
@@ -649,6 +670,7 @@
 			color: rgba(25, 28, 33, 0.7);
 			margin-bottom: 7px;
 			cursor: pointer;
+			white-space: nowrap;
 			&:last-child{margin-bottom: 0px;}
 			&.table__many-delete
 			{

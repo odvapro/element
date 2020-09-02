@@ -159,6 +159,7 @@ export default
 	remove: 'Удалить',
 	delete: 'Удалить',
 	edit: 'Редактировать',
+	duplicate: 'Дублировать',
 	upload: 'Загрузить',
 	upload_by_link: 'Загрузить по ссылке',
 	select_an_option: 'Выберите вариант',
