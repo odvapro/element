@@ -29,6 +29,8 @@ Temporary Items
 /vue/public/upload/
 !/vue/public/upload/.gitkeep
 /vue/public/tmp/
+/public/tmp/
+/public/upload/
 !/vue/public/tmp/.gitkeep
 !/public/tmp/.gitkeep
 !/public/upload/.gitkeep
@@ -46,6 +48,7 @@ googleSecrets.json
 vendor
 codeception.yml
 deploy.php
+
 
 /docs/
 composer.lock
