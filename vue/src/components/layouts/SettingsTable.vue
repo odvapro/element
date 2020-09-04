@@ -1,9 +1,9 @@
 <template>
 	<div class="settings-table-wrapper">
-		<div class="settings-empty-tables" v-if="tables.length < 1">
+		<div class="settings-empty-tables" v-if="!tables.length">
 			{{$t('settingsTable.no_tables')}}
 		</div>
-		<div class="settings-table-head" v-if="tables.length > 0">
+		<div class="settings-table-head" v-if="tables.length">
 			<div class="settings-table-row-data">
 				<div class="settings-table-item">
 					<div class="settings-table-item-title">{{$t('code')}}</div>
@@ -49,8 +49,13 @@
 						</div>
 					</div>
 					<div class="settings-table-item centered">
-						<button @click="showTableGroups(table)" class="settings-table__open-settings">groups</button>
-						<TableGroups v-click-outside="hideTableGroups" v-if="table.code == showTableGroupsCode"/>
+						<button @click="showTableGroups(table)" class="settings-table__open-settings">{{$t('groups')}}</button>
+						<TableGroups
+							v-click-outside="hideTableGroups"
+							v-if="table.code == showTableGroupsCode"
+							:access="table.access"
+							:table="table.code"
+						/>
 					</div>
 				</div>
 				<div class="settings-table-row-setting" id="settings-table-row" :style="table.showSettings">
@@ -336,7 +341,7 @@
 				if(result.data.success)
 					this.fieldTypes = result.data.types;
 
-				this.tables = this.$store.state.tables.tables;
+				Vue.set(this, 'tables', this.$store.state.tables.tables);
 
 				for (let table of this.tables)
 				{

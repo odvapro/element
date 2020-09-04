@@ -12,6 +12,9 @@ class ElController extends ControllerBase
 	{
 		$delete = $this->request->getPost('delete');
 
+		if (empty($this->element->checkAccess($delete['table'], EmGroups::ACCESS_WRITE)))
+			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
+
 		if (empty($delete))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
@@ -30,6 +33,9 @@ class ElController extends ControllerBase
 	public function insertAction()
 	{
 		$insert = $this->request->getPost('insert');
+
+		if (empty($this->element->checkAccess($insert['table'], EmGroups::ACCESS_WRITE)))
+			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
 
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
@@ -60,6 +66,9 @@ class ElController extends ControllerBase
 	{
 		$update = $this->request->getPost('update');
 
+		if (empty($this->element->checkAccess($update['table'], EmGroups::ACCESS_WRITE)))
+			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
+
 		if (empty($update))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
@@ -84,6 +93,10 @@ class ElController extends ControllerBase
 	public function selectAction()
 	{
 		$select = $this->request->get('select');
+
+		if (empty($this->element->checkAccess($select['from'], EmGroups::ACCESS_READ)))
+			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
+
 		$page   = (!empty($select['page'])) ? $select['page'] : 1;
 		$limit  = empty($this->request->get('limit')) ? 100 : intval($this->request->get('limit'));
 
@@ -125,6 +138,7 @@ class ElController extends ControllerBase
 		{
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
+			$table['access']  = $this->element->getAccessTable($table['code']);
 
 			if (!count($emViewsTable))
 			{

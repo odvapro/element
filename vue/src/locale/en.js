@@ -196,7 +196,9 @@ export default
 	enter_something: 'Enter ',
 	key: 'Key',
 	createGroup: 'Create Group',
-	members: 'members',
+	addGroup: 'Add a Group',
+	disableAccess: 'Disable Access',
+	members: 'members: {count}',
 	addMember: 'Add member',
 	months:
 	[

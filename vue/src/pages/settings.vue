@@ -30,12 +30,12 @@
 				<div class="settings-tab-content" v-if="activeTab == $t('users')">
 					<SettingsUser/>
 				</div>
-			</div>
-			<div class="settings-tab-content" v-if="activeTab == $t('languages')">
-				<SettingsLang/>
-			</div>
-			<div class="settings-tab-content" v-if="activeTab == $t('groups')">
-				<SettingsGroups/>
+				<div class="settings-tab-content" v-if="activeTab == $t('languages')">
+					<SettingsLang/>
+				</div>
+				<div class="settings-tab-content" v-if="activeTab == $t('groups')">
+					<SettingsGroups/>
+				</div>
 			</div>
 		</div>
 	</div>

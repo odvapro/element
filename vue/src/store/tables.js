@@ -244,6 +244,14 @@ const table =
 		 */
 		async removeRecord(store, recordPrams)
 		{
+			let result = await store.dispatch('removeTableRow', recordPrams.delete);
+
+			if (!result.data.success)
+			{
+				Vue.prototype.ElMessage.error(result.data.message);
+				return;
+			}
+
 			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
 				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
 
@@ -255,8 +263,6 @@ const table =
 				});
 				this.commit('setTableContent',curTableCont);
 			}
-
-			return store.dispatch('removeTableRow', recordPrams.delete);
 		},
 		/**
 		 * deleteParams:<sql params for deleting>

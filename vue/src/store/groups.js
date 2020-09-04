@@ -6,7 +6,9 @@ const groups =
 {
 	state:
 	{
-		groups: []
+		groups: [],
+		// варианты доступа - чтение, запись,..
+		accessOptions: [],
 	},
 	mutations:
 	{
@@ -19,7 +21,10 @@ const groups =
 		{
 			state.groups.push(group);
 		},
-
+		setAccessOptions(state, accessOptions)
+		{
+			state.accessOptions = accessOptions;
+		},
 		/**
 		 * Removes group from grpups
 		 */
@@ -70,17 +75,14 @@ const groups =
 		 */
 		removeGroupUser(state, params)
 		{
-			const groupIndex = state.groups.reduce((acc,group,groupIndex)=>{
-				if(group.id == params.groupId)
-					return groupIndex;
-			});
-
-			const memberIndex = state.groups[groupIndex].members.reduce((acc,member,memberIndex)=>{
-				if(member.id == params.userId)
-					return memberIndex;
-			});
-
-			state.groups[groupIndex].members.splice(memberIndex,1);
+			for (let group of state.groups)
+				if (group.id === params.groupId)
+					group.members = group.members.filter(member=>
+					{
+						if(member.id !== params.userId)
+							return true;
+						return false;
+					});
 		}
 	},
 	actions:
@@ -99,7 +101,26 @@ const groups =
 
 			store.commit('addGroup', result.data.group);
 		},
+		// запрашивает возможные варианты доступа
+		async getAccessOptions(store)
+		{
+			let result = await axios.get('/groups/getAccessOptions/');
+			if(!result.data.success)
+			{
+				store.commit('setAccessOptions', []);
+				return;
+			}
+			store.commit('setAccessOptions', result.data.options);
+		},
+		async setGroupAccess(store, {groupId, accessStr, tableName})
+		{
+			let result = await axios.post('/groups/setGroupAccess/', qs.stringify({groupId, accessStr, tableName}));
 
+			if (!result.data.success)
+				Vue.prototype.ElMessage.error(result.data.msg);
+			else
+				Vue.prototype.ElMessage(Vue.prototype.$t('elMessages.settings_saved'));
+		},
 		/**
 		 * params = {user (object),groupId (int)}
 		 */

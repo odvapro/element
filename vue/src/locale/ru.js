@@ -196,7 +196,9 @@ export default
 	enter_something: 'Введите ',
 	key: 'Ключ',
 	createGroup: 'Создать группу',
-	members: 'участники',
+	addGroup: 'Добавить группу',
+	disableAccess: 'Отключить доступ',
+	members: 'участники: {count}',
 	addMember: 'Добавить пользователя',
 	months:
 	[

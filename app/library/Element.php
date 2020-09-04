@@ -55,7 +55,36 @@ class Element
 
 		return $emTypes;
 	}
+	public function checkAccess($tableName, $accessValue)
+	{
+		$authMiddleware = new AuthMiddleware($this->di);
+		$userId = $authMiddleware->session->get('auth');
 
+		$groups = EmGroups::getGroupsByUserId($userId);
+
+		foreach ($groups as $group)
+		{
+			if ( !empty($group->checkTableAccess($tableName, $accessValue)) )
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * возвращает массив доступов таблицы [{access,group_id}]
+	 * @param  string $tableName название таблицы
+	 * @return array
+	 */
+	public function getAccessTable($tableName)
+	{
+		$accessData = EmGroupsTables::find([
+			'conditions' => 'table_name = ?0',
+			'bind'       => [$tableName],
+			'columns'    => 'group_id, access, table_name'
+		])->toArray();
+
+		return $accessData;
+	}
 	/**
 	 * Достать колонки таблицы c типами
 	 * @param  string $tableName

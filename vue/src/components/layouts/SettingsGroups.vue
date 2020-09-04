@@ -16,7 +16,7 @@
 							>
 								{{ group.name }}
 							</div>
-							<div class="settings-groups__member-info">{{group.members.length}} {{$t('members')}}</div>
+							<div class="settings-groups__member-info">{{$t('members', {'count': group.members.length})}}</div>
 						</div>
 						<button v-if="group.name != 'Administrators'" class="settings-groups__remove-btn" @click="removeGroup(group)">{{$t('remove')}}</button>
 					</div>
