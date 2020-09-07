@@ -139,7 +139,7 @@ class GroupsController extends ControllerBase
 		$groupId   = $this->request->getPost('groupId');
 		$tableName = $this->request->getPost('tableName');
 
-		if (empty(constant("EmGroups::$accessStr")) || empty($groupId) || empty($tableName))
+		if (empty($accessStr) || empty(constant("EmGroups::$accessStr")) || empty($groupId) || empty($tableName))
 			return $this->jsonResult(['success' => false]);
 
 		$relation = EmGroupsTables::findFirst([

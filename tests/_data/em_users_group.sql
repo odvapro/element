@@ -16,6 +16,7 @@ LOCK TABLES `em_groups_users` WRITE;
 INSERT INTO `em_groups_users` (`id`, `group_id`, `user_id`)
 VALUES
 	(1, 1, 1),
-	(2, 2, 1);
+	(2, 2, 1),
+	(3, 2, 2);
 /*!40000 ALTER TABLE `em_groups_users` ENABLE KEYS */;
 UNLOCK TABLES;

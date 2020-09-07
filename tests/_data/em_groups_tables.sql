@@ -18,6 +18,7 @@ INSERT INTO `em_groups_tables` (`id`, `group_id`, `table_name`, `access`)
 VALUES
 	(1, 1, 'callbacks', 3),
 	(2, 1, 'block_type', 3),
-	(3, 2, 'block_type', 1);
+	(3, 2, 'test_table', 1),
+	(4, 2, 'callbacks', 3);
 /*!40000 ALTER TABLE `em_groups_tables` ENABLE KEYS */;
 UNLOCK TABLES;
