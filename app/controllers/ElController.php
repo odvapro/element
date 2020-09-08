@@ -78,8 +78,6 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
 		}
 
-		$resultUpdate = $this->element->update($update);
-
 		if ($resultUpdate === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
