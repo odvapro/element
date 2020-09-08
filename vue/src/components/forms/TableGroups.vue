@@ -17,7 +17,7 @@
 		</div>
 		<div class="table-groups__buttons">
 			<button class="el-gbtn">{{$t('disableAccess')}}</button>
-			<button class="el-btn">{{$t('addGroup')}}</button>
+			<button @click="$emit('showTableGroupsAdding')" class="el-btn">{{$t('addGroup')}}</button>
 		</div>
 	</div>
 </template>

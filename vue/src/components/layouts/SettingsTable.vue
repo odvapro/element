@@ -52,9 +52,10 @@
 						<button @click="showTableGroups(table)" class="settings-table__open-settings">{{$t('groups')}}</button>
 						<TableGroups
 							v-click-outside="hideTableGroups"
-							v-if="table.code == showTableGroupsCode"
+							v-if="table.code == showTableGroupsCode && !showPopupAddGroup"
 							:access="table.access"
 							:table="table.code"
+							@showTableGroupsAdding="showTableGroupsAdding"
 						/>
 					</div>
 				</div>
@@ -96,16 +97,22 @@
 				@cancel="settingsPopup = false"
 			></component>
 		</Popup>
+		<StoreSelect
+			@selectItem="addGroupToTable"
+			:visible.sync="showPopupAddGroup"
+			:settings="{searchStr:'$store.state.groups.groups'}"
+		></StoreSelect>
 	</div>
 </template>
 <script>
 	import qs from 'qs';
 	import TableWork from '@/mixins/tableWork.js';
 	import TableGroups from '@/components/forms/TableGroups.vue';
+	import StoreSelect from '@/components/popups/StoreSelect.vue'
 	export default
 	{
 		mixins: [TableWork],
-		components:{TableGroups},
+		components:{TableGroups, StoreSelect},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -122,6 +129,7 @@
 				settingsTable:false,
 				settingsColumn:false,
 				showTableGroupsCode:false,
+				showPopupAddGroup:false,
 			}
 		},
 		computed:
@@ -359,7 +367,31 @@
 			hideTableGroups()
 			{
 				this.showTableGroupsCode = false;
-			}
+			},
+			showTableGroupsAdding()
+			{
+				this.showPopupAddGroup = true;
+			},
+			hideTableGroupsAdding()
+			{
+				this.showPopupAddGroup = false;
+			},
+			async addGroupToTable(group)
+			{
+				let table = this.showTableGroupsCode;
+				this.showTableGroupsCode = false;
+
+				await this.$store.dispatch('setGroupAccess', {
+						groupId   : group.id,
+						accessStr : this.$store.state.groups.accessOptions[0].strValue,
+						tableName : table
+					});
+
+				await this.$store.dispatch('getTables');
+				await this.initTables();
+
+				this.showTableGroupsCode = table;
+			},
 		},
 		/**
 		 * Хук при загрузке страницы

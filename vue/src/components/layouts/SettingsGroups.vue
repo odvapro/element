@@ -36,14 +36,18 @@
 				</li>
 			</ul>
 		</div>
-		<SelectUser @selectUser="selectUser" :visible.sync="showPopupAddMember"></SelectUser>
+		<StoreSelect
+			@selectItem="selectUser"
+			:visible.sync="showPopupAddMember"
+			:settings="{searchStr:'$store.state.settings.users'}"
+		></StoreSelect>
 	</div>
 </template>
 <script>
-	import SelectUser from '@/components/popups/SelectUser.vue'
+	import StoreSelect from '@/components/popups/StoreSelect.vue'
 	export default
 	{
-		components:{SelectUser},
+		components:{StoreSelect},
 		data()
 		{
 			return {

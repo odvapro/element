@@ -200,6 +200,7 @@ export default
 	disableAccess: 'Отключить доступ',
 	members: 'участники: {count}',
 	addMember: 'Добавить пользователя',
+	search: 'Поиск...',
 	months:
 	[
 		'Январь',

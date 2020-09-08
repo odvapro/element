@@ -200,6 +200,7 @@ export default
 	disableAccess: 'Disable Access',
 	members: 'members: {count}',
 	addMember: 'Add member',
+	search: 'Search...',
 	months:
 	[
 		'January',

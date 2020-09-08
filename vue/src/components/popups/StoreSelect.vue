@@ -1,9 +1,9 @@
 <template>
-	<Popup class="select-user__add-popup" :visible.sync="isPopupVisible">
-		<input v-model="searchText" class="select-user__add-search" type="text" placeholder="Search for person">
-		<div class="select-user__user-line" v-for="user in users" @click="selectUser(user)">
-			<img :src="user.avatar" alt="">
-			{{ user.name }}
+	<Popup class="select-popup__add" :visible.sync="isPopupVisible">
+		<input v-model="searchText" class="select-popup__add-search" type="text" :placeholder="$t('search')">
+		<div class="select-popup__item-line" v-for="item in items" @click="selectItem(item)">
+			<img :src="item.avatar" alt="" v-if="item.avatar">
+			{{ item.name }}
 		</div>
 	</Popup>
 </template>
@@ -11,7 +11,7 @@
 	import qs from 'qs';
 	export default
 	{
-		props: ['visible'],
+		props: ['visible', 'settings'],
 		data()
 		{
 			return {
@@ -31,37 +31,47 @@
 					this.$emit('update:visible', val);
 				}
 			},
-			users()
+			searched()
 			{
-				let usersCount = 0;
-				return this.$store.state.settings.users.filter(user => {
-					if(usersCount > 10 || typeof user.name == 'undefined') return false;
+				if (this.settings.searchArr)
+					return this.settings.searchArr;
+
+				let searched = this;
+				for (let property of this.settings.searchStr.split('.'))
+					searched = searched[property];
+				return searched;
+			},
+			items()
+			{
+				let itemsCount = 0;
+				return this.searched.filter(item => {
+					if(itemsCount > 10 || typeof item.name == 'undefined') return false;
 
 					const searchText = this.searchText.toLowerCase();
-					const name       = user.name.toLowerCase();
-					const showUser   = name.indexOf(searchText) !== -1;
+					const name       = item.name.toLowerCase();
+					const showItem   = name.indexOf(searchText) !== -1;
 
-					if(!showUser)
+					if(!showItem)
 						return false;
 
-					usersCount++;
+					itemsCount++;
 					return true;
 				});
-			}
+			},
 		},
 		methods:
 		{
-			selectUser(user)
+			selectItem(item)
 			{
-				this.$emit('selectUser',user);
+				this.$emit('selectItem',item);
 				this.$emit('update:visible', false);
 			}
 		}
 	}
 </script>
 <style lang="scss">
-	.select-user__add-popup .popup-close{display: none;}
-	.select-user__add-search
+	.select-popup__add .popup-close{display: none;}
+	.select-popup__add-search
 	{
 		height: 43px;
 		background: rgba(103, 115, 135, 0.1);
@@ -73,7 +83,7 @@
 		margin-bottom: 15px;
 		&::placeholder{color: rgba(103, 115, 135, 0.7);}
 	}
-	.select-user__user-line
+	.select-popup__item-line
 	{
 		display: flex;
 		align-items: center;
