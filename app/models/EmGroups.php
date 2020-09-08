@@ -7,6 +7,11 @@ class EmGroups extends ModelBase
 	const ACCESS_FULL  = self::ACCESS_READ | self::ACCESS_WRITE;
 	const ADMIN_ID     = 1;
 
+	/**
+	 * находит все группы пользователя по его id
+	 * @param  int    $userId
+	 * @return array
+	 */
 	public static function getGroupsByUserId($userId)
 	{
 		$groupRelations = EmGroupsUsers::find([

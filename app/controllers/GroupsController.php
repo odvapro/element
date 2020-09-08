@@ -103,7 +103,7 @@ class GroupsController extends ControllerBase
 	}
 
 	/**
-	 * данные о возможных правах доступа в виде [{title, value},..]
+	 * отдает данные о возможных правах доступа в виде [{title, value},..]
 	 * @return json
 	 */
 	public function getAccessOptionsAction()
@@ -132,7 +132,13 @@ class GroupsController extends ControllerBase
 
 		return $this->jsonResult(['success'=>true, 'options' => $result]);
 	}
-
+	/**
+	 * задает доступ к таблице
+	 * @param  string $accessStr доступ передается строкой-именем константы
+	 * @param  int    $groupId
+	 * @param  string $tableName название таблицы
+	 * @return json
+	 */
 	public function setGroupAccessAction()
 	{
 		$accessStr = $this->request->getPost('accessStr');

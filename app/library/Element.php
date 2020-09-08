@@ -55,6 +55,12 @@ class Element
 
 		return $emTypes;
 	}
+	/**
+	 * проверяет доступ к таблице
+	 * @param  string $tableName   название таблицы
+	 * @param  int    $accessValue константа класса EmGroups
+	 * @return bool
+	 */
 	public function checkAccess($tableName, $accessValue)
 	{
 		$authMiddleware = new AuthMiddleware($this->di);
