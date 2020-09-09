@@ -163,4 +163,27 @@ class GroupsController extends ControllerBase
 
 		return $this->jsonResult(['success' => true]);
 	}
+	/**
+	 * отключает доступ к таблице у всез групп
+	 * @param  string $tableName название таблицы
+	 * @return json
+	 */
+	public function disableGroupsAccessAction()
+	{
+		$tableName = $this->request->getPost('tableName');
+
+		if (empty($tableName))
+			return $this->jsonResult(['success' => false, 'message' => 'empty table name']);
+
+		$groupsTables = EmGroupsTables::find([
+			'conditions' => 'table_name = ?0',
+			'bind'       => [$tableName]
+		]);
+
+		$success = true;
+		foreach ($groupsTables as $groupTable)
+			$groupTable->delete();
+
+		return $this->jsonResult(['success' => true]);
+	}
 }

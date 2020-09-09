@@ -30,6 +30,27 @@ class EmGroups extends ModelBase
 
 		return $groups;
 	}
+	/**
+	 * проверяет, относится ли пользоваетль к группе администраторов
+	 * @param  int $userId
+	 * @return boolean
+	 */
+	public static function isAdmin($userId)
+	{
+		$isAdmin = false;
+		$groupRelations = EmGroupsUsers::find([
+			'conditions' => 'user_id = ?0',
+			'bind'       => [$userId]
+		]);
+		foreach ($groupRelations as $group)
+			if (intval($group->id) === self::ADMIN_ID)
+			{
+				$isAdmin = true;
+				break;
+			}
+
+		return $isAdmin;
+	}
 
 	public function initialize()
 	{

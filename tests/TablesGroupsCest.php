@@ -72,6 +72,17 @@ class TablesGroupsCest
 		$I->seeResponseContainsJson(['success' => true]);
 	}
 
+	public function checkDisableAccess(ApiTester $I)
+	{
+		$this->authorize($I, 'admin', 'adminpass');
+
+		$I->sendPOST('/groups/disableGroupsAccess/');
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/groups/disableGroupsAccess/',['tableName' => 'block_type']);
+		$I->seeResponseContainsJson(['success' => true]);
+	}
+
 	protected function select(ApiTester $I, $tableName)
 	{
 		$I->sendGET('/el/select',

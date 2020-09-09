@@ -56,6 +56,7 @@
 							:access="table.access"
 							:table="table.code"
 							@showTableGroupsAdding="showTableGroupsAdding"
+							@disableTableAccess="disableTableAccess"
 						/>
 					</div>
 				</div>
@@ -122,7 +123,6 @@
 				fieldTypes:[],
 				tables: [],
 				tableStyle: {height: '0px', overflow: 'hidden'},
-
 				settingsPopup:false,
 				settingsFielType:false,
 				currentSettings:false,
@@ -364,18 +364,23 @@
 			{
 				this.showTableGroupsCode = table.code;
 			},
+			/**
+			 * скрывает попап с доступами для таблиц
+			 */
 			hideTableGroups()
 			{
 				this.showTableGroupsCode = false;
 			},
+			/**
+			 * открывает попап с доступами для таблиц
+			 */
 			showTableGroupsAdding()
 			{
 				this.showPopupAddGroup = true;
 			},
-			hideTableGroupsAdding()
-			{
-				this.showPopupAddGroup = false;
-			},
+			/**
+			 * добавляет в доступы таблицы новую строку с группой
+			 */
 			async addGroupToTable(group)
 			{
 				let table = this.showTableGroupsCode;
@@ -391,6 +396,24 @@
 				await this.initTables();
 
 				this.showTableGroupsCode = table;
+			},
+			/**
+			 * отправляет запрос на ограничение доступа к таблице
+			 */
+			async disableTableAccess(tableName)
+			{
+				let result = await this.$axios.post('/groups/disableGroupsAccess/', qs.stringify({tableName}));
+
+				if (!result.data.success)
+				{
+					this.ElMessage.error(result.data.message);
+					return;
+				}
+
+				await this.$store.dispatch('getTables');
+				await this.initTables();
+				this.ElMessage(this.$t('elMessages.settings_saved'));
+				this.showTableGroupsCode = false;
 			},
 		},
 		/**
