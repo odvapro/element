@@ -181,6 +181,8 @@ class ElController extends ControllerBase
 	 */
 	public function setTviewSettingsAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$tviewId = $this->request->getPost('tviewId');
 		$params  = $this->request->getPost('params');
 

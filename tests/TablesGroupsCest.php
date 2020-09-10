@@ -83,6 +83,76 @@ class TablesGroupsCest
 		$I->seeResponseContainsJson(['success' => true]);
 	}
 
+	public function checkAccessUsersAdmin(ApiTester $I)
+	{
+		$this->logOut($I);
+		$this->checkAccessUsers($I, 'admin', 'adminpass', true);
+	}
+
+	public function checkAccessUsersUser(ApiTester $I)
+	{
+		$this->logOut($I);
+		$this->checkAccessUsers($I, 'user1', 'adminpass', false);
+	}
+
+	protected function checkAccessUsers(ApiTester $I, $login, $password, $result)
+	{
+		$this->authorize($I, $login, $password);
+
+		$I->sendPOST('/users/updateUser/', ['id'   => 2,'name' => 'test']);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/users/deleteUser/', ['id'   => 3]);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/users/addUser/', ['name' => 'test','login' => 'test','email' => 'test@test.test','password' => '1111']);
+		$I->seeResponseContainsJson(['success' => $result]);
+	}
+
+	public function checkAccessGroupsAdmin(ApiTester $I)
+	{
+		$this->logOut($I);
+		$this->checkAccessGroups($I, 'admin', 'adminpass', true);
+	}
+
+	public function checkAccessGroupsUser(ApiTester $I)
+	{
+		$this->logOut($I);
+		$this->checkAccessGroups($I, 'user1', 'adminpass', false);
+	}
+
+	protected function checkAccessGroups(ApiTester $I, $login, $password, $result)
+	{
+		$this->authorize($I, $login, $password);
+
+		$I->sendPOST('/groups/get/');
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/add/');
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/addUser/', ['id' => 3,'group' => 2]);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/removeUser/', ['id' => 1,'group' => 2]);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/remove/', ['id' => 3]);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/update/', ['id' => 2,'name' => 'test']);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/getAccessOptions/');
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/setGroupAccess/', ['accessStr' => 'ACCESS_READ', 'groupId' => 2, 'tableName' => 'test_table']);
+		$I->seeResponseContainsJson(['success' => $result]);
+
+		$I->sendPOST('/groups/disableGroupsAccess/', ['tableName' => 'test_table']);
+		$I->seeResponseContainsJson(['success' => $result]);
+	}
+
 	protected function select(ApiTester $I, $tableName)
 	{
 		$I->sendGET('/el/select',

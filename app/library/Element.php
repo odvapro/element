@@ -77,6 +77,17 @@ class Element
 	}
 
 	/**
+	 * проверяет, является ли текущий пользователь администратором
+	 * @return [type] [description]
+	 */
+	public function checkAuthAdmin()
+	{
+		if (!EmGroups::isAdmin(Phalcon\Di::getDefault()->get('session')->get('auth')))
+			return false;
+		return true;
+	}
+
+	/**
 	 * возвращает массив доступов таблицы [{access,group_id}]
 	 * @param  string $tableName название таблицы
 	 * @return array

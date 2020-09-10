@@ -21,19 +21,20 @@
 					@click="setActiveTab(item)"
 					v-for="item in tabs"
 					:class="{active: item.active}"
+					v-if="item.noAdminRights || $store.state.users.authUser.is_admin"
 				>{{item.name}}</div>
 			</div>
 			<div class="settings-tabs-content-wrapper">
-				<div class="settings-tab-content" v-if="activeTab == $t('tables')">
+				<div class="settings-tab-content" v-if="activeTab == $t('tables') && $store.state.users.authUser.is_admin">
 					<SettingsTable/>
 				</div>
-				<div class="settings-tab-content" v-if="activeTab == $t('users')">
+				<div class="settings-tab-content" v-if="activeTab == $t('users') && $store.state.users.authUser.is_admin">
 					<SettingsUser/>
 				</div>
 				<div class="settings-tab-content" v-if="activeTab == $t('languages')">
 					<SettingsLang/>
 				</div>
-				<div class="settings-tab-content" v-if="activeTab == $t('groups')">
+				<div class="settings-tab-content" v-if="activeTab == $t('groups') && $store.state.users.authUser.is_admin">
 					<SettingsGroups/>
 				</div>
 			</div>
@@ -61,7 +62,7 @@
 				tabs:[
 					{ name: this.$t('tables'), active: true },
 					{ name: this.$t('users'), active: false },
-					{ name: this.$t('languages'), active: false },
+					{ name: this.$t('languages'), active: false, noAdminRights: true,  },
 					{ name: this.$t('groups'), active: false }
 				],
 				activeTab: this.$t('tables'),
@@ -106,6 +107,9 @@
 		mounted()
 		{
 			this.$store.commit('showLoader',true);
+			if (!this.$store.state.users.authUser.is_admin)
+				this.setActiveTab(this.tabs[2]);
+
 		}
 	}
 </script>

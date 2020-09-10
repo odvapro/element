@@ -66,7 +66,7 @@
 		},
 		async mounted()
 		{
-			if (!this.$store.isAuthUser)
+			if (!this.$store.getters.isAuthUser)
 				if (this.$cookie.get('user'))
 					this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 
@@ -74,6 +74,8 @@
 				this.setLanguage(this.$store.state.users.authUser.language);
 			else
 				this.setLanguage('en', this.$store.state.users.authUser.id);
+
+			console.log(this.$store.state.users.authUser);
 		}
 	}
 </script>

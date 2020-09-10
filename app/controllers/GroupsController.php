@@ -4,12 +4,16 @@ class GroupsController extends ControllerBase
 {
 	public function getAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$groups = EmGroups::find();
 		return $this->jsonResult(['success' => true, 'groups' => $groups]);
 	}
 
 	public function addAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$group = new EmGroups();
 		$group->name = 'Untiteled';
 		$group->save();
@@ -18,6 +22,8 @@ class GroupsController extends ControllerBase
 
 	public function addUserAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
@@ -45,6 +51,8 @@ class GroupsController extends ControllerBase
 
 	public function removeUserAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
@@ -70,6 +78,8 @@ class GroupsController extends ControllerBase
 
 	public function removeAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$groupId = $this->request->getPost('id');
 		if(empty($groupId))
 			return $this->jsonResult(['success'=>false,'msg'=>'no group id']);
@@ -86,6 +96,8 @@ class GroupsController extends ControllerBase
 
 	public function updateAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$groupId = $this->request->getPost('id');
 		$name    = $this->request->getPost('name');
 		if(empty($groupId) || empty($name))
@@ -108,6 +120,8 @@ class GroupsController extends ControllerBase
 	 */
 	public function getAccessOptionsAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$lang = $this->config->application->userSettings['language'];
 
 		if (empty($lang))
@@ -141,6 +155,8 @@ class GroupsController extends ControllerBase
 	 */
 	public function setGroupAccessAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$accessStr = $this->request->getPost('accessStr');
 		$groupId   = $this->request->getPost('groupId');
 		$tableName = $this->request->getPost('tableName');
@@ -170,6 +186,8 @@ class GroupsController extends ControllerBase
 	 */
 	public function disableGroupsAccessAction()
 	{
+		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
 		$tableName = $this->request->getPost('tableName');
 
 		if (empty($tableName))

@@ -44,7 +44,8 @@ class AuthController extends ControllerBase
 				'id'       => $user->id,
 				'email'    => $user->email,
 				'avatar'   => 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '&s=40',
-				'language' => $user->language
+				'language' => $user->language,
+				'is_admin' => EmGroups::isAdmin($user->id)
 			]
 		]);
 	}
