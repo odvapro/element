@@ -234,7 +234,15 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
-
+		async duplicateRecord(store, recordPrams)
+		{
+			let result = await axios({
+				method : 'post',
+				url    : '/el/duplicate/',
+				data   : qs.stringify({duplicate:recordPrams}),
+			});
+			return result;
+		},
 		/**
 		 * Remove records or one record
 		 * @var reocrdParams {

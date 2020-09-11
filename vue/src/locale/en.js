@@ -159,6 +159,7 @@ export default
 	remove: 'Remove',
 	delete: 'Delete',
 	edit: 'Edit',
+	duplicate: 'Duplicate',
 	upload: 'Upload',
 	upload_by_link: 'Upload ly link',
 	select_an_option: 'Select an Option',

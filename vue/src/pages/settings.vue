@@ -12,10 +12,7 @@
 			</div>
 		</div>
 		<div class="settings-tab-wrapper">
-			<div
-				class="settings-tabs-head"
-				:class="settingsTabsHeadClass"
-			>
+			<div class="settings-tabs-head">
 				<div
 					class="settings-tab-item"
 					@click="setActiveTab(item)"
@@ -37,6 +34,9 @@
 				<div class="settings-tab-content" v-if="activeTab == $t('groups') && $store.state.users.authUser.is_admin">
 					<SettingsGroups/>
 				</div>
+				<div class="settings-tab-content" v-if="activeTab == 'API&Tokens'">
+					<SettingsApi/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -46,10 +46,11 @@
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
 	import SettingsGroups from '@/components/layouts/SettingsGroups.vue';
+	import SettingsApi from '@/components/layouts/SettingsApi.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang, SettingsGroups },
+		components: { SettingsTable, SettingsUser, SettingsLang, SettingsGroups, SettingsApi },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -63,7 +64,8 @@
 					{ name: this.$t('tables'), active: true },
 					{ name: this.$t('users'), active: false },
 					{ name: this.$t('languages'), active: false, noAdminRights: true,  },
-					{ name: this.$t('groups'), active: false }
+					{ name: this.$t('groups'), active: false },
+					{ name: 'API&Tokens', active: false }
 				],
 				activeTab: this.$t('tables'),
 			}
@@ -84,13 +86,6 @@
 			{
 				for (var item of this.tabs)
 					item.active = false;
-			}
-		},
-		computed:
-		{
-			settingsTabsHeadClass()
-			{
-				return 'settings-tabs-head_' + this.$store.getters.lang;
 			}
 		},
 		watch:
@@ -154,18 +149,10 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 365px;
+		width: fit-content;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
-		&_ru
-		{
-			width: 390px
-		}
-		&_en
-		{
-			width: 365px;
-		}
 	}
 	.settings-tab-item
 	{

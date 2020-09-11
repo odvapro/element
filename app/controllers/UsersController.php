@@ -151,7 +151,7 @@ class UsersController extends ControllerBase
 		$user->name      = $name;
 		$user->email     = $email;
 		$user->login     = $login;
-		$user->language  = json_encode($language);
+		$user->language  = $language;
 		$user->password  = md5($password);
 
 		if(!$user->save())
