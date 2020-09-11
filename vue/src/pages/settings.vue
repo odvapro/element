@@ -12,10 +12,7 @@
 			</div>
 		</div>
 		<div class="settings-tab-wrapper">
-			<div
-				class="settings-tabs-head"
-				:class="settingsTabsHeadClass"
-			>
+			<div class="settings-tabs-head">
 				<div
 					class="settings-tab-item"
 					@click="setActiveTab(item)"
@@ -30,9 +27,12 @@
 				<div class="settings-tab-content" v-if="activeTab == $t('users')">
 					<SettingsUser/>
 				</div>
-			</div>
-			<div class="settings-tab-content" v-if="activeTab == $t('languages')">
-				<SettingsLang/>
+				<div class="settings-tab-content" v-if="activeTab == $t('languages')">
+					<SettingsLang/>
+				</div>
+				<div class="settings-tab-content" v-if="activeTab == 'API&Tokens'">
+					<SettingsApi/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -41,10 +41,11 @@
 	import SettingsTable from '@/components/layouts/SettingsTable.vue';
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
+	import SettingsApi from '@/components/layouts/SettingsApi.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang },
+		components: { SettingsTable, SettingsUser, SettingsLang, SettingsApi },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -54,7 +55,12 @@
 		data()
 		{
 			return {
-				tabs: [{ name: this.$t('tables'), active: true }, { name: this.$t('users'), active: false }, { name: this.$t('languages'), active: false } ],
+				tabs: [
+					{ name: this.$t('tables'),    active: true },
+					{ name: this.$t('users'),     active: false },
+					{ name: this.$t('languages'), active: false },
+					{ name: 'API&Tokens',         active: false }
+				],
 				activeTab: this.$t('tables'),
 			}
 		},
@@ -74,13 +80,6 @@
 			{
 				for (var item of this.tabs)
 					item.active = false;
-			}
-		},
-		computed:
-		{
-			settingsTabsHeadClass()
-			{
-				return 'settings-tabs-head_' + this.$store.getters.lang;
 			}
 		},
 		watch:
@@ -141,18 +140,10 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 265px;
+		width: fit-content;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
-		&_ru
-		{
-			width: 294px;
-		}
-		&_en
-		{
-			width: 265px;
-		}
 	}
 	.settings-tab-item
 	{
