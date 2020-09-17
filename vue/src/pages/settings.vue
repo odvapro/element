@@ -34,7 +34,7 @@
 				<div class="settings-tab-content" v-if="activeTab == $t('groups') && $store.state.users.authUser.is_admin">
 					<SettingsGroups/>
 				</div>
-				<div class="settings-tab-content" v-if="activeTab == 'API&Tokens'">
+				<div class="settings-tab-content" v-if="activeTab == 'API&Tokens' && $store.state.users.authUser.is_admin">
 					<SettingsApi/>
 				</div>
 			</div>
@@ -63,7 +63,7 @@
 				tabs:[
 					{ name: this.$t('tables'), active: true },
 					{ name: this.$t('users'), active: false },
-					{ name: this.$t('languages'), active: false, noAdminRights: true,  },
+					{ name: this.$t('languages'), active: false, noAdminRights: true },
 					{ name: this.$t('groups'), active: false },
 					{ name: 'API&Tokens', active: false }
 				],

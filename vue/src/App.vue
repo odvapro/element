@@ -74,8 +74,6 @@
 				this.setLanguage(this.$store.state.users.authUser.language);
 			else
 				this.setLanguage('en', this.$store.state.users.authUser.id);
-
-			console.log(this.$store.state.users.authUser);
 		}
 	}
 </script>

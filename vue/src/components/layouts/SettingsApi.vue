@@ -4,19 +4,27 @@
 			<h2 class="el-api__title el-api-tokens__title">Tokens</h2>
 			<div
 				class="el-api-token"
-				v-for="token in tokens">
+				v-for="(token, tokenInd) in tokens">
 				<div class="el-api-token__info">
 					<div class="el-api-token-value">{{token.value}}</div>
 					<div class="el-api-token-date">Generated {{token.date}}</div>
 				</div>
 				<div class="el-api-token__actions">
-					<div class="el-api-select"
-						>Administrators<span class="el-api-select__arrow"><svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.46257 0.413952C8.35094 0.302324 8.16954 0.302324 8.05792 0.413952L4.49978 3.97907L0.934661 0.413952C0.823033 0.302324 0.641638 0.302324 0.53001 0.413952C0.418382 0.525579 0.418382 0.706975 0.53001 0.818603L4.29047 4.57907C4.34629 4.63488 4.41606 4.66279 4.4928 4.66279C4.56257 4.66279 4.63931 4.63488 4.69513 4.57907L8.45559 0.818603C8.57419 0.706975 8.5742 0.525579 8.46257 0.413952Z" fill="#677387" fill-opacity="0.4"/><path d="M8.02256 0.378596L8.02253 0.378631L4.49974 3.90832L0.970016 0.378596C0.838862 0.247442 0.625809 0.247442 0.494655 0.378596C0.363501 0.50975 0.363501 0.722804 0.494655 0.853958L4.25512 4.61442C4.32048 4.67978 4.40304 4.71279 4.4928 4.71279C4.57494 4.71279 4.66468 4.68022 4.73048 4.61442L8.49043 0.854471C8.62923 0.723252 8.6291 0.50977 8.49792 0.378596C8.36677 0.247442 8.15372 0.247442 8.02256 0.378596Z" stroke="#677387" stroke-opacity="0.4" stroke-width="0.1"/></svg></span>
-					</div>
-					<div class="el-api-token-remove">{{$t('remove')}}</div>
+					<Select
+						v-if="groups.length"
+						:defaultText="groups[0].name"
+						class="select--simple"
+					>
+						<SelectOption
+							v-for="group in groups"
+							@click.native="selectGroup(group)"
+							:key="group.code"
+						>{{ group.name }}</SelectOption>
+					</Select>
+					<div @click="removeToken(token, tokenInd)" class="el-api-token-remove">{{$t('remove')}}</div>
 				</div>
 			</div>
-			<div class="el-api-tokens-add">
+			<div @click="addToken" class="el-api-tokens-add">
 				<span class="el-api-tokens-add__icon"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="0.5" y1="4.5" x2="8.5" y2="4.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/><line x1="4.5" y1="8.5" x2="4.5" y2="0.5" stroke="#C2C7CF" stroke-linecap="round"/></svg></span>
 				Generate Token
 			</div>
@@ -47,14 +55,19 @@
 				</div>
 				<div class="el-api-code">
 					<div class="el-api-code-copy">copy</div>
-					<ul class="el-api-code-content">
+					<!-- <ul class="el-api-code-content">
 						<li
 							class="el-api-code-content__row"
 							v-for="responseStr of doc.response"
 						>
 							{{responseStr}}
 						</li>
-					</ul>
+					</ul> -->
+					<pre class="test bash" >
+						<code class="">
+							{{doc.response}}
+						</code>
+					</pre>
 				</div>
 			</div>
 		</div>
@@ -68,29 +81,32 @@
 		{
 			return {
 				tokens: [
-					{ value: '4935eefddd20e1c2da613b3e64b65651', date: '12 January 2020 12:30', group: 'Administrators' },
-					{ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 'Administrators' },
+					{ value: '4935eefddd20e1c2da613b3e64b65651', date: '12 January 2020 12:30', group: 1 },
+					{ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 1 },
+					{ value: 'test1', date: '12 January 2020 12:30', group: 1 },
+					{ value: '2222', date: '12 January 2020 12:30', group: 1 },
+					{ value: 'test3', date: '12 January 2020 12:30', group: 1 },
 				],
 				docs: [
 					{
 						type:     'Get',
-						code:     ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						// response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						response: `\ncurl https://api.stripe.com/v1/charges \n-d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n# The colon prevents curl from asking for a password.`
 					},
 					{
 						type:     'Insert',
-						code:     ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
+						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
 					},
 					{
 						type:     'Delete',
-						code:     ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
+						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
 					},
 					{
 						type:     'Update',
-						code:     ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges \\','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
+						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
 					},
 				],
 				selectedTable: ''
@@ -104,7 +120,7 @@
 			},
 			groups()
 			{
-
+				return this.$store.state.groups.groups;
 			},
 		},
 		methods:
@@ -112,11 +128,28 @@
 			selectTable(table)
 			{
 				this.selectedTable = table;
+			},
+			selectGroup(group)
+			{
+
+			},
+			removeToken(token, index)
+			{
+				this.tokens.splice(index, 1);
+			},
+			addToken()
+			{
+				this.tokens.push({ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 1 },);
 			}
+
 		},
-		mounted()
+		async mounted()
 		{
+			console.log(this.$hljs.initHighlightingOnLoad());
+			this.$hljs.highlightBlock(document.querySelector('.test'))
 			this.selectTable(this.tables[0]);
+			if (!this.groups.length)
+				await this.$store.dispatch('getGroups');
 		}
 	}
 </script>
