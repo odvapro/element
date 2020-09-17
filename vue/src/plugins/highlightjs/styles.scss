@@ -1,9 +1,16 @@
-.hljs *
+.hljs
 {
-	color: rgba(25, 28, 33, 0.7);
+	white-space: pre-line;
 	font-family: $rMedium;
+	color: rgba(25, 28, 33, 0.7);
+	*
+	{
+		color: rgba(25, 28, 33, 0.7);
+	}
 }
-.hljs-built_in
+.hljs-built_in,
+.hljs-literal,
+.hljs-string
 {
 	color: rgba(208, 18, 70, 0.7);
 }

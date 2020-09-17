@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import hljs from'./hljs.min.js';
+import Vue from "vue";
+import vueHljs from "vue-hljs";
 import './styles.scss';
 
-Vue.prototype.$hljs = hljs;
+Vue.use(vueHljs);

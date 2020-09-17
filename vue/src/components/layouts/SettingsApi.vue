@@ -44,30 +44,28 @@
 			</h2>
 			<div
 				class="el-api-doc"
-				v-for="doc in docs"
+				v-for="(doc, docInd) in docs"
 			>
 				<div class="el-api-doc-header">
 					<div class="el-api-doc__title">{{doc.type}}</div>
 					<div class="el-api-doc-tabs">
-						<div class="el-api-doc-tab active">Code</div>
-						<div class="el-api-doc-tab">Response</div>
+						<div
+							@click="changeDocBlockTab(docInd, 'code')"
+							class="el-api-doc-tab"
+							:class="{'active': doc.tab === 'code'}"
+						>Code</div>
+						<div
+							@click="changeDocBlockTab(docInd, 'response')"
+							class="el-api-doc-tab"
+							:class="{'active': doc.tab === 'response'}"
+						>Response</div>
 					</div>
 				</div>
 				<div class="el-api-code">
-					<div class="el-api-code-copy">copy</div>
-					<!-- <ul class="el-api-code-content">
-						<li
-							class="el-api-code-content__row"
-							v-for="responseStr of doc.response"
-						>
-							{{responseStr}}
-						</li>
-					</ul> -->
-					<pre class="test bash" >
-						<code class="">
-							{{doc.response}}
-						</code>
-					</pre>
+					<div @click="copyText(doc[doc.tab])" class="el-api-code-copy">copy</div>
+					<div v-highlight v-if="doc.tab">
+						<pre><code class="bash">{{doc[doc.tab]}}</code></pre>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -90,23 +88,27 @@
 				docs: [
 					{
 						type:     'Get',
-						// response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
-						response: `\ncurl https://api.stripe.com/v1/charges \n-d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n# The colon prevents curl from asking for a password.`
+						tab: 'response',
+						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
+						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
 					},
 					{
 						type:     'Insert',
-						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						tab: 'response',
+						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
+						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
 					},
 					{
 						type:     'Delete',
-						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						tab: 'response',
+						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
+						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
 					},
 					{
 						type:     'Update',
-						code:     ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.'],
-						response: ['curl https://api.stripe.com/v1/charges','-u sk_test_4eC39HqLyjWDarjtT1zdp7dc:','# The colon prevents curl from asking for a password.']
+						tab: 'response',
+						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
+						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
 					},
 				],
 				selectedTable: ''
@@ -133,6 +135,16 @@
 			{
 
 			},
+			async changeDocBlockTab(docInd, activeTab)
+			{
+				if (!this.docs[docInd])
+					return;
+				this.docs[docInd].tab = '';
+
+				// это нужно, чтобы див перерисовывался и highlight.js заново отработал
+				await setTimeout(()=>{},1);
+				this.docs[docInd].tab = activeTab;
+			},
 			removeToken(token, index)
 			{
 				this.tokens.splice(index, 1);
@@ -140,13 +152,20 @@
 			addToken()
 			{
 				this.tokens.push({ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 1 },);
+			},
+			copyText(str)
+			{
+				const el = document.createElement('textarea');
+				el.value = str;
+				document.body.appendChild(el);
+				el.select();
+				document.execCommand('copy');
+				document.body.removeChild(el);
 			}
 
 		},
 		async mounted()
 		{
-			console.log(this.$hljs.initHighlightingOnLoad());
-			this.$hljs.highlightBlock(document.querySelector('.test'))
 			this.selectTable(this.tables[0]);
 			if (!this.groups.length)
 				await this.$store.dispatch('getGroups');

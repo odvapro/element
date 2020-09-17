@@ -11,6 +11,7 @@
     "qs": "^6.6.0",
     "vue": "^2.5.17",
     "vue-cookie": "^1.1.4",
+    "vue-hljs": "^1.1.2",
     "vue-meta": "^1.5.8",
     "vue-router": "^3.0.1",
     "vuejs-datepicker": "^1.6.2",

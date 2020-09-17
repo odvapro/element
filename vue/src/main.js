@@ -6,7 +6,6 @@ import scssNorm from './assets/normalize.scss'
 import scsssStyle from './assets/style.scss'
 import './plugins/axios.js'
 import './plugins/message.js'
-import './plugins/highlightjs/main.js'
 import Popup from './plugins/popup/index.js'
 import fonts from './assets/fonts.scss'
 import App from './App.vue'
@@ -19,6 +18,7 @@ import Select from './components/forms/Select.vue';
 import SelectOption from './components/forms/SelectOption.vue';
 import DateForm from './components/forms/DateForm.vue';
 import Table from './components/tviews/Table.vue';
+import './plugins/highlightjs/main.js';
 
 Vue.use(VueCookie);
 Vue.use(Meta)
