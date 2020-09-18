@@ -55,53 +55,7 @@ class Element
 
 		return $emTypes;
 	}
-	/**
-	 * проверяет доступ к таблице
-	 * @param  string $tableName   название таблицы
-	 * @param  int    $accessValue константа класса EmGroups
-	 * @return bool
-	 */
-	public function checkAccess($tableName, $accessValue)
-	{
-		$authMiddleware = new AuthMiddleware($this->di);
-		$userId = $authMiddleware->session->get('auth');
 
-		$groups = EmGroups::getGroupsByUserId($userId);
-
-		foreach ($groups as $group)
-		{
-			if ( !empty($group->checkTableAccess($tableName, $accessValue)) )
-				return true;
-		}
-		return false;
-	}
-
-	/**
-	 * проверяет, является ли текущий пользователь администратором
-	 * @return [type] [description]
-	 */
-	public function checkAuthAdmin()
-	{
-		if (!EmGroups::isAdmin(Phalcon\Di::getDefault()->get('session')->get('auth')))
-			return false;
-		return true;
-	}
-
-	/**
-	 * возвращает массив доступов таблицы [{access,group_id}]
-	 * @param  string $tableName название таблицы
-	 * @return array
-	 */
-	public function getAccessTable($tableName)
-	{
-		$accessData = EmGroupsTables::find([
-			'conditions' => 'table_name = ?0',
-			'bind'       => [$tableName],
-			'columns'    => 'group_id, access, table_name'
-		])->toArray();
-
-		return $accessData;
-	}
 	/**
 	 * Достать колонки таблицы c типами
 	 * @param  string $tableName

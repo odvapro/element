@@ -7,51 +7,6 @@ class EmGroups extends ModelBase
 	const ACCESS_FULL  = self::ACCESS_READ | self::ACCESS_WRITE;
 	const ADMIN_ID     = 1;
 
-	/**
-	 * находит все группы пользователя по его id
-	 * @param  int    $userId
-	 * @return array
-	 */
-	public static function getGroupsByUserId($userId)
-	{
-		$groupRelations = EmGroupsUsers::find([
-			'conditions' => 'user_id = ?0',
-			'bind'       => [$userId]
-		]);
-
-		if (empty($groupRelations))
-			return [];
-
-		$groupsIds = array_column($groupRelations->toArray(), 'group_id');
-		$groups = self::find([
-			'conditions' => 'id IN ({groupsIds:array})',
-			'bind'       => ['groupsIds'=>$groupsIds]
-		]);
-
-		return $groups;
-	}
-	/**
-	 * проверяет, относится ли пользоваетль к группе администраторов
-	 * @param  int $userId
-	 * @return boolean
-	 */
-	public static function isAdmin($userId)
-	{
-		$isAdmin = false;
-		$groupRelations = EmGroupsUsers::find([
-			'conditions' => 'user_id = ?0',
-			'bind'       => [$userId]
-		]);
-		foreach ($groupRelations as $group)
-			if (intval($group->id) === self::ADMIN_ID)
-			{
-				$isAdmin = true;
-				break;
-			}
-
-		return $isAdmin;
-	}
-
 	public function initialize()
 	{
 		$this->hasManyToMany('id', 'EmGroupsUsers', 'group_id', 'user_id', 'EmUsers', 'id', [
@@ -61,7 +16,6 @@ class EmGroups extends ModelBase
 			'alias' => 'access'
 		]);
 	}
-
 
 	/**
 	 * проверяет доступ $accessValue (read, write,..) к таблице $tableName

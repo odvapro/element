@@ -12,7 +12,7 @@ class ElController extends ControllerBase
 	{
 		$delete = $this->request->getPost('delete');
 
-		if (empty($this->element->checkAccess($delete['table'], EmGroups::ACCESS_WRITE)))
+		if (empty($this->access->checkTableAccess($delete['table'], EmGroups::ACCESS_WRITE)))
 			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
 
 		if (empty($delete))
@@ -72,7 +72,7 @@ class ElController extends ControllerBase
 	{
 		$insert = $this->request->getPost('insert');
 
-		if (empty($this->element->checkAccess($insert['table'], EmGroups::ACCESS_WRITE)))
+		if (empty($this->access->checkTableAccess($insert['table'], EmGroups::ACCESS_WRITE)))
 			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
 
 		if (empty($insert))
@@ -104,7 +104,7 @@ class ElController extends ControllerBase
 	{
 		$update = $this->request->getPost('update');
 
-		if (empty($this->element->checkAccess($update['table'], EmGroups::ACCESS_WRITE)))
+		if (empty($this->access->checkTableAccess($update['table'], EmGroups::ACCESS_WRITE)))
 			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
 
 		if (empty($update))
@@ -130,7 +130,7 @@ class ElController extends ControllerBase
 	{
 		$select = $this->request->get('select');
 
-		if (empty($this->element->checkAccess($select['from'], EmGroups::ACCESS_READ)))
+		if (empty($this->access->checkTableAccess($select['from'], EmGroups::ACCESS_READ)))
 			return $this->jsonResult(['success' => false, 'message' => 'access denied']);
 
 		$page   = (!empty($select['page'])) ? $select['page'] : 1;
@@ -174,7 +174,7 @@ class ElController extends ControllerBase
 		{
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
-			$table['access']  = $this->element->getAccessTable($table['code']);
+			$table['access']  = $this->access->getAccessTable($table['code']);
 
 			if (!count($emViewsTable))
 			{
@@ -219,7 +219,7 @@ class ElController extends ControllerBase
 	 */
 	public function setTviewSettingsAction()
 	{
-		if (!$this->element->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
 
 		$tviewId = $this->request->getPost('tviewId');
 		$params  = $this->request->getPost('params');

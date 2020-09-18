@@ -163,3 +163,9 @@ $di->set('element', function () use ($di)
 	$element = new Element($di->get('eldb'), $di);
 	return $element;
 });
+
+$di->set('access', function () use ($di)
+{
+	$access = new Access($di);
+	return $access;
+});
