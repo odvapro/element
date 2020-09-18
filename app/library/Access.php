@@ -80,7 +80,7 @@ class Access
 	 * @param  int    $userId
 	 * @return array
 	 */
-	public static function getGroupsByUserId($userId)
+	public function getGroupsByUserId($userId)
 	{
 		$groupRelations = EmGroupsUsers::find([
 			'conditions' => 'user_id = ?0',
@@ -97,5 +97,14 @@ class Access
 		]);
 
 		return $groups;
+	}
+	/**
+	 * генерация токена
+	 * @return string
+	 */
+	public function generateAccessToken()
+	{
+		$token = md5("elementodva" . rand(0, 9999999999) . "accesstoken");
+		return $token;
 	}
 }
