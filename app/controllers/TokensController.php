@@ -23,6 +23,8 @@ class TokensController extends ControllerBase
 		$token = new EmTokens();
 		$token->value    = $tokenStr;
 		$token->group_id = $group->id;
+		$token->date     = date("Y-m-d H:i");
+
 		$token->save();
 		$token->refresh();
 
@@ -50,14 +52,44 @@ class TokensController extends ControllerBase
 	}
 
 	/**
+	 * изменение токена по его id
+	 * @return json
+	 */
+	public function changeTokenAction()
+	{
+		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+
+		$tokenId = $this->request->getPost('token_id');
+		$groupId = $this->request->getPost('group_id');
+
+		if (empty($tokenId) || empty($groupId))
+			return $this->jsonResult(['success' => false, 'msg' => 'empty parameter']);
+
+		$token = EmTokens::findFirst($tokenId);
+		if (empty($token))
+			return $this->jsonResult(['success' => false, 'msg' => 'no such token']);
+
+		$group = EmGroups::findFirst($groupId);
+		if (empty($group))
+			return $this->jsonResult(['success' => false, 'msg' => 'no such group']);
+
+		$token->group_id = $group->id;
+		$saveResult = $token->save();
+		return $this->jsonResult(['success' => $saveResult, 'token' => $token->toArray()]);
+	}
+
+	/**
 	 * Возвращает все токены
 	 * @return json
 	 */
 	public function getTokensAction()
 	{
 		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
+		$tokens = [];
 
-		$tokens = EmTokens::find()->toArray();
+		foreach (EmTokens::find() as $token)
+			$tokens[] = $token->toArray();
+
 		return $this->jsonResult(['success' => !empty($tokens), 'tokens' => $tokens]);
 	}
 }

@@ -11,20 +11,21 @@
 				</div>
 				<div class="el-api-token__actions">
 					<Select
-						v-if="groups.length"
-						:defaultText="groups[0].name"
+						v-if="groups && groups.length"
+						:defaultText="token.group_name"
 						class="select--simple"
 					>
 						<SelectOption
 							v-for="group in groups"
-							@click.native="selectGroup(group)"
+							@click.native="changeTokenGroup(token.id, group.id)"
 							:key="group.code"
-						>{{ group.name }}</SelectOption>
+						>{{ group.name }}
+					</SelectOption>
 					</Select>
-					<div @click="removeToken(token, tokenInd)" class="el-api-token-remove">{{$t('remove')}}</div>
+					<div @click="removeToken(token.id)" class="el-api-token-remove">{{$t('remove')}}</div>
 				</div>
 			</div>
-			<div @click="addToken" class="el-api-tokens-add">
+			<div @click="createToken" class="el-api-tokens-add">
 				<span class="el-api-tokens-add__icon"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="0.5" y1="4.5" x2="8.5" y2="4.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/><line x1="4.5" y1="8.5" x2="4.5" y2="0.5" stroke="#C2C7CF" stroke-linecap="round"/></svg></span>
 				Generate Token
 			</div>
@@ -78,13 +79,6 @@
 		data()
 		{
 			return {
-				tokens: [
-					{ value: '4935eefddd20e1c2da613b3e64b65651', date: '12 January 2020 12:30', group: 1 },
-					{ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 1 },
-					{ value: 'test1', date: '12 January 2020 12:30', group: 1 },
-					{ value: '2222', date: '12 January 2020 12:30', group: 1 },
-					{ value: 'test3', date: '12 January 2020 12:30', group: 1 },
-				],
 				docs: [
 					{
 						type:     'Get',
@@ -124,6 +118,10 @@
 			{
 				return this.$store.state.groups.groups;
 			},
+			tokens()
+			{
+				return this.$store.state.groups.tokens;
+			},
 		},
 		methods:
 		{
@@ -131,10 +129,21 @@
 			{
 				this.selectedTable = table;
 			},
-			selectGroup(group)
+			async changeTokenGroup(tokenId, groupId)
 			{
-
+				await this.$store.dispatch('changeToken', {tokenId, groupId});
 			},
+			async removeToken(tokenId)
+			{
+				await this.$store.dispatch('removeToken', {tokenId});
+			},
+			async createToken()
+			{
+				await this.$store.dispatch('createToken', {groupId: this.groups[0].id});
+			},
+			/**
+			 * переключить таб на блоке с кодом
+			 */
 			async changeDocBlockTab(docInd, activeTab)
 			{
 				if (!this.docs[docInd])
@@ -145,22 +154,14 @@
 				await setTimeout(()=>{},1);
 				this.docs[docInd].tab = activeTab;
 			},
-			removeToken(token, index)
-			{
-				this.tokens.splice(index, 1);
-			},
-			addToken()
-			{
-				this.tokens.push({ value: 'b7580864176a7061daab7cd82ed2aee7', date: '12 January 2020 12:30', group: 1 },);
-			},
 			copyText(str)
 			{
-				const el = document.createElement('textarea');
-				el.value = str;
-				document.body.appendChild(el);
-				el.select();
+				const input = document.createElement('input');
+				input.value = str;
+				document.body.appendChild(input);
+				input.select();
 				document.execCommand('copy');
-				document.body.removeChild(el);
+				document.body.removeChild(input);
 			}
 
 		},
@@ -169,6 +170,9 @@
 			this.selectTable(this.tables[0]);
 			if (!this.groups.length)
 				await this.$store.dispatch('getGroups');
+
+			if (!this.tokens.length)
+				await this.$store.dispatch('getTokens');
 		}
 	}
 </script>

@@ -9,6 +9,7 @@ const groups =
 		groups: [],
 		// варианты доступа - чтение, запись,..
 		accessOptions: [],
+		tokens: [],
 	},
 	mutations:
 	{
@@ -16,7 +17,6 @@ const groups =
 		{
 			state.groups = groups;
 		},
-
 		addGroup(state, group)
 		{
 			state.groups.push(group);
@@ -83,7 +83,31 @@ const groups =
 							return true;
 						return false;
 					});
-		}
+		},
+		setTokens(state, tokens)
+		{
+			state.tokens = tokens;
+		},
+		addToken(state, token)
+		{
+			state.tokens.push(token);
+		},
+		removeToken(state, tokenId)
+		{
+			let tokenInd = state.tokens.findIndex(token=>token.id === tokenId);
+			if (!~tokenInd)
+				return;
+
+			state.tokens.splice(tokenInd, 1);
+		},
+		changeToken(state, token)
+		{
+			let tokenInd = state.tokens.findIndex(stateToken=>stateToken.id === token.id);
+			if (!~tokenInd)
+				return;
+
+			state.tokens[tokenInd] = token;
+		},
 	},
 	actions:
 	{
@@ -181,7 +205,55 @@ const groups =
 				return false;
 
 			store.commit('removeGroup', groupId);
-		}
+		},
+
+		async getTokens(store)
+		{
+			let result = await axios.get('/tokens/getTokens/');
+
+			if (result.data.success)
+				store.commit('setTokens', result.data.tokens);
+		},
+
+		async createToken(store, {groupId})
+		{
+			let result = await axios.post('/tokens/createToken/', qs.stringify({group_id: groupId}));
+			if (!result.data.success)
+			{
+				Vue.prototype.ElMessage.error(result.data.msg);
+				return false;
+			}
+
+			store.commit('addToken', result.data.token);
+			return true;
+		},
+
+		async removeToken(store, {tokenId})
+		{
+			let result = await axios.post('/tokens/removeToken/', qs.stringify({token_id: tokenId}));
+
+			if (!result.data.success)
+			{
+				Vue.prototype.ElMessage.error(result.data.msg);
+				return false;
+			}
+
+			store.commit('removeToken', tokenId);
+			return true;
+		},
+		async changeToken(store, {tokenId, groupId})
+		{
+			let result = await axios.post('/tokens/changeToken/', qs.stringify({token_id: tokenId, group_id: groupId}));
+
+			if (!result.data.success)
+			{
+				Vue.prototype.ElMessage.error(result.data.msg);
+				return false;
+			}
+
+			store.commit('changeToken', result.data.token);
+			return true;
+		},
 	}
 }
 export default groups;
