@@ -10,6 +10,7 @@ const groups =
 		// варианты доступа - чтение, запись,..
 		accessOptions: [],
 		tokens: [],
+		apiDocs: [],
 	},
 	mutations:
 	{
@@ -107,6 +108,10 @@ const groups =
 				return;
 
 			state.tokens[tokenInd] = token;
+		},
+		setApiDocs(state, apiDocs)
+		{
+			state.apiDocs = apiDocs;
 		},
 	},
 	actions:
@@ -252,6 +257,18 @@ const groups =
 			}
 
 			store.commit('changeToken', result.data.token);
+			return true;
+		},
+		async getApiDocs(store, {table_name})
+		{
+			let result = await axios.post('/tokens/getApiDocs/', qs.stringify({table_name}));
+			if (!result.data.success)
+			{
+				Vue.prototype.ElMessage.error(result.data.msg);
+				return false;
+			}
+
+			store.commit('setApiDocs', result.data.docs);
 			return true;
 		},
 	}

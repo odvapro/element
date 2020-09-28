@@ -38,25 +38,25 @@
 				>
 					<SelectOption
 						v-for="table in tables"
-						@click.native="selectTable(table)"
+						@click.native="selectTableForApi(table)"
 						:key="table.code"
 					>{{ table.code }}</SelectOption>
 				</Select>
 			</h2>
 			<div
 				class="el-api-doc"
-				v-for="(doc, docInd) in docs"
+				v-for="(doc, docType) in docs"
 			>
 				<div class="el-api-doc-header">
-					<div class="el-api-doc__title">{{doc.type}}</div>
+					<div class="el-api-doc__title">{{docType}}</div>
 					<div class="el-api-doc-tabs">
 						<div
-							@click="changeDocBlockTab(docInd, 'code')"
+							@click="changeDocBlockTab(docType, 'code')"
 							class="el-api-doc-tab"
 							:class="{'active': doc.tab === 'code'}"
 						>Code</div>
 						<div
-							@click="changeDocBlockTab(docInd, 'response')"
+							@click="changeDocBlockTab(docType, 'response')"
 							class="el-api-doc-tab"
 							:class="{'active': doc.tab === 'response'}"
 						>Response</div>
@@ -64,7 +64,7 @@
 				</div>
 				<div class="el-api-code">
 					<div @click="copyText(doc[doc.tab])" class="el-api-code-copy">copy</div>
-					<div v-highlight v-if="doc.tab">
+					<div v-highlight v-if="doc.tab && doc[doc.tab]">
 						<pre><code class="bash">{{doc[doc.tab]}}</code></pre>
 					</div>
 				</div>
@@ -79,33 +79,13 @@
 		data()
 		{
 			return {
-				docs: [
-					{
-						type:     'Get',
-						tab: 'response',
-						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
-						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
-					},
-					{
-						type:     'Insert',
-						tab: 'response',
-						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
-						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
-					},
-					{
-						type:     'Delete',
-						tab: 'response',
-						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
-						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
-					},
-					{
-						type:     'Update',
-						tab: 'response',
-						code: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n # The colon prevents curl from asking for a password.`,
-						response: `curl https://api.stripe.com/v1/charges\n  -d sk_test_4eC39HqLyjWDarjtT1zdp7dc:\n`,
-					},
-				],
-				selectedTable: ''
+				docs: {
+					get   :{tab: 'code'},
+					insert:{tab: 'code'},
+					delete:{tab: 'code'},
+					update:{tab: 'code'},
+				},
+				selectedTable: {},
 			}
 		},
 		computed:
@@ -125,18 +105,23 @@
 		},
 		methods:
 		{
-			selectTable(table)
-			{
-				this.selectedTable = table;
-			},
+			/**
+			 * сменить группу с токена
+			 */
 			async changeTokenGroup(tokenId, groupId)
 			{
 				await this.$store.dispatch('changeToken', {tokenId, groupId});
 			},
+			/**
+			 * запрос на удаление токена
+			 */
 			async removeToken(tokenId)
 			{
 				await this.$store.dispatch('removeToken', {tokenId});
 			},
+			/**
+			 * запрос на создание нового токена для групп
+			 */
 			async createToken()
 			{
 				await this.$store.dispatch('createToken', {groupId: this.groups[0].id});
@@ -144,15 +129,29 @@
 			/**
 			 * переключить таб на блоке с кодом
 			 */
-			async changeDocBlockTab(docInd, activeTab)
+			async changeDocBlockTab(docType, activeTab)
 			{
-				if (!this.docs[docInd])
+				if (!this.docs[docType])
 					return;
-				this.docs[docInd].tab = '';
+				this.docs[docType].tab = '';
 
 				// это нужно, чтобы див перерисовывался и highlight.js заново отработал
 				await setTimeout(()=>{},1);
-				this.docs[docInd].tab = activeTab;
+				this.docs[docType].tab = activeTab;
+			},
+			async selectTableForApi(table)
+			{
+				this.selectedTable = table;
+				await this.setApiDocs();
+			},
+			async setApiDocs()
+			{
+				await this.$store.dispatch('getApiDocs', {table_name: this.selectedTable.code});
+				for ( let [docType, doc] of Object.entries(this.$store.state.groups.apiDocs) )
+				{
+					this.docs[docType] = { ...this.docs[docType], ...doc };
+					this.changeDocBlockTab(docType, this.docs[docType].tab);
+				}
 			},
 			copyText(str)
 			{
@@ -162,12 +161,11 @@
 				input.select();
 				document.execCommand('copy');
 				document.body.removeChild(input);
-			}
-
+			},
 		},
 		async mounted()
 		{
-			this.selectTable(this.tables[0]);
+			this.selectTableForApi(this.tables[0]);
 			if (!this.groups.length)
 				await this.$store.dispatch('getGroups');
 
