@@ -4,6 +4,9 @@ use Phalcon\Di;
 class Access
 {
 	protected $di;
+	const READ  = 1;
+	const WRITE = 2;
+	const FULL  = self::READ | self::WRITE;
 	const ADMIN_ID = 1;
 
 	public function __construct($di)
@@ -12,7 +15,7 @@ class Access
 	}
 
 	/**
-	 * проверяет доступ к таблице
+	 * проверяет доступ текущего пользователя к таблице
 	 * @param  string $tableName   название таблицы
 	 * @param  int    $accessValue константа класса EmGroups
 	 * @return bool
@@ -25,21 +28,10 @@ class Access
 
 		foreach ($groups as $group)
 		{
-			if ( !empty($group->checkTableAccess($tableName, $accessValue)) )
+			if ( !empty($group->checkAccessToTable($tableName, $accessValue)) )
 				return true;
 		}
 		return false;
-	}
-
-	/**
-	 * проверяет, является ли текущий пользователь администратором
-	 * @return [type] [description]
-	 */
-	public function checkAuthAdmin()
-	{
-		if (!$this->isAdmin(Di::getDefault()->get('session')->get('auth')))
-			return false;
-		return true;
 	}
 
 	/**
@@ -58,6 +50,11 @@ class Access
 		return $accessData;
 	}
 
+	/**
+	 * проверка админа по id
+	 * @param  int  $userId
+	 * @return boolean
+	 */
 	public function isAdmin($userId)
 	{
 		$isAdmin = false;

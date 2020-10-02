@@ -9,14 +9,6 @@ class UsersController extends ControllerBase
 	 */
 	public function getUsersAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
-		if (!$this->access->isAdmin(Phalcon\Di::getDefault()->get('session')->get('auth')))
-			return $this->jsonResult([
-				'success' => false,
-				'message' => 'access denied'
-			]);
-
 		$users = EmUsers::find();
 
 		return $this->jsonResult(['success' => true, 'users' => $users]);
@@ -44,8 +36,6 @@ class UsersController extends ControllerBase
 	 */
 	public function updateUserAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$id         = $this->request->getPost('id');
 		$login      = $this->request->getPost('login');
 		$name       = $this->request->getPost('name');
@@ -103,8 +93,6 @@ class UsersController extends ControllerBase
 	 */
 	public function deleteUserAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$id = $this->request->getPost('id');
 
 		if (empty($id))
@@ -127,8 +115,6 @@ class UsersController extends ControllerBase
 	 */
 	public function addUserAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$name       = $this->request->getPost('name');
 		$login      = $this->request->getPost('login');
 		$email      = $this->request->getPost('email');

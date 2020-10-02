@@ -8,7 +8,6 @@ class TokensController extends ControllerBase
 	 */
 	public function createTokenAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
 
 		$groupId = $this->request->getPost('group_id');
 		if (empty($groupId))
@@ -37,7 +36,6 @@ class TokensController extends ControllerBase
 	 */
 	public function removeTokenAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
 
 		$tokenId = $this->request->getPost('token_id');
 		if (empty($tokenId))
@@ -57,7 +55,6 @@ class TokensController extends ControllerBase
 	 */
 	public function changeTokenAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
 
 		$tokenId = $this->request->getPost('token_id');
 		$groupId = $this->request->getPost('group_id');
@@ -84,7 +81,6 @@ class TokensController extends ControllerBase
 	 */
 	public function getTokensAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
 		$tokens = [];
 
 		foreach (EmTokens::find() as $token)

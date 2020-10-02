@@ -23,68 +23,163 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		{
 			$acl = new Phalcon\Acl\Adapter\Memory();
 			$acl->setDefaultAction(Phalcon\Acl::DENY);
+			$acl->setNoArgumentsDefaultAction(Phalcon\Acl::DENY);
 
-			//Register roles
-			$roles = [
-				'users'  => new Phalcon\Acl\Role('Users',"Super-User role"),
-				'guests' => new Phalcon\Acl\Role('Guests')
-			];
-			foreach($roles as $role)
-				$acl->addRole($role);
-
-			//Private area resources
-			$privateResources = [
-				'el'         => ['*'],
-				'users'      => ['*'],
-				'settings'   => ['*'],
-				'field'      => ['*'],
-				'ext'        => ['*'],
-				'tview'      => ['*'],
-				'groups'     => ['*'],
-				'tokens'     => ['*'],
-			];
-
-			foreach($privateResources as $resource => $actions)
-				$acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
-
-			//Public area resources
-			$publicResources = [
-				'index' => ['*'],
-				'auth'  => ['*']
-			];
-
-			foreach($publicResources as $resource => $actions)
-				$acl->addResource(new Phalcon\Acl\Resource($resource), $actions);
-
-			//Grant access to public areas to both users and guests
-			foreach($roles as $role)
-			{
-				foreach($publicResources as $resource => $actions)
-					$acl->allow($role->getName(), $resource, '*');
-			}
-
-			//Grant acess to private area to role Users
-			foreach($privateResources as $resource => $actions)
-			{
-				foreach($actions as $action)
-					$acl->allow('Users', $resource, $action);
-			}
+			$acl = $this->registerRolesAndResources($acl);
+			$acl = $this->setResourcesAccess($acl);
 
 			$this->_acl = $acl;
 		}
 		return $this->_acl;
 	}
 
+	public function setResourcesAccess($acl)
+	{
+		$roles = $this->getRoles();
+		$resources = $this->getResources();
+
+		//Grant access to public areas to both users and guests
+		foreach($roles as $role)
+			foreach($resources['public'] as $resource)
+				$acl->allow($role->getName(), $resource, '*');
+
+		//Grant acess to private area to role Users
+		foreach($resources['private'] as $resource => $actions)
+			foreach($actions as $actionName => $action)
+			{
+				$acl->allow('Admins', $resource, $actionName);
+
+				if ( isset($action['adminOnly']) )
+					continue;
+
+				if ( isset($action['allowFunction']) )
+					$acl->allow('Users', $resource, $actionName, $action['allowFunction']);
+				else
+					$acl->allow('Users', $resource, $actionName);
+			}
+
+		return $acl;
+	}
+
+	public function registerRolesAndResources($acl)
+	{
+		//Register roles
+		$roles = $this->getRoles();
+		foreach($roles as $role)
+			$acl->addRole($role);
+
+		$resources = $this->getResources();
+
+		// add public resources
+		foreach ($resources['public'] as $resource)
+			$acl->addResource(new Phalcon\Acl\Resource($resource), '*');
+
+		// add private resources
+		foreach ($resources['private'] as $resourceName => $resource)
+			$acl->addResource(new Phalcon\Acl\Resource($resourceName), array_keys($resource));
+
+		return $acl;
+	}
+
+	public function getResources()
+	{
+		$resources = [];
+		$resources['private'] = [
+			'el' => [
+				'delete' => [
+					'allowFunction' => function() {
+						$tableName = $this->request->getPost('delete')['table'];
+						return $this->access->checkTableAccess($tableName, Access::WRITE);
+					}
+				],
+				'duplicate' => [
+					'allowFunction' => function() {
+						$tableName = $this->request->getPost('duplicate')['from'];
+						return $this->access->checkTableAccess($tableName, Access::WRITE);
+					}
+				],
+				'insert' => [
+					'allowFunction' => function() {
+						$tableName = $this->request->getPost('insert')['table'];
+						return $this->access->checkTableAccess($tableName, Access::WRITE);
+					}
+				],
+				'update' => [
+					'allowFunction' => function() {
+						$tableName = $this->request->getPost('update')['table'];
+						return $this->access->checkTableAccess($tableName, Access::WRITE);
+					}
+				],
+				'select' => [
+					'allowFunction' => function() {
+						$tableName = $this->request->get('select')['from'];
+						return $this->access->checkTableAccess($tableName, Access::READ);
+					}
+				],
+				'getTables' => [ '*' => [] ],
+				'setTviewSettings' => ['adminOnly' => true]
+			],
+			'users' => [
+				'setLanguage'=> [
+					'allowFunction' => function() {
+						return $this->request->getPost('id') === $this->session->get('auth');
+					}
+				],
+				'getUser'=> [
+					'allowFunction' => function() {
+						return $this->request->get('id') === $this->session->get('auth');
+					}
+				],
+				'*'  => ['adminOnly'=>true],
+			],
+			'field'    => [ '*' => [] ],
+			'ext'      => [ '*' => [] ],
+			'tview'    => [ '*' => [] ],
+			'settings' => [ '*' => ['adminOnly' => true] ],
+			'groups'   => [ '*' => ['adminOnly' => true] ],
+			'tokens'   => [ '*' => ['adminOnly' => true] ],
+		];
+
+		$resources['public'] = ['index', 'auth'];
+
+		return $resources;
+	}
 	/**
-	 * This action is executed before execute any action in the application
+	 * возвращает массив Phalcon\Acl\Role
 	 */
-	public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher, $exception)
+	public function getRoles()
+	{
+		$roles = [
+			"guests" => new Phalcon\Acl\Role("Guests", "Unauthorized user"),
+			"users"  => new Phalcon\Acl\Role("Users", "Regular user"),
+			"admins" => new Phalcon\Acl\Role("Admins", "Super-user"),
+		];
+
+		return $roles;
+	}
+
+	/**
+	 * возвращает роль текущего пользователя
+	 */
+	public function getCurrentUserRole()
 	{
 		$auth = $this->session->get('auth');
 		if (!$auth)
 			$role = 'Guests';
 		else
+		{
 			$role = 'Users';
+			if ($this->access->isAdmin($auth))
+				$role = 'Admins';
+		}
+		return $role;
+	}
+	/**
+	 * This action is executed before execute any action in the application
+	 */
+	public function beforeDispatch(Phalcon\Events\Event $event, Phalcon\Mvc\Dispatcher $dispatcher, $exception)
+	{
+		$role = $this->getCurrentUserRole();
 
 		$controller = $dispatcher->getControllerName();
 		$action     = $dispatcher->getActionName();

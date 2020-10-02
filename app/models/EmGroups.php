@@ -2,11 +2,6 @@
 
 class EmGroups extends ModelBase
 {
-	const ACCESS_READ  = 1;
-	const ACCESS_WRITE = 2;
-	const ACCESS_FULL  = self::ACCESS_READ | self::ACCESS_WRITE;
-	const ADMIN_ID     = 1;
-
 	public function initialize()
 	{
 		$this->hasManyToMany('id', 'EmGroupsUsers', 'group_id', 'user_id', 'EmUsers', 'id', [
@@ -23,9 +18,9 @@ class EmGroups extends ModelBase
 	 * @param  int    $accessValue значение доступа - константа класса
 	 * @return boolean             есть ли доступ к таблице у группы
 	 */
-	public function checkTableAccess($tableName, $accessValue)
+	public function checkAccessToTable($tableName, $accessValue)
 	{
-		if (intval($this->id) === self::ADMIN_ID)
+		if (intval($this->id) === Access::ADMIN_ID)
 			return true;
 
 		foreach ($this->access->toArray() as $accessInfo)

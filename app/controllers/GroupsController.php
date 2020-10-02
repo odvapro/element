@@ -4,16 +4,12 @@ class GroupsController extends ControllerBase
 {
 	public function getAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$groups = EmGroups::find();
 		return $this->jsonResult(['success' => true, 'groups' => $groups]);
 	}
 
 	public function addAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$group = new EmGroups();
 		$group->name = 'Untiteled';
 		$group->save();
@@ -22,8 +18,6 @@ class GroupsController extends ControllerBase
 
 	public function addUserAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
@@ -51,8 +45,6 @@ class GroupsController extends ControllerBase
 
 	public function removeUserAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
@@ -78,8 +70,6 @@ class GroupsController extends ControllerBase
 
 	public function removeAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$groupId = $this->request->getPost('id');
 		if(empty($groupId))
 			return $this->jsonResult(['success'=>false,'msg'=>'no group id']);
@@ -96,8 +86,6 @@ class GroupsController extends ControllerBase
 
 	public function updateAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$groupId = $this->request->getPost('id');
 		$name    = $this->request->getPost('name');
 		if(empty($groupId) || empty($name))
@@ -120,8 +108,6 @@ class GroupsController extends ControllerBase
 	 */
 	public function getAccessOptionsAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$lang = $this->config->application->userSettings['language'];
 
 		if (empty($lang))
@@ -134,13 +120,13 @@ class GroupsController extends ControllerBase
 		[
 			[
 				'title'    => $translates['read'],
-				'value'    => EmGroups::ACCESS_READ,
-				'strValue' => 'ACCESS_READ',
+				'value'    => Access::READ,
+				'strValue' => 'READ',
 			],
 			[
 				'title'    => $translates['full'],
-				'value'    => EmGroups::ACCESS_FULL,
-				'strValue' => 'ACCESS_FULL',
+				'value'    => Access::FULL,
+				'strValue' => 'FULL',
 			],
 		];
 
@@ -155,13 +141,11 @@ class GroupsController extends ControllerBase
 	 */
 	public function setGroupAccessAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$accessStr = $this->request->getPost('accessStr');
 		$groupId   = $this->request->getPost('groupId');
 		$tableName = $this->request->getPost('tableName');
 
-		if (empty($accessStr) || empty(constant("EmGroups::$accessStr")) || empty($groupId) || empty($tableName))
+		if (empty($accessStr) || empty(constant("Access::$accessStr")) || empty($groupId) || empty($tableName))
 			return $this->jsonResult(['success' => false]);
 
 		$relation = EmGroupsTables::findFirst([
@@ -174,7 +158,7 @@ class GroupsController extends ControllerBase
 
 		$relation->group_id   = $groupId;
 		$relation->table_name = $tableName;
-		$relation->access     = constant("EmGroups::$accessStr");
+		$relation->access     = constant("Access::$accessStr");
 		$relation->save();
 
 		return $this->jsonResult(['success' => true]);
@@ -186,8 +170,6 @@ class GroupsController extends ControllerBase
 	 */
 	public function disableGroupsAccessAction()
 	{
-		if (!$this->access->checkAuthAdmin()) return $this->jsonResult(['success' => false,'message' => 'access denied']);
-
 		$tableName = $this->request->getPost('tableName');
 
 		if (empty($tableName))

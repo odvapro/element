@@ -5,7 +5,7 @@ class TablesGroupsCest
 	{
 		$this->authorize($I, 'admin', 'adminpass');
 
-		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'ACCESS_READ']);
+		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'READ']);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'tableName' => 'block_type']);
@@ -14,13 +14,13 @@ class TablesGroupsCest
 		$I->sendPOST('/groups/setGroupAccess/',['tableName' => 'block_type']);
 		$I->seeResponseContainsJson(['success' => false]);
 
-		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'ACCESS_FULL', 'tableName' => 'block_type']);
+		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'FULL', 'tableName' => 'block_type']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'ACCESS_READ', 'tableName' => 'block_type']);
+		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'READ', 'tableName' => 'block_type']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'ACCESS_FULL', 'tableName' => 'test_table']);
+		$I->sendPOST('/groups/setGroupAccess/',['groupId'=>2, 'accessStr' => 'FULL', 'tableName' => 'test_table']);
 		$I->seeResponseContainsJson(['success' => true]);
 	}
 
@@ -146,7 +146,7 @@ class TablesGroupsCest
 		$I->sendPOST('/groups/getAccessOptions/');
 		$I->seeResponseContainsJson(['success' => $result]);
 
-		$I->sendPOST('/groups/setGroupAccess/', ['accessStr' => 'ACCESS_READ', 'groupId' => 2, 'tableName' => 'test_table']);
+		$I->sendPOST('/groups/setGroupAccess/', ['accessStr' => 'READ', 'groupId' => 2, 'tableName' => 'test_table']);
 		$I->seeResponseContainsJson(['success' => $result]);
 
 		$I->sendPOST('/groups/disableGroupsAccess/', ['tableName' => 'test_table']);
