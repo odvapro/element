@@ -40,23 +40,19 @@ class ElController extends ControllerBase
 		if (empty($record))
 			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
 
-		$record = $record[0];
+		$values = [];
+		foreach ($record[0] as $fieldCode => $field)
+			if ($field['fieldName'] !== 'em_primary')
+				$values[$fieldCode] = $field['value'];
 
 		$insertParams = [
 			'table'   => $duplicateSelect['from'],
-			'columns' => [],
-			'values'  => []
+			'values'  => $values
 		];
-		foreach ($record as $propertyKey => $property)
-		{
-			if ($property['fieldName'] === 'em_primary')
-				continue;
-			$insertParams['columns'][] = $propertyKey;
-			$insertParams['values'][]  = $property['value'];
-		}
-		$resultDuplicate = $this->eldb->insert($insertParams);
 
-		if ($resultDuplicate === false)
+		$resultDuplicate = $this->element->insert($insertParams);
+
+		if (!$resultDuplicate)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
 
 		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);

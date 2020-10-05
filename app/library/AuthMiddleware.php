@@ -116,8 +116,8 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 						return $this->access->checkTableAccess($tableName, Access::READ);
 					}
 				],
-				'getTables' => [ '*' => [] ],
-				'setTviewSettings' => ['adminOnly' => true]
+				'setTviewSettings' => ['adminOnly' => true],
+				'getTables' => [],
 			],
 			'users' => [
 				'setLanguage'=> [
@@ -149,13 +149,11 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getRoles()
 	{
-		$roles = [
+		return [
 			"guests" => new Phalcon\Acl\Role("Guests", "Unauthorized user"),
 			"users"  => new Phalcon\Acl\Role("Users", "Regular user"),
 			"admins" => new Phalcon\Acl\Role("Admins", "Super-user"),
 		];
-
-		return $roles;
 	}
 
 	/**

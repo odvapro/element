@@ -538,6 +538,124 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => false]);
 	}
 
+	public function duplicate(ApiTester $I)
+	{
+		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'from' => 'callbacks',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'id',
+							'operation' => 'IS',
+							'value' => '33'
+						]
+					]
+				]
+			]
+		]);
+		$I->seeResponseContainsJson(["success" => true]);
+		$result = json_decode($I->grabResponse(), 1);
+
+		if (!empty(count($result['result']['items'])))
+			throw new Exception("Element already exist", 1);
+			
+
+
+		$I->sendPOST('/el/duplicate/',
+		[
+			'duplicate' =>
+			[
+				'from' => 'non-exist',
+			]
+		]);
+		$I->seeResponseContainsJson(['success' => false]);
+
+
+		$I->sendPOST('/el/duplicate/',
+		[
+			'duplicate' => []
+		]);
+		$I->seeResponseContainsJson(['success' => false]);
+
+
+		$I->sendPOST('/el/duplicate/',
+		[
+			'duplicate' =>
+			[
+				'from' => 'callbacks',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'id',
+							'operation' => 'IS',
+							'value' => '3200'
+						]
+					]
+				]
+			]
+		]);
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/el/duplicate/',
+		[
+			'duplicate' =>
+			[
+				'from' => 'callbacks',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'id',
+							'operation' => 'IS',
+							'value' => '32'
+						]
+					]
+				]
+			]
+		]);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendGET('/el/select',
+		[
+			'select' =>
+			[
+				'from' => 'callbacks',
+				'where' =>
+				[
+					'operation' => 'and',
+					'fields' =>
+					[
+						[
+							'code' => 'id',
+							'operation' => 'IS',
+							'value' => '33'
+						]
+					]
+				]
+			]
+		]);
+		$I->seeResponseContainsJson(["success" => true]);
+		$result = json_decode($I->grabResponse(), 1);
+
+		if (empty(count($result['result']['items'])))
+			throw new Exception("Element wasn't created", 1);
+
+	}
+
 	public function setTviewSettings(ApiTester $I)
 	{
 		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
