@@ -164,8 +164,8 @@ $di->set('element', function () use ($di)
 	return $element;
 });
 
-$di->set('access', function () use ($di)
+$di->set('user', function () use ($di)
 {
-	$access = new Access($di);
-	return $access;
+	static $user = null;
+	return $user;
 });

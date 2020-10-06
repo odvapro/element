@@ -49,9 +49,6 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 			{
 				$acl->allow('Admins', $resource, $actionName);
 
-				if ( isset($action['adminOnly']) )
-					continue;
-
 				if ( isset($action['allowFunction']) )
 					$acl->allow('Users', $resource, $actionName, $action['allowFunction']);
 				else
@@ -89,34 +86,34 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 				'delete' => [
 					'allowFunction' => function() {
 						$tableName = $this->request->getPost('delete')['table'];
-						return $this->access->checkTableAccess($tableName, Access::WRITE);
+						return $this->user->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'duplicate' => [
 					'allowFunction' => function() {
 						$tableName = $this->request->getPost('duplicate')['from'];
-						return $this->access->checkTableAccess($tableName, Access::WRITE);
+						return $this->user->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'insert' => [
 					'allowFunction' => function() {
 						$tableName = $this->request->getPost('insert')['table'];
-						return $this->access->checkTableAccess($tableName, Access::WRITE);
+						return $this->user->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'update' => [
 					'allowFunction' => function() {
 						$tableName = $this->request->getPost('update')['table'];
-						return $this->access->checkTableAccess($tableName, Access::WRITE);
+						return $this->user->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'select' => [
 					'allowFunction' => function() {
 						$tableName = $this->request->get('select')['from'];
-						return $this->access->checkTableAccess($tableName, Access::READ);
+						return $this->user->hasAccess($tableName, Access::READ);
 					}
 				],
-				'setTviewSettings' => ['adminOnly' => true],
+				'setTviewSettings' => ['allowFunction' => function(){return $this->user->isAdmin();}],
 				'getTables' => [],
 			],
 			'users' => [
@@ -130,14 +127,14 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 						return $this->request->get('id') === $this->session->get('auth');
 					}
 				],
-				'*'  => ['adminOnly'=>true],
+				'*'  => ['allowFunction'=>function(){return $this->user->isAdmin();}],
 			],
+			'settings' => [ '*' => ['allowFunction'=>function(){return $this->user->isAdmin();}] ],
+			'groups'   => [ '*' => ['allowFunction'=>function(){return $this->user->isAdmin();}] ],
+			'tokens'   => [ '*' => ['allowFunction'=>function(){return $this->user->isAdmin();}] ],
 			'field'    => [ '*' => [] ],
 			'ext'      => [ '*' => [] ],
 			'tview'    => [ '*' => [] ],
-			'settings' => [ '*' => ['adminOnly' => true] ],
-			'groups'   => [ '*' => ['adminOnly' => true] ],
-			'tokens'   => [ '*' => ['adminOnly' => true] ],
 		];
 
 		$resources['public'] = ['index', 'auth'];
@@ -162,12 +159,19 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 	public function getCurrentUserRole()
 	{
 		$auth = $this->session->get('auth');
-		if (!$auth)
+		if (!empty($auth) && empty($this->user))
+		{
+			$user = EmUsers::findFirst($auth);
+			if (!empty($user))
+				$this->user = $user;
+		}
+
+		if (!$this->user)
 			$role = 'Guests';
 		else
 		{
 			$role = 'Users';
-			if ($this->access->isAdmin($auth))
+			if ($this->user->isAdmin())
 				$role = 'Admins';
 		}
 		return $role;

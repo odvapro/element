@@ -36,6 +36,8 @@ class AuthController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'User is not found']);
 
 		$this->session->set('auth', $user->id);
+		if (empty($this->user))
+			$this->user = $user;
 
 		return $this->jsonResult([
 			'success' => true,
@@ -45,7 +47,7 @@ class AuthController extends ControllerBase
 				'email'    => $user->email,
 				'avatar'   => 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '&s=40',
 				'language' => $user->language,
-				'is_admin' => $this->access->isAdmin($user->id)
+				'is_admin' => $this->user->isAdmin()
 			]
 		]);
 	}

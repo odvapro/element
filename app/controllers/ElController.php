@@ -158,7 +158,7 @@ class ElController extends ControllerBase
 		{
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
-			$table['access']  = $this->access->getAccessTable($table['code']);
+			$table['access']  = Access::getAccessTable($table['code']);
 
 			if (!count($emViewsTable))
 			{

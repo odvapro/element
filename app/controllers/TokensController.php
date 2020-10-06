@@ -17,7 +17,7 @@ class TokensController extends ControllerBase
 		if (empty($group))
 			return $this->jsonResult(['success' => false, 'msg' => 'no such group']);
 
-		$tokenStr = $this->access->generateAccessToken();
+		$tokenStr = Access::generateAccessToken();
 
 		$token = new EmTokens();
 		$token->value    = $tokenStr;
