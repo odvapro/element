@@ -30,7 +30,7 @@
 					<span class="auth__error-text" data-test="error-text">{{user.password.error}}</span>
 				</label>
 				<div class="auth-bottom-btns">
-					<button class="auth-fill-btn el-btn" data-test="auth-login" @click="authUser()">{{$t('auth.log_in')}}</button>
+					<button class="auth-fill-btn el-btn" data-test="auth-login">{{$t('auth.log_in')}}</button>
 					<a class="auth-transpar-btn" data-test="btn-transpar" @click="activeForm = 'forgot'">{{$t('auth.forgot_your_password')}}</a>
 				</div>
 			</form>
