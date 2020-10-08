@@ -69,7 +69,7 @@ class TviewController extends ControllerBase
 			'fields' => array_keys($allFieldsData)
 		];
 
-		$allFields  = $this->element->select($select);
+		$allFields = $this->element->select($select);
 
 		$lastItem = end($allFieldsData);
 		$fileContent = "";
@@ -79,10 +79,10 @@ class TviewController extends ControllerBase
 			else
 				$fileContent .= json_encode($fieldData['fieldName'], JSON_UNESCAPED_UNICODE) . ",";
 
-		foreach ($allFields as $fieldDate)
+		foreach ($allFields['items'] as $fieldDate)
 		{
 			foreach ($fieldDate as $rowDataKey => &$rowDataValue)
-				$rowDataValue['name'] = $rowDataKey;
+				$rowDataValue = ['value'=>$rowDataValue, 'name'=>$rowDataKey];
 
 			$lastColumn = end($fieldDate)['name'];
 			foreach ($fieldDate as $rowData)

@@ -58,7 +58,7 @@ const table =
 		/**
 		 * Записать содержимое таблицы
 		 */
-		setSelectedElement(state, selectedElement)
+		setSelectedElement(state, {selectedElement, columns})
 		{
 			state.selectedElement = selectedElement;
 		},
@@ -75,16 +75,29 @@ const table =
 			let primaryKey = fieldValue.settings.primaryKey;
 			for(let tableLine of state.tableContent.items)
 			{
-				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
+				if(tableLine[primaryKey.fieldCode] != primaryKey.value)
 					continue;
 
-				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
+				tableLine[fieldValue.settings.fieldCode] = fieldValue.value;
 				break;
 			}
 		}
 	},
 	getters:
 	{
+		getTableFieldsNames: (state, getters) => tableCode =>
+		{
+			let table  = getters.getTable(tableCode),
+				result = {};
+			if (!table || !table.columns)
+				return result;
+
+			for (let column in table.columns)
+				result[column] = table.columns[column].em.type_info.code;
+
+			return result;
+			return [table, tableCode];
+		},
 		/**
 		 * Возвращет таблику по коду
 		 * @param  table code
@@ -170,7 +183,7 @@ const table =
 			let   settings       = column.em.settings;
 
 			settings.primaryKey = {
-				value     : (row) ? row[primaryKeyCode].value : '',
+				value     : (row) ? row[primaryKeyCode] : '',
 				fieldCode : primaryKeyCode
 			};
 			settings.fieldCode  = column.field;
@@ -257,7 +270,7 @@ const table =
 			if (!result.data.success)
 			{
 				Vue.prototype.ElMessage.error(result.data.message);
-				return;
+				return false;
 			}
 
 			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
@@ -271,6 +284,7 @@ const table =
 				});
 				this.commit('setTableContent',curTableCont);
 			}
+			return true;
 		},
 		/**
 		 * deleteParams:<sql params for deleting>
@@ -325,7 +339,7 @@ const table =
 
 			if (!result.data.success || result.data.result.items.length == 0)
 				return false;
-			this.commit('setSelectedElement',result.data.result.items[0]);
+			this.commit('setSelectedElement',{selectedElement:result.data.result.items[0], columns:result.data.result.columns_types});
 		},
 
 		/**
@@ -373,7 +387,7 @@ const table =
 			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
 			let setValues  = {}
 			for(let fieldCode in selectedElement)
-				setValues[fieldCode] = selectedElement[fieldCode].value;
+				setValues[fieldCode] = selectedElement[fieldCode];
 
 			var data = qs.stringify({
 				update:{
@@ -385,7 +399,7 @@ const table =
 							{
 								code      : primaryKeyCode,
 								operation : 'IS',
-								value     : selectedElement[primaryKeyCode].value
+								value     : selectedElement[primaryKeyCode]
 							}
 						]
 					}

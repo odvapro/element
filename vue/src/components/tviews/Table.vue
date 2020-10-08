@@ -37,16 +37,6 @@
 						@mousedown="registerEventResize($event, column)"
 					></div>
 				</div>
-				<div class="table-item">
-					<div class="table__add-column-item">
-						<!-- <div class="table__add-col-img">
-							<svg width="12" height="12">
-								<use xlink:href="#plus-white"></use>
-							</svg>
-						</div>
-						<span class="table__add-col-label">Add field</span> -->
-					</div>
-				</div>
 			</div>
 			<div class="table-row" data-test="table-row" v-for="(row, rowIndex) in tableContent.items">
 				<div class="table-item table__many-box">
@@ -67,7 +57,7 @@
 				<div
 					class="table-item"
 					v-for="column, index in table.columns"
-					v-if="column.visible && row[column.field]"
+					v-if="column.visible && typeof row[column.field] !== 'undefined'"
 					:key="`${index}${rowIndex}`"
 					:class="`_table-col-${index}`"
 					:style="{width: column.width + 'px'}"
@@ -75,17 +65,14 @@
 					<MainField
 						mode="edit"
 						view="table"
-						:fieldName="row[column.field].fieldName"
+						:fieldName="tableContent.columns_types[column.field] || ''"
 						:params="{
-							value     : row[column.field].value,
+							value     : row[column.field],
 							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
 						}"
 						@onChange="changeFieldValue"
 						@openEdit="openDetail(row,rowIndex)"
 					/>
-				</div>
-				<div class="table-item">
-					<div class="table-empty-col"></div>
 				</div>
 			</div>
 			<div class="table-row table-row__empty" data-test="table-row" v-if="!hasTableItems">
@@ -247,10 +234,7 @@
 			 */
 			getOverideName(column)
 			{
-				if (typeof column.em.name == 'undefined' || column.em.name == '' || column.em.name == null)
-					return column.field;
-
-				return column.em.name;
+				return column.em.name || column.field;
 			},
 
 			/**
@@ -424,7 +408,7 @@
 					requestWhere.fields.push({
 						code      : primaryKeyCode,
 						operation : 'IS',
-						value     : row[primaryKeyCode].value
+						value     : row[primaryKeyCode]
 					});
 				}
 
@@ -452,9 +436,9 @@
 						operation:'and',
 						fields:[
 							{
-								code      : `${primaryKeyCode} = ${row[primaryKeyCode].value}`,
+								code      : `${primaryKeyCode} = ${row[primaryKeyCode]}`,
 								operation : 'IS',
-								value     : row[primaryKeyCode].value
+								value     : row[primaryKeyCode]
 							}
 						]
 					}
@@ -480,7 +464,7 @@
 								{
 									code      : primaryKeyCode,
 									operation : 'IS',
-									value     : row[primaryKeyCode].value
+									value     : row[primaryKeyCode]
 								}
 							]
 						}
@@ -495,7 +479,7 @@
 			openDetail(row,rowIndex)
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
-				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode].value }});
+				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode] }});
 			},
 
 			addElement()
@@ -547,7 +531,6 @@
 		padding-left: 9px;
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&:last-child {border-right: none; }
 		&:hover{background: rgba(103, 115, 135, 0.05);}
 	}
 	.table-item-overide-name

@@ -6,8 +6,11 @@
 				<div class="em-matrix-head-field em-matrix-head-field__remove"></div>
 			</div>
 			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
-				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem.value}}</span></div>
-				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
+				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem}}</span></div>
+				<div class="em-matrix-field__hover-btns">
+					<div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div>
+					<div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div>
+				</div>
 			</div>
 			<div class="em-matrix-row-add">
 				<div class="em-matrix-row-add__icon">
@@ -99,7 +102,7 @@
 			{
 				this.currentElement  = false;
 				let primaryKeyCode   = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
-				this.detailTableId   = row[primaryKeyCode].value;
+				this.detailTableId   = row[primaryKeyCode];
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName      = false;
 				this.showDetail      = true;
@@ -109,9 +112,9 @@
 				this.currentElement = [];
 				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
 				for (let column in table.columns)
-					this.currentElement[column] = {value: ''};
+					this.currentElement[column] = '';
 
-				this.currentElement[this.fieldSettings.nodeField] = {value: this.detailElement[this.fieldSettings.keyField].value};
+				this.currentElement[this.fieldSettings.nodeField] = this.detailElement[this.fieldSettings.keyField];
 			},
 			popupForCreateMatrixElement()
 			{
@@ -134,7 +137,7 @@
 				if(result.data.success == true)
 				{
 					let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
-					data.selectedElement[primaryKeyCode].value = result.data.lastid;
+					data.selectedElement[primaryKeyCode] = result.data.lastid;
 					this.createMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_created'));
 					this.showDetail = false;

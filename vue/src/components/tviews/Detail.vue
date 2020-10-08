@@ -43,9 +43,9 @@
 					<MainField
 						mode="edit"
 						view="detail"
-						:fieldName="column.fieldName"
+						:fieldName="fieldNames[columnCode] || ''"
 						:params="{
-							value     : column.value,
+							value     : column,
 							settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
 						}"
 						@onChange="changeFieldValue"
@@ -66,12 +66,14 @@
 		{
 			return {
 				columns:{},
-				selectedElement:{}
+				selectedElement:{},
+				fieldNames:{}
 			}
 		},
 		mounted()
 		{
 			this.selectElement();
+			this.fieldNames = Object.assign(this.fieldNames, this.$store.getters.getTableFieldsNames(this.tableCode));
 		},
 		methods:
 		{
@@ -104,12 +106,9 @@
 				{
 					for(let columnCode in this.columns)
 					{
-						this.$set(this.selectedElement, columnCode,{
-							value     :'',
-							fieldName :this.columns[columnCode].em.type_info.code
-						});
+						this.$set(this.selectedElement, columnCode,'');
 						if (this.element && typeof this.element[columnCode] != 'undefined')
-							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode].value);
+							this.$set(this.selectedElement, columnCode, this.element[columnCode]);
 					}
 				}
 			},
@@ -123,7 +122,7 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+				this.selectedElement[fieldValue.settings.fieldCode] = fieldValue.value;
 			},
 
 			/**
@@ -141,9 +140,7 @@
 			 */
 			getColumnName(columnCode)
 			{
-				if(!this.columnEmSettings(columnCode).name)
-					return columnCode;
-				return this.columnEmSettings(columnCode).name
+				return this.columnEmSettings(columnCode).name || columnCode;
 			},
 
 			/**

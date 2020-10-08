@@ -37,13 +37,15 @@ class ElController extends ControllerBase
 
 		$record = $this->element->select($duplicateSelect);
 
-		if (empty($record))
+		if (empty($record) || empty($record['items']))
 			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
 
+		$primaryKey = array_search('em_primary', $record['columns_types']);
+
 		$values = [];
-		foreach ($record[0] as $fieldCode => $field)
-			if ($field['fieldName'] !== 'em_primary')
-				$values[$fieldCode] = $field['value'];
+		foreach ($record['items'][0] as $fieldCode => $field)
+			if ($fieldCode !== $primaryKey)
+				$values[$fieldCode] = $field;
 
 		$insertParams = [
 			'table'   => $duplicateSelect['from'],
@@ -138,8 +140,8 @@ class ElController extends ControllerBase
 		$resultSelect = $this->element->select($select);
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
-		$pagination['items'] = $resultSelect;
 
+		$pagination = array_merge($pagination, $resultSelect);
 		return $this->jsonResult([
 			'success' => true,
 			'result' => $pagination

@@ -55,7 +55,7 @@
 			async removeElementDetail(data)
 			{
 				let result = await this.removeElement(data);
-				if (result.data.success)
+				if (result)
 					this.ElMessage(this.$t('elMessages.element_removed'));
 				this.$router.go(-1);
 			}

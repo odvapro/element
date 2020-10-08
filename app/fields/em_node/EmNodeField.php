@@ -20,10 +20,10 @@ class EmNodeField extends FieldBase
 		];
 		$node = $this->element->select($select);
 
-		if(!count($node) )
+		if(!count($node['items']) )
 			return [];
 
-		$node = $node[0];
+		$node = $node['items'][0];
 		return [
 			'id'   => $node[$this->settings['nodeFieldCode']]['value'],
 			'name' => $node[$this->settings['nodeSearchCode']]['value'],

@@ -197,10 +197,16 @@ class Element
 		if ($selectResult === false)
 			return false;
 
+		$resultItems = [];
+		$resultColumns = [];
+		foreach ($tableColumns as $column)
+			$resultColumns[$column['field']] = $column['em']['type_info']['code'];
+
+
 		/**
 		 * Добавляем в селект запрос, поля для отображения
 		 */
-		$selectResultWithFields = array_map(function ($selectItem) use ($tableColumns, $selectParams)
+		$resultItems = array_map(function ($selectItem) use ($tableColumns, $selectParams)
 		{
 			$result = [];
 			foreach ($selectItem as $fieldCode => $columnValue)
@@ -213,13 +219,12 @@ class Element
 				else
 					$field = new EmStringField($columnValue,$settings,$selectItem);
 
-				$result[$fieldCode]['value']     = $field->getValue();
-				$result[$fieldCode]['fieldName'] = $tableColumns[$fieldCode]['em']['type_info']['code'];
+				$result[$fieldCode] = $field->getValue();
 			}
 			return $result;
 		}, $selectResult);
 
-		return $selectResultWithFields;
+		return ['items' => $resultItems, 'columns_types' => $resultColumns];
 	}
 
 	/**
