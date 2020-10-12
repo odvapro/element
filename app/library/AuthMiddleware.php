@@ -158,14 +158,6 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getCurrentUserRole()
 	{
-		$auth = $this->session->get('auth');
-		if (!empty($auth) && empty($this->user))
-		{
-			$user = EmUsers::findFirst($auth);
-			if (!empty($user))
-				$this->user = $user;
-		}
-
 		if (!$this->user)
 			$role = 'Guests';
 		else

@@ -167,5 +167,9 @@ $di->set('element', function () use ($di)
 $di->set('user', function () use ($di)
 {
 	static $user = null;
+
+	if (empty($user) && !empty($di->get('session')->get('auth')))
+		$user = EmUsers::findFirst($di->get('session')->get('auth'));
+
 	return $user;
 });

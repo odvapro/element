@@ -108,10 +108,9 @@ class GroupsController extends ControllerBase
 	 */
 	public function getAccessOptionsAction()
 	{
-		$lang = $this->config->application->userSettings['language'];
-
-		if (empty($lang))
-			$lang = 'en';
+		$lang = 'en';
+		if (!empty($this->user))
+			$lang = $this->user->language;
 
 		$translates = file_get_contents(__DIR__ . "/locale/{$lang}.json");
 		$translates = json_decode($translates, true);
