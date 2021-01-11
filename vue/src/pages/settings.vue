@@ -101,7 +101,13 @@
 	}
 </script>
 <style lang="scss">
-	.settings-wrapper {padding: 23px 0 23px 21px;}
+	.settings-wrapper
+	{
+		padding: 23px 0 23px 21px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 	.settings-head
 	{
 		display: flex;
@@ -153,6 +159,11 @@
 		{
 			width: 265px;
 		}
+	}
+	.settings-tab-wrapper
+	{
+		display: flex;
+		flex-direction: column;
 	}
 	.settings-tab-item
 	{

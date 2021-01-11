@@ -81,7 +81,7 @@ class SettingsController extends ControllerBase
 		$fieldClass = new $emType['fieldComponent']('', $field->getSettings());
 		$emSettings = [
 			'type'      => $field->type,
-			'name'      => $field->name,
+			'name'      => $field->name === $field->field ? "" : $field->name,
 			'type_info' => $this->element->emTypes[$field->type],
 			'settings'  => $fieldClass->getSettings(),
 			'required'  => $field->getRequired()
