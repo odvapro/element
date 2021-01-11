@@ -36,7 +36,7 @@
 						@mousedown="registerEventResize($event, column)"
 					></div>
 				</div>
-				<div class="table-item">
+				<div class="table-item table-item--empty">
 					<div class="table__add-column-item">
 						<!-- <div class="table__add-col-img">
 							<svg width="12" height="12">
@@ -82,7 +82,7 @@
 						@openEdit="openDetail(row,rowIndex)"
 					/>
 				</div>
-				<div class="table-item">
+				<div class="table-item table-item--empty">
 					<div class="table-empty-col"></div>
 				</div>
 			</div>
@@ -532,6 +532,7 @@
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&:last-child {border-right: none; }
 		&:hover{background: rgba(103, 115, 135, 0.05);}
+		&--empty{padding: 0;width: 0;}
 	}
 	.table-item-overide-name
 	{
