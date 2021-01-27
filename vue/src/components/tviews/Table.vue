@@ -228,7 +228,22 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.$store.dispatch('saveFieldValue',fieldValue);
+				const id = fieldValue.settings.primaryKey.value;
+				const tableCode = fieldValue.settings.tableCode;
+				let selectedElement = null;
+
+				for (let row of this.tableContent.items)
+					if (row.id.value === id)
+					{
+						selectedElement = row;
+						break;
+					}
+
+				if (!selectedElement || !selectedElement[fieldValue.settings.fieldCode]) return;
+
+				selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+
+				this.$store.dispatch('saveSelectedElement', { selectedElement, tableCode });
 			},
 
 			/**
