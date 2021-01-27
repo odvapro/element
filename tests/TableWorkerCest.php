@@ -372,8 +372,12 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'columns' => ['name', 'email', 'col', 'avat'],
-				'values' => ['11', 'qwe', '222222', '222211211']
+				'values' => [
+					'name'  => '11',
+					'email' => 'qwe',
+					'col'   => '222222',
+					'avat'  => '222211211',
+				],
 			]
 		]);
 
@@ -385,8 +389,12 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'columns' => ['name', 'avat'],
-				'values' => ['11', 'qwe', '222222', '222211211']
+				'values' => [
+					'name' => '11',
+					'avat' => 'qwe',
+					'222222',
+					'222211211',
+				],
 			]
 		]);
 
