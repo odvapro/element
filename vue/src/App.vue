@@ -48,26 +48,25 @@
 				return 'Content';
 			}
 		},
+		methods:
+		{
+			async setLanguage(language = 'en', id = -1)
+			{
+				if (~id)
+					await this.$store.dispatch('setLanguage', {language, id});
+				this.$store.commit('setLanguage', language);
+			},
+		},
 		async mounted()
 		{
-			if (!this.$store.state.users.authUser || !++this.$store.state.users.authUser.id)
-			{
-				this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-				if (!this.$store.state.users.authUser || !++this.$store.state.users.authUser.id)
-				{
-					await this.$store.dispatch('setLanguage', {newLang: this.$store.state.languages.list[0]});
-					this.$store.commit('setLanguage', this.$store.state.languages.list[0])
-					return;
-				}
-			}
+			if (!this.$store.isAuthUser)
+				if (this.$cookie.get('user'))
+					this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 
 			if (this.$store.state.users.authUser.language)
-				this.$store.commit('setLanguage', this.$store.state.users.authUser.language);
+				this.setLanguage(this.$store.state.users.authUser.language);
 			else
-			{
-				await this.$store.dispatch('setLanguage', {newLang: this.$store.state.languages.list[0]});
-				this.$store.commit('setLanguage', this.$store.state.languages.list[0]);
-			}
+				this.setLanguage('en', this.$store.state.users.authUser.id);
 		}
 	}
 </script>

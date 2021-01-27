@@ -234,7 +234,15 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
-
+		async duplicateRecord(store, recordPrams)
+		{
+			let result = await axios({
+				method : 'post',
+				url    : '/el/duplicate/',
+				data   : qs.stringify({duplicate:recordPrams}),
+			});
+			return result;
+		},
 		/**
 		 * Remove records or one record
 		 * @var reocrdParams {
@@ -250,7 +258,8 @@ const table =
 			if(typeof recordPrams.rowIndex == 'object')
 			{
 				let curTableCont = store.state.tableContent;
-				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>{
+				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>
+				{
 					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
 				});
 				this.commit('setTableContent',curTableCont);
@@ -357,7 +366,7 @@ const table =
 		async saveSelectedElement(store,{selectedElement,tableCode})
 		{
 			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
-			let setValues  = {}
+			let setValues  = {};
 			for(let fieldCode in selectedElement)
 				setValues[fieldCode] = selectedElement[fieldCode].value;
 
@@ -382,5 +391,5 @@ const table =
 			return result;
 		}
 	}
-}
+};
 export default table;

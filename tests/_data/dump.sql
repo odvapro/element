@@ -96,7 +96,7 @@ CREATE TABLE `em_users` (
   `name` varchar(200) NOT NULL DEFAULT '',
   `password` varchar(200) NOT NULL DEFAULT '',
   `email` varchar(200) NOT NULL DEFAULT '',
-  `language` varchar(200) NOT NULL DEFAULT '{"short":"en","long":"English"}',
+  `language` varchar(200) NOT NULL DEFAULT 'en',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -30,9 +30,9 @@
 				<div class="settings-tab-content" v-if="activeTab == $t('users')">
 					<SettingsUser/>
 				</div>
-			</div>
-			<div class="settings-tab-content" v-if="activeTab == $t('languages')">
-				<SettingsLang/>
+				<div class="settings-tab-content" v-if="activeTab == $t('languages')">
+					<SettingsLang/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -80,12 +80,12 @@
 		{
 			settingsTabsHeadClass()
 			{
-				return 'settings-tabs-head_' + this.$store.state.languages.currentLang.short;
+				return 'settings-tabs-head_' + this.$store.getters.lang;
 			}
 		},
 		watch:
 		{
-			'$store.state.languages.currentLang'()
+			'$store.getters.lang'()
 			{
 				this.tabs[0].name = this.$t('tables');
 				this.tabs[1].name = this.$t('users');
@@ -101,7 +101,13 @@
 	}
 </script>
 <style lang="scss">
-	.settings-wrapper {padding: 23px 0 23px 21px; }
+	.settings-wrapper
+	{
+		padding: 23px 0 23px 21px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 	.settings-head
 	{
 		display: flex;
@@ -153,6 +159,11 @@
 		{
 			width: 265px;
 		}
+	}
+	.settings-tab-wrapper
+	{
+		display: flex;
+		flex-direction: column;
 	}
 	.settings-tab-item
 	{

@@ -36,7 +36,7 @@
 						@mousedown="registerEventResize($event, column)"
 					></div>
 				</div>
-				<div class="table-item">
+				<div class="table-item table-item--empty">
 					<div class="table__add-column-item">
 						<!-- <div class="table__add-col-img">
 							<svg width="12" height="12">
@@ -58,6 +58,7 @@
 					<div class="table__many-modal" v-if="openedEditRowIndex === rowIndex" v-click-outside="closeEditModal">
 						<ul>
 							<li @click="openDetail(row,rowIndex)">{{$t('edit')}}</li>
+							<li @click="duplicate(row)">{{$t('duplicate')}}</li>
 							<li @click="remove(row,rowIndex)" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
@@ -81,7 +82,7 @@
 						@openEdit="openDetail(row,rowIndex)"
 					/>
 				</div>
-				<div class="table-item">
+				<div class="table-item table-item--empty">
 					<div class="table-empty-col"></div>
 				</div>
 			</div>
@@ -227,7 +228,22 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.$store.dispatch('saveFieldValue',fieldValue);
+				const id = fieldValue.settings.primaryKey.value;
+				const tableCode = fieldValue.settings.tableCode;
+				let selectedElement = null;
+
+				for (let row of this.tableContent.items)
+					if (row.id.value === id)
+					{
+						selectedElement = row;
+						break;
+					}
+
+				if (!selectedElement || !selectedElement[fieldValue.settings.fieldCode]) return;
+
+				selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+
+				this.$store.dispatch('saveSelectedElement', { selectedElement, tableCode });
 			},
 
 			/**
@@ -423,7 +439,27 @@
 				this.openedEditRowIndex	= false;
 				this.checkAll = false;
 			},
+			async duplicate(row)
+			{
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
 
+				let result = await this.$store.dispatch('duplicateRecord', {
+					from: this.table.code,
+					where:
+					{
+						operation:'and',
+						fields:[
+							{
+								code      : `${primaryKeyCode} = ${row[primaryKeyCode].value}`,
+								operation : 'IS',
+								value     : row[primaryKeyCode].value
+							}
+						]
+					}
+				});
+				this.openedEditRowIndex = false;
+				this.getTableContent();
+			},
 			/**
 			 * Удаляет запись
 			 */
@@ -511,6 +547,7 @@
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&:last-child {border-right: none; }
 		&:hover{background: rgba(103, 115, 135, 0.05);}
+		&--empty{padding: 0;width: 0;}
 	}
 	.table-item-overide-name
 	{
@@ -636,7 +673,7 @@
 		top:40px;
 		border:1px solid #E2E4E8;
 		border-radius: 2px;
-		width:80px;
+		min-width:80px;
 		text-align:left;
 		padding:10px;
 		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
@@ -649,6 +686,7 @@
 			color: rgba(25, 28, 33, 0.7);
 			margin-bottom: 7px;
 			cursor: pointer;
+			white-space: nowrap;
 			&:last-child{margin-bottom: 0px;}
 			&.table__many-delete
 			{
