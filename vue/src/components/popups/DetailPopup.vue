@@ -96,4 +96,13 @@
 		}
 		.detail-head{padding-right: 0px; }
 	}
+	@media (max-width: 768px)
+	{
+		.detail-popup
+		{
+			.popup-block { min-width: unset; }
+			.detail-head__burder { display: none; }
+
+		}
+	}
 </style>

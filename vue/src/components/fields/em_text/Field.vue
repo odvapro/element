@@ -211,4 +211,8 @@
 		margin-right: 15px;
 	}
 	#el-editor *{box-sizing: content-box; }
+	@media (max-width: 768px)
+	{
+		.em-text { min-width: unset; }
+	}
 </style>

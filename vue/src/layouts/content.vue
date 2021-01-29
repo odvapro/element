@@ -1,7 +1,11 @@
 <template>
 	<div id="app">
 		<div class="app-wrapper" :style="{'grid-template-columns': templateColumnsStr }" :class="{'app-wrapper--opened': isShowSidebar }">
-			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
+			<Sidebar
+				:sidebarStyle="sidebar"
+				v-if="sidebar['gridTemplateColumns'] && isShowSidebar"
+				@closeSidebar="closeSidebarIfIsMobile"
+			/>
 			<div class="content-wrapper">
 				<router-view/>
 				<div class="content__loader" v-if="$store.state.showLoader">
@@ -35,6 +39,13 @@
 				isMobile: false,
 			}
 		},
+		watch:
+		{
+			$route (to, from)
+			{
+				this.closeSidebarIfIsMobile();
+			},
+		},
 		computed:
 		{
 			...mapGetters([
@@ -46,7 +57,7 @@
 					? this.sidebar['gridTemplateColumns']
 					: this.isShowSidebar
 						? '320px auto'
-						: '0px auto';
+						: '';
 			},
 		},
 		/**
@@ -71,6 +82,11 @@
 		},
 		methods:
 		{
+			closeSidebarIfIsMobile()
+			{
+				if (this.isMobile)
+					this.$store.commit('updateShowSidebar', false);
+			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */

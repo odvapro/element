@@ -317,7 +317,7 @@
 			padding-right: 14px;
 			justify-content: flex-start;
 			align-items: center;
-			min-width: 375px;
+			min-width: 320px;
 		}
 		.detail-head__burder { margin-right: 20px; }
 		.detail-head-name { flex-wrap: wrap; }
@@ -325,5 +325,6 @@
 		.detail-head__buttons { text-align-last: left; }
 		.detail-name-wrapper { flex-basis: 90%; }
 		.detail-icon-wrapper { flex-basis: 4%; }
+		.detail-field-box { min-width: 150px; }
 	}
 </style>
