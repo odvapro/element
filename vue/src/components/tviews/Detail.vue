@@ -1,6 +1,7 @@
 <template>
 	<div class="detail">
 		<div class="detail-head">
+			<div class="detail-head__burder"><MobileBurger/></div>
 			<div class="detail-head-name">
 				<div class="detail-icon-wrapper">
 					<svg width="14" height="13">
@@ -58,10 +59,12 @@
 <script>
 	import MainField from '@/components/fields/MainField.vue';
 	import qs from 'qs';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+
 	export default
 	{
 		props: ['tableCode', 'name', 'id', 'element'],
-		components: {MainField},
+		components: {MainField, MobileBurger},
 		data()
 		{
 			return {
@@ -306,5 +309,21 @@
 		button{
 			margin-left:10px;
 		}
+	}
+	@media (max-width: 768px)
+	{
+		.detail-head
+		{
+			padding-right: 14px;
+			justify-content: flex-start;
+			align-items: center;
+			min-width: 375px;
+		}
+		.detail-head__burder { margin-right: 20px; }
+		.detail-head-name { flex-wrap: wrap; }
+		.detail-icon-wrapper, .detail-name-wrapper { margin-bottom: 20px; }
+		.detail-head__buttons { text-align-last: left; }
+		.detail-name-wrapper { flex-basis: 90%; }
+		.detail-icon-wrapper { flex-basis: 4%; }
 	}
 </style>

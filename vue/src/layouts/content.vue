@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
+		<div class="app-wrapper" :style="{'grid-template-columns': templateColumnsStr }" :class="{'app-wrapper--opened': isShowSidebar }">
 			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
 			<div class="content-wrapper">
 				<router-view/>
@@ -14,6 +14,8 @@
 <script>
 	import Loader from '@/components/forms/Loader.vue';
 	import Sidebar from '@/components/layouts/Sidebar.vue';
+	import { mapGetters } from 'vuex';
+
 	export default
 	{
 		name: 'Content',
@@ -30,7 +32,42 @@
 					isDrug: false,
 					posX: this.$cookie.get('drugPosition')
 				},
+				isMobile: false,
 			}
+		},
+		computed:
+		{
+			...mapGetters([
+				'isShowSidebar',
+			]),
+			templateColumnsStr()
+			{
+				return !this.isMobile
+					? this.sidebar['gridTemplateColumns']
+					: this.isShowSidebar
+						? '320px auto'
+						: '0px auto';
+			},
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		async mounted()
+		{
+			await this.$store.dispatch('getTables');
+
+			if (this.$cookie.get('drugPosition') >= 200)
+				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
+			else
+				this.sidebar['gridTemplateColumns'] = '400px auto';
+
+
+			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
+
+			this.initEventScale();
+
+			window.addEventListener('resize', () => { this.updateIsMobile(); });
+			this.updateIsMobile();
 		},
 		methods:
 		{
@@ -67,24 +104,12 @@
 					self.$cookie.set('drugPosition', self.points.posX, 111);
 				}, false);
 			},
+			updateIsMobile()
+			{
+				this.isMobile = window.innerWidth < 768;
+				this.$store.commit('updateShowSidebar', !this.isMobile);
+			},
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		async mounted()
-		{
-			await this.$store.dispatch('getTables');
-
-			if (this.$cookie.get('drugPosition') >= 200)
-				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
-			else
-				this.sidebar['gridTemplateColumns'] = '400px auto';
-
-
-			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-
-			this.initEventScale();
-		}
 	}
 </script>
 <style lang="scss">
@@ -92,9 +117,7 @@
 	{
 		min-height: 100vh;
 		user-select: none;
-	}
-	.app-wrapper
-	{
+		position: relative;
 		display: grid;
 		grid-template-columns: 400px auto;
 	}

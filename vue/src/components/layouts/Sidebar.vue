@@ -215,6 +215,7 @@
 		{
 			background-color: #e6e6e6;
 		}
+		@media (max-width: 768px) { display: none; }
 	}
 	.sidebar-logo-wrapper
 	{

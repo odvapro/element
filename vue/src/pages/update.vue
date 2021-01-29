@@ -1,6 +1,7 @@
 <template>
 	<div class="update-wrapper">
 		<div class="update-head">
+			<div class="update-head__burger"><MobileBurger/></div>
 			<div class="update-head-name">
 				<div class="update-icon-wrapper"> ⚙️ </div>
 				<div class="update-name-wrapper">
@@ -27,9 +28,11 @@
 </template>
 <script>
 	import Loader from '@/components/forms/Loader.vue';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+
 	export default
 	{
-		components:{Loader},
+		components:{Loader,MobileBurger},
 		data()
 		{
 			return {
@@ -135,4 +138,15 @@
 	.update-buttons .el-gbtn {margin-right: 17px; }
 	.update-success {color:#3A8406; font-size: 14px;}
 	.update__loader{margin-bottom: 20px;}
+	@media (max-width: 768px)
+	{
+		.update-wrapper { min-width: 375px; }
+		.update-head
+		{
+			padding-right: 20px;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.update-head__burger { margin-right: 20px; }
+	}
 </style>
