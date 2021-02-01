@@ -1,6 +1,7 @@
 <template>
 	<div class="settings-wrapper">
 		<div class="settings-head">
+			<div class="settings-head__burger"><MobileBurger/></div>
 			<div class="settings-head-name">
 				<div class="settings-icon-wrapper">
 					⚙️
@@ -41,10 +42,11 @@
 	import SettingsTable from '@/components/layouts/SettingsTable.vue';
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang },
+		components: { SettingsTable, SettingsUser, SettingsLang, MobileBurger },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -191,5 +193,16 @@
 		align-items: flex-start;
 		overflow: auto;
 		height: 100%;
+	}
+	@media (max-width: 768px)
+	{
+		.settings-wrapper { min-width: 375px; }
+		.settings-head
+		{
+			padding-right: 14px;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.settings-head__burger { margin-right: 20px; }
 	}
 </style>

@@ -148,4 +148,21 @@
 		color: rgba(208, 18, 70, 0.4);
 		margin-top: 2px;
 	}
+	@media (max-width: 768px)
+	{
+		.popup-block
+		{
+			min-height: 100vh;
+			max-width: 100vw;
+			width: 100%;
+		}
+		.popup__field
+		{
+			flex-wrap: wrap;
+		}
+		.popup__field-name
+		{
+			width: 180px;
+		}
+	}
 </style>

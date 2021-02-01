@@ -1,5 +1,5 @@
 <template>
-	<div class="sidebar-wrapper">
+	<div v-click-outside=closeSidebar class="sidebar-wrapper">
 		<router-link to="/" class="sidebar-logo-wrapper">
 			<svg width="125" height="25">
 				<use xlink:href="#logo"></use>
@@ -85,6 +85,8 @@
 	</div>
 </template>
 <script>
+	import { mapGetters } from 'vuex';
+
 	export default
 	{
 		data()
@@ -102,6 +104,9 @@
 		},
 		computed:
 		{
+			...mapGetters([
+				'getExtensionsLinks',
+			]),
 			/**
 			 * Достать из урла активную страницу
 			 */
@@ -126,6 +131,10 @@
 		},
 		methods:
 		{
+			closeSidebar()
+			{
+				this.$emit('closeSidebar');
+			},
 			/**
 			 * Выход из учетной записи
 			 */
@@ -189,8 +198,10 @@
 		},
 		async mounted()
 		{
-			var result = await this.$axios.get('/extensions/getLinks/');
-			this.extensionsLinks = result.data.links;
+			if (!this.getExtensionsLinks || !this.getExtensionsLinks.length)
+				await this.$store.dispatch('setExtensionsLinks');
+
+			this.extensionsLinks = JSON.parse(JSON.stringify(this.getExtensionsLinks));
 			this.updateExtensionLinks();
 		}
 	}
@@ -215,6 +226,7 @@
 		{
 			background-color: #e6e6e6;
 		}
+		@media (max-width: 768px) { display: none; }
 	}
 	.sidebar-logo-wrapper
 	{

@@ -151,6 +151,10 @@
 		cursor: pointer;
 		&:hover {background-color: rgba(103, 115, 135, 0.1); }
 		svg{stroke:#677387;transform: rotate(45deg);}
-
+	}
+	@media (max-width: 768px)
+	{
+		.em-list-settings__key-block, .em-list-settings__value-block { max-width: 150px; }
+		// .em-list-settings__value-block { max-width: 160px; }
 	}
 </style>

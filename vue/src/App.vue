@@ -73,6 +73,5 @@
 <style lang="scss">
 	.app-layouts-wrapper{height: 100vh; }
 	*{box-sizing: border-box; }
-	body{min-width: 1180px; }
 	.content-wrapper {overflow: hidden; }
 </style>

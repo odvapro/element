@@ -289,5 +289,32 @@
 		font-size: 8px;
 		line-height: 11px;
 	}
-
+	@media (max-width: 768px)
+	{
+		.em-file__s-code,
+		.em-file__s-width,
+		.em-file__s-height
+		{
+			width: auto;
+			min-width: 100px;
+			flex-basis: 33.4%;
+		}
+		.em-file__settings-path
+		{
+			margin-top: 8px;
+			width: 100%;
+			span,
+			input
+			{
+				max-width: fit-content;
+				flex-basis: 50%;
+				width: 50%;
+			}
+			span
+			{
+				overflow-x: scroll;
+				&::webkit-scrollbar { width: 0; height: 0; }
+			}
+		}
+	}
 </style>
