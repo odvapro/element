@@ -32,8 +32,10 @@
 			 */
 			close(e)
 			{
-				let blockInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-block') === el});
-				let closeInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-close') === el});
+				const overlay = e.target.closest('.popup-overlay');
+				if (!overlay) return;
+				const blockInPathIndex = overlay.querySelector('.popup-block'),
+					closeInPathIndex = overlay.querySelector('.popup-close');
 
 				if (blockInPathIndex === -1 || closeInPathIndex !== -1)
 					this.$emit('update:visible', false);

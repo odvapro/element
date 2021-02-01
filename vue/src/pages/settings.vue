@@ -194,8 +194,10 @@
 		overflow: auto;
 		height: 100%;
 	}
+	.settings-head__burger { display: none; }
 	@media (max-width: 768px)
 	{
+		.settings-head__burger { display: block; }
 		.settings-wrapper { min-width: 375px; }
 		.settings-head
 		{
