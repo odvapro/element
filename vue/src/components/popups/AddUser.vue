@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="settings-popup-row-params">
 		<div class="popup__name">{{$t('add_user')}}</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
@@ -124,4 +124,3 @@
 		}
 	}
 </script>
-<style lang="scss"></style>

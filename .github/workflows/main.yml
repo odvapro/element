@@ -31,3 +31,4 @@ jobs:
           host: 95.213.191.208
           user: root
           key: ${{secrets.SSH_PRIVATE_KEY}}
+          args: "-tt -vvv"

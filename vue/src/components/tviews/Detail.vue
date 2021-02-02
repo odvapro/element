@@ -54,6 +54,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="detail__buttons">
+			<template v-if="name != 'tableAddElement'">
+				<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
+				<button @click="remove" class="el-gbtn">{{$t('remove')}}</button>
+				<button @click="saveElement" class="el-btn">{{$t('save')}}</button>
+			</template>
+			<template v-else>
+				<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
+				<button @click="createElement" class="el-btn">{{$t('create')}}</button>
+			</template>
+		</div>
 	</div>
 </template>
 <script>
@@ -310,8 +321,10 @@
 			margin-left:10px;
 		}
 	}
+	.detail__buttons { display: none; }
 	@media (max-width: 768px)
 	{
+		.detail { padding: 10px 0 0px 10px; }
 		.detail-head
 		{
 			padding-right: 14px;
@@ -321,10 +334,16 @@
 		}
 		.detail-head__burder { margin-right: 20px; }
 		.detail-head-name { flex-wrap: wrap; }
-		.detail-icon-wrapper, .detail-name-wrapper { margin-bottom: 20px; }
-		.detail-head__buttons { text-align-last: left; }
-		.detail-name-wrapper { flex-basis: 90%; }
-		.detail-icon-wrapper { flex-basis: 4%; }
+		.detail-head__buttons { display: none; }
+		.detail-name-wrapper { flex-basis: 90%; margin-bottom: 0; }
+		.detail-icon-wrapper { flex-basis: 4%; margin-bottom: 0; }
 		.detail-field-box { min-width: 150px; }
+		.detail__buttons
+		{
+			display: block;
+			padding-top: 20px;
+			margin-top: auto;
+			button { margin-left: 10px; &:first-child { margin-left: 0; } }
+		}
 	}
 </style>

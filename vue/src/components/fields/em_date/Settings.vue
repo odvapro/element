@@ -1,5 +1,5 @@
 <template>
-	<div class="">
+	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">{{$t('fieldEmDate.settings.include_time')}}</div>
 			<div class="popup__field-input">
