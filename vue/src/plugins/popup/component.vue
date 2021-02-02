@@ -156,14 +156,21 @@
 			min-height: 100vh;
 			max-width: 100vw;
 			width: 100%;
+			display: flex;
+			flex-direction: column;
 		}
-		.popup__field
+		.settings-popup-row-params
 		{
-			flex-wrap: wrap;
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
 		}
-		.popup__field-name
+		.popup__field { flex-wrap: wrap; }
+		.popup__field-name { width: 180px; }
+		.popup__buttons
 		{
-			width: 180px;
+			margin-top: auto;
+			padding-top: 20px;
 		}
 	}
 </style>

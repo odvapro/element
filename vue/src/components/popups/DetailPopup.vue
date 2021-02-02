@@ -102,7 +102,11 @@
 		{
 			.popup-block { min-width: unset; }
 			.detail-head__burder { display: none; }
-
+			.detail
+			{
+				flex-shrink: 0;
+				flex-grow: 1;
+			}
 		}
 	}
 </style>

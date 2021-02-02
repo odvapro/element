@@ -162,6 +162,7 @@
 		.content-wrapper
 		{
 			overflow: auto;
+			max-height: 100vh;
 			&::-webkit-scrollbar { width: 0; }
 		}
 		.app-wrapper__sidebar
