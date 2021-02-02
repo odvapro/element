@@ -1,11 +1,15 @@
 <template>
 	<div id="app">
-		<div class="app-wrapper" :style="{'grid-template-columns': templateColumnsStr }" :class="{'app-wrapper--opened': isShowSidebar }">
-			<Sidebar
-				:sidebarStyle="sidebar"
-				v-if="sidebar['gridTemplateColumns'] && isShowSidebar"
-				@closeSidebar="closeSidebarIfIsMobile"
-			/>
+		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
+			<transition name="el-sidebar-transition">
+				<div
+					class="app-wrapper__sidebar"
+					v-if="sidebar['gridTemplateColumns'] && (!isMobile || isShowSidebar)"
+					v-click-outside="closeSidebarIfIsMobile"
+				>
+					<Sidebar :sidebarStyle="sidebar" @closeSidebar="closeSidebarIfIsMobile" />
+				</div>
+			</transition>
 			<div class="content-wrapper">
 				<router-view/>
 				<div class="content__loader" v-if="$store.state.showLoader">
@@ -51,14 +55,6 @@
 			...mapGetters([
 				'isShowSidebar',
 			]),
-			templateColumnsStr()
-			{
-				return !this.isMobile
-					? this.sidebar['gridTemplateColumns']
-					: this.isShowSidebar
-						? '320px auto'
-						: '';
-			},
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -82,6 +78,7 @@
 		},
 		methods:
 		{
+
 			closeSidebarIfIsMobile()
 			{
 				if (this.isMobile)
@@ -157,5 +154,23 @@
 		top:140px;
 		left:50%;
 		margin-left: -50px;
+	}
+
+	@media (max-width: 768px)
+	{
+		.app-wrapper { display: flex; }
+		.content-wrapper
+		{
+			overflow: auto;
+			&::-webkit-scrollbar { width: 0; }
+		}
+		.app-wrapper__sidebar
+		{
+			overflow: hidden;
+			flex-basis: 320px;
+			flex-shrink: 0;
+		}
+		.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease 0.5s; }
+		.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px; }
 	}
 </style>

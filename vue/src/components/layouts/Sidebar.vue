@@ -414,4 +414,8 @@
 		background:#F0F1F3;
 	}
 	.sidebar-tables-wrapper{flex-grow: 1;}
+	@media (max-width: 768px)
+	{
+		.sidebar-wrapper { min-width: 320px; }
+	}
 </style>

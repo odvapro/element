@@ -316,5 +316,7 @@
 				&::webkit-scrollbar { width: 0; height: 0; }
 			}
 		}
+		.em-file__s-remove { padding-left:5px; }
+		.em-file__s-remove-button { width: 12px; height: 12px; }
 	}
 </style>

@@ -22,6 +22,8 @@
 			[
 				{ name: 'msapplication-TileColor', content: '#da532c' },
 				{ name: 'theme-color', content: '#ffffff' },
+				{ name: 'viewport min-width=375px', content: 'min-width=375, width=device-width, initial-scale=1' },
+				{ name: 'MobileOptimized', content: '375' },
 			],
 			link:
 			[
@@ -73,5 +75,4 @@
 <style lang="scss">
 	.app-layouts-wrapper{height: 100vh; }
 	*{box-sizing: border-box; }
-	.content-wrapper {overflow: hidden; }
 </style>
