@@ -1,8 +1,8 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" @keydown.esc="close" tabindex="1">
-			<div class="popup-block" @click.stop>
-				<div class="popup-close" @click="close">
+		<div class="popup-overlay" @click=closeByClickoutside v-if="visible" ref="popup" @keydown.esc=closeByEsc tabindex="1">
+			<div ref=popupBlock class="popup-block">
+				<div ref=popupClose class="popup-close" @click=close>
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>
 					</svg>
@@ -29,32 +29,32 @@
 			/**
 			 * Closes popup
 			 */
-			close(e)
+			closeByClickoutside(e)
 			{
-				const overlay = e.target.closest('.popup-overlay');
-				if (!overlay) return;
-				const blockInPathIndex = overlay.querySelector('.popup-block'),
-					closeInPathIndex = overlay.querySelector('.popup-close');
-
-				if (blockInPathIndex === -1 || closeInPathIndex !== -1)
-					this.$emit('update:visible', false);
+				if (e.target.closest('.popup-block') !== this.$refs.popupBlock)
+					this.close();
+			},
+			closeByEsc()
+			{
+				const innerPopup = this.$refs.popupBlock ? this.$refs.popupBlock.querySelector('.popup-block') : null;
+				if (!innerPopup)
+					this.close();
+			},
+			close()
+			{
+				this.$emit('update:visible', false);
 			},
 			keyup(event)
 			{
 				if (event.keyCode === 27)
-					this.close();
-			}
+					this.closeByEsc();
+			},
 		},
 		mounted()
 		{
 			if (this.visible)
-			{
 				document.body.appendChild(this.$el);
-			}
-		},
-		created()
-		{
-  			document.addEventListener('keyup', this.keyup);
+			document.addEventListener('keyup', this.keyup);
 		},
 		destroyed()
 		{
