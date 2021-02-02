@@ -159,6 +159,11 @@
 	@media (max-width: 768px)
 	{
 		.app-wrapper { display: flex; }
+		.content-wrapper
+		{
+			overflow: auto;
+			&::-webkit-scrollbar { width: 0; }
+		}
 		.app-wrapper__sidebar
 		{
 			overflow: hidden;
