@@ -9,6 +9,7 @@
 					v-for="listItem in selectedItems"
 					:key="listItem.key"
 					@remove="removeItem(listItem)"
+					:current=true
 				>{{ listItem.value }}</ListOption>
 			</template>
 			<ListOption

@@ -11,6 +11,13 @@
 <script>
 	export default
 	{
+		props:
+		{
+			current: {
+				type: Boolean,
+				default: false,
+			},
+		},
 		methods:
 		{
 			/**
@@ -18,8 +25,10 @@
 			 */
 			select:function(event)
 			{
+				if (this.current)
+					return;
 				this.$emit('select');
-				this.$parent.closePopup();
+				setTimeout(() => { this.$parent.closePopup(); }, 100);
 			},
 			/**
 			 * Remove item
