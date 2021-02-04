@@ -10,6 +10,7 @@
 				<ListOption
 					v-if="localFieldValue.id"
 					@remove="removeItem"
+					:current=true
 				>{{ localFieldValue.name }}</ListOption>
 			</template>
 			<ListOption
