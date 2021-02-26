@@ -11,6 +11,7 @@ class FileHelper
 		'image/png'   => '.png',
 		'image/gif'   => '.gif',
 		'image/pjpeg' => '.jpeg',
+		'image/webp'  => '.webp',
 	];
 
 	public static $fileTypes = [

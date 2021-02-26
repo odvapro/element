@@ -7,7 +7,7 @@
 		<Popup class="em-text__popup" :visible.sync="showEditor">
 			<div class="em-text__editor-wrapper">
 				<div class="em-text__popup-head">
-					<div class="em_text__label-wrapper">
+					<div class="em-text__label-wrapper">
 						<div class="em-text__popup-name">{{fieldName}}</div>
 						<div class="em-text__popup-code">{{fieldCode}}</div>
 					</div>

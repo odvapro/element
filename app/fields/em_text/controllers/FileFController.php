@@ -14,10 +14,11 @@ class FileFController extends ControllerBase
 		$file = $file[0];
 
 		$fileType = FileHelper::getTypeByMimeType($file->getRealType());
-		if(empty($fileType))
+		$extension = FileHelper::$imageTypes[$file->getRealType()] ?? null;
+
+		if(empty($fileType) || empty($extension))
 			return $this->jsonResult(['success' => false, 'message' => 'invalid file type']);
 
-		$extension = FileHelper::$imageTypes[$file->getRealType()];
 		$fullPath  = $this->savedPath . md5($file->getName() . time()) . $extension;
 		$file->moveTo($fullPath);
 		$fileName  = trim(str_replace(ROOT, '', $fullPath),'/');
