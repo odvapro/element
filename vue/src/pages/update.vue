@@ -138,8 +138,10 @@
 	.update-buttons .el-gbtn {margin-right: 17px; }
 	.update-success {color:#3A8406; font-size: 14px;}
 	.update__loader{margin-bottom: 20px;}
+	.update-head__burger { display: none; }
 	@media (max-width: 768px)
 	{
+		.update-head__burger { display: block; }
 		.update-wrapper { min-width: 375px; }
 		.update-head
 		{
