@@ -276,8 +276,7 @@ class Element
 		foreach ($insertParams['values'] as $fieldCode => $fieldValue)
 		{
 			if (!isset($tableColumns[$fieldCode]))
-				return false;
-
+				continue;
 			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
 			$settings   = $tableColumns[$fieldCode]['em']['settings'];
 

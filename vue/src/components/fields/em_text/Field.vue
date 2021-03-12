@@ -7,12 +7,12 @@
 		<Popup class="em-text__popup" :visible.sync="showEditor">
 			<div class="em-text__editor-wrapper">
 				<div class="em-text__popup-head">
-					<div class="em_text__label-wrapper">
+					<div class="em-text__label-wrapper">
 						<div class="em-text__popup-name">{{fieldName}}</div>
 						<div class="em-text__popup-code">{{fieldCode}}</div>
 					</div>
 					<div class="em_text__button-wrapper">
-						<button class="el-gbtn em-text__popup-cancel-btn" @click="showEditor = false">Cancel</button>
+						<button class="el-gbtn em-text__popup-cancel-btn" @click="closeEditor()" >Cancel</button>
 						<button class="el-btn" @click="closeAndSaveEditor()">Save</button>
 					</div>
 				</div>
@@ -55,6 +55,10 @@
 
 			}
 		},
+		beforeDestroy()
+		{
+			this.closeEditor();
+		},
 		methods:
 		{
 			saveEditorContent()
@@ -73,10 +77,16 @@
 				this.fieldName = !!columnSettings.em.name ? columnSettings.em.name : columnSettings.em.settings.name;
 				this.fieldCode = columnSettings.em.settings.name;
 			},
+			closeEditor()
+			{
+				if (this.editor && this.editor.destroy)
+					this.editor.destroy();
+				this.showEditor = false;
+			},
 			closeAndSaveEditor()
 			{
 				this.saveEditorContent();
-				this.showEditor = false;
+				this.closeEditor();
 			},
 			openEditor()
 			{
@@ -200,5 +210,13 @@
 	{
 		margin-right: 15px;
 	}
-	#el-editor *{box-sizing: content-box; }
+	#el-editor
+	{
+		user-select: text;
+		*{box-sizing: content-box; }
+	}
+	@media (max-width: 768px)
+	{
+		.em-text { min-width: unset; }
+	}
 </style>

@@ -37,6 +37,16 @@
 						@mousedown="registerEventResize($event, column)"
 					></div>
 				</div>
+				<div class="table-item table-item--empty">
+					<div class="table__add-column-item">
+						<!-- <div class="table__add-col-img">
+							<svg width="12" height="12">
+								<use xlink:href="#plus-white"></use>
+							</svg>
+						</div>
+						<span class="table__add-col-label">Add field</span> -->
+					</div>
+				</div>
 			</div>
 			<div class="table-row" data-test="table-row" v-for="(row, rowIndex) in tableContent.items">
 				<div class="table-item table__many-box">
@@ -73,6 +83,9 @@
 						@onChange="changeFieldValue"
 						@openEdit="openDetail(row,rowIndex)"
 					/>
+				</div>
+				<div class="table-item table-item--empty">
+					<div class="table-empty-col"></div>
 				</div>
 			</div>
 			<div class="table-row table-row__empty" data-test="table-row" v-if="!hasTableItems">
@@ -226,7 +239,22 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.$store.dispatch('saveFieldValue',fieldValue);
+				const id = fieldValue.settings.primaryKey.value;
+				const tableCode = fieldValue.settings.tableCode;
+				let selectedElement = null;
+
+				for (let row of this.tableContent.items)
+					if (row.id.value === id)
+					{
+						selectedElement = row;
+						break;
+					}
+
+				if (!selectedElement || !selectedElement[fieldValue.settings.fieldCode]) return;
+
+				selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+
+				this.$store.dispatch('saveSelectedElement', { selectedElement, tableCode });
 			},
 
 			/**
@@ -532,6 +560,7 @@
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&:hover{background: rgba(103, 115, 135, 0.05);}
+		&--empty{padding: 0;width: 0;}
 	}
 	.table-item-overide-name
 	{

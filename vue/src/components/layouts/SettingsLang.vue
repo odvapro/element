@@ -7,7 +7,7 @@
 			<div class="settings-lang-list">
 				<List>
 					<template v-slot:selected>
-						<ListOption>{{ $store.getters.langStr }}</ListOption>
+						<ListOption :current=true>{{ $store.getters.langStr }}</ListOption>
 					</template>
 					<ListOption
 						v-for="(lang, langIndex) in $store.getters.langList"

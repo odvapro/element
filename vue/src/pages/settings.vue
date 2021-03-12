@@ -1,6 +1,7 @@
 <template>
 	<div class="settings-wrapper">
 		<div class="settings-head">
+			<div class="settings-head__burger"><MobileBurger/></div>
 			<div class="settings-head-name">
 				<div class="settings-icon-wrapper">
 					⚙️
@@ -45,12 +46,13 @@
 	import SettingsTable from '@/components/layouts/SettingsTable.vue';
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 	import SettingsGroups from '@/components/layouts/SettingsGroups.vue';
 	import SettingsApi from '@/components/layouts/SettingsApi.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang, SettingsGroups, SettingsApi },
+		components: { SettingsTable, SettingsUser, SettingsLang, MobileBurger, SettingsGroups, SettingsApi, },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -109,7 +111,13 @@
 	}
 </script>
 <style lang="scss">
-	.settings-wrapper {padding: 23px 0 23px 21px; height: 100%;}
+	.settings-wrapper
+	{
+		padding: 23px 0 23px 21px;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 	.settings-head
 	{
 		display: flex;
@@ -154,6 +162,11 @@
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
 	}
+	.settings-tab-wrapper
+	{
+		display: flex;
+		flex-direction: column;
+	}
 	.settings-tab-item
 	{
 		font-size: 12px;
@@ -180,5 +193,18 @@
 		align-items: flex-start;
 		overflow: auto;
 		height: 100%;
+	}
+	.settings-head__burger { display: none; }
+	@media (max-width: 768px)
+	{
+		.settings-head__burger { display: block; }
+		.settings-wrapper { min-width: 375px; }
+		.settings-head
+		{
+			padding-right: 14px;
+			justify-content: flex-start;
+			align-items: center;
+		}
+		.settings-head__burger { margin-right: 20px; }
 	}
 </style>

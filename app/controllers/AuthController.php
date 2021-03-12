@@ -35,8 +35,7 @@ class AuthController extends ControllerBase
 			]
 		];
 
-		if (!empty($this->user))
-			$result['user']['is_admin'] = $this->user->isAdmin();
+		$result['user']['is_admin'] = $user->isAdmin();
 
 		return $this->jsonResult($result);
 	}

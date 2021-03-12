@@ -1,9 +1,8 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" @click="close" v-if="visible" ref="popup" tabindex="1">
-			<div
-				class="popup-block">
-				<div class="popup-close" @click="close">
+		<div class="popup-overlay" @click=closeByClickoutside v-if="visible" ref="popup" @keydown.esc=closeByEsc tabindex="1">
+			<div ref=popupBlock class="popup-block">
+				<div ref=popupClose class="popup-close" @click=close>
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>
 					</svg>
@@ -30,30 +29,32 @@
 			/**
 			 * Closes popup
 			 */
-			close(e)
+			closeByClickoutside(e)
 			{
-				let blockInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-block') === el});
-				let closeInPathIndex = e.path.findIndex(el=>{return document.querySelector('.popup-close') === el});
-
-				if (blockInPathIndex === -1 || closeInPathIndex !== -1)
-					this.$emit('update:visible', false);
+				if (e.target.closest('.popup-block') !== this.$refs.popupBlock)
+					this.close();
+			},
+			closeByEsc()
+			{
+				const innerPopup = this.$refs.popupBlock ? this.$refs.popupBlock.querySelector('.popup-block') : null;
+				if (!innerPopup)
+					this.close();
+			},
+			close()
+			{
+				this.$emit('update:visible', false);
 			},
 			keyup(event)
 			{
 				if (event.keyCode === 27)
-					this.close(event);
-			}
+					this.closeByEsc();
+			},
 		},
 		mounted()
 		{
 			if (this.visible)
-			{
 				document.body.appendChild(this.$el);
-			}
-		},
-		created()
-		{
-  			document.addEventListener('keyup', this.keyup);
+			document.addEventListener('keyup', this.keyup);
 		},
 		destroyed()
 		{
@@ -147,5 +148,29 @@
 		line-height: 11px;
 		color: rgba(208, 18, 70, 0.4);
 		margin-top: 2px;
+	}
+	@media (max-width: 768px)
+	{
+		.popup-block
+		{
+			min-height: 100vh;
+			max-width: 100vw;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+		.settings-popup-row-params
+		{
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+		}
+		.popup__field { flex-wrap: wrap; }
+		.popup__field-name { width: 180px; }
+		.popup__buttons
+		{
+			margin-top: auto;
+			padding-top: 20px;
+		}
 	}
 </style>

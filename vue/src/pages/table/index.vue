@@ -2,6 +2,7 @@
 	<div class="index__wrapper">
 		<div class="index__head" v-if="table">
 			<div class="index__head-name">
+				<div class="index__head-burger"><MobileBurger/></div>
 				<div class="index__icon-wrapper">
 					<svg width="14" height="13">
 						<use xlink:href="#tableicon"></use>
@@ -19,7 +20,7 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						{{$t('properties')}}
+						<div class="index__menu-item-title">{{$t('properties')}}</div>
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
@@ -32,7 +33,7 @@
 						class="index__menu-item"
 						@click="openPopup('isSortPopupShow')"
 					>
-						{{$t('sort')}}
+						<div class="index__menu-item-title">{{$t('sort')}}</div>
 						<SortPopup
 							v-if="popups.isSortPopupShow"
 							:columns="table.columns"
@@ -45,7 +46,7 @@
 						@click="openPopup('isFiltersPopupShow')"
 						class="index__menu-item"
 					>
-						{{$t('filter')}}
+						<div class="index__menu-item-title">{{$t('filter')}}</div>
 						<FiltersPopup
 							v-if="popups.isFiltersPopupShow"
 							:columns="table.columns"
@@ -54,23 +55,44 @@
 						/>
 					</li>
 					<li
-						:class="{active: popups.isExportPopupShow}"
-						class="index__menu-item index__menu-item-more"
-						@click="openPopup('isExportPopupShow')"
+						:class="{active: popups.isMorePopupShow}"
+						class="index__menu-more"
 					>
-						...
-						<ExportPopup
-							v-if="popups.isExportPopupShow"
-							v-click-outside:isExportPopupShow="closePopup"
-							:tview="activeTview"
-						/>
+						<div
+							@click="openPopup('isMorePopupShow')"
+							class="index__menu-item-title"
+						>...</div>
+						<ul
+							v-if="popups.isMorePopupShow"
+							class="index__menu-more-list"
+							v-click-outside:isMorePopupShow="closePopup"
+						>
+							<li
+								class="index__menu-more-list-item index__menu-more-list-item--mobile"
+								:class="{active: popups.isPropertiesPopupShow}"
+								@click="closePopup(null, 'isMorePopupShow'); openPopup('isPropertiesPopupShow');"
+							>{{$t('properties')}}</li>
+							<li
+								:class="{active: popups.isSortPopupShow}"
+								class="index__menu-more-list-item index__menu-more-list-item--mobile"
+								@click="closePopup(null, 'isMorePopupShow'); openPopup('isSortPopupShow');"
+							>{{$t('sort')}}</li>
+							<li
+								:class="{active: popups.isFiltersPopupShow}"
+								@click="closePopup(null, 'isMorePopupShow'); openPopup('isFiltersPopupShow');"
+								class="index__menu-more-list-item index__menu-more-list-item--mobile"
+							>{{$t('filter')}}</li>
+							<li
+								class="index__menu-more-list-item"
+							><ExportPopup :tview="activeTview" /></li>
+						</ul>
 					</li>
 				</ul>
 				<button class="index__add-btn el-btn" @click="addElement()">
 					<svg width="12" height="12">
 						<use xlink:href="#plus"></use>
 					</svg>
-					{{$t('add_element')}}
+					<span class="index__add-btn-text">{{$t('add_element')}}</span>
 				</button>
 			</div>
 		</div>
@@ -87,10 +109,12 @@
 	import SortPopup from '@/components/popups/SortPopup.vue';
 	import Properties from '@/components/popups/Properties.vue';
 	import TableWork from '@/mixins/tableWork.js';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+
 	export default
 	{
 		mixins: [TableWork],
-		components: { Properties, FiltersPopup, ExportPopup, SortPopup },
+		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger },
 		/**
 		 * Head параметры страницы
 		 */
@@ -113,7 +137,7 @@
 					isPropertiesPopupShow : false,
 					isFiltersPopupShow    : false,
 					isSortPopupShow       : false,
-					isExportPopupShow     : false,
+					isMorePopupShow       : false,
 				},
 				propertiesPopupData: {}
 			}
@@ -243,19 +267,15 @@
 	}
 	.index__menu-item
 	{
+		margin-right: 5px;
+		position: relative;
+	}
+	.index__menu-item-title
+	{
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
-		margin-right: 5px;
-		cursor: pointer;
-		position: relative;
 		padding: 5px 8px;
-		&-more
-		{
-			font-size: 15px;
-			line-height: 1;
-			height: 23px;
-			padding: 0px 2px;
-		}
+		cursor: pointer;
 		&.active, &:hover
 		{
 			background-color: rgba(103, 115, 135, 0.1);
@@ -267,5 +287,49 @@
 		position: relative;
 		top:1px;
 		margin-right:2px;
+	}
+	.index__menu-more
+	{
+		position: relative;
+	}
+	.index__menu-more-list
+	{
+		position: absolute;
+		top: calc(100% + 5px);
+		right: 0;
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		z-index: 2;
+		border-radius: 2px;
+		background-color: #fff;
+		width:auto;
+		min-width: 120px;
+		transform: translate(calc(50% - 11px));
+	}
+	.index__menu-more-list-item
+	{
+		padding-top: 8px;
+		padding-bottom: 8px;
+		padding-left: 11px;
+		font-size: 10px;
+		color: rgba(25, 28, 33, 0.7);
+		display: block;
+		cursor: pointer;
+		&:hover { background-color: rgba(103, 115, 135, 0.1); }
+		&--mobile { display: none; }
+	}
+	@media (max-width: 768px)
+	{
+		.index__wrapper { min-width: 375px; }
+		.index__head { padding-right: 14px; align-items: center; }
+		.index__head-burger { margin-right: 20px; }
+		.index__overide-name { font-size: 18px; }
+		.index__add-btn-text { display: none; }
+		.index__menu-item
+		{
+			.index__menu-item-title { display: none; }
+			&.active, &:hover { background-color: transparent; }
+		}
+		.index__menu-more-list-item--mobile { display: block; }
 	}
 </style>

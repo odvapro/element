@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import router from './router'
-import Meta from 'vue-meta'
-import scssVars from './assets/variables.scss'
-import scssNorm from './assets/normalize.scss'
-import scsssStyle from './assets/style.scss'
-import './plugins/axios.js'
-import './plugins/message.js'
-import Popup from './plugins/popup/index.js'
-import fonts from './assets/fonts.scss'
-import App from './App.vue'
-import store from './store/index.js'
+import Vue from 'vue';
+import router from './router';
+import Meta from 'vue-meta';
+import scssVars from './assets/variables.scss';
+import scssNorm from './assets/normalize.scss';
+import scsssStyle from './assets/style.scss';
+import './plugins/axios.js';
+import './plugins/message.js';
+import Popup from './plugins/popup/index.js';
+import fonts from './assets/fonts.scss';
+import App from './App.vue';
+import store from './store/index.js';
 import VueCookie from 'vue-cookie';
 import Checkbox from './components/forms/Checkbox.vue';
 import List from './components/forms/List.vue';
@@ -21,8 +21,8 @@ import Table from './components/tviews/Table.vue';
 import './plugins/highlightjs/main.js';
 
 Vue.use(VueCookie);
-Vue.use(Meta)
-Vue.use(Popup)
+Vue.use(Meta);
+Vue.use(Popup);
 Vue.config.productionTip = false;
 
 Vue.component('Checkbox', Checkbox);
@@ -73,8 +73,7 @@ router.beforeEach(async function(to, from, next)
 	next();
 });
 
-Vue.directive('click-outside',
-{
+Vue.directive('click-outside', {
 	bind: function (el, binding, vnode)
 	{
 		el.fisrtClick = true;
@@ -104,4 +103,4 @@ new Vue({
 	router,
 	store,
 	render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

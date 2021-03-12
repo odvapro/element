@@ -9,8 +9,7 @@ import vuexI18n from 'vuex-i18n';
 import translationsEn from '../locale/en';
 import translationsRu from '../locale/ru';
 
-
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
 	modules:
@@ -27,7 +26,12 @@ const store = new Vuex.Store({
 		isAuth         : false,
 		isIntallDb     : false,
 		showLoader     : false,
-		layoutSelected : false
+		layoutSelected : false,
+		showSidebar    : false,
+	},
+	getters:
+	{
+		isShowSidebar: state => state.showSidebar,
 	},
 	mutations:
 	{
@@ -62,9 +66,17 @@ const store = new Vuex.Store({
 		showLoader(state,hide)
 		{
 			state.showLoader = hide;
-		}
+		},
+
+		/**
+		 * показывает/скрывает сайдбар
+		 */
+		updateShowSidebar(state, status)
+		{
+			state.showSidebar = !!status;
+		},
 	}
-})
+});
 
 Vue.use(vuexI18n.plugin, store);
 Vue.i18n.add('en', translationsEn);

@@ -1,7 +1,15 @@
 <template>
 	<div id="app">
 		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
-			<Sidebar :sidebarStyle="sidebar" v-if="sidebar['gridTemplateColumns']"/>
+			<transition name="el-sidebar-transition">
+				<div
+					class="app-wrapper__sidebar"
+					v-if="sidebar['gridTemplateColumns'] && (!isMobile || isShowSidebar)"
+					v-click-outside="closeSidebarIfIsMobile"
+				>
+					<Sidebar :sidebarStyle="sidebar" @closeSidebar="closeSidebarIfIsMobile" />
+				</div>
+			</transition>
 			<div class="content-wrapper">
 				<router-view/>
 				<div class="content__loader" v-if="$store.state.showLoader">
@@ -14,6 +22,8 @@
 <script>
 	import Loader from '@/components/forms/Loader.vue';
 	import Sidebar from '@/components/layouts/Sidebar.vue';
+	import { mapGetters } from 'vuex';
+
 	export default
 	{
 		name: 'Content',
@@ -33,10 +43,50 @@
 					isDrug: false,
 					posX: this.$cookie.get('drugPosition')
 				},
+				isMobile: false,
 			}
+		},
+		watch:
+		{
+			$route (to, from)
+			{
+				this.closeSidebarIfIsMobile();
+			},
+		},
+		computed:
+		{
+			...mapGetters([
+				'isShowSidebar',
+			]),
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		async mounted()
+		{
+			await this.$store.dispatch('getTables');
+
+			if (this.$cookie.get('drugPosition') >= 200)
+				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
+			else
+				this.sidebar['gridTemplateColumns'] = '400px auto';
+
+
+			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
+
+			this.initEventScale();
+
+			window.addEventListener('resize', () => { this.updateIsMobile(); });
+			this.updateIsMobile();
 		},
 		methods:
 		{
+
+			closeSidebarIfIsMobile()
+			{
+				if (this.isMobile)
+					this.$store.commit('updateShowSidebar', false);
+			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */
@@ -70,6 +120,11 @@
 					self.$cookie.set('drugPosition', self.points.posX, 111);
 				}, false);
 			},
+			updateIsMobile()
+			{
+				this.isMobile = window.innerWidth < 768;
+				this.$store.commit('updateShowSidebar', !this.isMobile);
+			},
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -83,7 +138,7 @@
 			this.initEventScale();
 
 			await this.$store.dispatch('getTables');
-		}
+		},
 	}
 </script>
 <style lang="scss">
@@ -91,9 +146,7 @@
 	{
 		min-height: 100vh;
 		user-select: none;
-	}
-	.app-wrapper
-	{
+		position: relative;
 		display: grid;
 		grid-template-columns: 400px auto;
 	}
@@ -117,5 +170,24 @@
 		top:140px;
 		left:50%;
 		margin-left: -50px;
+	}
+
+	@media (max-width: 768px)
+	{
+		.app-wrapper { display: flex; }
+		.content-wrapper
+		{
+			overflow: auto;
+			max-height: 100vh;
+			&::-webkit-scrollbar { width: 0; }
+		}
+		.app-wrapper__sidebar
+		{
+			overflow: hidden;
+			flex-basis: 320px;
+			flex-shrink: 0;
+		}
+		.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease 0.5s; }
+		.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px; }
 	}
 </style>

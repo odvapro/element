@@ -9,8 +9,9 @@ class Image extends Phalcon\Mvc\User\Plugin
 	const CROPRIGHT = 5;
 
 	public $quality_jpg = 85;
+	public $quality_webp = 80;
 	public $quality_png = 6;
-	public $quality_truecolor = TRUE;
+	public $quality_truecolor = true;
 
 	public $interlace = 1;
 
@@ -33,487 +34,499 @@ class Image extends Phalcon\Mvc\User\Plugin
 	protected $source_w;
 	protected $source_h;
 
-/**
-* Create instance from a strng
-*
-* @param string $image_data
-* @return ImageResize
-* @throws \exception
-*/
-public static function createFromString($image_data)
-{
-	$resize = new self('data://application/octet-stream;base64,' . base64_encode($image_data));
-	return $resize;
-}
-
-/**
-* Loads image source and its properties to the instanciated object
-*
-* @param string $filename
-* @return ImageResize
-* @throws \Exception
-*/
-public function __construct($filename)
-{
-	$image_info = @getimagesize($filename);
-
-	if (!$image_info) {
-		throw new \Exception('Could not read file');
+	/**
+	 * Create instance from a strng
+	 *
+	 * @param string $image_data
+	 * @return ImageResize
+	 * @throws \exception
+	 */
+	public static function createFromString($image_data)
+	{
+		$resize = new self('data://application/octet-stream;base64,' . base64_encode($image_data));
+		return $resize;
 	}
 
-	list (
-		$this->original_w,
-		$this->original_h,
-		$this->source_type
-	) = $image_info;
+	/**
+	 * Loads image source and its properties to the instanciated object
+	 *
+	 * @param string $filename
+	 * @return ImageResize
+	 * @throws \Exception
+	 */
+	public function __construct($filename)
+	{
+		$image_info = @getimagesize($filename);
 
-	switch ($this->source_type) {
-		case IMAGETYPE_GIF:
-		$this->source_image = imagecreatefromgif($filename);
-		break;
+		if (!$image_info) {
+			throw new \Exception('Could not read file');
+		}
 
-		case IMAGETYPE_JPEG:
-		$this->source_image = $this->imageCreateJpegfromExif($filename);
+		list (
+			$this->original_w,
+			$this->original_h,
+			$this->source_type
+		) = $image_info;
 
-// set new width and height for image, maybe it has changed
-		$this->original_w = ImageSX($this->source_image);
-		$this->original_h = ImageSY($this->source_image);
+		switch ($this->source_type)
+		{
+			case IMAGETYPE_GIF:
+				$this->source_image = imagecreatefromgif($filename);
+			break;
 
-		break;
+			case IMAGETYPE_JPEG:
+				$this->source_image = $this->imageCreateJpegfromExif($filename);
 
-		case IMAGETYPE_PNG:
-		$this->source_image = imagecreatefrompng($filename);
-		break;
+				// set new width and height for image, maybe it has changed
+				$this->original_w = ImageSX($this->source_image);
+				$this->original_h = ImageSY($this->source_image);
+			break;
 
-		default:
-		throw new \Exception('Unsupported image type');
-		break;
+			case IMAGETYPE_PNG:
+				$this->source_image = imagecreatefrompng($filename);
+			break;
+
+			case IMAGETYPE_WEBP:
+				$this->source_image = imagecreatefromwebp($filename);
+			break;
+
+			default:
+				throw new \Exception('Unsupported image type');
+			break;
+		}
+
+		if (!$this->source_image) {
+			throw new \Exception('Could not load image');
+		}
+
+		return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
 	}
 
-	if (!$this->source_image) {
-		throw new \Exception('Could not load image');
-	}
+	// http://stackoverflow.com/a/28819866
+	public function imageCreateJpegfromExif($filename)
+	{
+		$img = imagecreatefromjpeg($filename);
+		$exif = @exif_read_data($filename);
 
-	return $this->resize($this->getSourceWidth(), $this->getSourceHeight());
-}
+		if (!$exif || !isset($exif['Orientation'])){
+			return $img;
+		}
 
-// http://stackoverflow.com/a/28819866
-public function imageCreateJpegfromExif($filename){
-	$img = imagecreatefromjpeg($filename);
-	$exif = @exif_read_data($filename);
+		$orientation = $exif['Orientation'];
 
-	if (!$exif || !isset($exif['Orientation'])){
+		if ($orientation === 6 || $orientation === 5){
+			$img = imagerotate($img, 270, null);
+		} else if ($orientation === 3 || $orientation === 4){
+			$img = imagerotate($img, 180, null);
+		} else if ($orientation === 8 || $orientation === 7){
+			$img = imagerotate($img, 90, null);
+		}
+
+		if ($orientation === 5 || $orientation === 4 || $orientation === 7){
+			imageflip($img, IMG_FLIP_HORIZONTAL);
+		}
+
 		return $img;
 	}
 
-	$orientation = $exif['Orientation'];
+	/**
+	 * Saves new image
+	 *
+	 * @param string $filename
+	 * @param string $image_type
+	 * @param integer $quality
+	 * @param integer $permissions
+	 * @return \static
+	 */
+	public function save($filename, $image_type = null, $quality = null, $permissions = null)
+	{
+		$image_type = $image_type ?: $this->source_type;
 
-	if ($orientation === 6 || $orientation === 5){
-		$img = imagerotate($img, 270, null);
-	} else if ($orientation === 3 || $orientation === 4){
-		$img = imagerotate($img, 180, null);
-	} else if ($orientation === 8 || $orientation === 7){
-		$img = imagerotate($img, 90, null);
-	}
+		switch ($image_type) {
+			case IMAGETYPE_GIF:
+				$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
 
-	if ($orientation === 5 || $orientation === 4 || $orientation === 7){
-		imageflip($img, IMG_FLIP_HORIZONTAL);
-	}
+				$background = imagecolorallocatealpha($dest_image, 255, 255, 255, 1);
+				imagecolortransparent($dest_image, $background);
+				imagefill($dest_image, 0, 0 , $background);
+				imagesavealpha($dest_image, true);
+			break;
 
-	return $img;
-}
+			case IMAGETYPE_WEBP:
+			case IMAGETYPE_JPEG:
+				$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
 
-/**
-* Saves new image
-*
-* @param string $filename
-* @param string $image_type
-* @param integer $quality
-* @param integer $permissions
-* @return \static
-*/
-public function save($filename, $image_type = null, $quality = null, $permissions = null)
-{
-	$image_type = $image_type ?: $this->source_type;
+				$background = imagecolorallocate($dest_image, 255, 255, 255);
+				imagefilledrectangle($dest_image, 0, 0, $this->getDestWidth(), $this->getDestHeight(), $background);
+			break;
 
-	switch ($image_type) {
-		case IMAGETYPE_GIF:
-		$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
+			case IMAGETYPE_PNG:
+				if (!$this->quality_truecolor && !imageistruecolor($this->source_image)) {
+					$dest_image = imagecreate($this->getDestWidth(), $this->getDestHeight());
 
-		$background = imagecolorallocatealpha($dest_image, 255, 255, 255, 1);
-		imagecolortransparent($dest_image, $background);
-		imagefill($dest_image, 0, 0 , $background);
-		imagesavealpha($dest_image, true);
-		break;
+					$background = imagecolorallocatealpha($dest_image, 255, 255, 255, 1);
+					imagecolortransparent($dest_image, $background);
+					imagefill($dest_image, 0, 0 , $background);
+				} else {
+					$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
+				}
 
-		case IMAGETYPE_JPEG:
-		$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
-
-		$background = imagecolorallocate($dest_image, 255, 255, 255);
-		imagefilledrectangle($dest_image, 0, 0, $this->getDestWidth(), $this->getDestHeight(), $background);
-		break;
-
-		case IMAGETYPE_PNG:
-		if (!$this->quality_truecolor && !imageistruecolor($this->source_image)) {
-			$dest_image = imagecreate($this->getDestWidth(), $this->getDestHeight());
-
-			$background = imagecolorallocatealpha($dest_image, 255, 255, 255, 1);
-			imagecolortransparent($dest_image, $background);
-			imagefill($dest_image, 0, 0 , $background);
-		} else {
-			$dest_image = imagecreatetruecolor($this->getDestWidth(), $this->getDestHeight());
+				imagealphablending($dest_image, false);
+				imagesavealpha($dest_image, true);
+			break;
 		}
 
-		imagealphablending($dest_image, false);
-		imagesavealpha($dest_image, true);
-		break;
-	}
+		imageinterlace($dest_image, $this->interlace);
 
-	imageinterlace($dest_image, $this->interlace);
+		imagecopyresampled(
+			$dest_image,
+			$this->source_image,
+			$this->dest_x,
+			$this->dest_y,
+			$this->source_x,
+			$this->source_y,
+			$this->getDestWidth(),
+			$this->getDestHeight(),
+			$this->source_w,
+			$this->source_h
+		);
 
-	imagecopyresampled(
-		$dest_image,
-		$this->source_image,
-		$this->dest_x,
-		$this->dest_y,
-		$this->source_x,
-		$this->source_y,
-		$this->getDestWidth(),
-		$this->getDestHeight(),
-		$this->source_w,
-		$this->source_h
-	);
+		switch ($image_type) {
+			case IMAGETYPE_GIF:
+				imagegif($dest_image, $filename);
+			break;
 
-	switch ($image_type) {
-		case IMAGETYPE_GIF:
-		imagegif($dest_image, $filename);
-		break;
+			case IMAGETYPE_JPEG:
+				if ($quality === null) {
+					$quality = $this->quality_jpg;
+				}
 
-		case IMAGETYPE_JPEG:
-		if ($quality === null) {
-			$quality = $this->quality_jpg;
+				imagejpeg($dest_image, $filename, $quality);
+			break;
+
+			case IMAGETYPE_PNG:
+				if ($quality === null) {
+					$quality = $this->quality_png;
+				}
+
+				imagepng($dest_image, $filename, $quality);
+			break;
+			case IMAGETYPE_WEBP:
+				if ($quality === null) {
+					$quality = $this->quality_webp;
+				}
+
+				imagewebp($dest_image, $filename, $quality);
+			break;
 		}
 
-		imagejpeg($dest_image, $filename, $quality);
-		break;
-
-		case IMAGETYPE_PNG:
-		if ($quality === null) {
-			$quality = $this->quality_png;
+		if ($permissions) {
+			chmod($filename, $permissions);
 		}
 
-		imagepng($dest_image, $filename, $quality);
-		break;
-	}
+		imagedestroy($dest_image);
 
-	if ($permissions) {
-		chmod($filename, $permissions);
-	}
-
-	imagedestroy($dest_image);
-
-	return $this;
-}
-
-/**
-* Convert the image to string
-*
-* @param int $image_type
-* @param int $quality
-* @return string
-*/
-public function getImageAsString($image_type = null, $quality = null)
-{
-	$string_temp = tempnam(sys_get_temp_dir(), '');
-
-	$this->save($string_temp , $image_type, $quality);
-
-	$string = file_get_contents($string_temp);
-
-	unlink($string_temp);
-
-	return $string;
-}
-
-/**
-* Convert the image to string with the current settings
-*
-* @return string
-*/
-public function __toString()
-{
-	return $this->getImageAsString();
-}
-
-/**
-* Outputs image to browser
-* @param string $image_type
-* @param integer $quality
-*/
-public function output($image_type = null, $quality = null)
-{
-	$image_type = $image_type ?: $this->source_type;
-
-	header('Content-Type: ' . image_type_to_mime_type($image_type));
-
-	$this->save(null, $image_type, $quality);
-}
-
-/**
-* Resizes image according to the given height (width proportional)
-*
-* @param integer $height
-* @param boolean $allow_enlarge
-* @return \static
-*/
-public function resizeToHeight($height, $allow_enlarge = false)
-{
-	$ratio = $height / $this->getSourceHeight();
-	$width = $this->getSourceWidth() * $ratio;
-
-	$this->resize($width, $height, $allow_enlarge);
-
-	return $this;
-}
-
-/**
-* Resizes image according to the given width (height proportional)
-*
-* @param integer $width
-* @param boolean $allow_enlarge
-* @return \static
-*/
-public function resizeToWidth($width, $allow_enlarge = false)
-{
-	$ratio  = $width / $this->getSourceWidth();
-	$height = $this->getSourceHeight() * $ratio;
-
-	$this->resize($width, $height, $allow_enlarge);
-
-	return $this;
-}
-
-/**
-* Resizes image to best fit inside the given dimensions
-*
-* @param integer $max_width
-* @param integer $max_height
-* @param boolean $allow_enlarge
-* @return \static
-*/
-public function resizeToBestFit($max_width, $max_height, $allow_enlarge = false)
-{
-	if($this->getSourceWidth() <= $max_width && $this->getSourceHeight() <= $max_height && $allow_enlarge === false){
 		return $this;
 	}
 
-	$ratio  = $this->getSourceHeight() / $this->getSourceWidth();
-	$width = $max_width;
-	$height = $width * $ratio;
+	/**
+	 * Convert the image to string
+	 *
+	 * @param int $image_type
+	 * @param int $quality
+	 * @return string
+	 */
+	public function getImageAsString($image_type = null, $quality = null)
+	{
+		$string_temp = tempnam(sys_get_temp_dir(), '');
 
-	if($height > $max_height){
-		$height = $max_height;
-		$width = $height / $ratio;
+		$this->save($string_temp , $image_type, $quality);
+
+		$string = file_get_contents($string_temp);
+
+		unlink($string_temp);
+
+		return $string;
 	}
 
-	return $this->resize($width, $height, $allow_enlarge);
-}
-
-/**
-* Resizes image according to given scale (proportionally)
-*
-* @param integer|float $scale
-* @return \static
-*/
-public function scale($scale)
-{
-	$width  = $this->getSourceWidth() * $scale / 100;
-	$height = $this->getSourceHeight() * $scale / 100;
-
-	$this->resize($width, $height, true);
-
-	return $this;
-}
-
-/**
-* Resizes image according to the given width and height
-*
-* @param integer $width
-* @param integer $height
-* @param boolean $allow_enlarge
-* @return \static
-*/
-public function resize($width, $height, $allow_enlarge = false)
-{
-	if (!$allow_enlarge) {
-// if the user hasn't explicitly allowed enlarging,
-// but either of the dimensions are larger then the original,
-// then just use original dimensions - this logic may need rethinking
-
-		if ($width > $this->getSourceWidth() || $height > $this->getSourceHeight()) {
-			$width  = $this->getSourceWidth();
-			$height = $this->getSourceHeight();
-		}
+	/**
+	 * Convert the image to string with the current settings
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->getImageAsString();
 	}
 
-	$this->source_x = 0;
-	$this->source_y = 0;
+	/**
+	 * Outputs image to browser
+	 * @param string $image_type
+	 * @param integer $quality
+	 */
+	public function output($image_type = null, $quality = null)
+	{
+		$image_type = $image_type ?: $this->source_type;
 
-	$this->dest_w = $width;
-	$this->dest_h = $height;
+		header('Content-Type: ' . image_type_to_mime_type($image_type));
 
-	$this->source_w = $this->getSourceWidth();
-	$this->source_h = $this->getSourceHeight();
-
-	return $this;
-}
-
-/**
-* Crops image according to the given width, height and crop position
-*
-* @param integer $width
-* @param integer $height
-* @param boolean $allow_enlarge
-* @param integer $position
-* @return \static
-*/
-public function crop($width, $height, $allow_enlarge = false, $position = self::CROPCENTER)
-{
-	if (!$allow_enlarge) {
-// this logic is slightly different to resize(),
-// it will only reset dimensions to the original
-// if that particular dimenstion is larger
-
-		if ($width > $this->getSourceWidth()) {
-			$width  = $this->getSourceWidth();
-		}
-
-		if ($height > $this->getSourceHeight()) {
-			$height = $this->getSourceHeight();
-		}
+		$this->save(null, $image_type, $quality);
 	}
 
-	$ratio_source = $this->getSourceWidth() / $this->getSourceHeight();
-	$ratio_dest = $width / $height;
+	/**
+	 * Resizes image according to the given height (width proportional)
+	 *
+	 * @param integer $height
+	 * @param boolean $allow_enlarge
+	 * @return \static
+	 */
+	public function resizeToHeight($height, $allow_enlarge = false)
+	{
+		$ratio = $height / $this->getSourceHeight();
+		$width = $this->getSourceWidth() * $ratio;
 
-	if ($ratio_dest < $ratio_source) {
-		$this->resizeToHeight($height, $allow_enlarge);
+		$this->resize($width, $height, $allow_enlarge);
 
-		$excess_width = ($this->getDestWidth() - $width) / $this->getDestWidth() * $this->getSourceWidth();
+		return $this;
+	}
 
-		$this->source_w = $this->getSourceWidth() - $excess_width;
-		$this->source_x = $this->getCropPosition($excess_width, $position);
+	/**
+	 * Resizes image according to the given width (height proportional)
+	 *
+	 * @param integer $width
+	 * @param boolean $allow_enlarge
+	 * @return \static
+	 */
+	public function resizeToWidth($width, $allow_enlarge = false)
+	{
+		$ratio  = $width / $this->getSourceWidth();
+		$height = $this->getSourceHeight() * $ratio;
+
+		$this->resize($width, $height, $allow_enlarge);
+
+		return $this;
+	}
+
+	/**
+	 * Resizes image to best fit inside the given dimensions
+	 *
+	 * @param integer $max_width
+	 * @param integer $max_height
+	 * @param boolean $allow_enlarge
+	 * @return \static
+	 */
+	public function resizeToBestFit($max_width, $max_height, $allow_enlarge = false)
+	{
+		if($this->getSourceWidth() <= $max_width && $this->getSourceHeight() <= $max_height && $allow_enlarge === false)
+			return $this;
+
+		$ratio  = $this->getSourceHeight() / $this->getSourceWidth();
+		$width = $max_width;
+		$height = $width * $ratio;
+
+		if($height > $max_height){
+			$height = $max_height;
+			$width = $height / $ratio;
+		}
+
+		return $this->resize($width, $height, $allow_enlarge);
+	}
+
+	/**
+	 * Resizes image according to given scale (proportionally)
+	 *
+	 * @param integer|float $scale
+	 * @return \static
+	 */
+	public function scale($scale)
+	{
+		$width  = $this->getSourceWidth() * $scale / 100;
+		$height = $this->getSourceHeight() * $scale / 100;
+
+		$this->resize($width, $height, true);
+
+		return $this;
+	}
+
+	/**
+	 * Resizes image according to the given width and height
+	 *
+	 * @param integer $width
+	 * @param integer $height
+	 * @param boolean $allow_enlarge
+	 * @return \static
+	 */
+	public function resize($width, $height, $allow_enlarge = false)
+	{
+		if (!$allow_enlarge) {
+			// if the user hasn't explicitly allowed enlarging,
+			// but either of the dimensions are larger then the original,
+			// then just use original dimensions - this logic may need rethinking
+
+			if ($width > $this->getSourceWidth() || $height > $this->getSourceHeight()) {
+				$width  = $this->getSourceWidth();
+				$height = $this->getSourceHeight();
+			}
+		}
+
+		$this->source_x = 0;
+		$this->source_y = 0;
 
 		$this->dest_w = $width;
-	} else {
-		$this->resizeToWidth($width, $allow_enlarge);
-
-		$excess_height = ($this->getDestHeight() - $height) / $this->getDestHeight() * $this->getSourceHeight();
-
-		$this->source_h = $this->getSourceHeight() - $excess_height;
-		$this->source_y = $this->getCropPosition($excess_height, $position);
-
 		$this->dest_h = $height;
+
+		$this->source_w = $this->getSourceWidth();
+		$this->source_h = $this->getSourceHeight();
+
+		return $this;
 	}
 
-	return $this;
-}
+	/**
+	 * Crops image according to the given width, height and crop position
+	 *
+	 * @param integer $width
+	 * @param integer $height
+	 * @param boolean $allow_enlarge
+	 * @param integer $position
+	 * @return \static
+	 */
+	public function crop($width, $height, $allow_enlarge = false, $position = self::CROPCENTER)
+	{
+		if (!$allow_enlarge) {
+			// this logic is slightly different to resize(),
+			// it will only reset dimensions to the original
+			// if that particular dimenstion is larger
 
-/**
-* Crops image according to the given width, height, x and y
-*
-* @param integer $width
-* @param integer $height
-* @param integer $x
-* @param integer $y
-* @return \static
-*/
-public function freecrop($width, $height, $x = false, $y = false)
-{
-	if($x === false or $y === false){
-		return $this->crop($width, $height);
+			if ($width > $this->getSourceWidth()) {
+				$width  = $this->getSourceWidth();
+			}
+
+			if ($height > $this->getSourceHeight()) {
+				$height = $this->getSourceHeight();
+			}
+		}
+
+		$ratio_source = $this->getSourceWidth() / $this->getSourceHeight();
+		$ratio_dest = $width / $height;
+
+		if ($ratio_dest < $ratio_source) {
+			$this->resizeToHeight($height, $allow_enlarge);
+
+			$excess_width = ($this->getDestWidth() - $width) / $this->getDestWidth() * $this->getSourceWidth();
+
+			$this->source_w = $this->getSourceWidth() - $excess_width;
+			$this->source_x = $this->getCropPosition($excess_width, $position);
+
+			$this->dest_w = $width;
+		} else {
+			$this->resizeToWidth($width, $allow_enlarge);
+
+			$excess_height = ($this->getDestHeight() - $height) / $this->getDestHeight() * $this->getSourceHeight();
+
+			$this->source_h = $this->getSourceHeight() - $excess_height;
+			$this->source_y = $this->getCropPosition($excess_height, $position);
+
+			$this->dest_h = $height;
+		}
+
+		return $this;
 	}
-	$this->source_x = $x;
-	$this->source_y = $y;
-	if($width > $this->getSourceWidth() - $x){
-		$this->source_w = $this->getSourceWidth() - $x;
-	} else {
-		$this->source_w = $width;
+
+	/**
+	 * Crops image according to the given width, height, x and y
+	 *
+	 * @param integer $width
+	 * @param integer $height
+	 * @param integer $x
+	 * @param integer $y
+	 * @return \static
+	 */
+	public function freecrop($width, $height, $x = false, $y = false)
+	{
+		if($x === false or $y === false){
+			return $this->crop($width, $height);
+		}
+		$this->source_x = $x;
+		$this->source_y = $y;
+		if($width > $this->getSourceWidth() - $x){
+			$this->source_w = $this->getSourceWidth() - $x;
+		} else {
+			$this->source_w = $width;
+		}
+
+		if($height > $this->getSourceHeight() - $y){
+			$this->source_h = $this->getSourceHeight() - $y;
+		} else {
+			$this->source_h = $height;
+		}
+
+		$this->dest_w = $width;
+		$this->dest_h = $height;
+
+		return $this;
 	}
 
-	if($height > $this->getSourceHeight() - $y){
-		$this->source_h = $this->getSourceHeight() - $y;
-	} else {
-		$this->source_h = $height;
+	/**
+	 * Gets source width
+	 *
+	 * @return integer
+	 */
+	public function getSourceWidth()
+	{
+		return $this->original_w;
 	}
 
-	$this->dest_w = $width;
-	$this->dest_h = $height;
-
-	return $this;
-}
-
-/**
-* Gets source width
-*
-* @return integer
-*/
-public function getSourceWidth()
-{
-	return $this->original_w;
-}
-
-/**
-* Gets source height
-*
-* @return integer
-*/
-public function getSourceHeight()
-{
-	return $this->original_h;
-}
-
-/**
-* Gets width of the destination image
-*
-* @return integer
-*/
-public function getDestWidth()
-{
-	return $this->dest_w;
-}
-
-/**
-* Gets height of the destination image
-* @return integer
-*/
-public function getDestHeight()
-{
-	return $this->dest_h;
-}
-
-/**
-* Gets crop position (X or Y) according to the given position
-*
-* @param integer $expectedSize
-* @param integer $position
-* @return integer
-*/
-protected function getCropPosition($expectedSize, $position = self::CROPCENTER)
-{
-	$size = 0;
-	switch ($position) {
-		case self::CROPBOTTOM:
-		case self::CROPRIGHT:
-		$size = $expectedSize;
-		break;
-		case self::CROPCENTER:
-		case self::CROPCENTRE:
-		$size = $expectedSize / 2;
-		break;
+	/**
+	 * Gets source height
+	 *
+	 * @return integer
+	 */
+	public function getSourceHeight()
+	{
+		return $this->original_h;
 	}
-	return $size;
-}
+
+	/**
+	 * Gets width of the destination image
+	 *
+	 * @return integer
+	 */
+	public function getDestWidth()
+	{
+		return $this->dest_w;
+	}
+
+	/**
+	 * Gets height of the destination image
+	 * @return integer
+	 */
+	public function getDestHeight()
+	{
+		return $this->dest_h;
+	}
+
+	/**
+	 * Gets crop position (X or Y) according to the given position
+	 *
+	 * @param integer $expectedSize
+	 * @param integer $position
+	 * @return integer
+	 */
+	protected function getCropPosition($expectedSize, $position = self::CROPCENTER)
+	{
+		$size = 0;
+		switch ($position) {
+			case self::CROPBOTTOM:
+			case self::CROPRIGHT:
+				$size = $expectedSize;
+			break;
+			case self::CROPCENTER:
+			case self::CROPCENTRE:
+				$size = $expectedSize / 2;
+			break;
+		}
+		return $size;
+	}
 }
 
 // imageflip definition for PHP < 5.5
@@ -522,7 +535,8 @@ if (!function_exists('imageflip')) {
 	define('IMG_FLIP_VERTICAL', 1);
 	define('IMG_FLIP_BOTH', 2);
 
-	function imageflip($image, $mode) {
+	function imageflip($image, $mode)
+	{
 		switch ($mode) {
 			case IMG_FLIP_HORIZONTAL: {
 				$max_x = imagesx($image) - 1;

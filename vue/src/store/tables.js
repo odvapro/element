@@ -11,10 +11,15 @@ const table =
 		tables          : [],
 		tableColumns    : [],
 		tableContent    : {},
-		selectedElement : {}
+		selectedElement : {},
+		extensionsLinks : [],
 	},
 	mutations:
 	{
+		setExtensionsLinks(state, links)
+		{
+			state.extensionsLinks = links;
+		},
 		/**
 		 * Select запрос шаблон
 		 */
@@ -98,6 +103,10 @@ const table =
 			return result;
 			return [table, tableCode];
 		},
+		/**
+		 * отдает ссылки на дополнения в сайдбар
+		 */
+		getExtensionsLinks: state => state.extensionsLinks || [],
 		/**
 		 * Возвращет таблику по коду
 		 * @param  table code
@@ -195,6 +204,14 @@ const table =
 	actions:
 	{
 		/**
+		 * получить ссылки на дополнения в сайдбар
+		 */
+		async setExtensionsLinks(store)
+		{
+			const result = await axios.get('/extensions/getLinks/');
+			store.commit('setExtensionsLinks', result.data.links);
+		},
+		/**
 		 * Достать список таблиц
 		 */
 		async getTables(store)
@@ -279,7 +296,8 @@ const table =
 			if(typeof recordPrams.rowIndex == 'object')
 			{
 				let curTableCont = store.state.tableContent;
-				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>{
+				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>
+				{
 					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
 				});
 				this.commit('setTableContent',curTableCont);
@@ -351,7 +369,7 @@ const table =
 		 */
 		async saveFieldValue(store, fieldValue)
 		{
-			let setValues  = {}
+			let setValues  = {};
 			let primaryKey = fieldValue.settings.primaryKey;
 			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
 			var data = qs.stringify({
@@ -385,7 +403,7 @@ const table =
 		async saveSelectedElement(store,{selectedElement,tableCode})
 		{
 			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
-			let setValues  = {}
+			let setValues  = {};
 			for(let fieldCode in selectedElement)
 				setValues[fieldCode] = selectedElement[fieldCode];
 
@@ -410,5 +428,5 @@ const table =
 			return result;
 		}
 	}
-}
+};
 export default table;

@@ -1,5 +1,6 @@
 <template>
 	<div v-if="extComponent" class="extensions__wrapper">
+		<div class="extensions__wrapper-burger"><MobileBurger/></div>
 		<component
 			v-bind:is="extComponent"
 			:url="paramsString"
@@ -7,8 +8,11 @@
 	</div>
 </template>
 <script>
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+
 	export default
 	{
+		components: {MobileBurger},
 		data()
 		{
 			return {
@@ -37,4 +41,9 @@
 </script>
 <style>
 	.extensions__wrapper{padding: 23px 20px 23px 21px; }
+	@media (max-width: 768px)
+	{
+		.extensions__wrapper { min-width: 375px; }
+		.extensions__wrapper-burger{ margin-bottom: 20px; }
+	}
 </style>

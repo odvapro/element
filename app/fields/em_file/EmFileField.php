@@ -54,7 +54,6 @@ class EmFileField extends FieldBase
 		if(empty($this->fieldValue))
 			return '';
 
-
 		foreach($this->fieldValue as $fileKey => &$file)
 		{
 			if(isset($file['delete']))
@@ -88,7 +87,6 @@ class EmFileField extends FieldBase
 			foreach ($image['sizes'] as &$imageSize)
 				$imageSize = $imageSize['localPath'];
 		}
-
 		if(empty($this->fieldValue))
 			return '';
 

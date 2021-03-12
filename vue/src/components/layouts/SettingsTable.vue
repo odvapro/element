@@ -485,6 +485,7 @@
 		transition: all 0.3s;
 		height: 0;
 		padding: 0 8px;
+		width: 100%;
 		.settings-table-item
 		{
 			border-right: none;
