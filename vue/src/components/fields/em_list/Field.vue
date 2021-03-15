@@ -44,7 +44,7 @@
 			 */
 			selectedItems()
 			{
-				if (typeof this.localFieldValue != 'object')
+				if (!this.fieldSettings.list || !this.localFieldValue || !this.localFieldValue.length)
 					return [];
 
 				return this.fieldSettings.list.filter(listItem=>{
@@ -58,6 +58,9 @@
 			 */
 			itemsList()
 			{
+				if (!this.fieldSettings.list || !this.fieldSettings.list.length)
+					return [];
+
 				return this.fieldSettings.list.filter(listItem=>{
 					if(listItem.value.indexOf(this.searchText) !== -1)
 						return true;

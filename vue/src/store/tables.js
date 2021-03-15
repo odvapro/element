@@ -251,12 +251,12 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
-		async duplicateRecord(store, recordPrams)
+		async duplicateRecord(store, recordParams)
 		{
 			let result = await axios({
 				method : 'post',
 				url    : '/el/duplicate/',
-				data   : qs.stringify({duplicate:recordPrams}),
+				data   : qs.stringify({duplicate:recordParams}),
 			});
 			return result;
 		},
@@ -267,22 +267,22 @@ const table =
 		 *      delete:<sql params for deleting>
 		 * }
 		 */
-		async removeRecord(store, recordPrams)
+		async removeRecord(store, recordParams)
 		{
-			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
-				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+			if(typeof recordParams.rowIndex != 'undefined' && typeof recordParams.rowIndex != 'object')
+				store.state.tableContent.items.splice(recordParams.rowIndex,1);
 
-			if(typeof recordPrams.rowIndex == 'object')
+			if(typeof recordParams.rowIndex == 'object')
 			{
 				let curTableCont = store.state.tableContent;
 				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>
 				{
-					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
+					return (recordParams.rowIndex.indexOf(itemIndex) != -1)?false:true;
 				});
 				this.commit('setTableContent',curTableCont);
 			}
 
-			return store.dispatch('removeTableRow', recordPrams.delete);
+			return store.dispatch('removeTableRow', recordParams.delete);
 		},
 		/**
 		 * deleteParams:<sql params for deleting>

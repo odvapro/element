@@ -26,7 +26,7 @@
 			},
 			openDetail({tableCode,id})
 			{
-				this.$router.push({name:'tableDetail', params:{tableCode:tableCode, id:id }});
+				this.$router.push({name:'tableDetail', params:{tableCode, id }});
 			},
 			async saveElementDetail(data)
 			{

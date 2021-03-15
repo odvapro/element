@@ -87,9 +87,8 @@ class EmFileCest
 		$result = $result['result']['items'][0];
 
 		$I->assertArrayHasKey('file', $result);
-		$I->assertArrayHasKey('value', $result['file']);
 
-		$result = $result['file']['value'];
+		$result = $result['file'];
 
 		// Проверка на существование файлов
 		foreach($result as &$file)

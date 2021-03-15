@@ -66,16 +66,16 @@
 				<div
 					class="table-item"
 					v-for="column, index in table.columns"
-					v-if="column.visible && row[column.field]"
+					v-if="column.visible && row[column.field] !== undefined"
 					:key="`${index}${rowIndex}`"
 					:style="{width: column.width + 'px'}"
 				>
 					<MainField
 						mode="edit"
 						view="table"
-						:fieldName="row[column.field].fieldName"
+						:fieldName="column.em.settings.code"
 						:params="{
-							value     : row[column.field].value,
+							value     : row[column.field],
 							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
 						}"
 						@onChange="changeFieldValue"
@@ -422,7 +422,7 @@
 					requestWhere.fields.push({
 						code      : primaryKeyCode,
 						operation : 'IS',
-						value     : row[primaryKeyCode].value
+						value     : row[primaryKeyCode],
 					});
 				}
 
@@ -450,9 +450,9 @@
 						operation:'and',
 						fields:[
 							{
-								code      : `${primaryKeyCode} = ${row[primaryKeyCode].value}`,
+								code      : `${primaryKeyCode} = ${row[primaryKeyCode]}`,
 								operation : 'IS',
-								value     : row[primaryKeyCode].value
+								value     : row[primaryKeyCode]
 							}
 						]
 					}
@@ -478,7 +478,7 @@
 								{
 									code      : primaryKeyCode,
 									operation : 'IS',
-									value     : row[primaryKeyCode].value
+									value     : row[primaryKeyCode],
 								}
 							]
 						}
@@ -493,7 +493,7 @@
 			openDetail(row,rowIndex)
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
-				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode].value }});
+				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode] }});
 			},
 
 			addElement()
