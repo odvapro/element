@@ -31,9 +31,9 @@
 		{
 			return {
 				showPopup: false,
-				searchText:'',
-				localFieldValue:this.fieldValue
-			}
+				searchText: '',
+				localFieldValue: this.fieldValue,
+			};
 		},
 
 		computed:
@@ -47,9 +47,8 @@
 				if (!this.fieldSettings.list || !this.localFieldValue || !this.localFieldValue.length)
 					return [];
 
-				return this.fieldSettings.list.filter(listItem=>{
-					if(this.localFieldValue.indexOf(listItem.key) !== -1)
-						return true;
+				return this.fieldSettings.list.filter(listItem => {
+						return this.localFieldValue.indexOf(listItem.key) !== -1;
 				});
 			},
 
@@ -61,10 +60,20 @@
 				if (!this.fieldSettings.list || !this.fieldSettings.list.length)
 					return [];
 
-				return this.fieldSettings.list.filter(listItem=>{
-					if(listItem.value.indexOf(this.searchText) !== -1)
-						return true;
+				return this.fieldSettings.list.filter(listItem => {
+					return listItem.value.indexOf(this.searchText) !== -1;
 				});
+			},
+		},
+		watch:
+		{
+			fieldValue:
+			{
+				handler(value)
+				{
+					this.$set(this, 'localFieldValue', value);
+				},
+				deep: true,
 			},
 		},
 		methods:

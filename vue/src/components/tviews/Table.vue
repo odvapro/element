@@ -233,15 +233,14 @@
 				let selectedElement = null;
 
 				for (let row of this.tableContent.items)
-					if (row.id.value === id)
+					if (row.id === id)
 					{
 						selectedElement = row;
 						break;
 					}
 
-				if (!selectedElement || !selectedElement[fieldValue.settings.fieldCode]) return;
-
-				selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+				if (!selectedElement || typeof selectedElement[fieldValue.settings.fieldCode] === 'undefined') return;
+				selectedElement[fieldValue.settings.fieldCode] = fieldValue.value;
 
 				this.$store.dispatch('saveSelectedElement', { selectedElement, tableCode });
 			},

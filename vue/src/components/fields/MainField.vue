@@ -1,15 +1,13 @@
 <template>
-
-		<component
-			v-bind:is="columnContent"
-			:fieldValue="params.value"
-			:fieldSettings="params.settings"
-			:mode="mode"
-			:view="view"
-			@onChange="changeValue"
-			@openEdit="openEdit"
-		></component>
-
+	<component
+		v-bind:is="columnContent"
+		:fieldValue.sync="params.value"
+		:fieldSettings="params.settings"
+		:mode="mode"
+		:view="view"
+		@onChange="changeValue"
+		@openEdit="openEdit"
+	></component>
 </template>
 <script>
 	import Vue from 'vue';

@@ -80,10 +80,10 @@ const table =
 			let primaryKey = fieldValue.settings.primaryKey;
 			for(let tableLine of state.tableContent.items)
 			{
-				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
+				if(tableLine[primaryKey.fieldCode] != primaryKey)
 					continue;
 
-				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
+				tableLine[fieldValue.settings.fieldCode] = fieldValue;
 				break;
 			}
 		}
@@ -179,14 +179,14 @@ const table =
 			let   settings       = column.em.settings;
 
 			settings.primaryKey = {
-				value     : (row) ? row[primaryKeyCode].value : '',
+				value     : (row) ? row[primaryKeyCode] : '',
 				fieldCode : primaryKeyCode
 			};
 			settings.fieldCode  = column.field;
 			settings.tableCode  = tableCode;
 
 			return Object.assign({}, settings);
-		}
+		},
 	},
 	actions:
 	{
@@ -351,7 +351,7 @@ const table =
 		{
 			let setValues  = {};
 			let primaryKey = fieldValue.settings.primaryKey;
-			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
+			setValues[fieldValue.settings.fieldCode] = fieldValue;
 			var data = qs.stringify({
 				update:{
 					table :fieldValue.settings.tableCode,
@@ -362,7 +362,7 @@ const table =
 							{
 								code      :primaryKey.fieldCode,
 								operation :'IS',
-								value     :primaryKey.value
+								value     :primaryKey,
 							}
 						]
 					}
@@ -385,7 +385,7 @@ const table =
 			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
 			let setValues  = {};
 			for(let fieldCode in selectedElement)
-				setValues[fieldCode] = selectedElement[fieldCode].value;
+				setValues[fieldCode] = selectedElement[fieldCode];
 
 			var data = qs.stringify({
 				update:{
@@ -397,7 +397,7 @@ const table =
 							{
 								code      : primaryKeyCode,
 								operation : 'IS',
-								value     : selectedElement[primaryKeyCode].value
+								value     : selectedElement[primaryKeyCode],
 							}
 						]
 					}

@@ -124,7 +124,7 @@
 							fieldName :this.columns[columnCode].em.type_info.code
 						});
 						if (this.element && typeof this.element[columnCode] != 'undefined')
-							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode].value);
+							this.$set(this.selectedElement[columnCode], 'value', this.element[columnCode]);
 					}
 				}
 			},
@@ -138,7 +138,7 @@
 			 */
 			changeFieldValue(fieldValue)
 			{
-				this.selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+				this.selectedElement[fieldValue.settings.fieldCode] = fieldValue.value;
 			},
 
 			/**

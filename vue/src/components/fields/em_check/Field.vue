@@ -16,8 +16,22 @@
 		data()
 		{
 			return {
-				isChecked: false
-			}
+				isChecked: false,
+			};
+		},
+		watch:
+		{
+			fieldValue(value)
+			{
+				this.$set(this, 'isChecked', value);
+			},
+		},
+		/**
+		 * Set default value
+		 */
+		mounted()
+		{
+			this.isChecked = this.fieldValue;
 		},
 		methods:
 		{
@@ -27,15 +41,8 @@
 					value     : checkboxStatus,
 					settings  : this.fieldSettings
 				});
-			}
+			},
 		},
-		/**
-		 * Set default value
-		 */
-		mounted()
-		{
-			this.isChecked = this.fieldValue;
-		}
 	}
 </script>
 <style lang="scss">

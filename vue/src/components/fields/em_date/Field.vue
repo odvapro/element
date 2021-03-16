@@ -30,8 +30,7 @@
 		{
 			isEmpty()
 			{
-				if(!this.localDate)
-					return true;
+				return !this.localDate;
 			},
 			includeTime()
 			{
@@ -57,6 +56,13 @@
 				return dateStr;
 			}
 		},
+		watch:
+		{
+			fieldValue(value)
+			{
+				this.localDate = this.convertToJsDate(value);
+			},
+		},
 		mounted()
 		{
 			this.localDate = this.convertToJsDate(this.fieldValue);
@@ -78,7 +84,7 @@
 				this.localDate = this.convertToJsDate(newDate);
 				this.$emit('onChange', {
 					value     : newDate,
-					settings  : this.fieldSettings
+					settings  : this.fieldSettings,
 				});
 			},
 			convertToJsDate(sqlDate)
@@ -86,7 +92,7 @@
 				if(!sqlDate)
 					return null;
 				return new Date(Date.parse(sqlDate.replace(/-/g, '/')));
-			}
+			},
 		},
 	}
 </script>
