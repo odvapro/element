@@ -122,6 +122,7 @@
 					for(let columnCode in this.columns)
 					{
 						this.$set(this.selectedElement, columnCode,'');
+						this.$set(this.selectedElement, columnCode, '');
 						if (this.element && typeof this.element[columnCode] != 'undefined')
 							this.$set(this.selectedElement, columnCode, this.element[columnCode]);
 					}

@@ -7,10 +7,7 @@
 			</div>
 			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
 				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem}}</span></div>
-				<div class="em-matrix-field__hover-btns">
-					<div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div>
-					<div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div>
-				</div>
+				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
 			</div>
 			<div class="em-matrix-row-add">
 				<div class="em-matrix-row-add__icon">
@@ -77,7 +74,7 @@
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
-					if (+matrixValue[primaryKeyCode].value == +element[primaryKeyCode].value)
+					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
 						return this.fieldValue.matrixValue[index] = element;
 
 			},
@@ -94,7 +91,7 @@
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
 
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
-					if (+matrixValue[primaryKeyCode].value == +element[primaryKeyCode].value)
+					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
 							return this.fieldValue.matrixValue.splice(index, 1);
 			},
 
