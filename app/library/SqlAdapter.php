@@ -221,6 +221,45 @@ class SqlAdapter extends PdoAdapter
 
 		return true;
 	}
+
+	/**
+	 * Duplicate row in table
+	 * @param array
+	 * @return array
+	 */
+	public function duplicate($requestParams)
+	{
+		$sql     = '';
+		$table   = isset($requestParams['table']) ? $requestParams['table'] : null;
+		$id      = isset($requestParams['where']['fields'][0]['value']) ? $requestParams['where']['fields'][0]['value'] : null;
+		$columns = isset($requestParams['columns']) ? $requestParams['columns'] : null;
+
+		if (empty($table) || empty($id) || empty($columns))
+			return false;
+
+		$sqlColumns = implode(', ', $columns);
+		$sql = "INSERT INTO {$table} ({$sqlColumns})
+				SELECT {$sqlColumns}
+				FROM {$table}
+				WHERE id = {$id}";
+
+		try
+		{
+			$this->db->execute($sql, $sqlColumns);
+		} catch (Exception $e) {
+			echo "<pre>";
+			var_dump([$e, $sql]);
+			echo "</pre>";
+			exit();
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"duplicateRequest: {$sql}"
+			);
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * delete from table
 	 * @param  array

@@ -87,7 +87,6 @@ class EmFileCest
 		$result = $result['result']['items'][0];
 
 		$I->assertArrayHasKey('file', $result);
-		$I->assertArrayHasKey(0, $result['file']);
 
 		$result = $result['file'];
 

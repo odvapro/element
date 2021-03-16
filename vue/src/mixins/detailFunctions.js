@@ -42,7 +42,7 @@ export default
 							{
 								code      : primaryKeyCode,
 								operation : 'IS',
-								value     : data.selectedElement[primaryKeyCode]
+								value     : data.selectedElement[primaryKeyCode],
 							}
 						]
 					}

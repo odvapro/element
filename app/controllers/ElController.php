@@ -31,33 +31,12 @@ class ElController extends ControllerBase
 	public function duplicateAction()
 	{
 		$duplicateSelect = $this->request->getPost('duplicate');
-
 		if (empty($duplicateSelect))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$record = $this->element->select($duplicateSelect);
+		$resultDuplicate = $this->element->duplicate($duplicateSelect);
 
-		if (empty($record) || empty($record['items']))
-			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
-
-		$primaryKey = array_search('em_primary', $record['columns_types']);
-
-		$values = [];
-		foreach ($record['items'][0] as $fieldCode => $field)
-			if ($fieldCode !== $primaryKey)
-				$values[$fieldCode] = $field;
-
-		$insertParams = [
-			'table'   => $duplicateSelect['from'],
-			'values'  => $values
-		];
-
-		$resultDuplicate = $this->element->insert($insertParams);
-
-		if (!$resultDuplicate)
-			return $this->jsonResult(['success' => false, 'message' => 'some error']);
-
-		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);
+		return $this->jsonResult(['success' => $resultDuplicate]);
 	}
 	/**
 	 * insert method SQL

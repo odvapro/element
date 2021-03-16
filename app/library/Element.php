@@ -293,4 +293,24 @@ class Element
 
 		return $this->eldb->insert($insertParams);
 	}
+
+	/**
+	 * Duplicated row by id
+	 * @return array
+	 */
+	public function duplicate($duplicateParams)
+	{
+		if (empty($duplicateParams) || empty($duplicateParams['from']) || empty($duplicateParams['where'])) return false;
+		$duplicateParams['table']   = $duplicateParams['from'];
+		$duplicateParams['columns'] = [];
+		$columns                    = $this->getColumns($duplicateParams['table']);
+		unset($duplicateParams['from']);
+
+		if (empty($columns)) return false;
+
+		foreach ($columns as $columnName => $column)
+			if ($column['em']['settings']['code'] !== 'em_primary') $duplicateParams['columns'][] = $columnName;
+
+		return $this->eldb->duplicate($duplicateParams);
+	}
 }

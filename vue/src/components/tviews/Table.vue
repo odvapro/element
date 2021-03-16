@@ -75,7 +75,7 @@
 					<MainField
 						mode="edit"
 						view="table"
-						:fieldName="tableContent.columns_types[column.field] || ''"
+						:fieldName="column.em.settings.code"
 						:params="{
 							value     : row[column.field],
 							settings  : $store.getters.getColumnSettings(table.code, column.field, row)
@@ -244,15 +244,14 @@
 				let selectedElement = null;
 
 				for (let row of this.tableContent.items)
-					if (row.id.value === id)
+					if (row.id === id)
 					{
 						selectedElement = row;
 						break;
 					}
 
-				if (!selectedElement || !selectedElement[fieldValue.settings.fieldCode]) return;
-
-				selectedElement[fieldValue.settings.fieldCode].value = fieldValue.value;
+				if (!selectedElement || typeof selectedElement[fieldValue.settings.fieldCode] === 'undefined') return;
+				selectedElement[fieldValue.settings.fieldCode] = fieldValue.value;
 
 				this.$store.dispatch('saveSelectedElement', { selectedElement, tableCode });
 			},
@@ -436,7 +435,7 @@
 					requestWhere.fields.push({
 						code      : primaryKeyCode,
 						operation : 'IS',
-						value     : row[primaryKeyCode]
+						value     : row[primaryKeyCode],
 					});
 				}
 
@@ -492,7 +491,7 @@
 								{
 									code      : primaryKeyCode,
 									operation : 'IS',
-									value     : row[primaryKeyCode]
+									value     : row[primaryKeyCode],
 								}
 							]
 						}

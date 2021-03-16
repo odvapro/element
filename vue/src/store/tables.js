@@ -80,10 +80,11 @@ const table =
 			let primaryKey = fieldValue.settings.primaryKey;
 			for(let tableLine of state.tableContent.items)
 			{
-				if(tableLine[primaryKey.fieldCode] != primaryKey.value)
+				if(tableLine[primaryKey.fieldCode] != primaryKey)
 					continue;
 
-				tableLine[fieldValue.settings.fieldCode] = fieldValue.value;
+				tableLine[fieldValue.settings.fieldCode] = fieldValue;
+
 				break;
 			}
 		}
@@ -199,7 +200,7 @@ const table =
 			settings.tableCode  = tableCode;
 
 			return Object.assign({}, settings);
-		}
+		},
 	},
 	actions:
 	{
@@ -264,12 +265,12 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
-		async duplicateRecord(store, recordPrams)
+		async duplicateRecord(store, recordParams)
 		{
 			let result = await axios({
 				method : 'post',
 				url    : '/el/duplicate/',
-				data   : qs.stringify({duplicate:recordPrams}),
+				data   : qs.stringify({duplicate:recordParams}),
 			});
 			return result;
 		},
@@ -280,29 +281,22 @@ const table =
 		 *      delete:<sql params for deleting>
 		 * }
 		 */
-		async removeRecord(store, recordPrams)
+		async removeRecord(store, recordParams)
 		{
-			let result = await store.dispatch('removeTableRow', recordPrams.delete);
+			if(typeof recordParams.rowIndex != 'undefined' && typeof recordParams.rowIndex != 'object')
+				store.state.tableContent.items.splice(recordParams.rowIndex,1);
 
-			if (!result.data.success)
-			{
-				Vue.prototype.ElMessage.error(result.data.message);
-				return false;
-			}
-
-			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
-				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
-
-			if(typeof recordPrams.rowIndex == 'object')
+			if(typeof recordParams.rowIndex == 'object')
 			{
 				let curTableCont = store.state.tableContent;
 				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>
 				{
-					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
+					return (recordParams.rowIndex.indexOf(itemIndex) != -1)?false:true;
 				});
 				this.commit('setTableContent',curTableCont);
 			}
-			return true;
+
+			return store.dispatch('removeTableRow', recordParams.delete);
 		},
 		/**
 		 * deleteParams:<sql params for deleting>
@@ -371,7 +365,7 @@ const table =
 		{
 			let setValues  = {};
 			let primaryKey = fieldValue.settings.primaryKey;
-			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
+			setValues[fieldValue.settings.fieldCode] = fieldValue;
 			var data = qs.stringify({
 				update:{
 					table :fieldValue.settings.tableCode,
@@ -382,7 +376,7 @@ const table =
 							{
 								code      :primaryKey.fieldCode,
 								operation :'IS',
-								value     :primaryKey.value
+								value     :primaryKey,
 							}
 						]
 					}
@@ -417,7 +411,7 @@ const table =
 							{
 								code      : primaryKeyCode,
 								operation : 'IS',
-								value     : selectedElement[primaryKeyCode]
+								value     : selectedElement[primaryKeyCode],
 							}
 						]
 					}

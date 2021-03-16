@@ -42,9 +42,10 @@
 				</div>
 				<div class="detail-field-box">
 					<MainField
+						v-if="columns[columnCode]"
 						mode="edit"
 						view="detail"
-						:fieldName="fieldNames[columnCode] || ''"
+						:fieldName="columns[columnCode].em.settings.code"
 						:params="{
 							value     : column,
 							settings  : $store.getters.getColumnSettings(tableCode, columnCode, selectedElement)
