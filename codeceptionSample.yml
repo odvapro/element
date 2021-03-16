@@ -22,6 +22,7 @@ suites:
                         - 'tests/_data/em_users.sql'
                         - 'tests/_data/em_users_group.sql'
                         - 'tests/_data/em_groups_tables.sql'
+                        - 'tests/_data/em_tokens.sql'
                 - Asserts
 
 paths:

@@ -31,9 +31,12 @@ class ElController extends ControllerBase
 	public function duplicateAction()
 	{
 		$duplicateSelect = $this->request->getPost('duplicate');
-		if (empty($duplicateSelect))
+		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
+		$row = $this->element->select($duplicateSelect);
+		if (empty($row['items']))
+			return $this->jsonResult(['success' => false, 'message' => 'wrong id']);
 		$resultDuplicate = $this->element->duplicate($duplicateSelect);
 
 		return $this->jsonResult(['success' => $resultDuplicate]);

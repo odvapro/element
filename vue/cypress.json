@@ -1,7 +1,8 @@
 {
-	"baseUrl":"http://localhost:8080/element",
+	"baseUrl":"http://localhost:8080/element/",
 	"env":
 	{
-		"apiUrl": "http://element.local/element/api/"
-	}
+		"apiUrl": "http://element.dev.odva.pro/element/api/"
+	},
+	"chromeWebSecurity": false
 }
