@@ -15,7 +15,7 @@ export default
 			for(let fieldCode in data.selectedElement)
 			{
 				if(primaryKeyCode == fieldCode) continue;
-				setValues[fieldCode] = data.selectedElement[fieldCode].value;
+				setValues[fieldCode] = data.selectedElement[fieldCode];
 			}
 
 			let insertData = qs.stringify({
