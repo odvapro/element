@@ -291,6 +291,7 @@
 	.index__menu-more
 	{
 		position: relative;
+		.index__menu-item-title { padding: 2px 8px 8px; }
 	}
 	.index__menu-more-list
 	{

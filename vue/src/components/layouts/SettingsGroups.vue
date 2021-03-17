@@ -218,6 +218,7 @@
 		border:0px;
 		padding:0px;
 		cursor: pointer;
+		background-color: transparent;
 	}
 	.settings-groups__content {padding-top: 29px; }
 </style>

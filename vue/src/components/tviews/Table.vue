@@ -559,7 +559,7 @@
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
 		&:hover{background: rgba(103, 115, 135, 0.05);}
-		&--empty{padding: 0;width: 0;}
+		&--empty{padding: 0;width: 0;border: 0;}
 	}
 	.table-item-overide-name
 	{

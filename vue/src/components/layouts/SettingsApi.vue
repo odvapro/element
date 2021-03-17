@@ -31,7 +31,8 @@
 			</div>
 		</div>
 		<div class="el-api-docs">
-			<h2 class="el-api__title el-api__title--select el-api-docs__title">API Docs
+			<div class="el-api-docs__head">
+				<h2 class="el-api__title el-api__title--no-border">API Docs</h2>
 				<Select
 					:defaultText="selectedTable.code"
 					class="select--simple"
@@ -42,7 +43,7 @@
 						:key="table.code"
 					>{{ table.code }}</SelectOption>
 				</Select>
-			</h2>
+			</div>
 			<div
 				class="el-api-doc"
 				v-for="(doc, docType) in docs"
@@ -183,11 +184,8 @@
 		font-family: $rMedium;
 		padding-bottom: 7px;
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		&--select
-		{
-			display: flex;
-			justify-content: space-between;
-		}
+		margin: 0;
+		&--no-border { border: 0; padding-bottom: 0; }
 	}
 	.el-api-tokens
 	{
@@ -255,11 +253,13 @@
 			height: 9px;
 		}
 	}
-	.el-api-docs {
-	}
-	.el-api-docs__title
+	.el-api-docs__head
 	{
 		margin-bottom: 28px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
 	.el-api-doc
 	{
@@ -279,6 +279,8 @@
 		font-size: 12px;
 		line-height: 14px;
 		margin-bottom: 6px;
+		text-transform: capitalize;
+		font-family: $rMedium;
 	}
 	.el-api-doc-tabs
 	{

@@ -61,6 +61,7 @@
 		height: 100%;
 		padding-left: 10px;
 		padding-right: 10px;
+		input { word-break: break-all; }
 	}
 	.detail-field-box .em-string{padding:0px;}
 	.detail-field-box .em-string .el-inp-noborder{line-height:1.15}
