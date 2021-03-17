@@ -30,7 +30,6 @@ export default
 <style lang="scss">
 	.el-burder
 	{
-		display: none;
 		cursor: pointer;
 		span
 		{
@@ -42,6 +41,5 @@ export default
 			margin-bottom: 5px;
 			&:last-child { margin-bottom: 0; }
 		}
-		@media (max-width: 768px) { display: block; }
 	}
 </style>

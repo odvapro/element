@@ -75,4 +75,22 @@
 <style lang="scss">
 	.app-layouts-wrapper{height: 100vh; }
 	*{box-sizing: border-box; }
+	.content-wrapper {overflow: hidden; }
+	.app__loader
+	{
+		position: absolute;
+		top:0px;
+		left:0px;
+		width:100%;
+		height: 100%;
+		background: rgba(255,255,255,1);
+	}
+	.app__loader-block
+	{
+		position: absolute;
+		top:50%;
+		left:50%;
+		margin-left: -50px;
+		margin-top: -20px;
+	}
 </style>

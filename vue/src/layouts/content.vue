@@ -1,11 +1,12 @@
 <template>
 	<div id="app">
-		<div class="app-wrapper" :style="{'grid-template-columns': sidebar['gridTemplateColumns']}">
+		<div class="app-wrapper">
 			<transition name="el-sidebar-transition">
 				<div
 					class="app-wrapper__sidebar"
-					v-if="sidebar['gridTemplateColumns'] && (!isMobile || isShowSidebar)"
+					v-if="sidebar.flexBasis && isShowSidebar"
 					v-click-outside="closeSidebarIfIsMobile"
+					:style="{ 'flex-basis': sidebar.flexBasis, 'min-width': sidebar.flexBasis }"
 				>
 					<Sidebar :sidebarStyle="sidebar" @closeSidebar="closeSidebarIfIsMobile" />
 				</div>
@@ -34,14 +35,16 @@
 		data()
 		{
 			return {
-				sidebar: {},
+				sidebar:
+				{
+					flexBasis: '400px',
+				},
 				points:
 				{
 					isDrug: false,
 					posX: this.$cookie.get('drugPosition')
 				},
-				isMobile: false,
-			}
+			};
 		},
 		watch:
 		{
@@ -64,32 +67,33 @@
 			await this.$store.dispatch('getTables');
 
 			if (this.$cookie.get('drugPosition') >= 200)
-				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
+				this.sidebar.flexBasis = `${this.$cookie.get('drugPosition')}px`;
 			else
-				this.sidebar['gridTemplateColumns'] = '400px auto';
-
+				this.sidebar.flexBasis = '400px';
 
 			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 
 			this.initEventScale();
-
-			window.addEventListener('resize', () => { this.updateIsMobile(); });
-			this.updateIsMobile();
+			if (window.innerWidth > 768)
+				this.$store.commit('updateShowSidebar', true);
 		},
 		methods:
 		{
-
+			closeSidebar()
+			{
+				this.$store.commit('updateShowSidebar', false);
+			},
 			closeSidebarIfIsMobile()
 			{
-				if (this.isMobile)
-					this.$store.commit('updateShowSidebar', false);
+				if (window.innerWidth < 768)
+					this.closeSidebar();
 			},
 			/**
 			 * Инициализация событий для уменьшения/увеливения сайдбара
 			 */
 			initEventScale()
 			{
-				var app = document.getElementsByClassName('app-wrapper')[0],
+				let app = document.getElementsByClassName('app-wrapper')[0],
 					self = this;
 
 				document.addEventListener('mousedown', function(event)
@@ -109,7 +113,7 @@
 						return false;
 
 					self.points.posX = event.pageX;
-					app.style.gridTemplateColumns = event.pageX + 'px auto'
+					self.sidebar.flexBasis = `${event.pageX}px`;
 				}, false);
 				document.addEventListener('mouseup', function(event)
 				{
@@ -117,11 +121,19 @@
 					self.$cookie.set('drugPosition', self.points.posX, 111);
 				}, false);
 			},
-			updateIsMobile()
-			{
-				this.isMobile = window.innerWidth < 768;
-				this.$store.commit('updateShowSidebar', !this.isMobile);
-			},
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		async mounted()
+		{
+			if (this.$cookie.get('drugPosition') >= 200)
+				this.sidebar.flexBasis = `${this.$cookie.get('drugPosition')}px`;
+
+			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
+			this.initEventScale();
+
+			await this.$store.dispatch('getTables');
 		},
 	}
 </script>
@@ -131,13 +143,17 @@
 		min-height: 100vh;
 		user-select: none;
 		position: relative;
-		display: grid;
-		grid-template-columns: 400px auto;
+		display: flex;
+	}
+	.app-wrapper__sidebar
+	{
+		flex-basis: 400px;
 	}
 	.content-wrapper
 	{
 		overflow: hidden;
 		position: relative;
+		width: 100%;
 	}
 	.content__loader
 	{
@@ -155,7 +171,8 @@
 		left:50%;
 		margin-left: -50px;
 	}
-
+	.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease .5s; }
+	.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px!important; min-width: 0px!important; }
 	@media (max-width: 768px)
 	{
 		.app-wrapper { display: flex; }
@@ -171,7 +188,5 @@
 			flex-basis: 320px;
 			flex-shrink: 0;
 		}
-		.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease 0.5s; }
-		.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px; }
 	}
 </style>
