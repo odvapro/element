@@ -84,54 +84,74 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		$resources['private'] = [
 			'el' => [
 				'delete' => [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						$tableName = $this->request->getPost('delete')['table'];
-						return $user->hasAccess($tableName, Access::WRITE);
+
+						if (!empty($user))
+							return $user->hasAccess($tableName, Access::WRITE);
+
+						return $group->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'duplicate' => [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						$tableName = $this->request->getPost('duplicate')['from'];
-						return $user->hasAccess($tableName, Access::WRITE);
+
+						if (!empty($user))
+							return $user->hasAccess($tableName, Access::WRITE);
+
+						return $group->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'insert' => [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						$tableName = $this->request->getPost('insert')['table'];
-						return $user->hasAccess($tableName, Access::WRITE);
+
+						if (!empty($user))
+							return $user->hasAccess($tableName, Access::WRITE);
+
+						return $group->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'update' => [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						$tableName = $this->request->getPost('update')['table'];
-						return $user->hasAccess($tableName, Access::WRITE);
+
+						if (!empty($user))
+							return $user->hasAccess($tableName, Access::WRITE);
+
+						return $group->hasAccess($tableName, Access::WRITE);
 					}
 				],
 				'select' => [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						$tableName = $this->request->get('select')['from'];
-						return $user->hasAccess($tableName, Access::READ);
+
+						if (!empty($user))
+							return $user->hasAccess($tableName, Access::READ);
+
+						return $group->hasAccess($tableName, Access::READ);
 					}
 				],
-				'setTviewSettings' => ['allowFunction' => function($user){return $user->isAdmin();}],
+				'setTviewSettings' => ['allowFunction' => function($user, $group){return $user->isAdmin();}],
 				'getTables' => [],
 			],
 			'users' => [
 				'setLanguage'=> [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						return $this->request->getPost('id') === $user->id;
 					}
 				],
 				'getUser'=> [
-					'allowFunction' => function($user) {
+					'allowFunction' => function($user, $group) {
 						return $this->request->get('id') === $user->id;
 					}
 				],
-				'*'  => ['allowFunction'=>function($user){return $user->isAdmin();}],
+				'*'  => ['allowFunction'=>function($user, $group){return $user->isAdmin();}],
 			],
-			'settings' => [ '*' => ['allowFunction'=>function($user){return $user->isAdmin();}] ],
-			'groups'   => [ '*' => ['allowFunction'=>function($user){return $user->isAdmin();}] ],
-			'tokens'   => [ '*' => ['allowFunction'=>function($user){return $user->isAdmin();}] ],
+			'settings' => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
+			'groups'   => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
+			'tokens'   => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
 			'field'    => [ '*' => [] ],
 			'ext'      => [ '*' => [] ],
 			'tview'    => [ '*' => [] ],
@@ -158,12 +178,17 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getCurrentUserRole()
 	{
-		if (!$this->user)
+		$this->session->remove('token');
+		$this->session->set('token', $this->request->get('token', 'string', ''));
+
+		if (!$this->user && !$this->group)
 			$role = 'Guests';
 		else
 		{
 			$role = 'Users';
-			if ($this->user->isAdmin())
+
+			if (($this->user && $this->user->isAdmin())
+				|| $this->group && $this->group->isAdminGroup())
 				$role = 'Admins';
 		}
 		return $role;
@@ -179,7 +204,9 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		$action     = $dispatcher->getActionName();
 
 		$acl = $this->getAcl();
-		$allowed = $acl->isAllowed($role, $controller, $action, ['user'=>$this->user]);
+
+		$allowed = $acl->isAllowed($role, $controller, $action, ['user' => $this->user, 'group' => $this->group]);
+
 		if($allowed != Phalcon\Acl::ALLOW)
 		{
 			echo json_encode(['success' => false, 'message' => 'you dont have access']);

@@ -74,6 +74,8 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex';
+
 	export default
 	{
 		data()
@@ -86,22 +88,16 @@
 					update:{tab: 'code'},
 				},
 				selectedTable: {},
-			}
+			};
 		},
 		computed:
 		{
-			tables()
-			{
-				return this.$store.state.tables.tables;
-			},
-			groups()
-			{
-				return this.$store.state.groups.groups;
-			},
-			tokens()
-			{
-				return this.$store.state.groups.tokens;
-			},
+			...mapState({
+				tables: state => state.tables.tables,
+				groups: state => state.groups.groups,
+				tokens: state => state.groups.tokens,
+				apiDocs: state => state.groups.apiDocs,
+			}),
 		},
 		methods:
 		{
@@ -147,7 +143,7 @@
 			async setApiDocs()
 			{
 				await this.$store.dispatch('getApiDocs', {table_name: this.selectedTable.code});
-				for ( let [docType, doc] of Object.entries(this.$store.state.groups.apiDocs) )
+				for ( let [docType, doc] of Object.entries(this.apiDocs) )
 				{
 					this.docs[docType] = { ...this.docs[docType], ...doc };
 					this.changeDocBlockTab(docType, this.docs[docType].tab);

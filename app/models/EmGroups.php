@@ -16,6 +16,26 @@ class EmGroups extends ModelBase
 		]);
 	}
 
+	public function isAdminGroup()
+	{
+		return intval($this->id) === Access::ADMINS_GROUP_ID;
+	}
+
+	/**
+	 * check if group has access $access to table $tableName
+	 * @param string $tableName
+	 * @param int $access
+	 * @return bool
+	 */
+	public function hasAccess($tableName, $access)
+	{
+		foreach ($this->access as $accessInfo)
+			if ($accessInfo->table_name === $tableName && (intval($access) & intval($accessInfo->access)))
+				return true;
+
+		return false;
+	}
+
 	/**
 	 * проверяет доступ $accessValue (read, write,..) к таблице $tableName
 	 * @param  string $tableName   название таблицы

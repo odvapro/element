@@ -1,6 +1,6 @@
 .hljs
 {
-	white-space: pre-line;
+	white-space: pre-wrap;
 	font-family: $rMedium;
 	color: rgba(25, 28, 33, 0.7);
 	*
@@ -20,7 +20,7 @@
 }
 
 // all classes
-/* 
+/*
 .hljs
 .hljs
 .hljs-subst

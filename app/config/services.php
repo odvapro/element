@@ -173,3 +173,16 @@ $di->set('user', function () use ($di)
 
 	return $user;
 });
+
+$di->set('group', function () use ($di)
+{
+	static $group = null;
+
+	if (empty($group) && !empty($di->get('session')->get('token')))
+	{
+		$token = EmTokens::findFirstByValue($di->get('session')->get('token'));
+		if (!empty($token)) $group = $token->group;
+	}
+
+	return $group;
+});

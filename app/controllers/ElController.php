@@ -13,6 +13,9 @@ class ElController extends ControllerBase
 		$delete = $this->request->getPost('delete');
 
 		if (empty($delete))
+			$delete = $this->request->get('delete');
+
+		if (empty($delete))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
 		$resultDelete = $this->element->delete($delete);
@@ -31,6 +34,10 @@ class ElController extends ControllerBase
 	public function duplicateAction()
 	{
 		$duplicateSelect = $this->request->getPost('duplicate');
+
+		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
+			$duplicateSelect = $duplicateSelect = $this->request->get('duplicate');
+
 		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
@@ -48,6 +55,9 @@ class ElController extends ControllerBase
 	public function insertAction()
 	{
 		$insert = $this->request->getPost('insert');
+
+		if (empty($insert))
+			$insert = $this->request->get('insert');
 
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
@@ -77,6 +87,9 @@ class ElController extends ControllerBase
 	public function updateAction()
 	{
 		$update = $this->request->getPost('update');
+
+		if (empty($update))
+			$update = $this->request->get('update');
 
 		if (empty($update))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);

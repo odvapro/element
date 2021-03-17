@@ -88,6 +88,7 @@ class TokensController extends ControllerBase
 
 		return $this->jsonResult(['success' => !empty($tokens), 'tokens' => $tokens]);
 	}
+
 	public function getApiDocsAction()
 	{
 		$table = $this->request->getPost('table_name');
@@ -96,20 +97,166 @@ class TokensController extends ControllerBase
 
 		$result = [
 			"get"    => [
-				"code"     => "curl {$baseRequestUrl}/el/select/?select[from]={$table}&select[page]=1",
-				"response" => "{\"success\": true}",
+				"code"     => "curl_setopt_array(\$curl, array(
+  CURLOPT_URL            => '{$baseRequestUrl}/el/select/',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING       => '',
+  CURLOPT_MAXREDIRS      => 10,
+  CURLOPT_TIMEOUT        => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST  => 'POST',
+  CURLOPT_POSTFIELDS     => http_build_query(array(
+    'token'  => #token#,
+    'select' => array(
+      'from' => {$table},
+      'page' => 1,
+    ),
+  )),
+  CURLOPT_HTTPHEADER     => array(
+  	'Content-Type: text/plain'
+  ),
+));
+
+\$response = curl_exec(\$curl);
+
+curl_close(\$curl);
+echo \$response;",
+				"response" => "{
+  \"success\": true,
+  \"result\": {
+    \"first\": 1,
+    \"before\": 1,
+    \"current\": 1,
+    \"last\": 1,
+    \"next\": 1,
+    \"total_pages\": 1,
+    \"total_items\": 1,
+    \"limit\": 1,
+    \"offset\": 1,
+    \"items\": [{
+      \"field_name\": \"field_value\"
+    }]
+  }
+}",
 			],
 			"insert" => [
-				"code"     => "curl {$baseRequestUrl}/el/insert/ -d \"insert[table]=field_types&insert[values][type]=test&insert[values][title]=test title\"",
-				"response" => "{\"success\":true,\"result\":true,\"lastid\":\"17\"}",
+				"code"     => "curl_setopt_array(\$curl, array(
+  CURLOPT_URL            => '{$baseRequestUrl}/el/insert/',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING       => '',
+  CURLOPT_MAXREDIRS      => 10,
+  CURLOPT_TIMEOUT        => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST  => 'POST',
+  CURLOPT_POSTFIELDS     => http_build_query(array(
+    'token'  => #token#,
+    'insert' => array(
+      'table'  => {$table},
+      'values' => array(
+        # ...
+      ),
+    ),
+  )),
+  CURLOPT_HTTPHEADER     => array(
+  	'Content-Type: text/plain'
+  ),
+));
+
+\$response = curl_exec(\$curl);
+
+curl_close(\$curl);
+echo \$response;",
+				"response" => "{
+  \"success\": true,
+  \"result\": true,
+  \"lastid\": \"17\"
+}",
 			],
 			"delete" => [
-				"code"     => "curl {$baseRequestUrl}/el/delete/ -d \"delete[table]={$table}&delete[where][operation]=and&delete[where][fields][0][code]=`#id field title`&delete[where][fields][0][operation]=IS&delete[where][fields][0][value]=`#id field value`\"",
-				"response" => "{\"success\": true}",
+				"code"     => "curl_setopt_array(\$curl, array(
+  CURLOPT_URL            => '{$baseRequestUrl}/el/delete/',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING       => '',
+  CURLOPT_MAXREDIRS      => 10,
+  CURLOPT_TIMEOUT        => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST  => 'POST',
+  CURLOPT_POSTFIELDS     => http_build_query(array(
+    'token'  => #token#,
+    'delete' => array(
+      'table'  => {$table},
+      'where'  => array(
+        'operation' => 'AND',
+        'fields'    => array(
+          [
+            'code'      => #field_code#,
+            'operation' => 'IS',
+            'value'     => #field_value#,
+          ],
+        ),
+      ),
+    ),
+  )),
+  CURLOPT_HTTPHEADER     => array(
+  	'Content-Type: text/plain'
+  ),
+));
+
+\$response = curl_exec(\$curl);
+
+curl_close(\$curl);
+echo \$response;",
+				"response" => "{
+  \"success\": true,
+  \"result\": true
+}",
 			],
 			"update" => [
-				"code"     => "curl {$baseRequestUrl}/el/update/ -d \"update[table]={$table}&update[set][code]=your value&update[set][keywords]=your value&update[set][description]=your value&update[set][title]=your value&update[set][pagetitle]=your value&update[set][form]=your value&update[where][operation]=and&update[where][fields][0][code]=id&update[where][fields][0][operation]=IS&update[where][fields][0][value]=`#id field value`\"",
-				"response" => "{\"success\": true}",
+				"code"     => "curl_setopt_array(\$curl, array(
+  CURLOPT_URL            => '{$baseRequestUrl}/el/update/',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING       => '',
+  CURLOPT_MAXREDIRS      => 10,
+  CURLOPT_TIMEOUT        => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST  => 'POST',
+  CURLOPT_POSTFIELDS     => http_build_query(array(
+    'token'  => #token#,
+    'delete' => array(
+      'table'  => {$table},
+      'set'    => array(
+         'field_code' => 'field_value',
+         # ...
+       ),
+       'where' => array(
+        'operation' => 'AND',
+        'fields'    => array(
+          [
+            'code'      => #field_code#,
+            'operation' => 'IS',
+            'value'     => #field_value#,
+          ],
+       ),
+      ),
+    ),
+  )),
+  CURLOPT_HTTPHEADER     => array(
+  	'Content-Type: text/plain'
+  ),
+));
+
+\$response = curl_exec(\$curl);
+
+curl_close(\$curl);
+echo \$response;",
+				"response" => "{
+  \"success\": true,
+  \"result\": true
+}",
 			],
 		];
 
