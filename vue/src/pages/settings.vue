@@ -117,6 +117,9 @@
 		align-items: flex-end;
 		margin-bottom: 13px;
 		padding-right: 95px;
+		padding-right: 14px;
+		justify-content: flex-start;
+		align-items: center;
 	}
 	.settings-head-name
 	{
@@ -194,17 +197,9 @@
 		overflow: auto;
 		height: 100%;
 	}
-	.settings-head__burger { display: none; }
+	.settings-head__burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.settings-head__burger { display: block; }
 		.settings-wrapper { min-width: 375px; }
-		.settings-head
-		{
-			padding-right: 14px;
-			justify-content: flex-start;
-			align-items: center;
-		}
-		.settings-head__burger { margin-right: 20px; }
 	}
 </style>
