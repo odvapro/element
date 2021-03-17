@@ -11,12 +11,12 @@
 	import qs from 'qs';
 	export default
 	{
-		props: ['visible', 'settings'],
+		props: ['visible', 'settings', 'disableIf', 'disableIfNot'],
 		data()
 		{
 			return {
-				searchText:''
-			}
+				searchText:'',
+			};
 		},
 		computed:
 		{
@@ -45,7 +45,10 @@
 			{
 				let itemsCount = 0;
 				return this.searched.filter(item => {
-					if(itemsCount > 10 || typeof item.name == 'undefined') return false;
+					if(itemsCount > 10
+						|| typeof item.name == 'undefined'
+						|| (this.disableIf && item[this.disableIf])
+						|| (this.disableIfNot && !item[this.disableIfNot])) return false;
 
 					const searchText = this.searchText.toLowerCase();
 					const name       = item.name.toLowerCase();

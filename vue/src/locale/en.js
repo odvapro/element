@@ -201,6 +201,7 @@ export default
 	disableAccess: 'Disable Access',
 	members: 'members: {count}',
 	addMember: 'Add member',
+	accessDenied: 'Access denied',
 	search: 'Search...',
 	months:
 	[

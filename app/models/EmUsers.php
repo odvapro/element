@@ -52,7 +52,7 @@ class EmUsers extends ModelBase
 	public function isAdmin()
 	{
 		$adminGroup = array_filter($this->groups, function($group) {
-			return intval($group['id']) === Access::ADMIN_ID;
+			return intval($group['id']) === Access::ADMINS_GROUP_ID;
 		});
 
 		return !empty($adminGroup);

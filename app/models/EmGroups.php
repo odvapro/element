@@ -2,6 +2,10 @@
 
 class EmGroups extends ModelBase
 {
+	public static function getAdminsGroup()
+	{
+		return self::findFirst(Access::ADMINS_GROUP_ID);
+	}
 	public function initialize()
 	{
 		$this->hasManyToMany('id', 'EmGroupsUsers', 'group_id', 'user_id', 'EmUsers', 'id', [
@@ -20,7 +24,7 @@ class EmGroups extends ModelBase
 	 */
 	public function checkAccessToTable($tableName, $accessValue)
 	{
-		if (intval($this->id) === Access::ADMIN_ID)
+		if (intval($this->id) === Access::ADMINS_GROUP_ID)
 			return true;
 
 		foreach ($this->access->toArray() as $accessInfo)
@@ -45,23 +49,26 @@ class EmGroups extends ModelBase
 
 	public function toArray($columns='')
 	{
-		$groups = parent::toArray();
-		$groups['members'] = [];
+		$group = parent::toArray();
+
+		$group['members'] = [];
 		foreach ($this->members as $member)
-			$groups['members'][] = [
+			$group['members'][] = [
 				'id'     => $member->id,
 				'name'   => $member->name,
 				'avatar' => $member->getAvatar(),
 			];
 
-		$groups['access_info'] = [];
+		$group['access_info'] = [];
 		foreach ($this->access as $access)
-			$groups['access_info'][] = [
+			$group['access_info'][] = [
 				'id'         => $access->id,
 				'table_name' => $access->table_name,
 				'access'     => $access->access,
 			];
 
-		return $groups;
+		$group['is_admin'] = intval($this->id) === Access::ADMINS_GROUP_ID;
+
+		return $group;
 	}
 }

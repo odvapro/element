@@ -2,12 +2,23 @@
 
 class GroupsController extends ControllerBase
 {
+	/**
+	 * get all groups
+	 * @return array
+	 */
 	public function getAction()
 	{
-		$groups = EmGroups::find();
+		$groups = [];
+		foreach (EmGroups::find() as $group)
+			$groups[] = $group->toArray();
+
 		return $this->jsonResult(['success' => true, 'groups' => $groups]);
 	}
 
+	/**
+	 * adding new group
+	 * @return array
+	 */
 	public function addAction()
 	{
 		$group = new EmGroups();
@@ -16,6 +27,12 @@ class GroupsController extends ControllerBase
 		return $this->jsonResult(['success' => true, 'group' => $group]);
 	}
 
+	/**
+	 * adding new user to group
+	 * @param int id user id
+	 * @param int group group id
+	 * @return array
+	 */
 	public function addUserAction()
 	{
 		$userId = $this->request->getPost('id');
@@ -28,7 +45,7 @@ class GroupsController extends ControllerBase
 			'bind'=>[$groupId,$userId]
 		]);
 		if(count($records))
-			return $this->jsonResult(['success'=>false,'msg'=>'User alreadey in group']);
+			return $this->jsonResult(['success'=>false,'msg'=>'User already in group']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
@@ -43,6 +60,12 @@ class GroupsController extends ControllerBase
 		return $this->jsonResult(['success'=>true]);
 	}
 
+	/**
+	 * removing user from group
+	 * @param int id user id
+	 * @param int group group id
+	 * @return array
+	 */
 	public function removeUserAction()
 	{
 		$userId = $this->request->getPost('id');
@@ -61,22 +84,29 @@ class GroupsController extends ControllerBase
 		if(!count($records))
 			return $this->jsonResult(['success'=>false,'msg'=>'User alreadey out of group']);
 
-
 		if(!$records->delete())
 			return $this->jsonResult(['success'=>false,'msg'=>'Something goes wrong']);
 
 		return $this->jsonResult(['success'=>true]);
 	}
 
+	/**
+	 * removing group
+	 * @param int id group id
+	 * @return array
+	 */
 	public function removeAction()
 	{
-		$groupId = $this->request->getPost('id');
+		$groupId = intval($this->request->getPost('id'));
+		if ($groupId === Access::ADMINS_GROUP_ID)
+			return $this->jsonResult(['success' => false, 'msg' => 'unable to delete admin group']);
+
 		if(empty($groupId))
 			return $this->jsonResult(['success'=>false,'msg'=>'no group id']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
-			return $this->jsonResult(['success'=>false,'msg'=>'group dont find']);
+			return $this->jsonResult(['success'=>false,'msg'=>'group not found']);
 
 		if(!$group->delete())
 			return $this->jsonResult(['success'=>false,'msg'=>'something goes wrong']);
@@ -84,10 +114,20 @@ class GroupsController extends ControllerBase
 		return $this->jsonResult(['success'=>true]);
 	}
 
+	/**
+	 * update group name
+	 * @param int id group id
+	 * @param string name new name
+	 * @return array
+	 */
 	public function updateAction()
 	{
-		$groupId = $this->request->getPost('id');
+		$groupId = intval($this->request->getPost('id'));
 		$name    = $this->request->getPost('name');
+
+		if ($groupId === Access::ADMINS_GROUP_ID)
+			return $this->jsonResult(['success' => false, 'msg' => 'unable to rename admin group']);
+
 		if(empty($groupId) || empty($name))
 			return $this->jsonResult(['success'=>false,'msg'=>'no group id or name']);
 
@@ -103,7 +143,7 @@ class GroupsController extends ControllerBase
 	}
 
 	/**
-	 * отдает данные о возможных правах доступа в виде [{title, value},..]
+	 * gives data about access rights in the form [{title, value}, ..]
 	 * @return json
 	 */
 	public function getAccessOptionsAction()
@@ -132,19 +172,23 @@ class GroupsController extends ControllerBase
 		return $this->jsonResult(['success'=>true, 'options' => $result]);
 	}
 	/**
-	 * задает доступ к таблице
-	 * @param  string $accessStr доступ передается строкой-именем константы
+	 * specifies access to a table
+	 * @param  string $accessStr access is passed by the string-name of the constant
 	 * @param  int    $groupId
-	 * @param  string $tableName название таблицы
+	 * @param  string $tableName
 	 * @return json
 	 */
 	public function setGroupAccessAction()
 	{
 		$accessStr = $this->request->getPost('accessStr');
-		$groupId   = $this->request->getPost('groupId');
+		$groupId   = intval($this->request->getPost('groupId'));
 		$tableName = $this->request->getPost('tableName');
 
-		if (empty($accessStr) || empty(constant("Access::$accessStr")) || empty($groupId) || empty($tableName))
+		if (empty($accessStr)
+			|| empty(constant("Access::$accessStr"))
+			|| empty($groupId)
+			|| empty($tableName)
+			|| $groupId === Access::ADMINS_GROUP_ID)
 			return $this->jsonResult(['success' => false]);
 
 		$relation = EmGroupsTables::findFirst([
@@ -163,8 +207,8 @@ class GroupsController extends ControllerBase
 		return $this->jsonResult(['success' => true]);
 	}
 	/**
-	 * отключает доступ к таблице у всез групп
-	 * @param  string $tableName название таблицы
+	 * disables access to the table for all groups
+	 * @param  string $tableName
 	 * @return json
 	 */
 	public function disableGroupsAccessAction()

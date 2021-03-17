@@ -145,7 +145,6 @@
 	.app-wrapper
 	{
 		min-height: 100vh;
-		user-select: none;
 		position: relative;
 		display: grid;
 		grid-template-columns: 400px auto;

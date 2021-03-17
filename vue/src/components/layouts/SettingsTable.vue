@@ -89,7 +89,7 @@
 			</div>
 		</div>
 		<Popup :visible.sync="settingsPopup">
-			<div class="popup__name">{{ $t('settings_of', { of_what: settingsColumn.field || '' }) }}</div>
+			<div class="popup__name">{{ $t('settings_of', { of_what: (settingsColumn && settingsColumn.field) || '' }) }}</div>
 			<component
 				:is="settingsComponent"
 				:settings="currentSettings"
@@ -100,6 +100,7 @@
 		</Popup>
 		<StoreSelect
 			@selectItem="addGroupToTable"
+			disableIf="is_admin"
 			:visible.sync="showPopupAddGroup"
 			:settings="{searchStr:'$store.state.groups.groups'}"
 		></StoreSelect>
@@ -109,7 +110,9 @@
 	import qs from 'qs';
 	import TableWork from '@/mixins/tableWork.js';
 	import TableGroups from '@/components/forms/TableGroups.vue';
-	import StoreSelect from '@/components/popups/StoreSelect.vue'
+	import StoreSelect from '@/components/popups/StoreSelect.vue';
+	import { mapState } from 'vuex';
+
 	export default
 	{
 		mixins: [TableWork],
@@ -120,20 +123,27 @@
 		data()
 		{
 			return {
-				fieldTypes:[],
+				fieldTypes: {},
 				tables: [],
 				tableStyle: {height: '0px', overflow: 'hidden'},
 				settingsPopup:false,
-				settingsFielType:false,
-				currentSettings:false,
-				settingsTable:false,
-				settingsColumn:false,
+				settingsFielType:'',
+				currentSettings:null,
+				settingsTable:null,
+				settingsColumn:null,
 				showTableGroupsCode:false,
 				showPopupAddGroup:false,
-			}
+			};
 		},
 		computed:
 		{
+			...mapState({
+				storeTables  : state => state.tables.tables,
+				storeTables  : state => state.tables.tables,
+				// Достать колонки столбца
+				getColumns   : state => state.tables.tableColumns,
+				accessOptions: state => state.groups.accessOptions,
+			}),
 			/**
 			 * Field settings component
 			 * gets settings component
@@ -141,22 +151,21 @@
 			 */
 			settingsComponent()
 			{
-				if(this.settingsColumn === false)
+				if(!this.settingsColumn)
 					return false;
 
-				if (this.settingsFielType == false)
+				if (!this.settingsFielType)
 					return false;
 
 				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
 			},
-
-			/**
-			 * Достать колонки столбца
-			 */
-			getColumns()
-			{
-				return this.$store.state.tables.tableColumns;
-			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.initTables();
 		},
 		methods:
 		{
@@ -167,7 +176,7 @@
 			{
 				try
 				{
-					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)
+					require(`@/components/fields/${column.em.settings.code}/Settings.vue`);
 				}
 				catch (e)
 				{
@@ -182,11 +191,11 @@
 			 */
 			openSettingsPopup(table, column)
 			{
-				this.settingsTable    = table,
-				this.settingsColumn   = column,
-				this.settingsFielType = column.em.type_info.code;
-				this.currentSettings  = column.em.settings;
-				this.settingsPopup    = true;
+				this.$set(this, 'settingsTable', table);
+				this.$set(this, 'settingsColumn', column);
+				this.$set(this, 'settingsFielType', column.em.type_info.code);
+				this.$set(this, 'currentSettings', column.em.settings);
+				this.$set(this, 'settingsPopup', true);
 			},
 
 			/**
@@ -196,7 +205,7 @@
 			{
 				let data = {
 					tableName  : this.settingsTable.code,
-					columnName : this.settingsColumn.field,
+					columnName : (this.settingsColumn && this.settingsColumn.field) || '',
 					fieldType  : this.settingsFielType,
 					settings   : settings
 				};
@@ -215,7 +224,7 @@
 							continue;
 						for(let columnCode in table.columns)
 						{
-							if(columnCode == this.settingsColumn.field)
+							if(columnCode == (this.settingsColumn && this.settingsColumn.field) || '')
 								table.columns[columnCode].em.settings = result.data.settings;
 						}
 					}
@@ -344,17 +353,17 @@
 			 */
 			async initTables()
 			{
+				await this.$store.dispatch('getTables');
 				let result = await this.$axios.get('/settings/getFiledTypes/');
 
 				if(result.data.success)
-					this.fieldTypes = result.data.types;
+					this.$set(this, 'fieldTypes', result.data.types);
 
-				Vue.set(this, 'tables', this.$store.state.tables.tables);
+				this.$set(this, 'tables', this.storeTables || []);
 
 				for (let table of this.tables)
-				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
-				}
+
 				this.$store.commit('showLoader',false);
 			},
 			/**
@@ -388,11 +397,10 @@
 
 				await this.$store.dispatch('setGroupAccess', {
 						groupId   : group.id,
-						accessStr : this.$store.state.groups.accessOptions[0].strValue,
+						accessStr : this.accessOptions[0].strValue,
 						tableName : table
 					});
 
-				await this.$store.dispatch('getTables');
 				await this.initTables();
 
 				this.showTableGroupsCode = table;
@@ -410,20 +418,12 @@
 					return;
 				}
 
-				await this.$store.dispatch('getTables');
 				await this.initTables();
 				this.ElMessage(this.$t('elMessages.settings_saved'));
 				this.showTableGroupsCode = false;
 			},
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			this.initTables();
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.settings-tab-wrapper {height: 100%; }

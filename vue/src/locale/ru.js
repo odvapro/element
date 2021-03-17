@@ -201,6 +201,7 @@ export default
 	disableAccess: 'Отключить доступ',
 	members: 'участники: {count}',
 	addMember: 'Добавить пользователя',
+	accessDenied: 'Доступ запрещен',
 	search: 'Поиск...',
 	months:
 	[

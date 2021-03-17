@@ -1,12 +1,15 @@
 <template>
 	<div class="table-groups">
-		<div v-for="group in tableGroups" class="table-groups__line">
+		<div v-for="group in tableGroups" v-if="group" class="table-groups__line">
 			<div class="table-groups__name">
 				<span>{{group.name}}</span>
 				<em>{{$t('members', {count:group.members.length})}}</em>
 			</div>
 			<div class="table-groups__select">
-				<Select :defaultText="group.access_str">
+				<Select
+					:defaultText="group.access_str"
+					:disabled="group.is_admin"
+				>
 					<SelectOption
 						v-for="(select, selectInd) of accessOptions"
 						@click.native="setGroupAccess(group.id, select.strValue)"
@@ -22,6 +25,8 @@
 	</div>
 </template>
 <script>
+	import { mapState } from 'vuex';
+
 	export default
 	{
 		props: ['access','table'],
@@ -29,20 +34,25 @@
 		{
 			return {
 				tableGroups: [],
-			}
+			};
 		},
 		computed:
 		{
-			accessOptions()
-			{
-				return this.$store.state.groups.accessOptions;
-			}
+			...mapState({
+				groups       : state => state.groups.groups,
+				accessOptions: state => state.groups.accessOptions,
+			}),
+		},
+		async mounted()
+		{
+			await this.getAccessOptions();
+			await this.initTableGroups();
 		},
 		methods:
 		{
 			async getAccessOptions()
 			{
-				if (!this.$store.state.groups.accessOptions.length)
+				if (!this.accessOptions || !this.accessOptions.length)
 					await this.$store.dispatch('getAccessOptions');
 			},
 			async setGroupAccess(groupId, accessStr)
@@ -54,47 +64,39 @@
 			 */
 			async initTableGroups()
 			{
-				if (!this.$store.state.groups.groups.length)
+				if (!this.groups || !this.groups.length)
 					await this.$store.dispatch('getGroups');
 
-				let tableGroups = [];
-				for (let accessInfo of this.access)
+				const groups = [];
+				for	(let group of this.groups)
 				{
-					// формируется группа с доп свойствами - access и access_str
-					let newTableGroup = {};
-					for (let group of this.$store.state.groups.groups)
+					for (let accessInfo of this.access)
 					{
-						if (group.id !== accessInfo.group_id)
-							continue;
-						newTableGroup = JSON.parse(JSON.stringify(group));
-						newTableGroup.access    = +accessInfo.access;
-						newTableGroup.access_str = this.getAccessStr(newTableGroup.access);
+						if (+accessInfo.group_id === +group.id)
+							groups.push({
+								...group,
+								access: +accessInfo.access,
+								access_str: this.getAccessStr(+accessInfo.access),
+								id: +group.id,
+							});
 					}
-					tableGroups.push(newTableGroup);
 				}
-				Vue.set(this, 'tableGroups', tableGroups);
+
+				this.$set(this, 'tableGroups', groups);
 			},
 			/**
 			 * находит title из accessOptions по значению доступа
 			 */
 			getAccessStr(access)
 			{
-				let accessInfo = this.accessOptions.find(select=>
-				{
-					return select.value === access;
-				});
+				let accessInfo = this.accessOptions.find(select => select.value === access );
 				if (!accessInfo)
 					return 'unsetted';
 				else
 					return accessInfo.title;
 			},
 		},
-		async mounted()
-		{
-			await this.getAccessOptions();
-			this.initTableGroups();
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.table-groups
@@ -142,5 +144,6 @@
 		border:0px;
 		background: none;
 		&:hover{background: rgba(103, 115, 135, 0.1);}
+		&.disabled:hover { background: none; }
 	}
 </style>

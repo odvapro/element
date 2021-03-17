@@ -140,9 +140,12 @@ class ElController extends ControllerBase
 
 		foreach ($tables as &$table)
 		{
+			$groupsId = array_column($this->user->groups, 'id');
+
+			$hasAccess = array_filter($table['access'], function ($accessItem) use ($groupsId) { return in_array($accessItem['group_id'], $groupsId); });
+			if (empty($hasAccess)) continue;
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
-			$table['access']  = Access::getAccessTable($table['code']);
 
 			if (!count($emViewsTable))
 			{
