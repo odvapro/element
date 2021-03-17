@@ -27,7 +27,7 @@ const store = new Vuex.Store({
 		isIntallDb     : false,
 		showLoader     : false,
 		layoutSelected : false,
-		showSidebar    : false,
+		showSidebar    : true,
 	},
 	getters:
 	{

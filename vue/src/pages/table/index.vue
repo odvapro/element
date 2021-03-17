@@ -319,11 +319,11 @@
 		&:hover { background-color: rgba(103, 115, 135, 0.1); }
 		&--mobile { display: none; }
 	}
+	.index__head-burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
 		.index__wrapper { min-width: 375px; }
 		.index__head { padding-right: 14px; align-items: center; }
-		.index__head-burger { margin-right: 20px; }
 		.index__overide-name { font-size: 18px; }
 		.index__add-btn-text { display: none; }
 		.index__menu-item

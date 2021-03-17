@@ -41,9 +41,9 @@
 </script>
 <style>
 	.extensions__wrapper{padding: 23px 20px 23px 21px; }
+	.extensions__wrapper-burger{ margin-bottom: 20px; }
 	@media (max-width: 768px)
 	{
 		.extensions__wrapper { min-width: 375px; }
-		.extensions__wrapper-burger{ margin-bottom: 20px; }
 	}
 </style>
