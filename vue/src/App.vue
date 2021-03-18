@@ -65,10 +65,10 @@
 				if (this.$cookie.get('user'))
 					this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 
-			if (this.$store.state.users.authUser.language)
+			if (this.$store.state.users.authUser && this.$store.state.users.authUser.language)
 				this.setLanguage(this.$store.state.users.authUser.language);
 			else
-				this.setLanguage('en', this.$store.state.users.authUser.id);
+				this.setLanguage('en', (this.$store.state.users.authUser && this.$store.state.users.authUser.id) || -1);
 		}
 	}
 </script>
