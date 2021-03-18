@@ -277,9 +277,17 @@ const table =
 			});
 
 			if (!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				return false;
 
-			return result;
+			const newContent = store.state.tableContent;
+			const duplicatedId = recordParams.where.fields[0].value;
+			const duplicatedRow = JSON.parse(JSON.stringify(newContent.items.find(item => item.id === duplicatedId)));
+			duplicatedRow.id = result.data.lastId;
+			newContent.items.push(duplicatedRow);
+
+			this.commit('setTableContent', newContent);
+
+			return true;
 		},
 		/**
 		 * Remove records or one record

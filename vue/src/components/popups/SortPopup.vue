@@ -78,13 +78,27 @@
 					{
 						self.sendRequest = true;
 						self.buildSortParams();
+						self.updateModified();
 					}, 2000);
 				},
 				deep: true
 			}
 		},
+		/**
+		 * Хук при загрузке компонента
+		 */
+		mounted()
+		{
+			this.sortParams = this.tview.sort;
+			this.parseSortParam();
+			this.updateModified();
+		},
 		methods:
 		{
+			updateModified()
+			{
+				this.$parent.updateModified('sort', (this.sortArray && this.sortArray.length));
+			},
 			/**
 			 * Выбор колонки
 			 */
@@ -213,17 +227,9 @@
 
 					this.sortArray.push(obj);
 				}
-			}
+			},
 		},
-		/**
-		 * Хук при загрузке компонента
-		 */
-		mounted()
-		{
-			this.sortParams = this.tview.sort;
-			this.parseSortParam();
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.sort-popup__operators-wrapper

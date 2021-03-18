@@ -229,7 +229,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function duplicate($requestParams)
 	{
-		$sql     = '';
 		$table   = isset($requestParams['table']) ? $requestParams['table'] : null;
 		$id      = isset($requestParams['where']['fields'][0]['value']) ? $requestParams['where']['fields'][0]['value'] : null;
 		$columns = isset($requestParams['columns']) ? $requestParams['columns'] : null;
@@ -242,15 +241,10 @@ class SqlAdapter extends PdoAdapter
 				SELECT {$sqlColumns}
 				FROM {$table}
 				WHERE id = {$id}";
-
 		try
 		{
 			$this->db->execute($sql, $sqlColumns);
 		} catch (Exception $e) {
-			echo "<pre>";
-			var_dump([$e, $sql]);
-			echo "</pre>";
-			exit();
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"duplicateRequest: {$sql}"
 			);

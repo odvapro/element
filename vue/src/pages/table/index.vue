@@ -20,10 +20,11 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						<div class="index__menu-item-title">{{$t('properties')}}</div>
+						<div class="index__menu-item-title" :class="{ 'index__menu-item-title--modified': propertiesModified }">{{$t('properties')}}</div>
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
+							@updateModified="updateModified"
 							v-click-outside:isPropertiesPopupShow="closePopup"
 						/>
 					</li>
@@ -33,11 +34,12 @@
 						class="index__menu-item"
 						@click="openPopup('isSortPopupShow')"
 					>
-						<div class="index__menu-item-title">{{$t('sort')}}</div>
+						<div class="index__menu-item-title" :class="{ 'index__menu-item-title--modified': sortModified }">{{$t('sort')}}</div>
 						<SortPopup
 							v-if="popups.isSortPopupShow"
 							:columns="table.columns"
 							:tview="activeTview"
+							@updateModified="updateModified"
 							v-click-outside:isSortPopupShow="closePopup"
 						/>
 					</li>
@@ -46,11 +48,12 @@
 						@click="openPopup('isFiltersPopupShow')"
 						class="index__menu-item"
 					>
-						<div class="index__menu-item-title">{{$t('filter')}}</div>
+						<div class="index__menu-item-title" :class="{ 'index__menu-item-title--modified': filterModified }">{{$t('filter')}}</div>
 						<FiltersPopup
 							v-if="popups.isFiltersPopupShow"
 							:columns="table.columns"
 							:tview="activeTview"
+							@updateModified="updateModified"
 							v-click-outside:isFiltersPopupShow="closePopup"
 						/>
 					</li>
@@ -68,19 +71,19 @@
 							v-click-outside:isMorePopupShow="closePopup"
 						>
 							<li
+								:class="{ active: popups.isPropertiesPopupShow, 'index__menu-more-list-item--modified': propertiesModified }"
 								class="index__menu-more-list-item index__menu-more-list-item--mobile"
-								:class="{active: popups.isPropertiesPopupShow}"
 								@click="closePopup(null, 'isMorePopupShow'); openPopup('isPropertiesPopupShow');"
 							>{{$t('properties')}}</li>
 							<li
-								:class="{active: popups.isSortPopupShow}"
+								:class="{ active: popups.isSortPopupShow, 'index__menu-more-list-item--modified': sortModified }"
 								class="index__menu-more-list-item index__menu-more-list-item--mobile"
 								@click="closePopup(null, 'isMorePopupShow'); openPopup('isSortPopupShow');"
 							>{{$t('sort')}}</li>
 							<li
-								:class="{active: popups.isFiltersPopupShow}"
-								@click="closePopup(null, 'isMorePopupShow'); openPopup('isFiltersPopupShow');"
+								:class="{ active: popups.isFiltersPopupShow, 'index__menu-more-list-item--modified': filterModified }"
 								class="index__menu-more-list-item index__menu-more-list-item--mobile"
+								@click="closePopup(null, 'isMorePopupShow'); openPopup('isFiltersPopupShow');"
 							>{{$t('filter')}}</li>
 							<li
 								class="index__menu-more-list-item"
@@ -139,7 +142,10 @@
 					isSortPopupShow       : false,
 					isMorePopupShow       : false,
 				},
-				propertiesPopupData: {}
+				propertiesPopupData: {},
+				sortModified      : false,
+				filterModified    : false,
+				propertiesModified: false,
 			}
 		},
 		computed:
@@ -153,10 +159,38 @@
 				for (let tview of this.table.tviews)
 					if(tview.id == tviewId)
 						return tview;
-			}
+			},
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.activeTable();
+			this.$store.subscribe((mutation, state) => {
+				if(mutation.type == 'setTables')
+					this.activeTable();
+			});
+			this.checkModified();
 		},
 		methods:
 		{
+			checkModified()
+			{
+				if (!this.table) return;
+
+				const tview = this.table.tviews[0];
+				this.sortModified = !!tview.sort.length;
+				this.filterModified = !!tview.filter.length;
+
+				for (let column of Object.values(tview.settings.columns))
+					if (column.visible !== 'true') { this.propertiesModified = true; break; }
+
+			},
+			updateModified(name, state)
+			{
+				this.$set(this, `${name}Modified`, state);
+			},
 			/**
 			 * Отобразить/Закрыть попап
 			 */
@@ -184,17 +218,6 @@
 			{
 				this.$router.push(`/table/${this.table.code}/add/`);
 			}
-		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			this.activeTable();
-			this.$store.subscribe((mutation, state) => {
-				if(mutation.type == 'setTables')
-					this.activeTable();
-			});
 		},
 		watch:
 		{
@@ -276,10 +299,15 @@
 		font-size: 12px;
 		padding: 5px 8px;
 		cursor: pointer;
+		border-radius: 2px;
 		&.active, &:hover
 		{
 			background-color: rgba(103, 115, 135, 0.1);
-			border-radius: 2px;
+		}
+		&--modified
+		{
+			color: #2F80ED;
+			background-color: rgba(#2F80ED, 0.1);
 		}
 	}
 	.index__add-btn svg
@@ -318,6 +346,7 @@
 		cursor: pointer;
 		&:hover { background-color: rgba(103, 115, 135, 0.1); }
 		&--mobile { display: none; }
+		&--modified { color: #2F80ED; background-color: rgba(#2F80ED, 0.1); }
 	}
 	.index__head-burger { margin-right: 20px; }
 	@media (max-width: 768px)

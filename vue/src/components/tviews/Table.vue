@@ -452,6 +452,9 @@
 				this.openedEditRowIndex	= false;
 				this.checkAll = false;
 			},
+			/**
+			 * duplicate row
+			 */
 			async duplicate(row)
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
@@ -471,7 +474,6 @@
 					}
 				});
 				this.openedEditRowIndex = false;
-				this.getTableContent();
 			},
 			/**
 			 * Удаляет запись

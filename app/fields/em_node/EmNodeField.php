@@ -28,7 +28,7 @@ class EmNodeField extends FieldBase
 		return [
 			'id'   => $node[$this->settings['nodeFieldCode']],
 			'name' => $node[$this->settings['nodeSearchCode']],
-			'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]['value']}"
+			'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]}"
 		];
 	}
 

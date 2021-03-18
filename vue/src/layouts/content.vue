@@ -122,33 +122,7 @@
 				}, false);
 			},
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		async mounted()
-		{
-			if (this.$cookie.get('drugPosition') >= 200)
-				this.sidebar.flexBasis = `${this.$cookie.get('drugPosition')}px`;
-
-			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-			this.initEventScale();
-
-			await this.$store.dispatch('getTables');
-		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		async mounted()
-		{
-			if (this.$cookie.get('drugPosition') >= 200)
-				this.sidebar['gridTemplateColumns'] = this.$cookie.get('drugPosition') + 'px auto';
-
-			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-			this.initEventScale();
-
-			await this.$store.dispatch('getTables');
-		},
-	}
+	};
 </script>
 <style lang="scss">
 	.app-wrapper
