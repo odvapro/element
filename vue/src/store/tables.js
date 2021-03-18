@@ -258,7 +258,19 @@ const table =
 				url    : '/el/duplicate/',
 				data   : qs.stringify({duplicate:recordParams}),
 			});
-			return result;
+
+			if (!result.data.success)
+				return false;
+
+			const newContent = store.state.tableContent;
+			const duplicatedId = recordParams.where.fields[0].value;
+			const duplicatedRow = JSON.parse(JSON.stringify(newContent.items.find(item => item.id === duplicatedId)));
+			duplicatedRow.id = result.data.lastId;
+			newContent.items.push(duplicatedRow);
+
+			this.commit('setTableContent', newContent);
+
+			return true;
 		},
 		/**
 		 * Remove records or one record

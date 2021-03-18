@@ -36,7 +36,7 @@ class ElController extends ControllerBase
 
 		$resultDuplicate = $this->element->duplicate($duplicateSelect);
 
-		return $this->jsonResult(['success' => $resultDuplicate]);
+		return $this->jsonResult(['success' => $resultDuplicate, 'lastId' => $this->eldb->getLastInsertId()]);
 	}
 	/**
 	 * insert method SQL
