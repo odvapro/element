@@ -99,13 +99,24 @@
 					{
 						self.sendRequest = true;
 						self.saveFilters();
+						self.updateModified();
 					}, 2000);
 				},
 				deep: true
 			}
 		},
+		mounted()
+		{
+			this.parseFilers(this.tview.filter);
+			this.sourceFilters = this.tview.filter;
+			this.updateModified();
+		},
 		methods:
 		{
+			updateModified()
+			{
+				this.$parent.updateModified('filter', (this.filter && this.filter.length));
+			},
 			/**
 			 * Select column for filtering
 			 */
@@ -261,13 +272,7 @@
 				e.filter.value = e.value;
 			}
 		},
-
-		mounted()
-		{
-			this.parseFilers(this.tview.filter);
-			this.sourceFilters = this.tview.filter;
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.filters-popup__operators-wrapper
