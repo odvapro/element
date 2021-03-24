@@ -24,6 +24,7 @@ suites:
                         - 'tests/_data/em_groups_tables.sql'
                         - 'tests/_data/em_tokens.sql'
                 - Asserts
+                - Filesystem
 
 paths:
     tests: tests

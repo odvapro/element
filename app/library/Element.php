@@ -15,6 +15,7 @@ class Element
 		$this->eldb    = $eldb;
 		$this->di      = $di;
 		$this->emTypes = $this->getEmTypes();
+		$this->dbHooks = new DBHooks();
 	}
 
 	/**
@@ -165,8 +166,15 @@ class Element
 	 */
 	public function count($selectParams)
 	{
+		$beforeHookResult = $this->dbHooks->before('count', $selectParams);
+		if (!$beforeHookResult) return false;
+
 		$selectParams = $this->_prepareRequestParams($selectParams);
-		return $this->eldb->count($selectParams);
+
+		$result = $this->eldb->count($selectParams);
+		$afterHookResult = $this->dbHooks->after('count', $selectParams, $result);
+
+		return $afterHookResult;
 	}
 
 	/**
@@ -176,8 +184,15 @@ class Element
 	 */
 	public function delete($deleteParams)
 	{
+		$beforeHookResult = $this->dbHooks->before('delete', $deleteParams);
+		if (!$beforeHookResult) return false;
+
 		$deleteParams = $this->_prepareRequestParams($deleteParams);
-		return $this->eldb->delete($deleteParams);
+
+		$result = $this->eldb->delete($deleteParams);
+		$afterHookResult = $this->dbHooks->after('delete', $deleteParams, $result);
+
+		return $afterHookResult;
 	}
 
 	/**
@@ -187,8 +202,8 @@ class Element
 	 */
 	public function select($selectParams)
 	{
-		if (empty($selectParams) || empty($selectParams['from']))
-			return false;
+		$beforeHookResult = $this->dbHooks->before('select', $selectParams);
+		if (!$beforeHookResult || empty($selectParams) || empty($selectParams['from'])) return false;
 
 		$tableColumns = $this->getColumns($selectParams['from']);
 		$selectParams = $this->_prepareRequestParams($selectParams);
@@ -201,7 +216,6 @@ class Element
 		$resultColumns = [];
 		foreach ($tableColumns as $column)
 			$resultColumns[$column['field']] = $column['em']['type_info']['code'];
-
 
 		/**
 		 * Добавляем в селект запрос, поля для отображения
@@ -224,7 +238,10 @@ class Element
 			return $result;
 		}, $selectResult);
 
-		return ['items' => $resultItems, 'columns_types' => $resultColumns];
+		$result = ['items' => $resultItems, 'columns_types' => $resultColumns];
+		$afterHookResult = $this->dbHooks->after('select', $selectParams, $result);
+
+		return $afterHookResult;
 	}
 
 	/**
@@ -233,8 +250,8 @@ class Element
 	 */
 	public function update($updateParams)
 	{
-		if (empty($updateParams) || empty($updateParams['set']))
-			return false;
+		$beforeHookResult = $this->dbHooks->before('update', $updateParams);
+		if (!$beforeHookResult || empty($updateParams) || empty($updateParams['set'])) return false;
 
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
@@ -258,7 +275,10 @@ class Element
 		}
 		$updateParams['set'] = $set;
 
-		return $this->eldb->update($updateParams);
+		$result = $this->eldb->update($updateParams);
+		$afterHookResult = $this->dbHooks->after('update', $updateParams, $result);
+
+		return $afterHookResult;
 	}
 
 	/**
@@ -267,8 +287,8 @@ class Element
 	 */
 	public function insert($insertParams)
 	{
-		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values']))
-			return false;
+		$beforeHookResult = $this->dbHooks->before('insert', $insertParams);
+		if (!$beforeHookResult || empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values'])) return false;
 
 		$tableColumns = $this->getColumns($insertParams['table']);
 
@@ -291,7 +311,10 @@ class Element
 		$insertParams['columns'] = array_keys($insertParams['values']);
 		$insertParams['values']  = $valuesSet;
 
-		return $this->eldb->insert($insertParams);
+		$result = $this->eldb->insert($insertParams);
+		$afterHookResult = $this->dbHooks->after('insert', $insertParams, $result);
+
+		return $afterHookResult;
 	}
 
 	/**
@@ -300,7 +323,9 @@ class Element
 	 */
 	public function duplicate($duplicateParams)
 	{
-		if (empty($duplicateParams) || empty($duplicateParams['from']) || empty($duplicateParams['where'])) return false;
+		$beforeHookResult = $this->dbHooks->before('duplicate', $duplicateParams);
+		if (!$beforeHookResult || empty($duplicateParams) || empty($duplicateParams['from']) || empty($duplicateParams['where'])) return false;
+
 		$duplicateParams['table']   = $duplicateParams['from'];
 		$duplicateParams['columns'] = [];
 		$columns                    = $this->getColumns($duplicateParams['table']);
@@ -311,6 +336,9 @@ class Element
 		foreach ($columns as $columnName => $column)
 			if ($column['em']['settings']['code'] !== 'em_primary') $duplicateParams['columns'][] = $columnName;
 
-		return $this->eldb->duplicate($duplicateParams);
+		$result = $this->eldb->duplicate($duplicateParams);
+		$afterHookResult = $this->dbHooks->after('duplicate', $duplicateParams, $result);
+
+		return $afterHookResult;
 	}
 }

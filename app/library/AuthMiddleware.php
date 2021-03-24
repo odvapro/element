@@ -45,15 +45,23 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 
 		//Grant acess to private area to role Users
 		foreach($resources['private'] as $resource => $actions)
+		{
 			foreach($actions as $actionName => $action)
 			{
 				$acl->allow('Admins', $resource, $actionName);
 
-				if ( isset($action['allowFunction']) )
-					$acl->allow('Users', $resource, $actionName, $action['allowFunction']);
+				if ( !empty($action) )
+					$acl->allow('Users', $resource, $actionName, $action);
 				else
 					$acl->allow('Users', $resource, $actionName);
 			}
+		}
+
+		foreach($resources['admin'] as $resourceCode => $resource)
+		{
+			foreach($resource as $action)
+				$acl->allow('Admins', $resourceCode, $action);
+		}
 
 		return $acl;
 	}
@@ -75,6 +83,10 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		foreach ($resources['private'] as $resourceName => $resource)
 			$acl->addResource(new Phalcon\Acl\Resource($resourceName), array_keys($resource));
 
+		// add admin resources
+		foreach ($resources['admin'] as $resourceName => $resource)
+			$acl->addResource(new Phalcon\Acl\Resource($resourceName), $resource);
+
 		return $acl;
 	}
 
@@ -83,78 +95,67 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		$resources = [];
 		$resources['private'] = [
 			'el' => [
-				'delete' => [
-					'allowFunction' => function($user, $group) {
-						$tableName = $this->request->getPost('delete')['table'];
+				'delete' => function($user, $group) {
+					$tableName = $this->request->getPost('delete')['table'];
 
-						if (!empty($user))
-							return $user->hasAccess($tableName, Access::WRITE);
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::WRITE);
 
-						return $group->hasAccess($tableName, Access::WRITE);
-					}
-				],
-				'duplicate' => [
-					'allowFunction' => function($user, $group) {
-						$tableName = $this->request->getPost('duplicate')['from'];
+					return $group->hasAccess($tableName, Access::WRITE);
+				},
+				'duplicate' => function($user, $group) {
+					$tableName = $this->request->getPost('duplicate')['from'];
 
-						if (!empty($user))
-							return $user->hasAccess($tableName, Access::WRITE);
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::WRITE);
 
-						return $group->hasAccess($tableName, Access::WRITE);
-					}
-				],
-				'insert' => [
-					'allowFunction' => function($user, $group) {
-						$tableName = $this->request->getPost('insert')['table'];
+					return $group->hasAccess($tableName, Access::WRITE);
+				},
+				'insert' => function($user, $group) {
+					$tableName = $this->request->getPost('insert')['table'];
 
-						if (!empty($user))
-							return $user->hasAccess($tableName, Access::WRITE);
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::WRITE);
 
-						return $group->hasAccess($tableName, Access::WRITE);
-					}
-				],
-				'update' => [
-					'allowFunction' => function($user, $group) {
-						$tableName = $this->request->getPost('update')['table'];
+					return $group->hasAccess($tableName, Access::WRITE);
+				},
+				'update' => function($user, $group) {
+					$tableName = $this->request->getPost('update')['table'];
 
-						if (!empty($user))
-							return $user->hasAccess($tableName, Access::WRITE);
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::WRITE);
 
-						return $group->hasAccess($tableName, Access::WRITE);
-					}
-				],
-				'select' => [
-					'allowFunction' => function($user, $group) {
-						$tableName = $this->request->get('select')['from'];
+					return $group->hasAccess($tableName, Access::WRITE);
+				},
+				'select' => function($user, $group) {
+					$tableName = $this->request->get('select')['from'];
 
-						if (!empty($user))
-							return $user->hasAccess($tableName, Access::READ);
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::READ);
 
-						return $group->hasAccess($tableName, Access::READ);
-					}
-				],
-				'setTviewSettings' => ['allowFunction' => function($user, $group){return $user->isAdmin();}],
-				'getTables' => [],
+					return $group->hasAccess($tableName, Access::READ);
+				},
+				'getTables' => null,
 			],
 			'users' => [
-				'setLanguage'=> [
-					'allowFunction' => function($user, $group) {
-						return $this->request->getPost('id') === $user->id;
-					}
-				],
-				'getUser'=> [
-					'allowFunction' => function($user, $group) {
-						return $this->request->get('id') === $user->id;
-					}
-				],
-				'*'  => ['allowFunction'=>function($user, $group){return $user->isAdmin();}],
+				'setLanguage' => function($user, $group) {
+					return $this->request->getPost('id') === $user->id;
+				},
+				'getUser' => function($user, $group) {
+					return $this->request->get('id') === $user->id;
+				},
 			],
-			'settings' => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
-			'groups'   => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
-			'tokens'   => [ '*' => ['allowFunction'=>function($user, $group){return $user->isAdmin();}] ],
-			'field'    => [ '*' => [] ],
-			'ext'      => [ '*' => [] ],
-			'tview'    => [ '*' => [] ],
+			'field'    => [ '*' => null, ],
+			'ext'      => [ '*' => null, ],
+			'tview'    => [ '*' => null, ],
+		];
+
+		$resources['admin'] = [
+			'settings' => ['*'],
+			'groups'   => ['*'],
+			'tokens'   => ['*'],
+			'users'    => ['*'],
+			'el'       => ['setTviewSettings'],
 		];
 
 		$resources['public'] = ['index', 'auth'];
