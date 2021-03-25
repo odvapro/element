@@ -153,7 +153,7 @@ class ElController extends ControllerBase
 
 		foreach ($tables as &$table)
 		{
-			$groupsId = array_column($this->user->groups, 'id');
+			$groupsId = array_column($this->user->groups->toArray(), 'id');
 
 			$hasAccess = array_filter($table['access'], function ($accessItem) use ($groupsId) { return in_array($accessItem['group_id'], $groupsId); });
 			if (empty($hasAccess)) continue;

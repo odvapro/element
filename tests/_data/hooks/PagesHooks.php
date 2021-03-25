@@ -1,4 +1,5 @@
 <?php
+namespace Element\Hooks;
 
 class PagesHooks extends HooksBase
 {

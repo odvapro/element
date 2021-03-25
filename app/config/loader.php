@@ -12,3 +12,7 @@ $loader->registerDirs([
 	$config->application->fldDir,
 	$config->application->hooksDir,
 ])->register();
+
+$loader->registerNamespaces([
+	'Element\Hooks' => $config->application->hooksDir,
+]);

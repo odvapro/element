@@ -22,9 +22,7 @@ class EmUsers extends ModelBase
 	 */
 	public function afterFetch()
 	{
-		$this->groups = $this->groups->toArray();
-
-		$groupsIds = array_column($this->groups, 'id');
+		$groupsIds = array_column($this->groups->toArray(), 'id');
 		if (!empty($groupsIds))
 			$tables = EmGroupsTables::find([
 				'conditions' => 'group_id IN ({groupsIds:array})',
@@ -51,7 +49,7 @@ class EmUsers extends ModelBase
 	}
 	public function isAdmin()
 	{
-		$adminGroup = array_filter($this->groups, function($group) {
+		$adminGroup = array_filter($this->groups->toArray(), function($group) {
 			return intval($group['id']) === Access::ADMINS_GROUP_ID;
 		});
 
