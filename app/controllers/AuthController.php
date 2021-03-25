@@ -2,18 +2,6 @@
 
 class AuthController extends ControllerBase
 {
-	public static function setLangInUserSettings()
-	{
-		$auth = Phalcon\Di::getDefault()->get('session')->get('auth');
-		$config = Phalcon\Di::getDefault()->get('config');
-		if (!empty($auth))
-		{
-			$user = EmUsers::findFirstById($auth);
-			$config->application->userSettings['language'] = $user->language;
-		}
-		elseif (empty($config->userSettings['language']) && empty($auth))
-			$config->application->userSettings['language'] = 'en';
-	}
 	/**
 	 * Авторизация пользователя
 	 */
@@ -36,8 +24,7 @@ class AuthController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'User is not found']);
 
 		$this->session->set('auth', $user->id);
-
-		return $this->jsonResult([
+		$result = [
 			'success' => true,
 			'user'    => [
 				'name'     => $user->name,
@@ -46,7 +33,11 @@ class AuthController extends ControllerBase
 				'avatar'   => 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '&s=40',
 				'language' => $user->language
 			]
-		]);
+		];
+
+		$result['user']['is_admin'] = $user->isAdmin();
+
+		return $this->jsonResult($result);
 	}
 
 	/**
@@ -87,15 +78,10 @@ class AuthController extends ControllerBase
 	 */
 	public function isLoggedAction()
 	{
-		$auth = $this->session->get('auth');
-		if(empty($auth))
-		{
-			AuthController::setLangInUserSettings();
+		if(!$this->user && empty($this->user))
 			return $this->jsonResult(['success' => false, 'message' => 'no auth']);
-		}
-		AuthController::setLangInUserSettings();
 
-		return $this->jsonResult(['success' => true, 'userid' => $auth]);
+		return $this->jsonResult(['success' => true, 'userid' => $this->user->id]);
 	}
 
 	/**

@@ -19,6 +19,7 @@ return new \Phalcon\Config(array(
 		'extDir'         => ROOT . '/app/extensions/',
 		'fldDir'         => ROOT . '/app/fields/',
 		'tViewsDir'      => ROOT . '/app/tviews/',
+		'hooksDir'       => ROOT . '/app/hooks/',
 		'baseUri'        => '#baseuri#',
 		// указывается относительно baseUri, так как вставляется после него
 		'defaultFilesUploadPath' => '/public/upload'

@@ -80,8 +80,59 @@ CREATE TABLE `em_views` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `em_groups`;
 
+CREATE TABLE `em_groups` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `em_groups` WRITE;
+/*!40000 ALTER TABLE `em_groups` DISABLE KEYS */;
+
+INSERT INTO `em_groups` (`id`, `name`)
+VALUES
+  (1,'Administrators');
+
+/*!40000 ALTER TABLE `em_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `em_groups_users`;
+
+CREATE TABLE `em_groups_users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `em_groups_users` WRITE;
+/*!40000 ALTER TABLE `em_groups_users` DISABLE KEYS */;
+
+INSERT INTO `em_groups_users` (`id`, `group_id`, `user_id`)
+VALUES
+  (1,1,1);
+
+DROP TABLE IF EXISTS `em_tokens`;
+
+CREATE TABLE `em_tokens` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `value` varchar(200) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `em_tokens`;
+
+CREATE TABLE `em_groups_tables` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `table_name` varchar(200) DEFAULT NULL,
+  `access` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

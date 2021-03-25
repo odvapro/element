@@ -18,7 +18,7 @@ class EmMatrixField extends FieldBase
 				]]
 			]
 		];
-		$node = $this->element->select($select);
+		$node = $this->element->select($select)['items'];
 
 		if(!count($node))
 			return [];

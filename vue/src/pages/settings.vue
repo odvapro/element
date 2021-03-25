@@ -13,26 +13,30 @@
 			</div>
 		</div>
 		<div class="settings-tab-wrapper">
-			<div
-				class="settings-tabs-head"
-				:class="settingsTabsHeadClass"
-			>
+			<div class="settings-tabs-head">
 				<div
 					class="settings-tab-item"
 					@click="setActiveTab(item)"
 					v-for="item in tabs"
 					:class="{active: item.active}"
+					v-if="item.noAdminRights || $store.state.users.authUser.is_admin"
 				>{{item.name}}</div>
 			</div>
 			<div class="settings-tabs-content-wrapper">
-				<div class="settings-tab-content" v-if="activeTab == $t('tables')">
+				<div class="settings-tab-content" v-if="activeTab == $t('tables') && $store.state.users.authUser.is_admin">
 					<SettingsTable/>
 				</div>
-				<div class="settings-tab-content" v-if="activeTab == $t('users')">
+				<div class="settings-tab-content" v-if="activeTab == $t('users') && $store.state.users.authUser.is_admin">
 					<SettingsUser/>
 				</div>
 				<div class="settings-tab-content" v-if="activeTab == $t('languages')">
 					<SettingsLang/>
+				</div>
+				<div class="settings-tab-content" v-if="activeTab == $t('groups') && $store.state.users.authUser.is_admin">
+					<SettingsGroups/>
+				</div>
+				<div class="settings-tab-content" v-if="activeTab == 'API&Tokens' && $store.state.users.authUser.is_admin">
+					<SettingsApi/>
 				</div>
 			</div>
 		</div>
@@ -43,10 +47,12 @@
 	import SettingsUser from '@/components/layouts/SettingsUser.vue';
 	import SettingsLang from '@/components/layouts/SettingsLang.vue';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+	import SettingsGroups from '@/components/layouts/SettingsGroups.vue';
+	import SettingsApi from '@/components/layouts/SettingsApi.vue';
 
 	export default
 	{
-		components: { SettingsTable, SettingsUser, SettingsLang, MobileBurger },
+		components: { SettingsTable, SettingsUser, SettingsLang, MobileBurger, SettingsGroups, SettingsApi, },
 		metaInfo:{
 			title: 'Settings'
 		},
@@ -56,7 +62,13 @@
 		data()
 		{
 			return {
-				tabs: [{ name: this.$t('tables'), active: true }, { name: this.$t('users'), active: false }, { name: this.$t('languages'), active: false } ],
+				tabs:[
+					{ name: this.$t('tables'), active: true },
+					{ name: this.$t('users'), active: false },
+					{ name: this.$t('languages'), active: false, noAdminRights: true },
+					{ name: this.$t('groups'), active: false },
+					{ name: 'API&Tokens', active: false }
+				],
 				activeTab: this.$t('tables'),
 			}
 		},
@@ -78,13 +90,6 @@
 					item.active = false;
 			}
 		},
-		computed:
-		{
-			settingsTabsHeadClass()
-			{
-				return 'settings-tabs-head_' + this.$store.getters.lang;
-			}
-		},
 		watch:
 		{
 			'$store.getters.lang'()
@@ -99,6 +104,9 @@
 		mounted()
 		{
 			this.$store.commit('showLoader',true);
+			if (!this.$store.state.users.authUser.is_admin)
+				this.setActiveTab(this.tabs[2]);
+
 		}
 	}
 </script>
@@ -117,6 +125,9 @@
 		align-items: flex-end;
 		margin-bottom: 13px;
 		padding-right: 95px;
+		padding-right: 14px;
+		justify-content: flex-start;
+		align-items: center;
 	}
 	.settings-head-name
 	{
@@ -149,18 +160,10 @@
 	{
 		display: flex;
 		height: 37px;
-		width: 265px;
+		width: fit-content;
 		margin-bottom: 18px;
 		align-items: center;
 		border-bottom: 2px solid rgba(103, 115, 135, 0.1);
-		&_ru
-		{
-			width: 294px;
-		}
-		&_en
-		{
-			width: 265px;
-		}
 	}
 	.settings-tab-wrapper
 	{
@@ -194,17 +197,9 @@
 		overflow: auto;
 		height: 100%;
 	}
-	.settings-head__burger { display: none; }
+	.settings-head__burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.settings-head__burger { display: block; }
 		.settings-wrapper { min-width: 375px; }
-		.settings-head
-		{
-			padding-right: 14px;
-			justify-content: flex-start;
-			align-items: center;
-		}
-		.settings-head__burger { margin-right: 20px; }
 	}
 </style>

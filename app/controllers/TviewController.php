@@ -55,42 +55,37 @@ class TviewController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
 
 		$allFieldsData = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
-		foreach ($allFieldsData as $fieldDataKey => &$fieldDataValue)
-			$fieldDataValue['fieldName'] = $fieldDataKey;
 
 		$fieldsAlias = json_decode(json_encode(EmTypes::findByTable($tview->table)));
 		foreach ($fieldsAlias as $alias)
-			foreach ($allFieldsData as &$actualFieldData)
-				if ($alias->field === $actualFieldData['fieldName'] && !empty($alias->name))
-					$actualFieldData['fieldName'] = $alias->name;
+			foreach ($allFieldsData as $actualFieldDataName => &$actualFieldData)
+				if ($alias->field === $actualFieldDataName && !empty($alias->name))
+					$actualFieldDataName = $alias->name;
 
 		$select = [
 			'from'   => $tview->table,
 			'fields' => array_keys($allFieldsData)
 		];
 
-		$allFields  = $this->element->select($select);
+		$allFields = $this->element->select($select);
 
-		$lastItem = end($allFieldsData);
+		$lastItemName = array_key_last($allFieldsData);
 		$fileContent = "";
-		foreach ($allFieldsData as $fieldData)
-			if ($fieldData['fieldName'] === $lastItem['fieldName'])
-				$fileContent .= json_encode($fieldData['fieldName'], JSON_UNESCAPED_UNICODE) . "\n";
-			else
-				$fileContent .= json_encode($fieldData['fieldName'], JSON_UNESCAPED_UNICODE) . ",";
-
-		foreach ($allFields as $fieldDate)
+		foreach ($allFieldsData as $fieldDataName => $fieldData)
 		{
-			foreach ($fieldDate as $rowDataKey => &$rowDataValue)
-				$rowDataValue['name'] = $rowDataKey;
+			if ($fieldDataName === $lastItemName)
+				$fileContent .= json_encode($fieldDataName, JSON_UNESCAPED_UNICODE) . "\n";
+			else
+				$fileContent .= json_encode($fieldDataName, JSON_UNESCAPED_UNICODE) . ",";
+		}
 
-			$lastColumn = end($fieldDate)['name'];
-			foreach ($fieldDate as $rowData)
+		foreach ($allFields as $fieldData)
+		{
+			$lastColumnName = array_key_last($fieldData);
+			foreach ($fieldData as $rowDataName => $rowData)
 			{
-				$valueToContent = empty($rowData['value'])
-				? ""
-				: $rowData['value'];
-				if ($rowData['name'] !== $lastColumn)
+				$valueToContent = $rowData ?? "";
+				if ($rowDataName !== $lastColumnName)
 					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
 				else
 					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . "\n";

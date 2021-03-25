@@ -18,6 +18,7 @@ import Select from './components/forms/Select.vue';
 import SelectOption from './components/forms/SelectOption.vue';
 import DateForm from './components/forms/DateForm.vue';
 import Table from './components/tviews/Table.vue';
+import './plugins/highlightjs/main.js';
 
 Vue.use(VueCookie);
 Vue.use(Meta);
@@ -36,7 +37,13 @@ window.Vue = Vue;
 
 router.beforeEach(async function(to, from, next)
 {
-	var valid = await router.app.$axios({url: '/' });
+	if(store.state.isIntallDb === true)
+	{
+		next();
+		return true;
+	}
+
+	let valid = await router.app.$axios({url: '/' });
 	if (!valid.data.success)
 	{
 		store.commit('setInstallDb', false);
@@ -48,7 +55,13 @@ router.beforeEach(async function(to, from, next)
 
 router.beforeEach(async function(to, from, next)
 {
-	var valid       = await router.app.$axios({url: '/auth/isLogged/' });
+	if(store.state.isAuth === true)
+	{
+		next();
+		return true;
+	}
+
+	let valid       = await router.app.$axios({url: '/auth/isLogged/' });
 	let userCookies = router.app.$cookie.get('user');
 	if (!valid.data.success || !userCookies)
 	{

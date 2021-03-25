@@ -34,6 +34,11 @@
 				await this.$store.dispatch('setLanguage', {language, id: this.$store.state.users.authUser.id});
 				this.$store.commit('setLanguage', language);
 			}
+		},
+		mounted()
+		{
+			if (!this.$store.state.users.authUser.is_admin)
+				this.$store.commit('showLoader',false);
 		}
 	}
 </script>

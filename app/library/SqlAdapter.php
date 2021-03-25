@@ -186,6 +186,7 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function insert($requestParams)
 	{
+		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
 		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
@@ -196,9 +197,6 @@ class SqlAdapter extends PdoAdapter
 
 		if (empty($columns) || empty($columns))
 			return false;
-
-		$table   = $this->escapeRealStr($table);
-		$columns = $this->escapeRealStr($columns);
 
 		$columns   = implode(', ', $columns);
 		$sqlValues = [];
@@ -221,6 +219,41 @@ class SqlAdapter extends PdoAdapter
 
 		return true;
 	}
+
+	/**
+	 * Duplicate row in table
+	 * @param array
+	 * @return array
+	 */
+	public function duplicate($requestParams)
+	{
+		$requestParams = $this->escapeRealStr($requestParams);
+
+		$table   = isset($requestParams['table']) ? $requestParams['table'] : null;
+		$id      = isset($requestParams['where']['fields'][0]['value']) ? $requestParams['where']['fields'][0]['value'] : null;
+		$columns = isset($requestParams['columns']) ? $requestParams['columns'] : null;
+
+		if (empty($table) || empty($id) || empty($columns))
+			return false;
+
+		$sqlColumns = implode(', ', $columns);
+		$sql = "INSERT INTO {$table} ({$sqlColumns})
+				SELECT {$sqlColumns}
+				FROM {$table}
+				WHERE id = {$id}";
+		try
+		{
+			$this->db->execute($sql, $sqlColumns);
+		} catch (Exception $e) {
+			Phalcon\Di::getDefault()->get('logger')->error(
+				"duplicateRequest: {$sql}"
+			);
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * delete from table
 	 * @param  array
@@ -262,7 +295,12 @@ class SqlAdapter extends PdoAdapter
 	{
 		$tables = [];
 		$dbTables = $this->db->fetchAll(
-			"SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_SCHEMA=:database",
+			"SELECT t.TABLE_NAME, gt.group_id, gt.access
+			FROM information_schema.TABLES AS t
+			LEFT JOIN em_groups_tables AS gt ON gt.table_name = t.TABLE_NAME
+			WHERE TABLE_TYPE='BASE TABLE'
+			AND TABLE_SCHEMA=:database
+			ORDER BY t.TABLE_NAME",
 			Phalcon\Db::FETCH_ASSOC,
 			[ 'database' => $this->db->getDescriptor()['dbname'] ]
 		);
@@ -272,13 +310,25 @@ class SqlAdapter extends PdoAdapter
 			if(strpos($table['TABLE_NAME'], 'em_') === 0)
 				continue;
 
-			$tables[] = [
-				'code'    => $table['TABLE_NAME'],
-				'name'    => $table['TABLE_NAME'],
-			];
+			if (empty($tables[$table['TABLE_NAME']]))
+				$tables[$table['TABLE_NAME']] = [
+					'code'    => $table['TABLE_NAME'],
+					'name'    => $table['TABLE_NAME'],
+					'access'  => [[
+						'group_id' => Access::ADMINS_GROUP_ID,
+						'access'   => Access::FULL,
+					]],
+				];
+
+			if (isset($table['group_id']) && isset($table['access']))
+				$tables[$table['TABLE_NAME']]['access'][] =
+				[
+					'group_id' => $table['group_id'],
+					'access'   => $table['access'],
+				];
 		}
 
-		return $tables;
+		return array_values($tables);
 	}
 
 	/**

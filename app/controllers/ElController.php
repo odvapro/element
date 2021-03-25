@@ -13,6 +13,9 @@ class ElController extends ControllerBase
 		$delete = $this->request->getPost('delete');
 
 		if (empty($delete))
+			$delete = $this->request->get('delete');
+
+		if (empty($delete))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
 		$resultDelete = $this->element->delete($delete);
@@ -32,34 +35,18 @@ class ElController extends ControllerBase
 	{
 		$duplicateSelect = $this->request->getPost('duplicate');
 
-		if (empty($duplicateSelect))
+		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
+			$duplicateSelect = $duplicateSelect = $this->request->get('duplicate');
+
+		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
-		$record = $this->element->select($duplicateSelect);
+		$row = $this->element->select($duplicateSelect);
+		if (empty($row['items']))
+			return $this->jsonResult(['success' => false, 'message' => 'wrong id']);
+		$resultDuplicate = $this->element->duplicate($duplicateSelect);
 
-		if (empty($record))
-			return $this->jsonResult(['success' => false, 'message' => 'can\'t find element']);
-
-		$record = $record[0];
-
-		$insertParams = [
-			'table'   => $duplicateSelect['from'],
-			'columns' => [],
-			'values'  => []
-		];
-		foreach ($record as $propertyKey => $property)
-		{
-			if ($property['fieldName'] === 'em_primary')
-				continue;
-			$insertParams['columns'][] = $propertyKey;
-			$insertParams['values'][]  = $property['value'];
-		}
-		$resultDuplicate = $this->eldb->insert($insertParams);
-
-		if ($resultDuplicate === false)
-			return $this->jsonResult(['success' => false, 'message' => 'some error']);
-
-		return $this->jsonResult(['success' => true, 'result' => $resultDuplicate]);
+		return $this->jsonResult(['success' => $resultDuplicate, 'lastId' => $this->eldb->getLastInsertId()]);
 	}
 	/**
 	 * insert method SQL
@@ -68,6 +55,9 @@ class ElController extends ControllerBase
 	public function insertAction()
 	{
 		$insert = $this->request->getPost('insert');
+
+		if (empty($insert))
+			$insert = $this->request->get('insert');
 
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
@@ -99,6 +89,9 @@ class ElController extends ControllerBase
 		$update = $this->request->getPost('update');
 
 		if (empty($update))
+			$update = $this->request->get('update');
+
+		if (empty($update))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
 
 		try {
@@ -120,6 +113,7 @@ class ElController extends ControllerBase
 	public function selectAction()
 	{
 		$select = $this->request->get('select');
+
 		$page   = (!empty($select['page'])) ? $select['page'] : 1;
 		$limit  = empty($this->request->get('limit')) ? 100 : intval($this->request->get('limit'));
 
@@ -141,8 +135,8 @@ class ElController extends ControllerBase
 		$resultSelect = $this->element->select($select);
 		if ($resultSelect === false)
 			return $this->jsonResult(['success' => false, 'message' => 'some error']);
-		$pagination['items'] = $resultSelect;
 
+		$pagination = array_merge($pagination, $resultSelect);
 		return $this->jsonResult([
 			'success' => true,
 			'result' => $pagination
@@ -159,6 +153,10 @@ class ElController extends ControllerBase
 
 		foreach ($tables as &$table)
 		{
+			$groupsId = array_column($this->user->groups->toArray(), 'id');
+
+			$hasAccess = array_filter($table['access'], function ($accessItem) use ($groupsId) { return in_array($accessItem['group_id'], $groupsId); });
+			if (empty($hasAccess)) continue;
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
 

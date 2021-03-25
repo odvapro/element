@@ -59,6 +59,18 @@
 		{
 			this.closeEditor();
 		},
+		watch:
+		{
+			fieldValue:
+			{
+				handler(value)
+				{
+					if (!this.showEditor)
+						this.$set(this, 'localValue', value);
+				},
+				deep: true,
+			},
+		},
 		methods:
 		{
 			saveEditorContent()
@@ -140,9 +152,9 @@
 						}
 					},
 				});
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.em-text

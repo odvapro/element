@@ -10,8 +10,34 @@
 	export default
 	{
 		props: ['columns'],
-		components: { PropertyItem }
-	}
+		components: { PropertyItem },
+		watch:
+		{
+			columns:
+			{
+				handler(newValue)
+				{
+					this.updateModified();
+				},
+				deep: true,
+			},
+		},
+		mounted()
+		{
+			this.updateModified();
+		},
+		methods:
+		{
+			updateModified()
+			{
+				let isModified = false;
+				for (let column of Object.values(this.columns))
+					if (!column.visible) { isModified = true; break; }
+
+				this.$emit('updateModified', 'properties', isModified);
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.properties-popup

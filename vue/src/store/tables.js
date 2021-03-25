@@ -63,7 +63,7 @@ const table =
 		/**
 		 * Записать содержимое таблицы
 		 */
-		setSelectedElement(state, selectedElement)
+		setSelectedElement(state, {selectedElement, columns})
 		{
 			state.selectedElement = selectedElement;
 		},
@@ -80,16 +80,30 @@ const table =
 			let primaryKey = fieldValue.settings.primaryKey;
 			for(let tableLine of state.tableContent.items)
 			{
-				if(tableLine[primaryKey.fieldCode].value != primaryKey.value)
+				if(tableLine[primaryKey.fieldCode] != primaryKey)
 					continue;
 
-				tableLine[fieldValue.settings.fieldCode].value = fieldValue.value;
+				tableLine[fieldValue.settings.fieldCode] = fieldValue;
+
 				break;
 			}
 		}
 	},
 	getters:
 	{
+		getTableFieldsNames: (state, getters) => tableCode =>
+		{
+			let table  = getters.getTable(tableCode),
+				result = {};
+			if (!table || !table.columns)
+				return result;
+
+			for (let column in table.columns)
+				result[column] = table.columns[column].em.type_info.code;
+
+			return result;
+			return [table, tableCode];
+		},
 		/**
 		 * отдает ссылки на дополнения в сайдбар
 		 */
@@ -179,14 +193,14 @@ const table =
 			let   settings       = column.em.settings;
 
 			settings.primaryKey = {
-				value     : (row) ? row[primaryKeyCode].value : '',
+				value     : (row) ? row[primaryKeyCode] : '',
 				fieldCode : primaryKeyCode
 			};
 			settings.fieldCode  = column.field;
 			settings.tableCode  = tableCode;
 
 			return Object.assign({}, settings);
-		}
+		},
 	},
 	actions:
 	{
@@ -236,7 +250,10 @@ const table =
 			});
 
 			if (!result.data.success)
+			{
+				message.error(Vue.prototype.$t('accessDenied'));
 				return false;
+			}
 
 			store.commit('setTableContent', result.data.result);
 		},
@@ -251,14 +268,26 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
-		async duplicateRecord(store, recordPrams)
+		async duplicateRecord(store, recordParams)
 		{
 			let result = await axios({
 				method : 'post',
 				url    : '/el/duplicate/',
-				data   : qs.stringify({duplicate:recordPrams}),
+				data   : qs.stringify({duplicate:recordParams}),
 			});
-			return result;
+
+			if (!result.data.success)
+				return false;
+
+			const newContent = store.state.tableContent;
+			const duplicatedId = recordParams.where.fields[0].value;
+			const duplicatedRow = JSON.parse(JSON.stringify(newContent.items.find(item => item.id === duplicatedId)));
+			duplicatedRow.id = result.data.lastId;
+			newContent.items.push(duplicatedRow);
+
+			this.commit('setTableContent', newContent);
+
+			return true;
 		},
 		/**
 		 * Remove records or one record
@@ -267,22 +296,22 @@ const table =
 		 *      delete:<sql params for deleting>
 		 * }
 		 */
-		async removeRecord(store, recordPrams)
+		async removeRecord(store, recordParams)
 		{
-			if(typeof recordPrams.rowIndex != 'undefined' && typeof recordPrams.rowIndex != 'object')
-				store.state.tableContent.items.splice(recordPrams.rowIndex,1);
+			if(typeof recordParams.rowIndex != 'undefined' && typeof recordParams.rowIndex != 'object')
+				store.state.tableContent.items.splice(recordParams.rowIndex,1);
 
-			if(typeof recordPrams.rowIndex == 'object')
+			if(typeof recordParams.rowIndex == 'object')
 			{
 				let curTableCont = store.state.tableContent;
 				curTableCont.items = curTableCont.items.filter((itemValue, itemIndex, arr)=>
 				{
-					return (recordPrams.rowIndex.indexOf(itemIndex) != -1)?false:true;
+					return (recordParams.rowIndex.indexOf(itemIndex) != -1)?false:true;
 				});
 				this.commit('setTableContent',curTableCont);
 			}
 
-			return store.dispatch('removeTableRow', recordPrams.delete);
+			return store.dispatch('removeTableRow', recordParams.delete);
 		},
 		/**
 		 * deleteParams:<sql params for deleting>
@@ -294,6 +323,10 @@ const table =
 				url    : '/el/delete/',
 				data   : qs.stringify({delete:deleteParams}),
 			});
+
+			if (!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
+
 			return result;
 		},
 
@@ -336,8 +369,11 @@ const table =
 			});
 
 			if (!result.data.success || result.data.result.items.length == 0)
+			{
+				message.error(Vue.prototype.$t('accessDenied'));
 				return false;
-			this.commit('setSelectedElement',result.data.result.items[0]);
+			}
+			this.commit('setSelectedElement',{selectedElement:result.data.result.items[0], columns:result.data.result.columns_types});
 		},
 
 		/**
@@ -351,7 +387,7 @@ const table =
 		{
 			let setValues  = {};
 			let primaryKey = fieldValue.settings.primaryKey;
-			setValues[fieldValue.settings.fieldCode] = fieldValue.value;
+			setValues[fieldValue.settings.fieldCode] = fieldValue;
 			var data = qs.stringify({
 				update:{
 					table :fieldValue.settings.tableCode,
@@ -362,15 +398,15 @@ const table =
 							{
 								code      :primaryKey.fieldCode,
 								operation :'IS',
-								value     :primaryKey.value
+								value     :primaryKey,
 							}
 						]
 					}
 				}
 			});
 			let result = await axios.post('/el/update/',data);
-			if(result.data.success != true)
-				message.error('Cant save data.😐');
+			if(!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
 			this.commit('setFieldValue',fieldValue);
 		},
 
@@ -385,7 +421,7 @@ const table =
 			let primaryKeyCode = store.getters.getPrimaryKeyCode(tableCode);
 			let setValues  = {};
 			for(let fieldCode in selectedElement)
-				setValues[fieldCode] = selectedElement[fieldCode].value;
+				setValues[fieldCode] = selectedElement[fieldCode];
 
 			var data = qs.stringify({
 				update:{
@@ -397,7 +433,7 @@ const table =
 							{
 								code      : primaryKeyCode,
 								operation : 'IS',
-								value     : selectedElement[primaryKeyCode].value
+								value     : selectedElement[primaryKeyCode],
 							}
 						]
 					}
@@ -405,8 +441,11 @@ const table =
 			});
 			let result = await axios.post('/el/update/',data);
 
+			if (!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
+
 			return result;
 		}
-	}
+	},
 };
 export default table;

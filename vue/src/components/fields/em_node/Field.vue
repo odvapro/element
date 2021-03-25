@@ -61,8 +61,16 @@
 			query(value)
 			{
 				this.newTag = this.query;
-				this.getNodes()
-			}
+				this.getNodes();
+			},
+			fieldValue:
+			{
+				handler(value)
+				{
+					this.$set(this, 'localFieldValue', value);
+				},
+				deep: true,
+			},
 		},
 		methods:
 		{
@@ -75,7 +83,7 @@
 				{
 					if(primaryKeyCode == fieldCode) continue;
 					setColumns.push(fieldCode);
-					setValues.push(data.selectedElement[fieldCode].value);
+					setValues.push(data.selectedElement[fieldCode]);
 				}
 
 				let insertData = qs.stringify({
@@ -83,8 +91,8 @@
 					{
 						table   :data.tableCode,
 						columns :setColumns,
-						values  :setValues
-					}
+						values  :setValues,
+					},
 				});
 				let result = await this.$axios.post('/el/insert/',insertData);
 				if(result.data.success == true)
@@ -104,9 +112,9 @@
 				this.currentElement = [];
 				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
 				for (let column in table.columns)
-					this.currentElement[column] = {value: ''};
+					this.currentElement[column] = '';
 
-				this.currentElement[this.fieldSettings.nodeSearchCode] = {value: this.newTag};
+				this.currentElement[this.fieldSettings.nodeSearchCode] = this.newTag;
 			},
 			popupForCreateElement()
 			{
@@ -122,7 +130,7 @@
 			{
 				this.$emit('onChange', {
 					value     : newValue,
-					settings  : this.fieldSettings
+					settings  : this.fieldSettings,
 				});
 			},
 
@@ -163,7 +171,7 @@
 				this.localFieldValue = listItem;
 				this.$emit('onChange', {
 					value    : this.localFieldValue,
-					settings : this.fieldSettings
+					settings : this.fieldSettings,
 				});
 			},
 
@@ -175,11 +183,11 @@
 				this.localFieldValue = '';
 				this.$emit('onChange', {
 					value     : this.localFieldValue,
-					settings  : this.fieldSettings
+					settings  : this.fieldSettings,
 				});
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.em-node__new-tag

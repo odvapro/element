@@ -97,6 +97,9 @@
 		align-items: flex-end;
 		margin-bottom: 13px;
 		padding-right: 95px;
+		justify-content: flex-start;
+		padding-right: 20px;
+		align-items: center;
 	}
 	.update-head-name
 	{
@@ -138,17 +141,9 @@
 	.update-buttons .el-gbtn {margin-right: 17px; }
 	.update-success {color:#3A8406; font-size: 14px;}
 	.update__loader{margin-bottom: 20px;}
-	.update-head__burger { display: none; }
+	.update-head__burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.update-head__burger { display: block; }
 		.update-wrapper { min-width: 375px; }
-		.update-head
-		{
-			padding-right: 20px;
-			justify-content: flex-start;
-			align-items: center;
-		}
-		.update-head__burger { margin-right: 20px; }
 	}
 </style>

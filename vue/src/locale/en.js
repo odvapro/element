@@ -168,6 +168,7 @@ export default
 	table: 'Table',
 	tables: 'Tables',
 	languages: 'Languages',
+	groups: 'Groups',
 	users: 'Users',
 	developed_by: 'Developed by',
 	cancel: 'Cancel',
@@ -195,6 +196,13 @@ export default
 	add: 'Add',
 	enter_something: 'Enter ',
 	key: 'Key',
+	createGroup: 'Create Group',
+	addGroup: 'Add a Group',
+	disableAccess: 'Disable Access',
+	members: 'members: {count}',
+	addMember: 'Add member',
+	accessDenied: 'Access denied',
+	search: 'Search...',
 	months:
 	[
 		'January',

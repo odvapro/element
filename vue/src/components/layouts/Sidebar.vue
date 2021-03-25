@@ -7,7 +7,7 @@
 		</router-link>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
-				<li class="sidebar__user">
+				<li class="sidebar__user" v-if="$store.state.users.authUser">
 					<a href="javascript:void(0)">
 						<div class="sidebar__user-img-wrapper">
 							<img :src="$store.state.users.authUser.avatar" alt="">
@@ -145,7 +145,7 @@
 				if (!result.data.success)
 					return false;
 
-				this.$router.push('/');
+				window.location.href = '/element';
 			},
 
 			/**

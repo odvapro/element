@@ -163,3 +163,26 @@ $di->set('element', function () use ($di)
 	$element = new Element($di->get('eldb'), $di);
 	return $element;
 });
+
+$di->set('user', function () use ($di)
+{
+	static $user = null;
+
+	if (empty($user) && !empty($di->get('session')->get('auth')))
+		$user = EmUsers::findFirst($di->get('session')->get('auth'));
+
+	return $user;
+});
+
+$di->set('group', function () use ($di)
+{
+	static $group = null;
+
+	if (empty($group) && !empty($di->get('session')->get('token')))
+	{
+		$token = EmTokens::findFirstByValue($di->get('session')->get('token'));
+		if (!empty($token)) $group = $token->group;
+	}
+
+	return $group;
+});

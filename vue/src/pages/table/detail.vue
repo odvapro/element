@@ -8,6 +8,7 @@
 		@saveElement="saveElementDetail"
 		@removeElement="removeElementDetail"
 		@createElement="createElementDetail"
+		v-if="show"
 	/>
 </template>
 <script>
@@ -18,6 +19,12 @@
 	{
 		components: {Detail},
 		mixins: [detailFunctions],
+		data()
+		{
+			return {
+				show:false
+			}
+		},
 		methods:
 		{
 			cancel()
@@ -26,7 +33,7 @@
 			},
 			openDetail({tableCode,id})
 			{
-				this.$router.push({name:'tableDetail', params:{tableCode:tableCode, id:id }});
+				this.$router.push({name:'tableDetail', params:{tableCode, id }});
 			},
 			async saveElementDetail(data)
 			{
@@ -48,10 +55,19 @@
 			async removeElementDetail(data)
 			{
 				let result = await this.removeElement(data);
-				if (result.data.success)
+				if (result)
 					this.ElMessage(this.$t('elMessages.element_removed'));
 				this.$router.go(-1);
 			}
+		},
+		mounted()
+		{
+			if(this.$store.state.tables.tables.length > 0)
+				this.show = true;
+			this.$store.subscribe((mutation, state) => {
+				if(mutation.type == 'setTables')
+					this.show = true;
+			});
 		}
 	}
 </script>
