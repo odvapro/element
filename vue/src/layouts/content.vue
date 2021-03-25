@@ -122,26 +122,12 @@
 				}, false);
 			},
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		async mounted()
-		{
-			if (this.$cookie.get('drugPosition') >= 200)
-				this.sidebar.flexBasis = `${this.$cookie.get('drugPosition')}px`;
-
-			this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
-			this.initEventScale();
-
-			await this.$store.dispatch('getTables');
-		},
-	}
+	};
 </script>
 <style lang="scss">
 	.app-wrapper
 	{
 		min-height: 100vh;
-		user-select: none;
 		position: relative;
 		display: flex;
 	}

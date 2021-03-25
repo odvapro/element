@@ -67,7 +67,7 @@ class TviewController extends ControllerBase
 			'fields' => array_keys($allFieldsData)
 		];
 
-		$allFields  = $this->element->select($select);
+		$allFields = $this->element->select($select);
 
 		$lastItemName = array_key_last($allFieldsData);
 		$fileContent = "";

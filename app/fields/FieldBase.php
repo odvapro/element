@@ -116,9 +116,10 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	 */
 	public function getLocales()
 	{
-		if (empty($this->config->application->userSettings['language']))
-			AuthController::setLangInUserSettings();
-		$lang = $this->config->application->userSettings['language'];
+		$lang = 'en';
+
+		if (!empty($this->di->get('user')))
+			$lang = $this->di->get('user')->language;
 
 		$fieldFile = "{$this->getFieldFolderPath()}/locale/{$lang}.json";
 		if(file_exists($fieldFile))

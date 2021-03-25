@@ -20,8 +20,9 @@
 				</div>
 				<div
 					class="table-item"
-					v-for="column in table.columns"
+					v-for="column,index in table.columns"
 					v-if="column.visible"
+					:class="`_table-col-${index}`"
 					:style="{ width: column.width + 'px'}"
 				>
 					<div class="table-item-img">
@@ -66,8 +67,9 @@
 				<div
 					class="table-item"
 					v-for="column, index in table.columns"
-					v-if="column.visible && row[column.field] !== undefined"
+					v-if="column.visible && typeof row[column.field] !== 'undefined'"
 					:key="`${index}${rowIndex}`"
+					:class="`_table-col-${index}`"
 					:style="{width: column.width + 'px'}"
 				>
 					<MainField
@@ -177,7 +179,16 @@
 				 */
 				handler: function (val, oldVal)
 				{
-					if (this.columnDrug.isDrug == false)
+					let curCols = Object.entries(oldVal);
+					curCols = curCols.reduce((colsString,col)=>{
+						return colsString += col[0];
+					});
+					let newCols = Object.entries(val);
+					newCols = newCols.reduce((colsString,col)=>{
+						return colsString += col[0];
+					});
+
+					if (this.columnDrug.isDrug == false && newCols == curCols)
 						this.saveColumnsParams();
 				},
 				deep: true
@@ -250,10 +261,7 @@
 			 */
 			getOverideName(column)
 			{
-				if (typeof column.em.name == 'undefined' || column.em.name == '' || column.em.name == null)
-					return column.field;
-
-				return column.em.name;
+				return column.em.name || column.field;
 			},
 
 			/**
@@ -365,7 +373,12 @@
 			endResize(event, col)
 			{
 				if (this.columnDrug.isDrug)
+				{
+					let col      = this.columnDrug.col;
+					let colDomEl = document.querySelector(`._table-col-${col.field}`);
+					col.width    = +colDomEl.style.width.replace('px','');
 					this.saveColumnsParams();
+				}
 
 				this.columnDrug.isDrug = false;
 			},
@@ -377,17 +390,18 @@
 			{
 				if (!this.columnDrug.isDrug)
 					return false;
-				let col = this.columnDrug.col;
 				let newWidth = Math.abs(this.columnDrug.posX - event.pageX - this.columnDrug.width);
 				if (newWidth < 110)
 					newWidth = 110;
 
 				if (newWidth > 600)
 					newWidth = 600;
-				let diff = Math.abs(col.width - newWidth);
 
-				if(diff > 2)
-					col.width = newWidth;
+				// col.width = newWidth;
+				let col = this.columnDrug.col;
+				document.querySelectorAll(`._table-col-${col.field}`).forEach((el)=>{
+					el.style.width = `${newWidth}px`;
+				});
 			},
 
 			/**
@@ -546,9 +560,8 @@
 		padding-left: 9px;
 		position: relative;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		&:last-child {border-right: none; }
 		&:hover{background: rgba(103, 115, 135, 0.05);}
-		&--empty{padding: 0;width: 0;}
+		&--empty{padding: 0;width: 0;border: 0;}
 	}
 	.table-item-overide-name
 	{

@@ -63,7 +63,7 @@ const table =
 		/**
 		 * Записать содержимое таблицы
 		 */
-		setSelectedElement(state, selectedElement)
+		setSelectedElement(state, {selectedElement, columns})
 		{
 			state.selectedElement = selectedElement;
 		},
@@ -84,12 +84,26 @@ const table =
 					continue;
 
 				tableLine[fieldValue.settings.fieldCode] = fieldValue;
+
 				break;
 			}
 		}
 	},
 	getters:
 	{
+		getTableFieldsNames: (state, getters) => tableCode =>
+		{
+			let table  = getters.getTable(tableCode),
+				result = {};
+			if (!table || !table.columns)
+				return result;
+
+			for (let column in table.columns)
+				result[column] = table.columns[column].em.type_info.code;
+
+			return result;
+			return [table, tableCode];
+		},
 		/**
 		 * отдает ссылки на дополнения в сайдбар
 		 */
@@ -236,7 +250,10 @@ const table =
 			});
 
 			if (!result.data.success)
+			{
+				message.error(Vue.prototype.$t('accessDenied'));
 				return false;
+			}
 
 			store.commit('setTableContent', result.data.result);
 		},
@@ -306,6 +323,10 @@ const table =
 				url    : '/el/delete/',
 				data   : qs.stringify({delete:deleteParams}),
 			});
+
+			if (!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
+
 			return result;
 		},
 
@@ -348,8 +369,11 @@ const table =
 			});
 
 			if (!result.data.success || result.data.result.items.length == 0)
+			{
+				message.error(Vue.prototype.$t('accessDenied'));
 				return false;
-			this.commit('setSelectedElement',result.data.result.items[0]);
+			}
+			this.commit('setSelectedElement',{selectedElement:result.data.result.items[0], columns:result.data.result.columns_types});
 		},
 
 		/**
@@ -381,8 +405,8 @@ const table =
 				}
 			});
 			let result = await axios.post('/el/update/',data);
-			if(result.data.success != true)
-				message.error('Cant save data.😐');
+			if(!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
 			this.commit('setFieldValue',fieldValue);
 		},
 
@@ -417,8 +441,11 @@ const table =
 			});
 			let result = await axios.post('/el/update/',data);
 
+			if (!result.data.success)
+				message.error(Vue.prototype.$t('accessDenied'));
+
 			return result;
 		}
-	}
+	},
 };
 export default table;

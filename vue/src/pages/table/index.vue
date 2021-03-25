@@ -1,7 +1,7 @@
 <template>
 	<div class="index__wrapper">
-		<div class="index__head">
-			<div class="index__head-name" v-if="table">
+		<div class="index__head" v-if="table">
+			<div class="index__head-name">
 				<div class="index__head-burger"><MobileBurger/></div>
 				<div class="index__icon-wrapper">
 					<svg width="14" height="13">
@@ -99,7 +99,11 @@
 				</button>
 			</div>
 		</div>
-		<Table :table="table" :tview="activeTview" v-if="table && activeTview" />
+		<Table
+			:table="table"
+			:tview="activeTview"
+			v-if="table && activeTview"
+		/>
 	</div>
 </template>
 <script>
@@ -163,6 +167,10 @@
 		mounted()
 		{
 			this.activeTable();
+			this.$store.subscribe((mutation, state) => {
+				if(mutation.type == 'setTables')
+					this.activeTable();
+			});
 			this.checkModified();
 		},
 		methods:
@@ -311,6 +319,7 @@
 	.index__menu-more
 	{
 		position: relative;
+		.index__menu-item-title { padding: 2px 8px 8px; }
 	}
 	.index__menu-more-list
 	{

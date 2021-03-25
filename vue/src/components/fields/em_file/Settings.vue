@@ -235,6 +235,10 @@
 			padding:0 10px;
 			border-radius: 2px 0 0 2px;
 			color: #191C21;
+			max-width: 180px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		input
 		{

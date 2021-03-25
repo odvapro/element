@@ -1,9 +1,9 @@
 <template>
 	<div class="settings-table-wrapper">
-		<div class="settings-empty-tables" v-if="tables.length < 1">
+		<div class="settings-empty-tables" v-if="!tables.length">
 			{{$t('settingsTable.no_tables')}}
 		</div>
-		<div class="settings-table-head" v-if="tables.length > 0">
+		<div class="settings-table-head" v-if="tables.length">
 			<div class="settings-table-row-data">
 				<div class="settings-table-item">
 					<div class="settings-table-item-title">{{$t('code')}}</div>
@@ -48,7 +48,17 @@
 							></Checkbox>
 						</div>
 					</div>
-					<div class="settings-table-item"></div>
+					<div class="settings-table-item centered">
+						<button @click="showTableGroups(table)" class="settings-table__open-settings">{{$t('groups')}}</button>
+						<TableGroups
+							v-click-outside="hideTableGroups"
+							v-if="table.code == showTableGroupsCode && !showPopupAddGroup"
+							:access="table.access"
+							:table="table.code"
+							@showTableGroupsAdding="showTableGroupsAdding"
+							@disableTableAccess="disableTableAccess"
+						/>
+					</div>
 				</div>
 				<div class="settings-table-row-setting" id="settings-table-row" :style="table.showSettings">
 					<div class="settings-table-row-setting-item active" v-for="column in table.columns">
@@ -67,7 +77,7 @@
 								>{{ field.name }}</SelectOption>
 							</Select>
 						</div>
-						<div class="settings-table-item centered">
+						<div class="settings-table-item">
 							<button
 								class="settings-table__open-settings"
 								@click="openSettingsPopup(table,column)"
@@ -79,7 +89,7 @@
 			</div>
 		</div>
 		<Popup :visible.sync="settingsPopup">
-			<div class="popup__name">{{ $t('settings_of', { of_what: settingsColumn.field || '' }) }}</div>
+			<div class="popup__name">{{ $t('settings_of', { of_what: (settingsColumn && settingsColumn.field) || '' }) }}</div>
 			<component
 				:is="settingsComponent"
 				:settings="currentSettings"
@@ -88,33 +98,52 @@
 				@cancel="settingsPopup = false"
 			></component>
 		</Popup>
+		<StoreSelect
+			@selectItem="addGroupToTable"
+			disableIf="is_admin"
+			:visible.sync="showPopupAddGroup"
+			:settings="{searchStr:'$store.state.groups.groups'}"
+		></StoreSelect>
 	</div>
 </template>
 <script>
 	import qs from 'qs';
 	import TableWork from '@/mixins/tableWork.js';
+	import TableGroups from '@/components/forms/TableGroups.vue';
+	import StoreSelect from '@/components/popups/StoreSelect.vue';
+	import { mapState } from 'vuex';
+
 	export default
 	{
 		mixins: [TableWork],
+		components:{TableGroups, StoreSelect},
 		/**
 		 * Глобальные переменные страницы
 		 */
 		data()
 		{
 			return {
-				fieldTypes:[],
+				fieldTypes: {},
 				tables: [],
 				tableStyle: {height: '0px', overflow: 'hidden'},
-
 				settingsPopup:false,
-				settingsFielType:false,
-				currentSettings:false,
-				settingsTable:false,
-				settingsColumn:false,
-			}
+				settingsFielType:'',
+				currentSettings:null,
+				settingsTable:null,
+				settingsColumn:null,
+				showTableGroupsCode:false,
+				showPopupAddGroup:false,
+			};
 		},
 		computed:
 		{
+			...mapState({
+				storeTables  : state => state.tables.tables,
+				storeTables  : state => state.tables.tables,
+				// Достать колонки столбца
+				getColumns   : state => state.tables.tableColumns,
+				accessOptions: state => state.groups.accessOptions,
+			}),
 			/**
 			 * Field settings component
 			 * gets settings component
@@ -122,22 +151,21 @@
 			 */
 			settingsComponent()
 			{
-				if(this.settingsColumn === false)
+				if(!this.settingsColumn)
 					return false;
 
-				if (this.settingsFielType == false)
+				if (!this.settingsFielType)
 					return false;
 
 				return () => import(`@/components/fields/${this.settingsFielType}/Settings.vue`);
 			},
-
-			/**
-			 * Достать колонки столбца
-			 */
-			getColumns()
-			{
-				return this.$store.state.tables.tableColumns;
-			}
+		},
+		/**
+		 * Хук при загрузке страницы
+		 */
+		mounted()
+		{
+			this.initTables();
 		},
 		methods:
 		{
@@ -148,7 +176,7 @@
 			{
 				try
 				{
-					require(`@/components/fields/${column.em.settings.code}/Settings.vue`)
+					require(`@/components/fields/${column.em.settings.code}/Settings.vue`);
 				}
 				catch (e)
 				{
@@ -163,11 +191,11 @@
 			 */
 			openSettingsPopup(table, column)
 			{
-				this.settingsTable    = table,
-				this.settingsColumn   = column,
-				this.settingsFielType = column.em.type_info.code;
-				this.currentSettings  = column.em.settings;
-				this.settingsPopup    = true;
+				this.$set(this, 'settingsTable', table);
+				this.$set(this, 'settingsColumn', column);
+				this.$set(this, 'settingsFielType', column.em.type_info.code);
+				this.$set(this, 'currentSettings', column.em.settings);
+				this.$set(this, 'settingsPopup', true);
 			},
 
 			/**
@@ -177,7 +205,7 @@
 			{
 				let data = {
 					tableName  : this.settingsTable.code,
-					columnName : this.settingsColumn.field,
+					columnName : (this.settingsColumn && this.settingsColumn.field) || '',
 					fieldType  : this.settingsFielType,
 					settings   : settings
 				};
@@ -196,7 +224,7 @@
 							continue;
 						for(let columnCode in table.columns)
 						{
-							if(columnCode == this.settingsColumn.field)
+							if(columnCode == (this.settingsColumn && this.settingsColumn.field) || '')
 								table.columns[columnCode].em.settings = result.data.settings;
 						}
 					}
@@ -325,28 +353,77 @@
 			 */
 			async initTables()
 			{
+				await this.$store.dispatch('getTables');
 				let result = await this.$axios.get('/settings/getFiledTypes/');
 
 				if(result.data.success)
-					this.fieldTypes = result.data.types;
+					this.$set(this, 'fieldTypes', result.data.types);
 
-				this.tables = this.$store.state.tables.tables;
+				this.$set(this, 'tables', this.storeTables || []);
 
 				for (let table of this.tables)
-				{
 					this.$set(table, 'showSettings', Object.assign({}, this.tableStyle));
-				}
+
 				this.$store.commit('showLoader',false);
-			}
+			},
+			/**
+			 * Shows table group settgins
+			 */
+			showTableGroups(table)
+			{
+				this.showTableGroupsCode = table.code;
+			},
+			/**
+			 * скрывает попап с доступами для таблиц
+			 */
+			hideTableGroups()
+			{
+				this.showTableGroupsCode = false;
+			},
+			/**
+			 * открывает попап с доступами для таблиц
+			 */
+			showTableGroupsAdding()
+			{
+				this.showPopupAddGroup = true;
+			},
+			/**
+			 * добавляет в доступы таблицы новую строку с группой
+			 */
+			async addGroupToTable(group)
+			{
+				let table = this.showTableGroupsCode;
+				this.showTableGroupsCode = false;
+
+				await this.$store.dispatch('setGroupAccess', {
+						groupId   : group.id,
+						accessStr : this.accessOptions[0].strValue,
+						tableName : table
+					});
+
+				await this.initTables();
+
+				this.showTableGroupsCode = table;
+			},
+			/**
+			 * отправляет запрос на ограничение доступа к таблице
+			 */
+			async disableTableAccess(tableName)
+			{
+				let result = await this.$axios.post('/groups/disableGroupsAccess/', qs.stringify({tableName}));
+
+				if (!result.data.success)
+				{
+					this.ElMessage.error(result.data.message);
+					return;
+				}
+
+				await this.initTables();
+				this.ElMessage(this.$t('elMessages.settings_saved'));
+				this.showTableGroupsCode = false;
+			},
 		},
-		/**
-		 * Хук при загрузке страницы
-		 */
-		mounted()
-		{
-			this.initTables();
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.settings-tab-wrapper {height: 100%; }
@@ -460,8 +537,19 @@
 		color: rgba(25, 28, 33, 0.7);
 		font-size: 12px;
 		border-right: 1px solid rgba(103, 115, 135, 0.1);
+		position: relative;
 		&.table-item {height: 49px; }
-		&:last-child {border-right: none; }
+		&:nth-child(3n)
+		{
+			min-width: 130px;
+			width: 130px;
+		}
+		&:last-child
+		{
+			border-right: none;
+			min-width: 100px;
+			width: 100px;
+		}
 		&.centered {justify-content: center; }
 		&.category-font {color: #191C21; }
 		.settings-table__open-settings
@@ -470,6 +558,7 @@
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
+			text-transform: lowercase;
 			&:hover{text-decoration: underline;}
 		}
 	}

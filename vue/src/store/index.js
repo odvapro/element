@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import tables from './tables.js';
 import users from './users.js';
+import groups from './groups.js';
 import settings from './settings.js';
 import languages from './languages.js';
 import vuexI18n from 'vuex-i18n';
@@ -13,10 +14,11 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 	modules:
 	{
-		tables: tables,
-		settings: settings,
-		users: users,
-		languages: languages
+		tables    : tables,
+		settings  : settings,
+		users     : users,
+		languages : languages,
+		groups    : groups
 	},
 	state:
 	{
@@ -47,6 +49,7 @@ const store = new Vuex.Store({
 		setAuth(state, status)
 		{
 			state.isAuth = status;
+			state.layoutSelected = true;
 		},
 
 		/**

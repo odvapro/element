@@ -145,7 +145,7 @@
 				if (!result.data.success)
 					return false;
 
-				this.$router.push('/');
+				window.location.href = '/element';
 			},
 
 			/**

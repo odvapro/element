@@ -1,6 +1,9 @@
 <template>
-	<div class="app-layouts-wrapper">
+	<div class="app">
 		<component :is="layout"></component>
+		<div class="app__loader" v-if="!$store.state.layoutSelected">
+			<Loader class="app__loader-block" />
+		</div>
 		<Sprite/>
 	</div>
 </template>
@@ -11,10 +14,11 @@
 	import Content from './layouts/content';
 	import Setup from './layouts/setup';
 	import Sprite from './components/layouts/Sprite.vue';
+	import Loader from '@/components/forms/Loader.vue';
 	import qs from 'qs';
 	export default
 	{
-		components: { Sprite, Setup, Content, Auth },
+		components: { Sprite, Setup, Content, Auth, Loader },
 		metaInfo:
 		{
 			title: 'Element',
@@ -41,6 +45,9 @@
 			 */
 			layout()
 			{
+				if (this.$store.state.layoutSelected == false)
+					return false;
+
 				if (this.$store.state.isIntallDb == false)
 					return 'Setup';
 
@@ -61,7 +68,7 @@
 		},
 		async mounted()
 		{
-			if (!this.$store.isAuthUser)
+			if (!this.$store.getters.isAuthUser)
 				if (this.$cookie.get('user'))
 					this.$store.commit('setAuthUser', JSON.parse(this.$cookie.get('user')));
 
@@ -73,7 +80,7 @@
 	}
 </script>
 <style lang="scss">
-	.app-layouts-wrapper{height: 100vh; }
+	.app{height: 100vh; }
 	*{box-sizing: border-box; }
 	.content-wrapper {overflow: hidden; }
 	.app__loader

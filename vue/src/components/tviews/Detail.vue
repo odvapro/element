@@ -81,12 +81,14 @@
 		{
 			return {
 				columns:{},
-				selectedElement:{}
+				selectedElement:{},
+				fieldNames:{}
 			}
 		},
 		mounted()
 		{
 			this.selectElement();
+			this.fieldNames = Object.assign(this.fieldNames, this.$store.getters.getTableFieldsNames(this.tableCode));
 		},
 		methods:
 		{
@@ -119,6 +121,7 @@
 				{
 					for(let columnCode in this.columns)
 					{
+						this.$set(this.selectedElement, columnCode,'');
 						this.$set(this.selectedElement, columnCode, '');
 						if (this.element && typeof this.element[columnCode] != 'undefined')
 							this.$set(this.selectedElement, columnCode, this.element[columnCode]);
@@ -153,9 +156,7 @@
 			 */
 			getColumnName(columnCode)
 			{
-				if(!this.columnEmSettings(columnCode).name)
-					return columnCode;
-				return this.columnEmSettings(columnCode).name
+				return this.columnEmSettings(columnCode).name || columnCode;
 			},
 
 			/**
