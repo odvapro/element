@@ -129,7 +129,7 @@
 			 */
 			tableContent()
 			{
-				return this.$store.getters.getTableContent;
+				return this.$store.state.tables.tableContent;
 			},
 
 			/**

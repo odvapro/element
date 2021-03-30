@@ -135,6 +135,14 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 
 					return $group->hasAccess($tableName, Access::READ);
 				},
+				'search' => function($user, $group) {
+					$tableName = $this->request->get('select')['from'];
+
+					if (!empty($user))
+						return $user->hasAccess($tableName, Access::READ);
+
+					return $group->hasAccess($tableName, Access::READ);
+				},
 				'getTables' => null,
 			],
 			'users' => [
