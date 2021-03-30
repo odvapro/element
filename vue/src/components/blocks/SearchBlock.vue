@@ -89,13 +89,9 @@
 				if(this.$route.params.limit)
 					requestParams.limit = this.$route.params.limit
 
-				if (value)
-				{
-					requestParams.select.search = value;
-					await this.$store.dispatch('search', requestParams);
-				} else {
-					await this.$store.dispatch('select', requestParams);
-				}
+				requestParams.select.search = value;
+				await this.$store.dispatch('search', requestParams);
+
 				this.$store.commit('showLoader',false);
 
 			},

@@ -194,6 +194,15 @@
 				deep: true
 			},
 
+			'tableContent.last'(value, oldValue)
+			{
+				if (value < +this.$route.params.page)
+					this.selectPage({
+						limit: +this.$route.params.limit,
+						page: value,
+					});
+			},
+
 			/**
 			 * Если меняется урл то выполнять
 			 */
@@ -417,7 +426,6 @@
 			 */
 			selectPage(pageParams)
 			{
-				this.$store.dispatch('selectPage', pageParams);
 				this.$router.push(`/table/${this.table.code}/tview/${this.tview.id}/page/${pageParams.page}/limit/${pageParams.limit}`);
 			},
 
