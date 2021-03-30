@@ -143,6 +143,53 @@ class ElController extends ControllerBase
 		]);
 	}
 
+	public function searchAction()
+	{
+		$select = $this->request->get('select');
+
+		if (empty($select))
+			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
+
+		$search = !empty($select['search']) ? $select['search'] : '';
+		$page   = !empty($select['page']) ? $select['page'] : 1;
+		$limit  = empty($this->request->get('limit')) ? 100 : intval($this->request->get('limit'));
+
+		$resultSelect = $this->element->select($select);
+
+		if ($resultSelect === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		$searchedFields = array_keys(array_intersect($resultSelect['columns_types'], ['em_string','em_text']));
+
+		if (!empty($searchedFields) && !empty($search))
+		{
+			$resultSelect['items'] = array_filter($resultSelect['items'], function($item) use ($searchedFields, $search)
+			{
+				foreach ($searchedFields as $searchedField) {
+					if (mb_stripos(json_encode($item[$searchedField], JSON_UNESCAPED_UNICODE), $search))
+						return true;
+				}
+				return false;
+			});
+		}
+
+		// Define count of element
+		$itemsCount = $this->element->count($select);
+		$paginator = new ElPagination([
+			'count' => count($resultSelect['items']),
+			'limit' => $limit,
+			'page'  => $page,
+		]);
+		$pagination = $paginator->getPaginate();
+		$resultSelect['items'] = array_slice($resultSelect['items'], $pagination['offset'], $pagination['offset'] + $limit);
+
+		$pagination = array_merge($pagination, $resultSelect);
+		return $this->jsonResult([
+			'success' => true,
+			'result' => $pagination,
+		]);
+	}
+
 	/**
 	 * Get Tables
 	 * @return json

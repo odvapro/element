@@ -28,6 +28,20 @@
 				updateTimeout: 0,
 			};
 		},
+		computed:
+		{
+			table()
+			{
+				return this.$store.getters.getTable(this.$route.params.tableCode);
+			},
+			tview()
+			{
+				let tviewId = this.$route.params.tview;
+				for (let tview of this.table.tviews)
+					if(tview.id == tviewId)
+						return tview;
+			},
+		},
 		watch:
 		{
 			searchValue(value)
@@ -59,9 +73,31 @@
 				this.opened = false;
 				this.$refs.searchInput.blur();
 			},
-			updateSearchValue(value)
+			async updateSearchValue(value)
 			{
-				this.$store.commit('setSearchValue', value);
+				let requestParams = {select : {}, };
+				if (this.tview.filter)
+					requestParams.select.where = this.tview.filter;
+
+				if (this.tview.sort)
+					requestParams.select.order = this.tview.sort;
+
+				requestParams.select.from   = this.$route.params.tableCode || this.tview.table;
+				requestParams.select.page   = this.$route.params.page      || 1;
+				requestParams.select.tview  = this.$route.params.tview     || this.tview.id;
+
+				if(this.$route.params.limit)
+					requestParams.limit = this.$route.params.limit
+
+				if (value)
+				{
+					requestParams.select.search = value;
+					await this.$store.dispatch('search', requestParams);
+				} else {
+					await this.$store.dispatch('select', requestParams);
+				}
+				this.$store.commit('showLoader',false);
+
 			},
 			setSearchValue(value)
 			{

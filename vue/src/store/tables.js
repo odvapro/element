@@ -13,7 +13,6 @@ const table =
 		tableContent    : {},
 		selectedElement : {},
 		extensionsLinks : [],
-		tableSearch     : '',
 	},
 	mutations:
 	{
@@ -88,11 +87,6 @@ const table =
 
 				break;
 			}
-		},
-
-		setSearchValue(state, search)
-		{
-			state.tableSearch = search;
 		},
 	},
 	getters:
@@ -207,30 +201,6 @@ const table =
 
 			return Object.assign({}, settings);
 		},
-		getTableContent: (state) =>
-		{
-			const search = state.tableSearch;
-			const newTableContent = JSON.parse(JSON.stringify(state.tableContent));
-
-			if (!newTableContent || !newTableContent.items || !newTableContent.items.length) return newTableContent;
-
-			const searchedFields = [];
-
-			for (let columnName in newTableContent.columns_types)
-				if (/em_string|em_text|em_int/.test(newTableContent.columns_types[columnName]))
-					searchedFields.push(columnName);
-
-			let newTableContentItems = newTableContent.items.filter(item =>
-			{
-				for (let searchField of searchedFields)
-					if (new RegExp(search.trim(), 'i').test(JSON.stringify(item[searchField])))
-						return true;
-				return false;
-			});
-
-			newTableContent.items = newTableContentItems;
-			return newTableContent;
-		},
 	},
 	actions:
 	{
@@ -269,6 +239,36 @@ const table =
 			var result = await axios({
 				method: 'get',
 				url: '/el/select/',
+				params: data,
+				/**
+				 * сериализовать отправляемые данные
+				 */
+				paramsSerializer: function(params)
+				{
+					return data;
+				},
+			});
+
+			if (!result.data.success)
+			{
+				message.error(Vue.prototype.$t('accessDenied'));
+				return false;
+			}
+
+			store.commit('setTableContent', result.data.result);
+		},
+
+		/**
+		 * Достать содержимое таблицы с поиском
+		 */
+		async search(store, params)
+		{
+			store.commit('setSelectRequest', params);
+			var data = qs.stringify(params);
+
+			var result = await axios({
+				method: 'get',
+				url: '/el/search/',
 				params: data,
 				/**
 				 * сериализовать отправляемые данные
