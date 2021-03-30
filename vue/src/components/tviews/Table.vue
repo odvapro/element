@@ -129,7 +129,7 @@
 			 */
 			tableContent()
 			{
-				return this.$store.state.tables.tableContent;
+				return this.$store.getters.getTableContent;
 			},
 
 			/**
@@ -202,6 +202,14 @@
 				this.setDefaulParams();
 				this.getTableContent();
 			}
+		},
+		/**
+		 * Хук при загразке страницы
+		 */
+		mounted()
+		{
+			this.setDefaulParams();
+			this.getTableContent();
 		},
 		methods:
 		{
@@ -338,10 +346,10 @@
 				this.$store.commit('showLoader',true);
 				var requestParams = {select : {}, };
 
-				if (this.tview.filter && typeof this.tview.filter.operation != 'undefined')
+				if (this.tview.filter)
 					requestParams.select.where = this.tview.filter;
 
-				if (this.tview.sort && typeof this.tview.sort != 'undefined')
+				if (this.tview.sort)
 					requestParams.select.order = this.tview.sort;
 
 				requestParams.select.from  = this.$route.params.tableCode || this.tview.table;
@@ -514,17 +522,9 @@
 			addElement()
 			{
 				this.$router.push(`/table/${this.table.code}/add/`);
-			}
+			},
 		},
-		/**
-		 * Хук при загразке страницы
-		 */
-		mounted()
-		{
-			this.setDefaulParams();
-			this.getTableContent();
-		}
-	}
+	};
 </script>
 <style lang="scss">
 	.table-item-img
@@ -726,6 +726,14 @@
 		&:hover
 		{
 			background-color: #e6e6e6;
+		}
+	}
+	@media (max-width: 768px)
+	{
+		.table-vertical-scroll
+		{
+			width: 100%;
+			overflow: initial;
 		}
 	}
 </style>

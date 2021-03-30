@@ -157,8 +157,6 @@
 		left:50%;
 		margin-left: -50px;
 	}
-	.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease .5s; }
-	.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px!important; min-width: 0px!important; }
 	@media (max-width: 768px)
 	{
 		.app-wrapper { display: flex; }
@@ -171,8 +169,10 @@
 		.app-wrapper__sidebar
 		{
 			overflow: hidden;
-			flex-basis: 320px;
+			flex-basis: 270px!important;
 			flex-shrink: 0;
 		}
 	}
+	.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease .5s; }
+	.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px!important; min-width: 0px!important; }
 </style>

@@ -5,9 +5,9 @@ class IndexFController extends ControllerBase
 	/**
 	 * Поиск полей для автокомплита, работает только при ajax запросах
 	 * @var $_POST['nodeTableCode'] string таблица привязки
- 	 * @var $_POST['nodeFieldCode'] string поле привязки - например id
- 	 * @var $_POST['nodeSearchCode'] string поле по которому ищется привязываемый элемент - например name
- 	 * @var $_POST['q'] string строка поиска
+	 * @var $_POST['nodeFieldCode'] string поле привязки - например id
+	 * @var $_POST['nodeSearchCode'] string поле по которому ищется привязываемый элемент - например name
+	 * @var $_POST['q'] string строка поиска
 	 * @return JSON
 	 */
 	public function autoCompleteAction()
@@ -36,7 +36,7 @@ class IndexFController extends ControllerBase
 		$nodes  = $this->element->select($select);
 		$result = [];
 
-		foreach($nodes as $node)
+		foreach($nodes['items'] as $node)
 		{
 			$result[] = [
 				'id'   => $node[$nodeField],

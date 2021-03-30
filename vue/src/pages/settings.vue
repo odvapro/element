@@ -201,5 +201,20 @@
 	@media (max-width: 768px)
 	{
 		.settings-wrapper { min-width: 375px; }
+		.settings-tab-wrapper
+		{
+			overflow-x: scroll;
+			max-width: calc(100vw - 46px);
+		}
+		.settings-tabs-content-wrapper
+		{
+			overflow: initial;
+		}
+		.settings-tabs-head
+		{
+			padding-bottom: 0;
+			height: auto;
+			&::-webkit-scrollbar { display: none; }
+		}
 	}
 </style>

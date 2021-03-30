@@ -89,9 +89,13 @@
 			},
 			convertToJsDate(sqlDate)
 			{
-				if(!sqlDate)
-					return null;
-				return new Date(Date.parse(sqlDate.replace(/-/g, '/')));
+				if(!sqlDate) return null;
+
+				let newDate = new Date(Date.parse(sqlDate.replace(/-/g, '/')));
+
+				if (isNaN(newDate.getTime())) return null;
+
+				return newDate;
 			},
 		},
 	}

@@ -57,6 +57,9 @@
 							v-click-outside:isFiltersPopupShow="closePopup"
 						/>
 					</li>
+					<li class="index__menu-item">
+						<SearchBlock/>
+					</li>
 					<li
 						:class="{active: popups.isMorePopupShow}"
 						class="index__menu-more"
@@ -113,11 +116,12 @@
 	import Properties from '@/components/popups/Properties.vue';
 	import TableWork from '@/mixins/tableWork.js';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+	import SearchBlock from '@/components/blocks/SearchBlock.vue';
 
 	export default
 	{
 		mixins: [TableWork],
-		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger },
+		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger, SearchBlock },
 		/**
 		 * Head параметры страницы
 		 */
@@ -351,9 +355,9 @@
 	.index__head-burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.index__wrapper { min-width: 375px; }
+		.index__wrapper { min-width: 375px; overflow: scroll; }
 		.index__head { padding-right: 14px; align-items: center; }
-		.index__overide-name { font-size: 18px; }
+		.index__overide-name { font-size: 18px; white-space: nowrap; }
 		.index__add-btn-text { display: none; }
 		.index__menu-item
 		{

@@ -1,6 +1,6 @@
 <template>
 	<Popup class="select-popup__add" :visible.sync="isPopupVisible">
-		<input v-model="searchText" class="select-popup__add-search" type="text" :placeholder="$t('search')">
+		<input v-model="searchText" class="select-popup__add-search" type="text" :placeholder="$t('search')+'...'">
 		<div class="select-popup__item-line" v-for="item in items" @click="selectItem(item)">
 			<img :src="item.avatar" alt="" v-if="item.avatar">
 			{{ item.name }}
