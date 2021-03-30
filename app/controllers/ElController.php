@@ -181,7 +181,7 @@ class ElController extends ControllerBase
 			'page'  => $page,
 		]);
 		$pagination = $paginator->getPaginate();
-		$resultSelect['items'] = array_slice($resultSelect['items'], $pagination['offset'], $pagination['offset'] + $limit);
+		$resultSelect['items'] = array_slice($resultSelect['items'], $pagination['offset'], $limit);
 
 		$pagination = array_merge($pagination, $resultSelect);
 		return $this->jsonResult([

@@ -13,6 +13,7 @@ const table =
 		tableContent    : {},
 		selectedElement : {},
 		extensionsLinks : [],
+		searchInTable   : '',
 	},
 	mutations:
 	{
@@ -87,6 +88,10 @@ const table =
 
 				break;
 			}
+		},
+		setSearchInTable(state, value)
+		{
+			state.searchInTable = value;
 		},
 	},
 	getters:
@@ -233,6 +238,11 @@ const table =
 		 */
 		async select(store, params)
 		{
+			if (store.state.searchInTable)
+			{
+				params.select.search = store.state.searchInTable;
+				return store.dispatch('search', params);
+			}
 			store.commit('setSelectRequest', params);
 			var data = qs.stringify(params);
 
@@ -282,9 +292,11 @@ const table =
 			if (!result.data.success)
 			{
 				message.error(Vue.prototype.$t('accessDenied'));
+				store.commit('setSearchInTable', '');
 				return false;
 			}
 
+			store.commit('setSearchInTable', params.select.search);
 			store.commit('setTableContent', result.data.result);
 		},
 
