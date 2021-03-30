@@ -221,4 +221,11 @@
 		background-color: transparent;
 	}
 	.settings-groups__content {padding-top: 29px; }
+	@media (max-width: 768px)
+	{
+		.settings-groups__wrapper
+		{
+			width: calc(100vw - 46px);
+		}
+	}
 </style>

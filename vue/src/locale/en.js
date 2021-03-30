@@ -202,7 +202,7 @@ export default
 	members: 'members: {count}',
 	addMember: 'Add member',
 	accessDenied: 'Access denied',
-	search: 'Search...',
+	search: 'Search',
 	months:
 	[
 		'January',

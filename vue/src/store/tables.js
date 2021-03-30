@@ -13,6 +13,7 @@ const table =
 		tableContent    : {},
 		selectedElement : {},
 		extensionsLinks : [],
+		tableSearch     : '',
 	},
 	mutations:
 	{
@@ -87,7 +88,12 @@ const table =
 
 				break;
 			}
-		}
+		},
+
+		setSearchValue(state, search)
+		{
+			state.tableSearch = search;
+		},
 	},
 	getters:
 	{
@@ -200,6 +206,30 @@ const table =
 			settings.tableCode  = tableCode;
 
 			return Object.assign({}, settings);
+		},
+		getTableContent: (state) =>
+		{
+			const search = state.tableSearch;
+			const newTableContent = JSON.parse(JSON.stringify(state.tableContent));
+
+			if (!newTableContent || !newTableContent.items || !newTableContent.items.length) return newTableContent;
+
+			const searchedFields = [];
+
+			for (let columnName in newTableContent.columns_types)
+				if (/em_string|em_text|em_int/.test(newTableContent.columns_types[columnName]))
+					searchedFields.push(columnName);
+
+			let newTableContentItems = newTableContent.items.filter(item =>
+			{
+				for (let searchField of searchedFields)
+					if (new RegExp(search.trim(), 'i').test(JSON.stringify(item[searchField])))
+						return true;
+				return false;
+			});
+
+			newTableContent.items = newTableContentItems;
+			return newTableContent;
 		},
 	},
 	actions:

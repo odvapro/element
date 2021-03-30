@@ -139,14 +139,13 @@ class Element
 
 		$selectParams['where']['fields'] = array_map(function ($wherePart) use ($tableColumns)
 		{
-			if(empty($wherePart['code']))
-				return $wherePart;
-			$fieldCode = $wherePart['code'];
-			if(empty($tableColumns[$fieldCode]))
+			if(empty($wherePart['code']) || empty($tableColumns[$wherePart['code']]))
 				return $wherePart;
 
-			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
-			$settings   = $tableColumns[$fieldCode]['em']['settings'];
+			$columnEm = $tableColumns[$wherePart['code']]['em'];
+
+			$fieldClass = $columnEm['type_info']['fieldComponent'];
+			$settings   = $columnEm['settings'];
 
 			if (class_exists($fieldClass))
 				$field = new $fieldClass('',$settings);

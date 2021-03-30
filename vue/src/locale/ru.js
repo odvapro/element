@@ -202,7 +202,7 @@ export default
 	members: 'участники: {count}',
 	addMember: 'Добавить пользователя',
 	accessDenied: 'Доступ запрещен',
-	search: 'Поиск...',
+	search: 'Поиск',
 	months:
 	[
 		'Январь',

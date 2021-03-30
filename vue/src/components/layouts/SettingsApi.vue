@@ -355,4 +355,12 @@
 			color: rgba(103, 115, 135, 0.4);
 		}
 	}
+	@media (max-width: 768px)
+	{
+		.el-api
+		{
+			min-width: calc(100vw - 46px);
+			width: auto;
+		}
+	}
 </style>
