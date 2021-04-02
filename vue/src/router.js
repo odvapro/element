@@ -1,7 +1,6 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from './store/index.js';
 
 var router = new Router({
 	mode: 'history',
@@ -49,5 +48,45 @@ var router = new Router({
 		},
 	]
 });
+
+router.beforeEach(async function(to, from, next)
+{
+	if(store.state.isIntallDb === true)
+	{
+		next();
+		return true;
+	}
+
+	let valid = await router.app.$axios({url: '/' });
+	if (!valid.data.success)
+	{
+		store.commit('setInstallDb', false);
+		return false;
+	}
+	store.commit('setInstallDb', true);
+	next();
+});
+
+router.beforeEach(async function(to, from, next)
+{
+	if(store.state.isAuth === true)
+	{
+		next();
+		return true;
+	}
+
+	let valid       = await router.app.$axios({url: '/auth/isLogged/' });
+	let userCookies = router.app.$cookie.get('user');
+	if (!valid.data.success || !userCookies)
+	{
+		store.commit('setAuth', false);
+		return false;
+	}
+
+	store.commit('setAuth', true);
+	next();
+});
+
+Vue.use(Router);
 
 export default router;

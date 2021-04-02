@@ -1,7 +1,7 @@
 <template>
 	<div class="detail">
 		<div class="detail-head">
-			<div class="detail-head__burder"><MobileBurger/></div>
+			<div class="detail-head__burger"><MobileBurger/></div>
 			<div class="detail-head-name">
 				<div class="detail-icon-wrapper">
 					<svg width="14" height="13">
@@ -213,10 +213,9 @@
 	.detail-head
 	{
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
 		margin-bottom: 28px;
 		padding-right: 95px;
+		align-items: center;
 	}
 	.detail-head-name
 	{
@@ -321,17 +320,15 @@
 		}
 	}
 	.detail__buttons { display: none; }
+	.detail-head__burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
 		.detail { padding: 10px 0 0px 10px; }
 		.detail-head
 		{
 			padding-right: 14px;
-			justify-content: flex-start;
-			align-items: center;
 			min-width: 320px;
 		}
-		.detail-head__burder { margin-right: 20px; }
 		.detail-head-name { flex-wrap: wrap; }
 		.detail-head__buttons { display: none; }
 		.detail-name-wrapper { flex-basis: 90%; margin-bottom: 0; }
