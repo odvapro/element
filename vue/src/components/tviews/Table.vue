@@ -198,7 +198,7 @@
 			{
 				if (value < +this.$route.params.page)
 					this.selectPage({
-						limit: +this.$route.params.limit,
+						limit: +this.$route.params.limit ? +this.$route.params.limit : 0,
 						page: value,
 					});
 			},

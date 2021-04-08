@@ -88,6 +88,7 @@
 		width:550px;
 		position: relative;
 		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+		.detail-head__burger { display: none; }
 	}
 	.popup-close
 	{

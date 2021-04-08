@@ -24,7 +24,7 @@ const store = new Vuex.Store({
 	{
 		drugPosition   : 400,
 		isAuth         : false,
-		isIntallDb     : true,
+		isIntallDb     : false,
 		showLoader     : false,
 		layoutSelected : false,
 		showSidebar    : true,

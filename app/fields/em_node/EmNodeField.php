@@ -2,28 +2,30 @@
 
 class EmNodeField extends FieldBase
 {
+	static $nodeTable = [];
+
 	/**
 	 * Достать значение поля
 	 */
 	public function getValue()
 	{
-		$select  = [
-			'from'  => $this->settings['nodeTableCode'],
-			'where' => [
-				'operation' => 'and',
-				'fields'    => [[
-					'code'      => $this->settings['nodeFieldCode'],
-					'operation' => 'IS',
-					'value'     => $this->fieldValue
-				]]
-			]
-		];
-		$node = $this->element->select($select);
+		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']]))
+			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select(['from' => $this->settings['nodeTableCode']]);
 
-		if( !count($node) || !count($node['items']))
+		if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
 			return [];
 
-		$node = $node['items'][0];
+		$node = null;
+		foreach (self::$nodeTable[$this->settings['nodeTableCode']]['items'] as $nodeItem) {
+			if ($nodeItem[$this->settings['nodeFieldCode']] == $this->fieldValue)
+			{
+				$node = $nodeItem;
+				break;
+			}
+		}
+
+		if(empty($node))
+			return [];
 
 		return [
 			'id'   => $node[$this->settings['nodeFieldCode']],

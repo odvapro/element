@@ -115,7 +115,7 @@ class ElController extends ControllerBase
 		$select = $this->request->get('select');
 
 		$page   = (!empty($select['page'])) ? $select['page'] : 1;
-		$limit  = empty($this->request->get('limit')) ? 100 : intval($this->request->get('limit'));
+		$limit  = empty(intval($this->request->get('limit'))) ? 100 : intval($this->request->get('limit'));
 
 		if (empty($select))
 			return $this->jsonResult(['success' => false, 'message' => 'empty request']);
@@ -152,7 +152,7 @@ class ElController extends ControllerBase
 
 		$search = !empty($select['search']) ? $select['search'] : '';
 		$page   = !empty($select['page']) ? $select['page'] : 1;
-		$limit  = empty($this->request->get('limit')) ? 100 : intval($this->request->get('limit'));
+		$limit  = empty(intval($this->request->get('limit'))) ? 100 : intval($this->request->get('limit'));
 
 		$resultSelect = $this->element->select($select);
 
