@@ -51,16 +51,18 @@ var router = new Router({
 
 router.beforeEach(async function(to, from, next)
 {
-	if(store.state.isIntallDb === true)
-	{
-		next();
-		return true;
-	}
+	if(store.state.isIntallDb)
+		return next();
 
 	let valid = await router.app.$axios({url: '/' });
+
 	if (!valid.data.success)
 	{
 		store.commit('setInstallDb', false);
+		if (to.name === 'index')
+			next();
+		else
+			next('/');
 		return false;
 	}
 	store.commit('setInstallDb', true);
