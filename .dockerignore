@@ -1,0 +1,5 @@
+.DS_Store
+.git
+node_modules
+vendor
+/api/app/cache/
