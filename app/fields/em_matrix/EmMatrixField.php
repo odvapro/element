@@ -2,28 +2,29 @@
 
 class EmMatrixField extends FieldBase
 {
+	static $nodeTable = [];
+
 	/**
 	 * Достать значение поля
 	 */
 	public function getValue()
 	{
-		$select  = [
-			'from'  => $this->settings['nodeTableCode'],
-			'where' => [
-				'operation' => 'and',
-				'fields'    => [[
-					'code'      => $this->settings['nodeField'],
-					'operation' => 'IS',
-					'value'     => $this->row[$this->settings['keyField']]
-				]]
-			]
-		];
-		$node = $this->element->select($select)['items'];
+		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']]))
+			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select(['from' => $this->settings['nodeTableCode']]);
 
-		if(!count($node))
+		if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
 			return [];
 
-		return ['matrixValue' => $node ];
+		$node = [];
+		foreach (self::$nodeTable[$this->settings['nodeTableCode']]['items'] as $nodeItem) {
+			if ($nodeItem[$this->settings['nodeField']] == $this->row[$this->settings['keyField']])
+				$node[] = $nodeItem;
+		}
+
+		if(empty($node))
+			return [];
+
+		return ['matrixValue' => $node];
 	}
 
 	/**
@@ -31,6 +32,6 @@ class EmMatrixField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		return NULL;
+		return null;
 	}
 }
