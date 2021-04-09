@@ -37,7 +37,6 @@ CREATE TABLE `em_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 # Дамп таблицы em_users
 # ------------------------------------------------------------
 
@@ -58,7 +57,7 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`, `language`)
 VALUES
-	(1,'admin','Untiteld','25e4ee4e9229397b6b17776bfceaf8e7','admin@email.com', 'en');
+  (1,'admin','Untiteld','25e4ee4e9229397b6b17776bfceaf8e7','admin@email.com', 'en');
 
 /*!40000 ALTER TABLE `em_users` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -80,6 +79,10 @@ CREATE TABLE `em_views` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+# Дамп таблицы em_groups
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `em_groups`;
 
 CREATE TABLE `em_groups` (
@@ -98,6 +101,10 @@ VALUES
 /*!40000 ALTER TABLE `em_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+# Дамп таблицы em_groups_users
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `em_groups_users`;
 
 CREATE TABLE `em_groups_users` (
@@ -110,22 +117,16 @@ CREATE TABLE `em_groups_users` (
 LOCK TABLES `em_groups_users` WRITE;
 /*!40000 ALTER TABLE `em_groups_users` DISABLE KEYS */;
 
-DROP TABLE IF EXISTS `em_groups_tables`;
-
-CREATE TABLE `em_groups_tables` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) DEFAULT NULL,
-  `table_name` varchar(200) DEFAULT NULL,
-  `access` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `em_groups_tables` WRITE;
-/*!40000 ALTER TABLE `em_groups_tables` DISABLE KEYS */;
-
 INSERT INTO `em_groups_users` (`id`, `group_id`, `user_id`)
 VALUES
   (1,1,1);
+
+/*!40000 ALTER TABLE `em_groups_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Дамп таблицы em_tokens
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `em_tokens`;
 
@@ -137,7 +138,11 @@ CREATE TABLE `em_tokens` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `em_tokens`;
+
+# Дамп таблицы em_tokens
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `em_groups_tables`;
 
 CREATE TABLE `em_groups_tables` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
