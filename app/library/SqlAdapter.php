@@ -186,7 +186,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function insert($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
 		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
@@ -227,8 +226,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function duplicate($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
-
 		$table   = isset($requestParams['table']) ? $requestParams['table'] : null;
 		$id      = isset($requestParams['where']['fields'][0]['value']) ? $requestParams['where']['fields'][0]['value'] : null;
 		$columns = isset($requestParams['columns']) ? $requestParams['columns'] : null;
