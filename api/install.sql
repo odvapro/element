@@ -152,6 +152,66 @@ CREATE TABLE `em_groups_tables` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+--
+-- Dumping routines (FUNCTION) for database 'element'
+--
+DELIMITER ;;
+
+# Dump of FUNCTION levenshtein
+# ------------------------------------------------------------
+
+/*!50003 DROP FUNCTION IF EXISTS `levenshtein` */;;
+/*!50003 SET SESSION SQL_MODE="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"*/;;
+/*!50003 CREATE*/ /*!50020 DEFINER=`root`@`127.0.0.1`*/ /*!50003 FUNCTION `levenshtein`( s1 VARCHAR(255), s2 VARCHAR(255) ) RETURNS int(11)
+    DETERMINISTIC
+BEGIN
+        DECLARE s1_len, s2_len, i, j, c, c_temp, cost INT;
+        DECLARE s1_char CHAR;
+        -- max strlen=255
+        DECLARE cv0, cv1 VARBINARY(256);
+
+        SET s1_len = CHAR_LENGTH(s1),
+            s2_len = CHAR_LENGTH(s2),
+            cv1 = 0x00,
+            j = 1,
+            i = 1,
+            c = 0;
+
+        IF s1 = s2 THEN
+            RETURN 0;
+        ELSEIF s1_len = 0 THEN
+            RETURN s2_len;
+        ELSEIF s2_len = 0 THEN
+            RETURN s1_len;
+        ELSE
+            WHILE j <= s2_len DO
+                SET cv1 = CONCAT(cv1, UNHEX(HEX(j))), j = j + 1;
+            END WHILE;
+            WHILE i <= s1_len DO
+                SET s1_char = SUBSTRING(s1, i, 1), c = i, cv0 = UNHEX(HEX(i)), j = 1;
+                WHILE j <= s2_len DO
+                    SET c = c + 1;
+                    IF s1_char = SUBSTRING(s2, j, 1) THEN
+                        SET cost = 0; ELSE SET cost = 1;
+                    END IF;
+                    SET c_temp = CONV(HEX(SUBSTRING(cv1, j, 1)), 16, 10) + cost;
+                    IF c > c_temp THEN SET c = c_temp; END IF;
+                    SET c_temp = CONV(HEX(SUBSTRING(cv1, j+1, 1)), 16, 10) + 1;
+                    IF c > c_temp THEN
+                        SET c = c_temp;
+                    END IF;
+                    SET cv0 = CONCAT(cv0, UNHEX(HEX(c))), j = j + 1;
+                END WHILE;
+                SET cv1 = cv0, i = i + 1;
+            END WHILE;
+        END IF;
+        RETURN c;
+    END */;;
+
+/*!50003 SET SESSION SQL_MODE=@OLD_SQL_MODE */;;
+DELIMITER ;
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
