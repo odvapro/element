@@ -61,7 +61,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function select($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$fields        = isset($requestParams['fields']) ? $requestParams['fields'] : [];
 		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
