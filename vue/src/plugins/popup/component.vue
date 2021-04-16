@@ -31,8 +31,27 @@
 			 */
 			closeByClickoutside(e)
 			{
-				if (e.target.closest('.popup-block') !== this.$refs.popupBlock)
-					this.close();
+				const allParentPopups = this.getAllParentElementBySelector(e.target, '.popup-block');
+				for (let parentPopup of allParentPopups)
+				{
+					if (parentPopup === this.$refs.popupBlock)
+						return true;
+				}
+
+				this.close();
+			},
+			getAllParentElementBySelector(node, parentSelector)
+			{
+				const selectedParents = [];
+
+				let nextElement = node;
+				while(nextElement)
+				{
+					nextElement = nextElement.parentNode ? nextElement.parentNode.closest(parentSelector) : null;
+
+					if (nextElement) selectedParents.push(nextElement);
+				}
+				return selectedParents;
 			},
 			closeByEsc()
 			{
