@@ -10,7 +10,13 @@ class EmNodeField extends FieldBase
 	public function getValue()
 	{
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']]))
-			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select(['from' => $this->settings['nodeTableCode']]);
+			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select([
+				'from' => $this->settings['nodeTableCode'],
+				'fields' => [
+					$this->settings['nodeFieldCode'],
+					$this->settings['nodeSearchCode'],
+				]
+			]);
 
 		if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
 			return [];
