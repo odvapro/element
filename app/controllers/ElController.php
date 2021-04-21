@@ -226,12 +226,15 @@ class ElController extends ControllerBase
 
 			$table['tviews'] = [];
 			$tviews = [];
+			$defaultTview = null;
 
 			foreach ($emViewsTable as $tview)
 			{
 				$table['tviews'][] = $tview->toArray();
 				if ($tview->default != '1')
 					continue;
+				else if (empty($defaultTview))
+					$defaultTview = $tview->toArray();
 
 				if (isset($tview->settings['table']['name']))
 					$table['name'] = $tview->settings['table']['name'];
@@ -240,6 +243,12 @@ class ElController extends ControllerBase
 					$table['visible'] = ($tview->settings['table']['visible'] == "false")?false:true;
 				else
 					$table['visible'] = false;
+			}
+
+			if (!empty($defaultTview) && !empty($defaultTview['settings']['columns']))
+			{
+				foreach ($defaultTview['settings']['columns'] as $defaultTviewColumnName => $defaultTviewColumn)
+					$table['columns'][$defaultTviewColumnName]['order'] = $defaultTviewColumn['order'];
 			}
 		}
 

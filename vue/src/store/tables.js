@@ -17,6 +17,19 @@ const table =
 	},
 	mutations:
 	{
+		/**
+		 *
+		 */
+		updateTableByCode(state, { code, value })
+		{
+			const soughtTableIndex = state.tables.findIndex(table => table.code === code);
+			if (!~soughtTableIndex) return false;
+			state.tables[soughtTableIndex] = value;
+			return true;
+		},
+		/**
+		 * обновление настроек tview
+		 */
 		updateTviewSettings(state, { settings, code, tviewIndex = 0 })
 		{
 			const tableIndex = state.tables.findIndex(table => table.code === code );
@@ -26,6 +39,9 @@ const table =
 
 			return true;
 		},
+		/**
+		 * задает ссылки на расширения
+		 */
 		setExtensionsLinks(state, links)
 		{
 			state.extensionsLinks = links;
@@ -98,6 +114,9 @@ const table =
 				break;
 			}
 		},
+		/**
+		 * поиск
+		 */
 		setSearchInTable(state, value)
 		{
 			state.searchInTable = value;
@@ -319,6 +338,10 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
+
+		/**
+		 * дублирование строки
+		 */
 		async duplicateRecord(store, recordParams)
 		{
 			let result = await axios({
@@ -496,7 +519,7 @@ const table =
 				message.error(Vue.prototype.$t('accessDenied'));
 
 			return result;
-		}
+		},
 	},
 };
 export default table;

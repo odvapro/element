@@ -33,6 +33,7 @@
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
 							@updateModified="updateModified"
+							@updateColumnsOrder=updateColumnsOrder
 							v-click-outside:isPropertiesPopupShow="closePopup"
 						/>
 					</li>
@@ -160,7 +161,7 @@
 				sortModified      : false,
 				filterModified    : false,
 				propertiesModified: false,
-			}
+			};
 		},
 		computed:
 		{
@@ -174,12 +175,15 @@
 					if(tview.id == tviewId)
 						return tview;
 			},
+			/**
+			 * отдает заданную иконку таблицы
+			 */
 			tableEmoji()
 			{
 				if (this.table && this.table.tviews[0] && this.table.tviews[0].settings.emoji)
 					return this.table.tviews[0].settings.emoji;
 				return false;
-			}
+			},
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -195,6 +199,30 @@
 		},
 		methods:
 		{
+			/**
+			 * обновляет таблицу по коду
+			 */
+			async updateColumnsOrder(columns)
+			{
+				for (let column of columns)
+				{
+					this.table.columns[column.code].order = column.order;
+					this.activeTview.settings.columns[column.code].order = column.order;
+				}
+
+				const result = await this.$store.dispatch('saveTableSettings', {
+					tviewId: this.activeTview.id,
+					params: {
+						columns: this.activeTview.settings.columns,
+					},
+				});
+				if (result)
+					this.$store.commit('updateTableByCode', { code: this.table.code, value: this.table });
+
+			},
+			/**
+			 * выбор иконки и обновление таблицы
+			 */
 			async pickEmoji(item)
 			{
 				const request = {
@@ -216,6 +244,9 @@
 					this.activeTable();
 				}
 			},
+			/**
+			 * проверяет были ли изменены фильтры/свойства/сортировка
+			 */
 			checkModified()
 			{
 				if (!this.table) return;
@@ -226,8 +257,10 @@
 
 				for (let column of Object.values(tview.settings.columns))
 					if (column.visible !== 'true') { this.propertiesModified = true; break; }
-
 			},
+			/**
+			 * обновляет состояние фильтров/свойств/сортировки
+			 */
 			updateModified(name, state)
 			{
 				this.$set(this, `${name}Modified`, state);
@@ -254,7 +287,9 @@
 				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
 				this.propertiesPopupData = this.table.columns;
 			},
-
+			/**
+			 * переход на страницу создания элемента
+			 */
 			addElement()
 			{
 				this.$router.push(`/table/${this.table.code}/add/`);
@@ -268,9 +303,9 @@
 			'$route.fullPath'()
 			{
 				this.activeTable();
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.index__wrapper { padding: 23px 0px 0px 21px; }

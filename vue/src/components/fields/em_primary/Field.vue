@@ -51,6 +51,7 @@
 	}
 	.em-primary
 	{
+		white-space: nowrap;
 		background: rgba(58, 132, 6, 0.04);
 		border-radius: 2px;
 		line-height: 25px;

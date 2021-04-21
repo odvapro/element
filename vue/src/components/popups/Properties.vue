@@ -1,16 +1,29 @@
 <template>
 	<div class="properties-popup">
 		<div class="properties-list">
-			<PropertyItem v-for="column in columns" :key="column.field" :column="column"/>
+			<draggable
+				@change=changeColumnOrder
+				:list="localColumns"
+			>
+				<PropertyItem v-for="column in localColumns" :key="column.field" :column="column"/>
+			</draggable>
 		</div>
 	</div>
 </template>
 <script>
 	import PropertyItem from '@/components/forms/PropertyItem.vue';
+	import draggable from 'vuedraggable';
+
 	export default
 	{
 		props: ['columns'],
-		components: { PropertyItem },
+		components: { PropertyItem, draggable },
+		data()
+		{
+			return {
+				localColumns: [],
+			};
+		},
 		watch:
 		{
 			columns:
@@ -25,9 +38,30 @@
 		mounted()
 		{
 			this.updateModified();
+			this.setLocalColumns();
 		},
 		methods:
 		{
+			changeColumnOrder(e)
+			{
+				if (!e.moved || !this.columns[e.moved.element.field]) return false;
+				const columnsOrder = [];
+
+				for (let [columnIndex, column] of Object.entries(this.localColumns))
+					columnsOrder.push({
+						code: column.field,
+						order: columnIndex,
+					});
+
+				this.$emit('updateColumnsOrder', columnsOrder);
+				return true;
+			},
+			setLocalColumns()
+			{
+				this.localColumns = Object.values(this.columns).sort((item1, item2) => {
+					return item1.order - item2.order;
+				});
+			},
 			updateModified()
 			{
 				let isModified = false;

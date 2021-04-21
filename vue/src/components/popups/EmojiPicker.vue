@@ -125,8 +125,8 @@
 	}
 	.el-emoji-picker__content-wrapper
 	{
-		max-height: 190px;
-		min-height: 190px;
+		max-height: 195px;
+		min-height: 195px;
 		overflow-y: hidden;
 		padding: 20px 16px;
 		display: flex;

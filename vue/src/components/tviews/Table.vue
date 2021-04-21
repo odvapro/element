@@ -20,9 +20,9 @@
 				</div>
 				<div
 					class="table-item"
-					v-for="column,index in table.columns"
+					v-for="(column, index) of tableColumns"
 					v-if="column.visible"
-					:class="`_table-col-${index}`"
+					:class="`_table-col-${column.field}`"
 					:style="{ width: column.width + 'px'}"
 				>
 					<div class="table-item-img">
@@ -66,10 +66,10 @@
 				</div>
 				<div
 					class="table-item"
-					v-for="column, index in table.columns"
+					v-for="(column, index) of tableColumns"
 					v-if="column.visible && typeof row[column.field] !== 'undefined'"
-					:key="`${index}${rowIndex}`"
-					:class="`_table-col-${index}`"
+					:key="`${column.field}${rowIndex}`"
+					:class="`_table-col-${column.field}`"
 					:style="{width: column.width + 'px'}"
 				>
 					<MainField
@@ -165,7 +165,19 @@
 			getUrlTableName()
 			{
 				return this.$route.params.tableCode;
-			}
+			},
+
+			/**
+			 * упорядоченные колонки таблицы
+			 */
+			tableColumns()
+			{
+				if (!this.table || !this.table.columns) return [];
+
+				return Object.values(this.table.columns).sort((item1, item2) => {
+					return item1.order - item2.order;
+				});
+			},
 		},
 		watch:
 		{
@@ -289,18 +301,19 @@
 				let tableColumns = this.table.columns,
 					request      = {};
 
-				request['tviewId'] = this.tview.id;
-				request['params'] = {};
-				request['params']['columns'] = {};
+				request.tviewId = this.tview.id;
+				request.params = {};
+				request.params.columns = {};
 
 				for (let column in tableColumns)
 				{
 					if (typeof tableColumns[column].width == 'undefined')
 						return false;
 
-					request['params']['columns'][column] = {
+					request.params.columns[column] = {
 						width: tableColumns[column].width,
-						visible: tableColumns[column].visible
+						visible: tableColumns[column].visible,
+						order: tableColumns[column].order || 0,
 					};
 
 					if (typeof this.tview.settings.columns == 'undefined')
@@ -309,6 +322,7 @@
 					this.$set(this.tview.settings.columns, column, {});
 					this.$set(this.tview.settings.columns[column], 'width', tableColumns[column].width);
 					this.$set(this.tview.settings.columns[column], 'visible', tableColumns[column].visible ? 'true' : 'false');
+					this.$set(this.tview.settings.columns[column], 'order', tableColumns[column].order || 0);
 				}
 
 				this.$store.dispatch('saveTableSettings', request);
