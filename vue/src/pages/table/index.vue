@@ -3,11 +3,19 @@
 		<div class="index__head" v-if="table">
 			<div class="index__head-name">
 				<div class="index__head-burger"><MobileBurger/></div>
-				<div class="index__icon-wrapper">
-					<svg width="14" height="13">
+				<div @click="openPopup('isEmojiPickerShow')" class="index__icon-wrapper">
+					<svg v-if="!tableEmoji" width="14" height="13">
 						<use xlink:href="#tableicon"></use>
 					</svg>
+					<div
+						v-else
+						class="index__icon-emoji"
+					>{{ tableEmoji }}</div>
 				</div>
+				<EmojiPicker
+					:visible.sync=popups.isEmojiPickerShow
+					@pick=pickEmoji
+				/>
 				<div class="index__name-wrapper">
 					<div class="index__overide-name">{{table.name}}</div>
 					<div class="index__real-name">{{table.code}}</div>
@@ -117,11 +125,12 @@
 	import TableWork from '@/mixins/tableWork.js';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 	import SearchBlock from '@/components/blocks/SearchBlock.vue';
+	import EmojiPicker from '@/components/popups/EmojiPicker.vue';
 
 	export default
 	{
 		mixins: [TableWork],
-		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger, SearchBlock },
+		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger, SearchBlock, EmojiPicker },
 		/**
 		 * Head параметры страницы
 		 */
@@ -145,6 +154,7 @@
 					isFiltersPopupShow    : false,
 					isSortPopupShow       : false,
 					isMorePopupShow       : false,
+					isEmojiPickerShow     : false,
 				},
 				propertiesPopupData: {},
 				sortModified      : false,
@@ -164,6 +174,12 @@
 					if(tview.id == tviewId)
 						return tview;
 			},
+			tableEmoji()
+			{
+				if (this.table && this.table.tviews[0] && this.table.tviews[0].settings.emoji)
+					return this.table.tviews[0].settings.emoji;
+				return false;
+			}
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -179,6 +195,27 @@
 		},
 		methods:
 		{
+			async pickEmoji(item)
+			{
+				const request = {
+					tviewId: this.$route.params.tview,
+					params: {
+						emoji: item,
+					},
+				};
+
+				const result = await this.$store.dispatch('saveTableSettings', request);
+				if (result)
+				{
+					const newSettings = {
+						...this.table.tviews[0].settings,
+						emoji: item,
+					};
+
+					this.$store.commit('updateTviewSettings', { settings: newSettings, code: this.table.code });
+					this.activeTable();
+				}
+			},
 			checkModified()
 			{
 				if (!this.table) return;
@@ -221,7 +258,7 @@
 			addElement()
 			{
 				this.$router.push(`/table/${this.table.code}/add/`);
-			}
+			},
 		},
 		watch:
 		{
@@ -250,7 +287,8 @@
 		display: flex;
 		align-items: center;
 	}
-	.index__icon-wrapper {margin-right: 12px; }
+	.index__icon-wrapper { margin-right: 12px; cursor: pointer; }
+	.index__icon-emoji { font-size: 20px; line-height: 26px; }
 	.index__overide-name
 	{
 		font-family: $rBold;

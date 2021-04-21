@@ -17,6 +17,15 @@ const table =
 	},
 	mutations:
 	{
+		updateTviewSettings(state, { settings, code, tviewIndex = 0 })
+		{
+			const tableIndex = state.tables.findIndex(table => table.code === code );
+
+			if (!~tableIndex) return false;
+			state.tables[tableIndex].tviews[tviewIndex].settings = Object.assign(state.tables[tableIndex].tviews[tviewIndex].settings, settings);
+
+			return true;
+		},
 		setExtensionsLinks(state, links)
 		{
 			state.extensionsLinks = links;
@@ -375,7 +384,7 @@ const table =
 		/**
 		 * Сохранить ширину колонок
 		 */
-		async saveColumnsWith(store, params)
+		async saveTableSettings(store, params)
 		{
 			var data   = qs.stringify(params);
 			var result = await axios({

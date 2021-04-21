@@ -203,6 +203,7 @@ export default
 	addMember: 'Добавить пользователя',
 	accessDenied: 'Доступ запрещен',
 	search: 'Поиск',
+	open: 'Открыть',
 	months:
 	[
 		'Январь',

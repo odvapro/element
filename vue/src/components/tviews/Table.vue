@@ -311,7 +311,7 @@
 					this.$set(this.tview.settings.columns[column], 'visible', tableColumns[column].visible ? 'true' : 'false');
 				}
 
-				this.$store.dispatch('saveColumnsWith', request);
+				this.$store.dispatch('saveTableSettings', request);
 			},
 
 			/**

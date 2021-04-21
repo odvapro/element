@@ -203,6 +203,7 @@ export default
 	addMember: 'Add member',
 	accessDenied: 'Access denied',
 	search: 'Search',
+	open: 'Open',
 	months:
 	[
 		'January',

@@ -1,7 +1,11 @@
 <template>
 	<transition name="popup-fade">
 		<div class="popup-overlay" @click=closeByClickoutside v-if="visible" ref="popup" @keydown.esc=closeByEsc tabindex="1">
-			<div ref=popupBlock class="popup-block">
+			<div
+				ref=popupBlock
+				class="popup-block"
+				:class=popupBlockClasses
+			>
 				<div ref=popupClose class="popup-close" @click=close>
 					<svg width="12" height="12">
 						<use xlink:href="#plus-white"></use>
@@ -22,6 +26,11 @@
 			{
 				type: Boolean,
 				default: false
+			},
+			popupBlockClasses:
+			{
+				type: Array,
+				default: () => ([]),
 			},
 		},
 		methods:
