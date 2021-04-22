@@ -31,6 +31,7 @@ export default
 		add_file: 'Add file',
 		choose_file: 'Choose File',
 		embed_link: 'Embed Link',
+		uploading_canceled_by_the_user: 'Uploading canceled by the user',
 	},
 	fieldEmList:
 	{

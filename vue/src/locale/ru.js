@@ -31,6 +31,7 @@ export default
 		add_file: 'Добавить файл',
 		choose_file: 'Выбрать файл',
 		embed_link: 'Использовать ссылку',
+		uploading_canceled_by_the_user: 'Пользователь отменил загрузку',
 	},
 	fieldEmList:
 	{
