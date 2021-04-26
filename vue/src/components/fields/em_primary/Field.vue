@@ -38,11 +38,11 @@
 <style lang="scss">
 	.em-primary-wr
 	{
+		position: relative;
 		display: flex;
 		align-items: center;
 		width: 100%;
 		height: 100%;
-		overflow: hidden;
 		cursor: pointer;
 		&:hover
 		{
@@ -64,16 +64,20 @@
 	}
 	.em-primary-hint
 	{
+		position: absolute;
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
 		white-space: nowrap;
-		margin-left: 26px;
 		border: 1px solid rgba(103, 115, 135, 0.1);
 		border-radius: 3px;
 		color: #677387;
+		background-color: #fff;
 		display: flex;
 		align-items: center;
 		padding: 5px 12px;
 		opacity: 0;
-		&:hover { background: rgba(103, 115, 135, 0.1); }
+		&:hover { background: #f0f1f3; }
 	}
 	.em-primary-hint__icon
 	{
