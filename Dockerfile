@@ -78,7 +78,7 @@ WORKDIR /var/www
 VOLUME /usr/local/etc/php/php.ini
 
 # element config
-VOLUME /var/www/element/app/config/config.php
+# VOLUME /var/www/element/app/config/config.php
 
 # sharing data
 VOLUME /var/www/element/public
@@ -94,7 +94,6 @@ VOLUME /var/www/element/vue/src/components/extensions
 # 	--network="lamp73_default" \
 # 	-p 8080:80  \
 # 	-v /var/element/config/php.ini:/usr/local/etc/php/php.ini \
-# 	-v /var/element/config/config.php:/var/www/element/app/config/config.php \
 # 	-v element_public:/var/www/element/public \
 # 	-v element_app_fields:/var/www/element/app/fields \
 # 	-v element_app_extensions:/var/www/element/app/extensions \
