@@ -3,12 +3,15 @@
 class EmIntField extends FieldBase
 {
 	protected $fieldValue = '';
+	protected $settings = [];
+
 	/**
 	 * Конструктор принимает значение поля
 	 */
-	public function __construct($fieldValue = '')
+	public function __construct($fieldValue = '', array $settings = [])
 	{
 		$this->fieldValue = $fieldValue;
+		$this->settings = $settings;
 	}
 
 	/**
@@ -24,6 +27,25 @@ class EmIntField extends FieldBase
 	 */
 	public function saveValue()
 	{
+		if (isset($this->fieldValue) && $this->fieldValue !== '')
+		{
+			if (isset($this->settings['max'])
+				&& isset($this->settings['max']['enabled'])
+				&& +$this->settings['max']['enabled']
+				&& isset($this->settings['max']['value'])
+				&& +$this->fieldValue >= +$this->settings['max']['value']
+			)
+				throw new Exception("{$this->settings['code']}: Maximum value is {$this->settings['max']['value']}");
+
+			if (isset($this->settings['min'])
+				&& isset($this->settings['min']['enabled'])
+				&& +$this->settings['min']['enabled']
+				&& isset($this->settings['min']['value'])
+				&& +$this->fieldValue <= +$this->settings['min']['value']
+			)
+				throw new Exception("{$this->settings['code']}: Minimum value is {$this->settings['min']['value']}");
+		}
+
 		return $this->fieldValue;
 	}
 }

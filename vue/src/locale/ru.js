@@ -31,7 +31,6 @@ export default
 		add_file: 'Добавить файл',
 		choose_file: 'Выбрать файл',
 		embed_link: 'Использовать ссылку',
-		uploading_canceled_by_the_user: 'Пользователь отменил загрузку',
 	},
 	fieldEmList:
 	{
@@ -64,6 +63,14 @@ export default
 			select_field: 'Выберите поле',
 			select_table: 'Выберите таблицу'
 		}
+	},
+	fieldEmInteger:
+	{
+		settings:
+		{
+			min_max: 'Минимум должен быть меньше максимума',
+		},
+		min_max_error: 'Некорректное значение. Минимум: {min}, максимум: {max}',
 	},
 	forms:
 	{
@@ -204,7 +211,8 @@ export default
 	addMember: 'Добавить пользователя',
 	accessDenied: 'Доступ запрещен',
 	search: 'Поиск',
-	open: 'Открыть',
+	max: 'Максимум',
+	min: 'Минимум',
 	months:
 	[
 		'Январь',

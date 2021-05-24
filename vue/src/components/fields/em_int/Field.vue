@@ -2,6 +2,7 @@
 	<div class="em-int">
 		<template v-if="mode == 'edit'">
 			<input
+				ref="intInput"
 				type="number"
 				class="el-inp-noborder em-int-number"
 				@change="changeValue"
@@ -31,11 +32,34 @@
 		},
 		methods:
 		{
+			validate(value)
+			{
+				if (this.fieldSettings.max
+					&& !!+this.fieldSettings.max.enabled
+					&& this.fieldSettings.max.value
+				)
+					return value <= +this.fieldSettings.max.value;
+
+				if (this.fieldSettings.min
+					&& !!+this.fieldSettings.min.enabled
+					&& this.fieldSettings.min.value
+				)
+					return value >= +this.fieldSettings.min.value;
+			},
 			/**
 			 * Send change current value
 			 */
 			changeValue(event)
 			{
+				if (!this.validate(+event.target.value))
+				{
+					this.$refs.intInput.value = this.fieldValue;
+
+					return this.ElMessage.error(this.$t('fieldEmInteger.min_max_error', {
+						min: this.fieldSettings.min.value,
+						max: this.fieldSettings.max.value,
+					}));
+				}
 				this.$emit('onChange', {
 					value     : event.target.value,
 					settings  : this.fieldSettings

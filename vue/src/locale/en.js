@@ -31,7 +31,6 @@ export default
 		add_file: 'Add file',
 		choose_file: 'Choose File',
 		embed_link: 'Embed Link',
-		uploading_canceled_by_the_user: 'Uploading canceled by the user',
 	},
 	fieldEmList:
 	{
@@ -64,6 +63,14 @@ export default
 			select_field: 'Select field',
 			select_table: 'Select table'
 		}
+	},
+	fieldEmInteger:
+	{
+		settings:
+		{
+			min_max: 'Min must be less than max',
+		},
+		min_max_error: 'Incorrect value. Min is: {min}, max is: {max}',
 	},
 	forms:
 	{
@@ -204,7 +211,8 @@ export default
 	addMember: 'Add member',
 	accessDenied: 'Access denied',
 	search: 'Search',
-	open: 'Open',
+	max: 'Max',
+	min: 'Min',
 	months:
 	[
 		'January',

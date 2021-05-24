@@ -289,7 +289,7 @@ const table =
 
 			if (!result.data.success)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				return false;
 			}
 
@@ -319,7 +319,7 @@ const table =
 
 			if (!result.data.success)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				store.commit('setSearchInTable', '');
 				return false;
 			}
@@ -399,7 +399,7 @@ const table =
 			});
 
 			if (!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 
 			return result;
 		},
@@ -444,7 +444,7 @@ const table =
 
 			if (!result.data.success || result.data.result.items.length == 0)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				return false;
 			}
 			this.commit('setSelectedElement',{selectedElement:result.data.result.items[0], columns:result.data.result.columns_types});
@@ -480,7 +480,7 @@ const table =
 			});
 			let result = await axios.post('/el/update/',data);
 			if(!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 			this.commit('setFieldValue',fieldValue);
 		},
 
@@ -516,7 +516,7 @@ const table =
 			let result = await axios.post('/el/update/',data);
 
 			if (!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 
 			return result;
 		},
