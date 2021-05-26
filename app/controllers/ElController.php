@@ -98,12 +98,11 @@ class ElController extends ControllerBase
 			$resultUpdate = $this->element->update($update);
 		} catch (Exception $e) {
 			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
-		} finally {
-			if ($resultUpdate === false)
-				return $this->jsonResult(['success' => false, 'message' => 'some error']);
-
-			return $this->jsonResult(['success' => true, 'result' => $resultUpdate]);
 		}
+		if ($resultUpdate === false)
+			return $this->jsonResult(['success' => false, 'message' => 'some error']);
+
+		return $this->jsonResult(['success' => true, 'result' => $resultUpdate]);
 	}
 
 	/**
@@ -226,12 +225,15 @@ class ElController extends ControllerBase
 
 			$table['tviews'] = [];
 			$tviews = [];
+			$defaultTview = null;
 
 			foreach ($emViewsTable as $tview)
 			{
 				$table['tviews'][] = $tview->toArray();
 				if ($tview->default != '1')
 					continue;
+				else if (empty($defaultTview))
+					$defaultTview = $tview->toArray();
 
 				if (isset($tview->settings['table']['name']))
 					$table['name'] = $tview->settings['table']['name'];
@@ -240,6 +242,12 @@ class ElController extends ControllerBase
 					$table['visible'] = ($tview->settings['table']['visible'] == "false")?false:true;
 				else
 					$table['visible'] = false;
+			}
+
+			if (!empty($defaultTview) && !empty($defaultTview['settings']['columns']))
+			{
+				foreach ($defaultTview['settings']['columns'] as $defaultTviewColumnName => $defaultTviewColumn)
+					$table['columns'][$defaultTviewColumnName]['order'] = isset($defaultTviewColumn['order']) ? $defaultTviewColumn['order'] : 0;
 			}
 		}
 

@@ -46,23 +46,35 @@
 						>{{item.name}}</div>
 					</div>
 					<div class="em-file__upload-tabs-content-wrapper">
-						<div class="em-file__file-tab" v-if="activeTab == $t('upload')">
-							<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
-							<label class="el-btn" for="file">{{$t('fieldEmFile.choose_file')}}</label>
+						<div class="em-file__progress-tab" v-if="isUploading">
+							<div class="em-file__progressbar">
+								<div class="em-file__progressbar-text">{{ percentUploadOfProgress }}%</div>
+								<div
+									class="em-file__progressbar-done"
+									:style="{ width: percentUploadOfProgress+'%' }"
+								></div>
+							</div>
+							<button @click=cancelUpload class="el-gbtn">{{ $t('cancel') }}</button>
 						</div>
-						<div
-							class="em-file__link-tab"
-							v-if="activeTab == $t('upload_by_link')"
-						>
-							<input
-								class="el-inp em-file__embed-input"
-								type="text"
-								:placeholder="$t('paste_link')"
-								v-model="link"
-								@change="uploadFile('link')"
-							/>
-							<button class="el-btn">{{$t('fieldEmFile.embed_link')}}</button>
-						</div>
+						<template v-else>
+							<div class="em-file__file-tab" v-if="activeTab == $t('upload')">
+								<input type="file" multiple="true" name="file" ref="emFile" @change="uploadFile('file')" id="file" class="em-file" />
+								<label class="el-btn" for="file">{{$t('fieldEmFile.choose_file')}}</label>
+							</div>
+							<div
+								class="em-file__link-tab"
+								v-if="activeTab == $t('upload_by_link')"
+							>
+								<input
+									class="el-inp em-file__embed-input"
+									type="text"
+									:placeholder="$t('paste_link')"
+									v-model="link"
+									@change="uploadFile('link')"
+								/>
+								<button @click="uploadFile('link')" class="el-btn">{{$t('fieldEmFile.embed_link')}}</button>
+							</div>
+						</template>
 					</div>
 				</div>
 			</div>
@@ -70,6 +82,8 @@
 	</div>
 </template>
 <script>
+	import axios from 'axios';
+
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
@@ -88,8 +102,11 @@
 					{ name: this.$t('upload_by_link'), active: false },
 				],
 				activeTab: this.$t('upload'),
-				link: ''
-			}
+				link: '',
+				percentUploadOfProgress : 0,
+				isUploading             : false,
+				cancelToken             : null,
+			};
 		},
 		computed:
 		{
@@ -121,7 +138,7 @@
 					return this.fieldSettings.tableCode;
 
 				return false;
-			}
+			},
 		},
 		methods:
 		{
@@ -159,16 +176,32 @@
 				if(this.view == 'table')
 					formData.append('prepareForSave', true);
 
-				let result = await this.$axios({
-					method : 'POST',
-					data   : formData,
-					headers: { 'Content-Type': 'multipart/form-data' },
-					url    : '/field/em_file/index/upload/'
+				this.cancelToken = axios.CancelToken.source();
+
+				this.setUploadProgressStatus(true);
+				let result = await axios({
+					method           : 'POST',
+					data             : formData,
+					headers          : { 'Content-Type': 'multipart/form-data' },
+					url              : '/field/em_file/index/upload/',
+					cancelToken      : this.cancelToken.token,
+					onUploadProgress : (e) =>
+					{
+						this.updateUploadProgress({ loaded: e.loaded, total: e.total });
+					},
+				}).catch(err =>
+				{
+					if (err.__proto__.__CANCEL__)
+						return { data: {
+							success: false,
+							message: err.message,
+						}};
 				});
+				this.setUploadProgressStatus(false);
 
 				if(!result.data.success)
 				{
-					this.Elmessage.error(result.data.message);
+					this.ElMessage.error(result.data.message);
 					return false;
 				}
 
@@ -179,6 +212,48 @@
 				this.closeSubPopup();
 			},
 
+			/**
+			 * (де)активирует отображение процесса загрузки
+			 */
+			setUploadProgressStatus(active)
+			{
+				this.clearUploadProgress();
+				this.$set(this, 'isUploading', !!active);
+			},
+			/**
+			 * обновляет отображение загрузки
+			 */
+			updateUploadProgress({ percent = 0, loaded = 0, total = 0 })
+			{
+				if (!percent && total)
+					percent = Math.floor((loaded * 100) / total);
+
+				if (percent < 0)
+					this.$set(this, 'percentUploadOfProgress', 0);
+				else if (percent > 100)
+					this.$set(this, 'percentUploadOfProgress', 100);
+				else
+					this.$set(this, 'percentUploadOfProgress', percent);
+			},
+			/**
+			 * очищает прогресс загрузки
+			 */
+			clearUploadProgress()
+			{
+				this.$set(this, 'percentUploadOfProgress', 0);
+			},
+			/**
+			 * отмена загрузки
+			 */
+			async cancelUpload()
+			{
+				if (this.cancelToken)
+				{
+					const result = await this.cancelToken.cancel(this.$t('fieldEmFile.uploading_canceled_by_the_user'));
+					this.cancelToken = null;
+				}
+				this.clearUploadProgress();
+			},
 			/**
 			 * Удалить файл
 			 */
@@ -243,6 +318,7 @@
 			 */
 			setActiveTab(tab)
 			{
+				if (this.isUploading) return false;
 				for (var item of this.tabs)
 					item.active = false;
 
@@ -281,7 +357,7 @@
 			closeSubPopup()
 			{
 				this.showSubPopup = false;
-			}
+			},
 		},
 		watch:
 		{
@@ -291,7 +367,7 @@
 			'fieldValue'(newValue)
 			{
 				this.localValue = newValue;
-			}
+			},
 		},
 		/**
 		 * Функция создания компонента
@@ -299,8 +375,8 @@
 		created()
 		{
 			this.localValue = this.fieldValue;
-		}
-	}
+		},
+	};
 </script>
 <style lang="scss">
 	.em-file-item-col
@@ -429,5 +505,36 @@
 		border:1px solid rgba(103, 115, 135, 0.3);
 		border-radius: 2px;
 		fill:rgba(103, 115, 135, 0.3);
+	}
+	.em-file__progress-tab
+	{
+		width: 100%;
+		padding: 25px 12px;
+		display: flex;
+		flex-direction: column;
+		button { margin-left: auto; }
+	}
+	.em-file__progressbar
+	{
+		position: relative;
+		width: 100%;
+		background-color: rgba(103, 115, 135, 0.1);
+		height: 20px;
+		margin-bottom: 18px;
+		overflow: hidden;
+	}
+	.em-file__progressbar-text
+	{
+		font-size: 8px;
+		line-height: 11px;
+		position: absolute;
+		left: 7px;
+		top: 5px;
+	}
+	.em-file__progressbar-done
+	{
+		height: 100%;
+		background-color: rgba(103, 115, 135, 0.1);
+		transition: width 0.5s ease-out;
 	}
 </style>

@@ -1,10 +1,10 @@
 <template>
 	<div class="property-item-list-item" @click.stop>
-		<!-- <div class="property-item-small-icon">
+		<div class="property-item-small-icon">
 			<svg width="6" height="5">
 				<use xlink:href="#lines"></use>
 			</svg>
-		</div> -->
+		</div>
 		<div>
 			<div class="property-item-big-icon">
 				<img :src="require(`@/assets${column.em.type_info.iconPath}`)" alt="">
@@ -69,7 +69,9 @@
 		width: 6px;
 		height: 14px;
 		margin-right: 8px;
+		cursor: grab;
 	}
+	.property-item-names-wrapper { cursor: default; }
 	.property-item-overide-name
 	{
 		color: #677387;

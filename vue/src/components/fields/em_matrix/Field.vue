@@ -49,8 +49,8 @@
 				detailTableId: false,
 				detailName: false,
 				currentElement: false,
-				detailElement: {}
-			}
+				detailElement: {},
+			};
 		},
 		components:{DetailPopup},
 		props: ['fieldValue','fieldSettings','mode', 'view'],
@@ -65,7 +65,7 @@
 				for (let code in this.fieldValue.matrixValue[0])
 					tableCols.push(code);
 				return tableCols;
-			}
+			},
 		},
 		methods:
 		{
@@ -154,13 +154,13 @@
 				this.showDetail = false;
 				this.ElMessage(this.$t('elMessages.element_removed'));
 				this.removeMatrixTableElement(data.selectedElement);
-			}
+			},
 		},
 		mounted()
 		{
 			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
-		}
-	}
+		},
+	};
 </script>
 <style lang="scss">
 	.em-matrix-field__hover-btns

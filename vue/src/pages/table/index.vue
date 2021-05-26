@@ -3,11 +3,19 @@
 		<div class="index__head" v-if="table">
 			<div class="index__head-name">
 				<div class="index__head-burger"><MobileBurger/></div>
-				<div class="index__icon-wrapper">
-					<svg width="14" height="13">
+				<div @click="openPopup('isEmojiPickerShow')" class="index__icon-wrapper">
+					<svg v-if="!tableEmoji" width="14" height="13">
 						<use xlink:href="#tableicon"></use>
 					</svg>
+					<div
+						v-else
+						class="index__icon-emoji"
+					>{{ tableEmoji }}</div>
 				</div>
+				<EmojiPicker
+					:visible.sync=popups.isEmojiPickerShow
+					@pick=pickEmoji
+				/>
 				<div class="index__name-wrapper">
 					<div class="index__overide-name">{{table.name}}</div>
 					<div class="index__real-name">{{table.code}}</div>
@@ -25,6 +33,7 @@
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
 							@updateModified="updateModified"
+							@updateColumnsOrder=updateColumnsOrder
 							v-click-outside:isPropertiesPopupShow="closePopup"
 						/>
 					</li>
@@ -117,11 +126,12 @@
 	import TableWork from '@/mixins/tableWork.js';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 	import SearchBlock from '@/components/blocks/SearchBlock.vue';
+	import EmojiPicker from '@/components/popups/EmojiPicker.vue';
 
 	export default
 	{
 		mixins: [TableWork],
-		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger, SearchBlock },
+		components: { Properties, FiltersPopup, ExportPopup, SortPopup, MobileBurger, SearchBlock, EmojiPicker },
 		/**
 		 * Head параметры страницы
 		 */
@@ -145,12 +155,13 @@
 					isFiltersPopupShow    : false,
 					isSortPopupShow       : false,
 					isMorePopupShow       : false,
+					isEmojiPickerShow     : false,
 				},
 				propertiesPopupData: {},
 				sortModified      : false,
 				filterModified    : false,
 				propertiesModified: false,
-			}
+			};
 		},
 		computed:
 		{
@@ -163,6 +174,15 @@
 				for (let tview of this.table.tviews)
 					if(tview.id == tviewId)
 						return tview;
+			},
+			/**
+			 * отдает заданную иконку таблицы
+			 */
+			tableEmoji()
+			{
+				if (this.table && this.table.tviews[0] && this.table.tviews[0].settings.emoji)
+					return this.table.tviews[0].settings.emoji;
+				return false;
 			},
 		},
 		/**
@@ -179,6 +199,54 @@
 		},
 		methods:
 		{
+			/**
+			 * обновляет таблицу по коду
+			 */
+			async updateColumnsOrder(columns)
+			{
+				for (let column of columns)
+				{
+					this.table.columns[column.code].order = column.order;
+					this.activeTview.settings.columns[column.code].order = column.order;
+				}
+
+				const result = await this.$store.dispatch('saveTableSettings', {
+					tviewId: this.activeTview.id,
+					params: {
+						columns: this.activeTview.settings.columns,
+					},
+				});
+				if (result)
+					this.$store.commit('updateTableByCode', { code: this.table.code, value: this.table });
+
+			},
+			/**
+			 * выбор иконки и обновление таблицы
+			 */
+			async pickEmoji(item)
+			{
+				const request = {
+					tviewId: this.$route.params.tview,
+					params: {
+						emoji: item,
+					},
+				};
+
+				const result = await this.$store.dispatch('saveTableSettings', request);
+				if (result)
+				{
+					const newSettings = {
+						...this.table.tviews[0].settings,
+						emoji: item,
+					};
+
+					this.$store.commit('updateTviewSettings', { settings: newSettings, code: this.table.code });
+					this.activeTable();
+				}
+			},
+			/**
+			 * проверяет были ли изменены фильтры/свойства/сортировка
+			 */
 			checkModified()
 			{
 				if (!this.table) return;
@@ -189,8 +257,10 @@
 
 				for (let column of Object.values(tview.settings.columns))
 					if (column.visible !== 'true') { this.propertiesModified = true; break; }
-
 			},
+			/**
+			 * обновляет состояние фильтров/свойств/сортировки
+			 */
 			updateModified(name, state)
 			{
 				this.$set(this, `${name}Modified`, state);
@@ -217,11 +287,13 @@
 				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
 				this.propertiesPopupData = this.table.columns;
 			},
-
+			/**
+			 * переход на страницу создания элемента
+			 */
 			addElement()
 			{
 				this.$router.push(`/table/${this.table.code}/add/`);
-			}
+			},
 		},
 		watch:
 		{
@@ -231,9 +303,9 @@
 			'$route.fullPath'()
 			{
 				this.activeTable();
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.index__wrapper { padding: 23px 0px 0px 21px; }
@@ -250,7 +322,8 @@
 		display: flex;
 		align-items: center;
 	}
-	.index__icon-wrapper {margin-right: 12px; }
+	.index__icon-wrapper { margin-right: 12px; cursor: pointer; }
+	.index__icon-emoji { font-size: 20px; line-height: 26px; }
 	.index__overide-name
 	{
 		font-family: $rBold;

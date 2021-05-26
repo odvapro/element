@@ -41,13 +41,14 @@ LOCK TABLES `em_types` WRITE;
 
 INSERT INTO `em_types` (`id`, `table`, `field`, `type`, `required`, `settings`, `name`)
 VALUES
-	(17,'products','images','em_file',0,'{\"path\":\"public/images/\",\"required\":\"false\"}',NULL),
-	(18,'block_type','file','em_file',0,'{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}',NULL),
-	(19,'block_type','text','em_text',0,NULL,NULL),
-	(20,'block_type','date','em_date',0,NULL,NULL),
-	(21,'block_type','datetime','em_date',0,NULL,NULL),
-	(22,'block_type','node','em_node',0,'{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}',NULL),
-	(23,'block_type','matrix','em_matrix',0,'{\"nodeTableCode\":\"block_type_nodes\",\"keyField\":\"id\",\"nodeField\":\"block_type_id\"}',NULL);
+  (17,'products','images','em_file',0,'{\"path\":\"public/images/\",\"required\":\"false\"}',NULL),
+  (18,'block_type','file','em_file',0,'{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}',NULL),
+  (19,'block_type','text','em_text',0,NULL,NULL),
+  (20,'block_type','date','em_date',0,NULL,NULL),
+  (21,'block_type','datetime','em_date',0,NULL,NULL),
+  (22,'block_type','node','em_node',0,'{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}',NULL),
+  (23,'block_type','matrix','em_matrix',0,'{\"finalTableCode\":\"block_type_nodes\",\"localField\":\"id\",\"finalTableField\":\"block_type_id\"}',NULL),
+  (24,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -58,11 +58,19 @@ export default
 		settings:
 		{
 			key_field: 'Связующее поле',
-			node_table: 'Выберите таблицу',
-			node_field: 'Выберите поле',
 			select_field: 'Выберите поле',
-			select_table: 'Выберите таблицу'
-		}
+			select_table: 'Выберите таблицу',
+			node_table: 'Таблица связей',
+			many_to_many: 'Многие ко многим',
+		},
+	},
+	fieldEmInteger:
+	{
+		settings:
+		{
+			min_max: 'Минимум должен быть меньше максимума',
+		},
+		min_max_error: 'Некорректное значение. Минимум: {min}, максимум: {max}',
 	},
 	forms:
 	{
@@ -203,6 +211,8 @@ export default
 	addMember: 'Добавить пользователя',
 	accessDenied: 'Доступ запрещен',
 	search: 'Поиск',
+	max: 'Максимум',
+	min: 'Минимум',
 	months:
 	[
 		'Январь',

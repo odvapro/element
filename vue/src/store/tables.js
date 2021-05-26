@@ -17,6 +17,31 @@ const table =
 	},
 	mutations:
 	{
+		/**
+		 *
+		 */
+		updateTableByCode(state, { code, value })
+		{
+			const soughtTableIndex = state.tables.findIndex(table => table.code === code);
+			if (!~soughtTableIndex) return false;
+			state.tables[soughtTableIndex] = value;
+			return true;
+		},
+		/**
+		 * обновление настроек tview
+		 */
+		updateTviewSettings(state, { settings, code, tviewIndex = 0 })
+		{
+			const tableIndex = state.tables.findIndex(table => table.code === code );
+
+			if (!~tableIndex) return false;
+			state.tables[tableIndex].tviews[tviewIndex].settings = Object.assign(state.tables[tableIndex].tviews[tviewIndex].settings, settings);
+
+			return true;
+		},
+		/**
+		 * задает ссылки на расширения
+		 */
 		setExtensionsLinks(state, links)
 		{
 			state.extensionsLinks = links;
@@ -89,6 +114,9 @@ const table =
 				break;
 			}
 		},
+		/**
+		 * поиск
+		 */
 		setSearchInTable(state, value)
 		{
 			state.searchInTable = value;
@@ -261,7 +289,7 @@ const table =
 
 			if (!result.data.success)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				return false;
 			}
 
@@ -291,7 +319,7 @@ const table =
 
 			if (!result.data.success)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				store.commit('setSearchInTable', '');
 				return false;
 			}
@@ -310,6 +338,10 @@ const table =
 			newParams.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
+
+		/**
+		 * дублирование строки
+		 */
 		async duplicateRecord(store, recordParams)
 		{
 			let result = await axios({
@@ -367,7 +399,7 @@ const table =
 			});
 
 			if (!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 
 			return result;
 		},
@@ -375,7 +407,7 @@ const table =
 		/**
 		 * Сохранить ширину колонок
 		 */
-		async saveColumnsWith(store, params)
+		async saveTableSettings(store, params)
 		{
 			var data   = qs.stringify(params);
 			var result = await axios({
@@ -412,7 +444,7 @@ const table =
 
 			if (!result.data.success || result.data.result.items.length == 0)
 			{
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 				return false;
 			}
 			this.commit('setSelectedElement',{selectedElement:result.data.result.items[0], columns:result.data.result.columns_types});
@@ -448,7 +480,7 @@ const table =
 			});
 			let result = await axios.post('/el/update/',data);
 			if(!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 			this.commit('setFieldValue',fieldValue);
 		},
 
@@ -484,10 +516,10 @@ const table =
 			let result = await axios.post('/el/update/',data);
 
 			if (!result.data.success)
-				message.error(Vue.prototype.$t('accessDenied'));
+				message.error(result.data.message || Vue.prototype.$t('accessDenied'));
 
 			return result;
-		}
+		},
 	},
 };
 export default table;

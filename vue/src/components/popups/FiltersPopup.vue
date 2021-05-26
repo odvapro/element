@@ -293,9 +293,14 @@
 	}
 	.filters-popup__delete-row-icon
 	{
-		width: 12px;
-		height: 12px;
 		transform: rotate(45deg);
+		font-size: 0;
+		line-height: 0;
+		svg
+		{
+			width: 12px;
+			height: 12px;
+		}
 	}
 	.filters-popup__row
 	{

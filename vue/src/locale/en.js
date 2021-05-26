@@ -58,11 +58,19 @@ export default
 		settings:
 		{
 			key_field: 'Key field',
-			node_table: 'Node table',
-			node_field: 'Node field',
 			select_field: 'Select field',
-			select_table: 'Select table'
-		}
+			select_table: 'Select table',
+			node_table: 'Node table',
+			many_to_many: 'Many to many'
+		},
+	},
+	fieldEmInteger:
+	{
+		settings:
+		{
+			min_max: 'Min must be less than max',
+		},
+		min_max_error: 'Incorrect value. Min is: {min}, max is: {max}',
 	},
 	forms:
 	{
@@ -203,6 +211,8 @@ export default
 	addMember: 'Add member',
 	accessDenied: 'Access denied',
 	search: 'Search',
+	max: 'Max',
+	min: 'Min',
 	months:
 	[
 		'January',

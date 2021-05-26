@@ -59,7 +59,11 @@
 							</svg>
 						</div>
 						<div class="sidebar-tableicon-wrapper">
-							<svg width="14" height="13">
+							<div
+								v-if="table.tviews[0] && table.tviews[0].settings && table.tviews[0].settings.emoji"
+								class="sidebar-tableicon-wrapper__emoji"
+							>{{ table.tviews[0].settings.emoji }}</div>
+							<svg v-else width="14" height="13">
 								<use xlink:href="#tableicon"></use>
 							</svg>
 						</div>
@@ -378,16 +382,20 @@
 	}
 	.sidebar-tableicon-wrapper
 	{
-		width: 14px;
-		height: 14px;
 		cursor: pointer;
 		margin-right: 13px;
 		line-height: 1em;
-		img
+		svg
 		{
-			width: 100%;
-			height: 100%;
+			width: 14px;
+			height: 14px;
 		}
+	}
+	.sidebar-tableicon-wrapper__emoji
+	{
+		font-size: 20px;
+		line-height: 26px;
+		margin-right: -4px;
 	}
 	.sidebar-develop-wrapper
 	{
