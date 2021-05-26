@@ -2,46 +2,106 @@
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
 			<div class="popup__field-name">
-				{{$t('fieldEmMatrix.settings.key_field')}}
-				<small v-if="errors.keyField" class="popup__field-error">{{ errors.keyField.message }}</small>
+				{{$t('fieldEmMatrix.settings.many_to_many')}}
+				<small v-if="errors.isManyToMany" class="popup__field-error">{{ errors.isManyToMany.message }}</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedKeyField">
-					<SelectOption
-						v-for="field,fieldKey in currentTable.columns"
-						:key="fieldKey"
-						@click.native="selectKeyField(field)"
-					>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
-				</Select>
+				<Checkbox
+					:checked.sync="localSettings.isManyToMany"
+				></Checkbox>
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
+				{{$t('fieldEmMatrix.settings.key_field')}}
+				<small v-if="errors.localField" class="popup__field-error">{{ errors.localField.message }}</small>
+			</div>
+			<div class="popup__field-input">
+				<Select :defaultText="selectedLocalField">
+					<SelectOption
+						v-for="field,fieldKey in currentTable.columns"
+						:key="fieldKey"
+						@click.native="selectField(field, 'local')"
+					>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
+				</Select>
+			</div>
+		</div>
+		<template v-if="localSettings.isManyToMany">
+			<div class="popup__field">
+				<div class="popup__field-name">
+					{{$t('fieldEmMatrix.settings.node_table')}}
+					<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedNodeTable">
+						<SelectOption
+							v-for="table,tableIndex in tables"
+							:key="tableIndex"
+							@click.native="selectTable(table, 'nodeTable')"
+						>{{ table.name }}</SelectOption>
+					</Select>
+				</div>
+			</div>
+			<div class="popup__field">
+				<div class="popup__field-name">
+					{{$t('fieldEmMatrix.settings.key_field')}} <span class="em-matrix--lowercase">({{$t('fieldEmMatrix.settings.node_table')}})</span>
+					<small v-if="errors.nodeTableField" class="popup__field-error">{{ errors.nodeTableField.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedNodeTableField" :disabled="nodeTableFields === false">
+						<SelectOption
+							v-if="nodeTableFields"
+							v-for="field,fieldKey in nodeTableFields"
+							:key="fieldKey"
+							@click.native="selectField(field, 'nodeTable')"
+						>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
+					</Select>
+				</div>
+			</div>
+			<div class="popup__field">
+				<div class="popup__field-name">
+					{{$t('fieldEmMatrix.settings.key_field')}} <span class="em-matrix--lowercase">({{$t('fieldEmMatrix.settings.node_table')}} - {{$t('table')}})</span>
+					<small v-if="errors.nodeTableFinalTableField" class="popup__field-error">{{ errors.nodeTableFinalTableField.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedNodeTableFinalTableField" :disabled="nodeTableFields === false">
+						<SelectOption
+							v-if="nodeTableFields"
+							v-for="field,fieldKey in nodeTableFields"
+							:key="fieldKey"
+							@click.native="selectField(field, 'nodeTableFinalTable')"
+						>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
+					</Select>
+				</div>
+			</div>
+		</template>
+		<div class="popup__field">
+			<div class="popup__field-name">
 				{{$t('table')}}
-				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
+				<small v-if="errors.finalTableCode" class="popup__field-error">{{ errors.finalTableCode.message }}</small>
 			</div>
 			<div class="popup__field-input">
 				<Select :defaultText="selectedTable">
 					<SelectOption
 						v-for="table,tableIndex in tables"
 						:key="tableIndex"
-						@click.native="selectTable(table)"
+						@click.native="selectTable(table, 'finalTable')"
 					>{{ table.name }}</SelectOption>
 				</Select>
 			</div>
 		</div>
 		<div class="popup__field">
 			<div class="popup__field-name">
-				{{$t('fieldEmMatrix.settings.node_table')}}
-				<small v-if="errors.nodeField" class="popup__field-error">{{ errors.nodeField.message }}</small>
+				{{$t('fieldEmMatrix.settings.select_field')}}
+				<small v-if="errors.finalTableField" class="popup__field-error">{{ errors.finalTableField.message }}</small>
 			</div>
 			<div class="popup__field-input">
-				<Select :defaultText="selectedSearchField" :disabled="(fields === false)">
+				<Select :defaultText="selectedFinalTableField" :disabled="(finalTableFields === false)">
 					<SelectOption
-						v-if="fields"
-						v-for="field,fieldIndex in fields"
+						v-if="finalTableFields"
+						v-for="field,fieldIndex in finalTableFields"
 						:key="fieldIndex"
-						@click.native="selectSearchField(field)"
+						@click.native="selectField(field, 'finalTable')"
 					>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
 				</Select>
 			</div>
@@ -62,14 +122,25 @@
 		data()
 		{
 			return {
-				localSettings :
+				localSettings:
 				{
+					/*
 					nodeTableCode  : false,
 					keyField  : false,
 					nodeField : false,
+					 */
+					isManyToMany             : false,
+					localField               : false,
+
+					nodeTableCode            : false,
+					nodeTableField           : false,
+					nodeTableFinalTableField : false,
+
+					finalTableCode           : false,
+					finalTableField          : false,
 				},
-				errors: {}
-			}
+				errors: {},
+			};
 		},
 		computed:
 		{
@@ -83,7 +154,14 @@
 			/**
 			 * Get fields list for current table
 			 */
-			fields()
+			finalTableFields()
+			{
+				return this.$store.getters.getColumns(this.localSettings.finalTableCode);
+			},
+			/**
+			 * Get fields list for node table
+			 */
+			nodeTableFields()
 			{
 				return this.$store.getters.getColumns(this.localSettings.nodeTableCode);
 			},
@@ -91,6 +169,21 @@
 			 * Default text on select table
 			 */
 			selectedTable()
+			{
+				var table = false;
+
+				if(this.localSettings.finalTableCode !== false)
+					table = this.$store.getters.getTable(this.localSettings.finalTableCode)
+
+				if(table === false)
+					return this.$t('fieldEmMatrix.settings.select_table');
+
+				return table.name;
+			},
+			/**
+			 * Default text on select node table
+			 */
+			selectedNodeTable()
 			{
 				var table = false;
 
@@ -105,12 +198,12 @@
 			/**
 			 * Default text on select table
 			 */
-			selectedKeyField()
+			selectedLocalField()
 			{
 				var field = false;
 
-				if(this.localSettings.keyField !== false)
-					field = this.$store.getters.getColumn(this.currentTable.code, this.localSettings.keyField)
+				if(this.localSettings.localField !== false)
+					field = this.$store.getters.getColumn(this.currentTable.code, this.localSettings.localField)
 
 				if(field === false)
 					return this.$t('fieldEmMatrix.settings.select_field');
@@ -120,12 +213,42 @@
 			/**
 			 * Default text on select table
 			 */
-			selectedSearchField()
+			selectedNodeTableField()
 			{
 				var field = false;
 
-				if(this.localSettings.nodeField !== false)
-					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeField)
+				if(this.localSettings.nodeTableField !== false)
+					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeTableField)
+
+				if(field === false)
+					return this.$t('fieldEmMatrix.settings.select_field');
+
+				return (field.em.name) ? field.em.name : field.field;
+			},
+			/**
+			 * Default text on select table
+			 */
+			selectedNodeTableFinalTableField()
+			{
+				var field = false;
+
+				if(this.localSettings.nodeTableFinalTableField !== false)
+					field = this.$store.getters.getColumn(this.localSettings.nodeTableCode, this.localSettings.nodeTableFinalTableField)
+
+				if(field === false)
+					return this.$t('fieldEmMatrix.settings.select_field');
+
+				return (field.em.name) ? field.em.name : field.field;
+			},
+			/**
+			 * Default text on select table
+			 */
+			selectedFinalTableField()
+			{
+				var field = false;
+
+				if(this.localSettings.finalTableField !== false)
+					field = this.$store.getters.getColumn(this.localSettings.finalTableCode, this.localSettings.finalTableField)
 
 				if(field === false)
 					return this.$t('fieldEmMatrix.settings.select_field');
@@ -143,56 +266,62 @@
 				this.$emit('cancel');
 			},
 			/**
+			 * validate settings data
+			 */
+			validate()
+			{
+				let error = false;
+
+				let manyToManyFields = new RegExp('nodeTableCode|nodeTableField|nodeTableFinalTableField');
+
+				for (let key in this.localSettings)
+				{
+
+					if (key === 'isManyToMany'
+						|| (!this.localSettings.isManyToMany && manyToManyFields.test(key))
+						|| this.localSettings[key] !== false
+					)
+						continue;
+
+					error = true;
+					this.$set(this.errors, key, {message: 'Field is required'})
+				}
+
+				return !error;
+			},
+			/**
 			 * Save settings
 			 */
 			save()
 			{
-				var error = false;
-
-				for(var index in this.localSettings)
-				{
-					if(this.localSettings[index] != false)
-						continue;
-
-					this.$set(this.errors, index, {message: 'Field is required'})
-					error = true;
-				}
-
-				if(error)
-					return;
-
-				this.$emit('save', this.localSettings);
+				if (this.validate())
+					this.$emit('save', this.localSettings);
 			},
 
 			/**
 			 * Select node table
 			 */
-			selectTable(table)
+			selectTable(table, code='finalTable')
 			{
-				if(this.localSettings.nodeTableCode == table.code)
+				if (typeof this.localSettings[code+'Code'] === 'undefined' || this.localSettings[code+'Code'] === table.code)
 					return;
 
-				this.localSettings.nodeTableCode  = table.code;
-				this.localSettings.nodeField = false;
-				this.$delete(this.errors, 'nodeTableCode');
+				this.localSettings[code+'Code'] = table.code;
+
+				if (code === 'nodeTable')
+					this.localSettings.nodeTableFinalTableField = false;
+
+				this.localSettings[code+'Field'] = false;
+				this.$delete(this.errors, code+'Code');
 			},
 
 			/**
 			 * Select node field
 			 */
-			selectKeyField(field)
+			selectField(field, fieldCode='local')
 			{
-				this.localSettings.keyField = field.field;
-				this.$delete(this.errors, 'keyField');
-			},
-
-			/**
-			 * Select node search field
-			 */
-			selectSearchField(field)
-			{
-				this.localSettings.nodeField = field.field;
-				this.$delete(this.errors, 'nodeField');
+				this.localSettings[fieldCode+'Field'] = field.field;
+				this.$delete(this.errors, fieldCode+'Field');
 			},
 		},
 		/**
@@ -205,8 +334,15 @@
 				if(typeof this.settings[index] == 'undefined')
 					continue;
 
-				this.$set(this.localSettings, index, this.settings[index])
+				if (this.settings[index] === 'false')
+					this.$set(this.localSettings, index, false);
+				else
+					this.$set(this.localSettings, index, this.settings[index]);
 			}
-		}
-	}
+			this.localSettings.isManyToMany = this.localSettings.isManyToMany === 'true';
+		},
+	};
 </script>
+<style>
+	.em-matrix--lowercase { text-transform: lowercase; }
+</style>

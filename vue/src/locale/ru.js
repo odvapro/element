@@ -58,11 +58,11 @@ export default
 		settings:
 		{
 			key_field: 'Связующее поле',
-			node_table: 'Выберите таблицу',
-			node_field: 'Выберите поле',
 			select_field: 'Выберите поле',
-			select_table: 'Выберите таблицу'
-		}
+			select_table: 'Выберите таблицу',
+			node_table: 'Таблица связей',
+			many_to_many: 'Многие ко многим',
+		},
 	},
 	fieldEmInteger:
 	{

@@ -247,7 +247,7 @@ class ElController extends ControllerBase
 			if (!empty($defaultTview) && !empty($defaultTview['settings']['columns']))
 			{
 				foreach ($defaultTview['settings']['columns'] as $defaultTviewColumnName => $defaultTviewColumn)
-					$table['columns'][$defaultTviewColumnName]['order'] = $defaultTviewColumn['order'];
+					$table['columns'][$defaultTviewColumnName]['order'] = isset($defaultTviewColumn['order']) ? $defaultTviewColumn['order'] : 0;
 			}
 		}
 

@@ -42,7 +42,14 @@ class SqlAdapter extends PdoAdapter
 		$fieldsSqls = [];
 		foreach ($whereArray['fields'] as $field)
 			$fieldsSqls[] = $this->buildWhere($field);
+
+		$fieldsSqls = array_filter($fieldsSqls);
+
+		if (empty($fieldsSqls))
+			return "";
+
 		$fieldsSqls = '(' . implode(' ' . $whereArray['operation'] . ' ', $fieldsSqls) . ')';
+
 		return $fieldsSqls;
 	}
 
@@ -80,7 +87,10 @@ class SqlAdapter extends PdoAdapter
 		$sql .= "FROM {$fromTable} ";
 
 		if (!empty($where) && !empty($where['fields']))
-			$sql .= 'WHERE ' . $this->buildWhere($where);
+		{
+			$whereSql = $this->buildWhere($where);
+			if (!empty($whereSql)) $sql .= 'WHERE ' . $whereSql;
+		}
 
 		if (!empty($order))
 			$sql .= ' ORDER BY ' . implode(', ', $order);
