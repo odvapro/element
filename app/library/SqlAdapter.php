@@ -124,8 +124,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function count($requestParams)
 	{
-		$requestParams = $this->escapeRealStr($requestParams);
-
 		$sql           = '';
 		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];

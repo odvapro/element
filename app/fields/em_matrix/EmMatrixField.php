@@ -114,9 +114,9 @@ class EmMatrixField extends FieldBase
 			'nodeTableFinalTableField' => isset($this->settings['nodeTableFinalTableField']) ? $this->settings['nodeTableFinalTableField'] : null,
 			'finalTableCode'           => isset($this->settings['finalTableCode']) ? $this->settings['finalTableCode'] : null,
 			'finalTableField'          => isset($this->settings['finalTableField']) ? $this->settings['finalTableField'] : null,
-			'field'                    => isset($whereArray['value']['field']['code']) ? $whereArray['value']['field']['code'] : null,
+			'field'                    => isset($whereArray['value']['field']['code']) ? quotemeta($whereArray['value']['field']['code']) : null,
 			'fieldType'                => isset($whereArray['value']['field']['type']) ? $whereArray['value']['field']['type'] : null,
-			'value'                    => isset($whereArray['value']['value']) ? $whereArray['value']['value'] : null,
+			'value'                    => isset($whereArray['value']['value']) ? quotemeta($whereArray['value']['value']) : null,
 		];
 
 		// если не хватает конфига
