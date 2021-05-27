@@ -4,9 +4,10 @@ class DBHooks
 {
 	public $groups = null;
 
-	public function __construct($groups)
+	public function __construct($groups, $element)
 	{
 		$this->groups = $groups;
+		$this->element = $element;
 	}
 
 	/**
@@ -64,7 +65,7 @@ class DBHooks
 
 		foreach ($classNames as $className) {
 			if (class_exists($className))
-				$hooks[] = new $className();
+				$hooks[] = new $className($this->element);
 		}
 
 		return $hooks;

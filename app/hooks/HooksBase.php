@@ -3,6 +3,12 @@ namespace Element\Hooks;
 
 class HooksBase
 {
+	protected $element;
+	public function __construct($element)
+	{
+		$this->element = $element;
+	}
+
 	public function beforeDeleteHook($request)
 	{
 		return true;

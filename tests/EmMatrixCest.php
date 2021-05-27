@@ -94,10 +94,7 @@ class EmMatrixCest
 				'code' => 'products',
 				'operation' => 'IS NOT EMPTY',
 				'value' => [
-					'field' => [
-						'code' => 'id',
-						'type' => 'em_primary',
-					],
+					'field' => 'id',
 					'value' => '',
 				],
 			]

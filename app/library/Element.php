@@ -17,7 +17,7 @@ class Element
 		$this->emTypes = $this->getEmTypes();
 
 		$groups = empty($di->get('user')) ? [$di->get('group')] : $di->get('user')->groups;
-		$this->dbHooks = new DBHooks($groups);
+		$this->dbHooks = new DBHooks($groups, $this);
 	}
 
 	/**
@@ -269,7 +269,7 @@ class Element
 				$field = new EmStringField($fieldValue,$settings,$updateParams['set']);
 
 			$fieldSaveValue = $field->saveValue();
-			if($fieldSaveValue === NULL)
+			if($fieldSaveValue === null)
 				$set[] = "{$fieldCode} = NULL";
 			else
 				$set[] = "{$fieldCode} = '{$fieldSaveValue}'";
