@@ -17,7 +17,7 @@ class Element
 		$this->emTypes = $this->getEmTypes();
 
 		$groups = empty($di->get('user')) ? [$di->get('group')] : $di->get('user')->groups;
-		$this->dbHooks = new DBHooks($groups, $this);
+		$this->dbHooks = new DBHooks($groups, $this->di);
 	}
 
 	/**

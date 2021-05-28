@@ -20,18 +20,25 @@
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
-		data()
-		{
-			return {
-				localFieldValue:''
-			}
-		},
 		mounted()
 		{
-			this.localFieldValue = this.fieldValue;
+			this.setDefaultSettings();
 		},
 		methods:
 		{
+			setDefaultSettings()
+			{
+				if (!this.fieldSettings.max)
+					this.fieldSettings.max = {
+						enabled: false,
+						value: 0,
+					};
+				if (!this.fieldSettings.min)
+					this.fieldSettings.min = {
+						enabled: false,
+						value: 0,
+					};
+			},
 			validate(value)
 			{
 				if (this.fieldSettings.max
@@ -45,6 +52,7 @@
 					&& this.fieldSettings.min.value
 				)
 					return value >= +this.fieldSettings.min.value;
+				return true;
 			},
 			/**
 			 * Send change current value

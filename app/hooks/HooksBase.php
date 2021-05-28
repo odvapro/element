@@ -3,10 +3,16 @@ namespace Element\Hooks;
 
 class HooksBase
 {
-	protected $element;
-	public function __construct($element)
+	protected $di;
+
+	public function __construct($di)
 	{
-		$this->element = $element;
+		$this->di = $di;
+	}
+
+	protected function getDi()
+	{
+		return $this->di;
 	}
 
 	public function beforeDeleteHook($request)

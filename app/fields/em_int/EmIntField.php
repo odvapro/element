@@ -33,7 +33,7 @@ class EmIntField extends FieldBase
 				&& isset($this->settings['max']['enabled'])
 				&& +$this->settings['max']['enabled']
 				&& isset($this->settings['max']['value'])
-				&& +$this->fieldValue >= +$this->settings['max']['value']
+				&& +$this->fieldValue > +$this->settings['max']['value']
 			)
 				throw new Exception("{$this->settings['code']}: Maximum value is {$this->settings['max']['value']}");
 
@@ -41,7 +41,7 @@ class EmIntField extends FieldBase
 				&& isset($this->settings['min']['enabled'])
 				&& +$this->settings['min']['enabled']
 				&& isset($this->settings['min']['value'])
-				&& +$this->fieldValue <= +$this->settings['min']['value']
+				&& +$this->fieldValue < +$this->settings['min']['value']
 			)
 				throw new Exception("{$this->settings['code']}: Minimum value is {$this->settings['min']['value']}");
 		}
