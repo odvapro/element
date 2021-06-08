@@ -6,7 +6,8 @@ class PagesHooks extends \Element\Hooks\HooksBase
 	public function beforeSelectHook($request)
 	{
 		if (isset($request['call_error_by_group']) && !empty($request['call_error_by_group']))
-			return false;
+			throw new \EmException("group_error", 0);
+
 		return true;
 	}
 	public function afterSelectHook($request, $data)

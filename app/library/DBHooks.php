@@ -3,6 +3,7 @@
 class DBHooks
 {
 	public $groups = null;
+	protected $hooks = null;
 	protected $di;
 
 	public function __construct($groups, $di)
@@ -61,15 +62,18 @@ class DBHooks
 	 */
 	public function getHooks($request)
 	{
-		$hooks = [];
-		$classNames = $this->getHookClassessNames($request);
+		if (empty($this->hooks))
+		{
+			$this->hooks = [];
+			$classNames = $this->getHookClassessNames($request);
 
-		foreach ($classNames as $className) {
-			if (class_exists($className))
-				$hooks[] = new $className($this->di);
+			foreach ($classNames as $className) {
+				if (class_exists($className))
+					$this->hooks[] = new $className($this->di);
+			}
 		}
 
-		return $hooks;
+		return $this->hooks;
 	}
 
 	/**

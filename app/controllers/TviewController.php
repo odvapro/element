@@ -67,7 +67,10 @@ class TviewController extends ControllerBase
 			'fields' => array_keys($allFieldsData)
 		];
 
-		$allFields = $this->element->select($select);
+		$selectResult = $this->element->select($select);
+		if (!$selectResult['success'])
+			return $this->jsonResult(['success' => false, 'code' => $selectResult['code']]);
+		$allFields = $selectResult['result'];
 
 		$lastItemName = array_key_last($allFieldsData);
 		$fileContent = "";

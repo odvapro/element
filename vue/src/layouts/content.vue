@@ -170,6 +170,7 @@
 		{
 			overflow: hidden;
 			flex-basis: 270px!important;
+			min-width: 270px!important;
 			flex-shrink: 0;
 		}
 	}

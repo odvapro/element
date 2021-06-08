@@ -262,8 +262,7 @@ class TableWorkerCest
 		// тест на лимит
 		$I->sendGET('/el/select',
 		[
-			'select' => ['from' => 'products'],
-			'limit'=>10
+			'select' => ['from' => 'products', 'limit'=>10],
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -570,7 +569,7 @@ class TableWorkerCest
 		$result = json_decode($I->grabResponse(), 1);
 
 		if (!empty(count($result['result']['items'])))
-			throw new Exception("Element already exist", 1);
+			throw new EmException("Element already exist", 1);
 
 
 
@@ -656,7 +655,7 @@ class TableWorkerCest
 		$result = json_decode($I->grabResponse(), 1);
 
 		if (empty(count($result['result']['items'])))
-			throw new Exception("Element wasn't created", 1);
+			throw new EmException("Element wasn't created", 1);
 
 	}
 

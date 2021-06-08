@@ -28,7 +28,7 @@ class EmDateCest
 		// save empty date
 		$this->saveField($I, '', 1);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'date' => NULL ]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'date' => null ]);
 	}
 
 	/**

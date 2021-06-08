@@ -371,6 +371,6 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function getLastInsertId()
 	{
-		return $this->db->lastInsertId();
+		return $this->db->query('SELECT LAST_INSERT_ID()')->fetch()[0];
 	}
 }

@@ -64,8 +64,8 @@
 					this.$refs.intInput.value = this.fieldValue;
 
 					return this.ElMessage.error(this.$t('fieldEmInteger.min_max_error', {
-						min: this.fieldSettings.min.value,
-						max: this.fieldSettings.max.value,
+						min: (this.fieldSettings.min && this.fieldSettings.min.value) ? this.fieldSettings.min.value : 0,
+						max: (this.fieldSettings.max && this.fieldSettings.max.value) ? this.fieldSettings.max.value : 0,
 					}));
 				}
 				this.$emit('onChange', {

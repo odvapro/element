@@ -18,10 +18,16 @@ class EmMatrixField extends FieldBase
 		$isManyToMany = isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') : false;
 
 		if ($isManyToMany && (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']])))
-			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select(['from' => $this->settings['nodeTableCode']]);
+		{
+			$selectResult = $this->element->select(['from' => $this->settings['nodeTableCode']]);
+			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
 
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['finalTableCode']]))
-			self::$nodeTable[$this->settings['finalTableCode']] = $this->element->select(['from' => $this->settings['finalTableCode']]);
+		{
+			$selectResult = $this->element->select(['from' => $this->settings['finalTableCode']]);
+			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
 
 		$node = [];
 		$localFieldValue = $this->row[$this->settings['localField']];

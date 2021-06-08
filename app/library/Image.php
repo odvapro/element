@@ -59,7 +59,7 @@ class Image extends Phalcon\Mvc\User\Plugin
 		$image_info = @getimagesize($filename);
 
 		if (!$image_info) {
-			throw new \Exception('Could not read file');
+			throw new EmException('Could not read file');
 		}
 
 		list (
@@ -91,12 +91,12 @@ class Image extends Phalcon\Mvc\User\Plugin
 			break;
 
 			default:
-				throw new \Exception('Unsupported image type');
+				throw new EmException('Unsupported image type');
 			break;
 		}
 
 		if (!$this->source_image) {
-			throw new \Exception('Could not load image');
+			throw new EmException('Could not load image');
 		}
 
 		return $this->resize($this->getSourceWidth(), $this->getSourceHeight());

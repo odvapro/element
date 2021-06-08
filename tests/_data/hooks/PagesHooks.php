@@ -6,7 +6,8 @@ class PagesHooks extends HooksBase
 	public function beforeSelectHook($request)
 	{
 		if (isset($request['call_error']) && !empty($request['call_error']))
-			return false;
+			throw new \EmException("hook_error", 1);
+
 		return true;
 	}
 	public function afterSelectHook($request, $data)
