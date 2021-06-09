@@ -13,11 +13,11 @@ class ElController extends ControllerBase
 		$delete = $this->request->getPost('delete');
 
 		if (empty($delete))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
 		$deleteResult = $this->element->delete($delete);
 		if (!$deleteResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $deleteResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $deleteResult['message'], 'code' => $deleteResult['code']]);
 
 		$deleteResult = $deleteResult['result'];
 
@@ -34,18 +34,18 @@ class ElController extends ControllerBase
 		$duplicateSelect = $this->request->getPost('duplicate');
 
 		if (empty($duplicateSelect) || empty($duplicateSelect['where']['fields'][0]['value']))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
 		$selectResult = $this->element->select($duplicateSelect);
 		if (!$selectResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $selectResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $selectResult['message'], 'code' => $selectResult['code']]);
 
 		$row = $selectResult['result'];
 		if (empty($row['items']))
-			return $this->jsonResult(['success' => false, 'message' => 'wrong_id']);
+			return $this->jsonResult(['success' => false, 'message' => 'wrong_id', 'code' => 12.1]);
 		$duplicateResult = $this->element->duplicate($duplicateSelect);
 		if (!$duplicateResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $duplicateResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $duplicateResult['message'], 'code' => $duplicateResult['code']]);
 		$duplicateResult = $duplicateResult['result'];
 		return $this->jsonResult(['success' => $duplicateResult, 'lastId' => $this->eldb->getLastInsertId()]);
 	}
@@ -58,16 +58,11 @@ class ElController extends ControllerBase
 		$insert = $this->request->getPost('insert');
 
 		if (empty($insert))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
-		try {
-			$insertResult = $this->element->insert($insert);
-		} catch (Exception $e) {
-			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
-		}
-
+		$insertResult = $this->element->insert($insert);
 		if (!$insertResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $insertResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $insertResult['message'], 'code' => $insertResult['code']]);
 
 		$insertResult = $insertResult['result'];
 		$lastId = $this->eldb->getLastInsertId();
@@ -89,15 +84,12 @@ class ElController extends ControllerBase
 		$update = $this->request->getPost('update');
 
 		if (empty($update))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
-		try {
-			$updateResult = $this->element->update($update);
-		} catch (Exception $e) {
-			return $this->jsonResult(['success' => false, 'message' => $e->getMessage()]);
-		}
+		$updateResult = $this->element->update($update);
 		if (!$updateResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $updateResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $updateResult['message'], 'code' => $updateResult['code']]);
+
 		$updateResult = $updateResult['result'];
 		return $this->jsonResult(['success' => true, 'result' => $updateResult]);
 	}
@@ -114,12 +106,12 @@ class ElController extends ControllerBase
 		$limit  = empty($select['limit']) || intval($select['limit']) <= 0 ? 100 : intval($select['limit']);
 
 		if (empty($select))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
 		// Define count of element
 		$itemsCount = $this->element->count($select);
 		if (!$itemsCount['success'])
-			return $this->jsonResult(['success' => false, 'message' => $itemsCount['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $itemsCount['message'], 'code' => $itemsCount['code']]);
 
 		$itemsCount = $itemsCount['result'];
 		$paginator = new ElPagination([
@@ -134,7 +126,7 @@ class ElController extends ControllerBase
 		$select['offset'] = $pagination['offset'];
 		$selectResult = $this->element->select($select);
 		if (!$selectResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $selectResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $selectResult['message'], 'code' => $selectResult['code']]);
 		$result = $selectResult['result'];
 
 		$pagination = array_merge($pagination, $result);
@@ -152,7 +144,7 @@ class ElController extends ControllerBase
 	{
 		$select = $this->request->get('select');
 		if (empty($select) || empty($select['from']))
-			return $this->jsonResult(['success' => false, 'message' => 'empty_request']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1.0]);
 
 		$search = !empty($select['search']) ? $select['search'] : '';
 		unset($select['search']);
@@ -187,7 +179,7 @@ class ElController extends ControllerBase
 		$selectResult = $this->element->select($select);
 
 		if (!$selectResult['success'])
-			return $this->jsonResult(['success' => false, 'message' => $selectResult['message']]);
+			return $this->jsonResult(['success' => false, 'message' => $selectResult['message'], 'code' => $selectResult['code']]);
 		$result = $selectResult['result'];
 
 		$paginator = new ElPagination([
@@ -278,11 +270,11 @@ class ElController extends ControllerBase
 		$params  = $this->request->getPost('params');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'tview_not_found']);
+			return $this->jsonResult(['success' => false, 'message' => 'tview_not_found', 'code' => 1.0]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'tview_not_found']);
+			return $this->jsonResult(['success' => false, 'message' => 'tview_not_found', 'code' => 12.1]);
 
 		$tviewSettings = $tview->settings;
 
@@ -291,7 +283,7 @@ class ElController extends ControllerBase
 
 		$tview->settings = $tviewSettings;
 		if ($tview->save() == false)
-			return $this->jsonResult(['success' => false, 'message' => 'some_error']);
+			return $this->jsonResult(['success' => false, 'message' => 'some_error', 'code' => 2.0]);
 
 		return $this->jsonResult(['success' => true]);
 	}

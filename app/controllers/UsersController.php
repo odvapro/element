@@ -23,7 +23,7 @@ class UsersController extends ControllerBase
 		$id = $this->request->get('id');
 
 		if (empty($id))
-			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
+			return $this->jsonResult(['success' => false, 'message' => 'id is require param', 'code' => 1.0]);
 
 		$user = EmUsers::findFirstById($id);
 
@@ -42,12 +42,12 @@ class UsersController extends ControllerBase
 		$password   = $this->request->getPost('password');
 
 		if (empty($id))
-			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
+			return $this->jsonResult(['success' => false, 'message' => 'id is require param', 'code' => 1.0]);
 
 		$user = EmUsers::findFirstById($id);
 
 		if (empty($user))
-			return $this->jsonResult(['success' => false, 'message' => 'user not found']);
+			return $this->jsonResult(['success' => false, 'message' => 'user not found', 'code' => 14.1]);
 
 		if (!empty($password))
 			$user->password = md5($password);
@@ -57,7 +57,7 @@ class UsersController extends ControllerBase
 		$user->login     = !empty($login) ? $login : $user->login;
 
 		if(!$user->save())
-			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
+			return $this->jsonResult(['success' => false, 'message' => 'something wrong', 'code' => 2.0]);
 
 		return $this->jsonResult(['success' => true]);
 	}
@@ -71,16 +71,16 @@ class UsersController extends ControllerBase
 		$newLanguage = $this->request->getPost('language');
 
 		if (empty($userId))
-			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
+			return $this->jsonResult(['success' => false, 'message' => 'id is require param', 'code' => 1.0]);
 
 		$user = EmUsers::findFirstById($userId);
 
 		if (empty($user))
-			return $this->jsonResult(['success' => false, 'message' => 'user is not found']);
+			return $this->jsonResult(['success' => false, 'message' => 'user is not found', 'code' => 14.1]);
 		$user->language = $newLanguage;
 
 		if(!$user->save())
-			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
+			return $this->jsonResult(['success' => false, 'message' => 'something wrong', 'code' => 2.0]);
 
 		return $this->jsonResult(['success' => true]);
 	}
@@ -94,15 +94,15 @@ class UsersController extends ControllerBase
 		$id = $this->request->getPost('id');
 
 		if (empty($id))
-			return $this->jsonResult(['success' => false, 'message' => 'id is require param']);
+			return $this->jsonResult(['success' => false, 'message' => 'id is require param', 'code' => 1.0]);
 
 		$user = EmUsers::findFirstById($id);
 
 		if (empty($user))
-			return $this->jsonResult(['success' => false, 'message' => 'user not found']);
+			return $this->jsonResult(['success' => false, 'message' => 'user not found', 'code' => 14.1]);
 
 		if(!$user->delete())
-			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
+			return $this->jsonResult(['success' => false, 'message' => 'something wrong', 'code' => 2.0]);
 
 		return $this->jsonResult(['success' => true]);
 	}
@@ -120,7 +120,7 @@ class UsersController extends ControllerBase
 		$language   = $this->request->getPost('language');
 
 		if (empty($name) || empty($login) || empty($email) || empty($password))
-			return $this->jsonResult(['success' => false, 'message' => 'fill all fields']);
+			return $this->jsonResult(['success' => false, 'message' => 'fill all fields', 'code' => 1.0]);
 
 		// if email exists - false
 		$user = EmUsers::find([
@@ -128,7 +128,7 @@ class UsersController extends ControllerBase
 			'bind'       => [$login]
 		]);
 		if (count($user))
-			return $this->jsonResult(['success' => false, 'message' => 'user already registered']);
+			return $this->jsonResult(['success' => false, 'message' => 'user already registered', 'code' => 14.2]);
 
 		$user = new EmUsers();
 
@@ -139,7 +139,7 @@ class UsersController extends ControllerBase
 		$user->password  = md5($password);
 
 		if(!$user->save())
-			return $this->jsonResult(['success' => false, 'message' => 'something wrong']);
+			return $this->jsonResult(['success' => false, 'message' => 'something wrong', 'code' => 2.0]);
 
 		return $this->jsonResult(['success' => true, 'id'=>$user->id]);
 	}
