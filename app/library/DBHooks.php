@@ -3,10 +3,13 @@
 class DBHooks
 {
 	public $groups = null;
+	protected $hooks = null;
+	protected $di;
 
-	public function __construct($groups)
+	public function __construct($groups, $di)
 	{
 		$this->groups = $groups;
+		$this->di = $di;
 	}
 
 	/**
@@ -59,15 +62,18 @@ class DBHooks
 	 */
 	public function getHooks($request)
 	{
-		$hooks = [];
-		$classNames = $this->getHookClassessNames($request);
+		if (empty($this->hooks))
+		{
+			$this->hooks = [];
+			$classNames = $this->getHookClassessNames($request);
 
-		foreach ($classNames as $className) {
-			if (class_exists($className))
-				$hooks[] = new $className();
+			foreach ($classNames as $className) {
+				if (class_exists($className))
+					$this->hooks[] = new $className($this->di);
+			}
 		}
 
-		return $hooks;
+		return $this->hooks;
 	}
 
 	/**
@@ -84,7 +90,10 @@ class DBHooks
 
 		$names[] = "Element\\Hooks\\{$className}";
 		foreach ($this->groups as $group)
-			$names[] = "Element\\Hooks\\{$group->name}\\{$className}";
+		{
+			$groupName = preg_replace('/[^a-zA-Z_0-9]/', '', $group->name);
+			$names[] = "Element\\Hooks\\{$groupName}\\{$className}";
+		}
 
 		return $names;
 	}

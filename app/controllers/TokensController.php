@@ -91,172 +91,191 @@ class TokensController extends ControllerBase
 
 	public function getApiDocsAction()
 	{
-		$table = $this->request->getPost('table_name');
-		$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
-		$baseRequestUrl     = $protocol . $_SERVER['SERVER_NAME'] . '/element/api';
+		$table          = $this->request->getPost('table_name');
+		$protocol       = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+		$baseRequestUrl = $protocol . $_SERVER['SERVER_NAME'] . '/element/api';
 
 		$result = [
 			"get"    => [
-				"code"     => "curl_setopt_array(\$curl, array(
-  CURLOPT_URL            => '{$baseRequestUrl}/el/select/',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING       => '',
-  CURLOPT_MAXREDIRS      => 10,
-  CURLOPT_TIMEOUT        => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST  => 'POST',
-  CURLOPT_POSTFIELDS     => http_build_query(array(
-    'token'  => #token#,
-    'select' => array(
-      'from' => {$table},
-      'page' => 1,
-    ),
-  )),
-  CURLOPT_HTTPHEADER     => array(
-  	'Content-Type: text/plain'
-  ),
-));
-
-\$response = curl_exec(\$curl);
-
-curl_close(\$curl);
-echo \$response;",
-				"response" => "{
-  \"success\": true,
-  \"result\": {
-    \"first\": 1,
-    \"before\": 1,
-    \"current\": 1,
-    \"last\": 1,
-    \"next\": 1,
-    \"total_pages\": 1,
-    \"total_items\": 1,
-    \"limit\": 1,
-    \"offset\": 1,
-    \"items\": [{
-      \"field_name\": \"field_value\"
-    }]
-  }
-}",
+				"code"     =>
+					"curl_setopt_array(\$curl, [\n" .
+					"  CURLOPT_URL            => '{$baseRequestUrl}/el/select/',\n" .
+					"  CURLOPT_RETURNTRANSFER => true,\n" .
+					"  CURLOPT_ENCODING       => '',\n" .
+					"  CURLOPT_MAXREDIRS      => 10,\n" .
+					"  CURLOPT_TIMEOUT        => 0,\n" .
+					"  CURLOPT_FOLLOWLOCATION => true,\n" .
+					"  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,\n" .
+					"  CURLOPT_CUSTOMREQUEST  => 'POST',\n" .
+					"  CURLOPT_POSTFIELDS     => http_build_query([\n" .
+					"    'token'  => 'token',\n" .
+					"    'select' => [\n" .
+					"      'from' => '{$table}',\n" .
+					"      # 'page'   => 1,\n" .
+					"      # 'limit'  => 100,\n" .
+					"      # 'where'  => [\n" .
+					"      #   'operation' => 'AND',\n" .
+					"      #   'fields'    => [\n" .
+					"      #     [\n" .
+					"      #       'code'      => 'field_code',\n" .
+					"      #       'operation' => 'IS',\n" .
+					"      #       'value'     => 'field_value',\n" .
+					"      #     ],\n" .
+					"      #   ],\n" .
+					"      # ],\n" .
+					"    ],\n" .
+					"  ]),\n" .
+					"  CURLOPT_HTTPHEADER     => [\n" .
+					"    'Content-Type: application/x-www-form-urlencoded',\n" .
+					"  ],\n" .
+					"]);\n" .
+					"\n" .
+					"\$response = curl_exec(\$curl);\n" .
+					"\n" .
+					"curl_close(\$curl);\n" .
+					"echo \$response;",
+				"response" =>
+					"{\n" .
+					"  \"success\": true,\n" .
+					"  \"result\": {\n" .
+					"    \"first\": 1,\n" .
+					"    \"before\": 1,\n" .
+					"    \"current\": 1,\n" .
+					"    \"last\": 1,\n" .
+					"    \"next\": 1,\n" .
+					"    \"total_pages\": 1,\n" .
+					"    \"total_items\": 1,\n" .
+					"    \"limit\": 1,\n" .
+					"    \"offset\": 1,\n" .
+					"    \"items\": [{\n" .
+					"      \"field_name\": \"field_value\"\n" .
+					"    }]\n" .
+					"  }\n" .
+					"}",
 			],
 			"insert" => [
-				"code"     => "curl_setopt_array(\$curl, array(
-  CURLOPT_URL            => '{$baseRequestUrl}/el/insert/',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING       => '',
-  CURLOPT_MAXREDIRS      => 10,
-  CURLOPT_TIMEOUT        => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST  => 'POST',
-  CURLOPT_POSTFIELDS     => http_build_query(array(
-    'token'  => #token#,
-    'insert' => array(
-      'table'  => {$table},
-      'values' => array(
-        # ...
-      ),
-    ),
-  )),
-  CURLOPT_HTTPHEADER     => array(
-  	'Content-Type: text/plain'
-  ),
-));
-
-\$response = curl_exec(\$curl);
-
-curl_close(\$curl);
-echo \$response;",
-				"response" => "{
-  \"success\": true,
-  \"result\": true,
-  \"lastid\": \"17\"
-}",
+				"code"     =>
+					"curl_setopt_array(\$curl, [\n" .
+					"  CURLOPT_URL            => '{$baseRequestUrl}/el/insert/',\n" .
+					"  CURLOPT_RETURNTRANSFER => true,\n" .
+					"  CURLOPT_ENCODING       => '',\n" .
+					"  CURLOPT_MAXREDIRS      => 10,\n" .
+					"  CURLOPT_TIMEOUT        => 0,\n" .
+					"  CURLOPT_FOLLOWLOCATION => true,\n" .
+					"  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,\n" .
+					"  CURLOPT_CUSTOMREQUEST  => 'POST',\n" .
+					"  CURLOPT_POSTFIELDS     => http_build_query([\n" .
+					"  'token'  => 'token',\n" .
+					"  'insert' => [\n" .
+					"    'table'  => '{$table}',\n" .
+					"    'values' => [\n" .
+					"      'value_1',\n" .
+					"      'value_2',\n" .
+					"    ],\n" .
+					"  ],\n" .
+					"  ]),\n" .
+					"  CURLOPT_HTTPHEADER     => [\n" .
+					"  'Content-Type: application/x-www-form-urlencoded',\n" .
+					"  ],\n" .
+					"]);\n" .
+					"\n\n" .
+					"\$response = curl_exec(\$curl);\n" .
+					"\n\n" .
+					"curl_close(\$curl);\n" .
+					"echo \$response;",
+				"response" =>
+					"{\n" .
+					"  \"success\": true,\n" .
+					"  \"result\": true,\n" .
+					"  \"lastid\": \"17\"\n" .
+					"}",
 			],
 			"delete" => [
-				"code"     => "curl_setopt_array(\$curl, array(
-  CURLOPT_URL            => '{$baseRequestUrl}/el/delete/',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING       => '',
-  CURLOPT_MAXREDIRS      => 10,
-  CURLOPT_TIMEOUT        => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST  => 'POST',
-  CURLOPT_POSTFIELDS     => http_build_query(array(
-    'token'  => #token#,
-    'delete' => array(
-      'table'  => {$table},
-      'where'  => array(
-        'operation' => 'AND',
-        'fields'    => array(
-          [
-            'code'      => #field_code#,
-            'operation' => 'IS',
-            'value'     => #field_value#,
-          ],
-        ),
-      ),
-    ),
-  )),
-  CURLOPT_HTTPHEADER     => array(
-  	'Content-Type: text/plain'
-  ),
-));
-
-\$response = curl_exec(\$curl);
-
-curl_close(\$curl);
-echo \$response;",
-				"response" => "{
-  \"success\": true,
-  \"result\": true
-}",
+				"code"     =>
+					"curl_setopt_array(\$curl, [\n" .
+					"  CURLOPT_URL            => '{$baseRequestUrl}/el/delete/',\n" .
+					"  CURLOPT_RETURNTRANSFER => true,\n" .
+					"  CURLOPT_ENCODING       => '',\n" .
+					"  CURLOPT_MAXREDIRS      => 10,\n" .
+					"  CURLOPT_TIMEOUT        => 0,\n" .
+					"  CURLOPT_FOLLOWLOCATION => true,\n" .
+					"  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,\n" .
+					"  CURLOPT_CUSTOMREQUEST  => 'POST',\n" .
+					"  CURLOPT_POSTFIELDS     => http_build_query([\n" .
+					"    'token'  => 'token',\n" .
+					"    'delete' => [\n" .
+					"        'table'  => '{$table}',\n" .
+					"        'where'  => [\n" .
+					"          'operation' => 'AND',\n" .
+					"          'fields'    => [\n" .
+					"          [\n" .
+					"            'code'      => 'field_code',\n" .
+					"            'operation' => 'IS',\n" .
+					"            'value'     => 'field_value',\n" .
+					"          ],\n" .
+					"        ],\n" .
+					"      ],\n" .
+					"    ],\n" .
+					"  ]),\n" .
+					"  CURLOPT_HTTPHEADER     => [\n" .
+					"    'Content-Type: application/x-www-form-urlencoded',\n" .
+					"  ],\n" .
+					"]);\n" .
+					"\n" .
+					"\$response = curl_exec(\$curl);\n" .
+					"\n" .
+					"curl_close(\$curl);\n" .
+					"echo \$response;",
+				"response" =>
+					"{\n" .
+					"  \"success\": true,\n" .
+					"  \"result\": true\n" .
+					"}",
 			],
 			"update" => [
-				"code"     => "curl_setopt_array(\$curl, array(
-  CURLOPT_URL            => '{$baseRequestUrl}/el/update/',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING       => '',
-  CURLOPT_MAXREDIRS      => 10,
-  CURLOPT_TIMEOUT        => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST  => 'POST',
-  CURLOPT_POSTFIELDS     => http_build_query(array(
-    'token'  => #token#,
-    'delete' => array(
-      'table'  => {$table},
-      'set'    => array(
-         'field_code' => 'field_value',
-         # ...
-       ),
-       'where' => array(
-        'operation' => 'AND',
-        'fields'    => array(
-          [
-            'code'      => #field_code#,
-            'operation' => 'IS',
-            'value'     => #field_value#,
-          ],
-       ),
-      ),
-    ),
-  )),
-  CURLOPT_HTTPHEADER     => array(
-  	'Content-Type: text/plain'
-  ),
-));
-
-\$response = curl_exec(\$curl);
-
-curl_close(\$curl);
-echo \$response;",
-				"response" => "{
-  \"success\": true,
-  \"result\": true
-}",
+				"code"     =>
+					"curl_setopt_array(\$curl, [\n" .
+					"  CURLOPT_URL            => '{$baseRequestUrl}/el/update/',\n" .
+					"  CURLOPT_RETURNTRANSFER => true,\n" .
+					"  CURLOPT_ENCODING       => '',\n" .
+					"  CURLOPT_MAXREDIRS      => 10,\n" .
+					"  CURLOPT_TIMEOUT        => 0,\n" .
+					"  CURLOPT_FOLLOWLOCATION => true,\n" .
+					"  CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,\n" .
+					"  CURLOPT_CUSTOMREQUEST  => 'POST',\n" .
+					"  CURLOPT_POSTFIELDS     => http_build_query([\n" .
+					"    'token'  => 'token',\n" .
+					"    'delete' => [\n" .
+					"      'table'  => '{$table}',\n" .
+					"      'set'    => [\n" .
+					"        'field_code' => 'field_value',\n" .
+					"      ],\n" .
+					"      'where' => [\n" .
+					"        'operation' => 'AND',\n" .
+					"        'fields'    => [\n" .
+					"          [\n" .
+					"            'code'      => 'field_code',\n" .
+					"            'operation' => 'IS',\n" .
+					"            'value'     => 'field_value',\n" .
+					"          ],\n" .
+					"        ],\n" .
+					"      ],\n" .
+					"    ],\n" .
+					"  ]),\n" .
+					"  CURLOPT_HTTPHEADER     => [\n" .
+					"    'Content-Type: application/x-www-form-urlencoded',\n" .
+					"  ],\n" .
+					"));\n" .
+					"\n" .
+					"\$response = curl_exec(\$curl);\n" .
+					"\n" .
+					"curl_close(\$curl);\n" .
+					"echo \$response;",
+				"response" =>
+					"{\n" .
+					"  \"success\": true,\n" .
+					"  \"result\": true\n" .
+					"}",
 			],
 		];
 

@@ -58,7 +58,7 @@
 		{
 			tableHead()
 			{
-				if (typeof this.fieldValue.matrixValue == 'undefined')
+				if (typeof this.fieldValue.matrixValue == 'undefined' || !this.fieldValue.matrixValue.length)
 					return [];
 
 				let tableCols = [];

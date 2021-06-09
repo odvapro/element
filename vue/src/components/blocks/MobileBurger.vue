@@ -30,6 +30,7 @@ export default
 <style lang="scss">
 	.el-burder
 	{
+		width: fit-content;
 		cursor: pointer;
 		span
 		{

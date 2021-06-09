@@ -47,12 +47,12 @@ class TablesGroupsCest
 		[
 			'insert' => [
 				'table' => 'test_table',
-				'values' => [
+				'values' => [[
 					'name'  => '11',
 					'email' => 'qwe',
 					'col'   => '222222',
 					'avat'  => '222211211'
-				]
+				]]
 			]
 		]);
 		$I->seeResponseContainsJson(['success' => false]);
@@ -61,12 +61,12 @@ class TablesGroupsCest
 		[
 			'insert' => [
 				'table' => 'callbacks',
-				'values' => [
+				'values' => [[
 					'phone'  => '47324972394',
 					'date' => '2018-11-05 17:27:00',
 					'name'   => 'Test',
 					'status'  => '1'
-				]
+				]]
 			]
 		]);
 		$I->seeResponseContainsJson(['success' => true]);

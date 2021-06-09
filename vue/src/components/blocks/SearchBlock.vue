@@ -87,7 +87,7 @@
 				requestParams.select.tview  = this.$route.params.tview     || this.tview.id;
 
 				if(this.$route.params.limit)
-					requestParams.limit = this.$route.params.limit
+					requestParams.select.limit = this.$route.params.limit
 
 				requestParams.select.search = value;
 				await this.$store.dispatch('search', requestParams);

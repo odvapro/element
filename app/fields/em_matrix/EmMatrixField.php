@@ -14,14 +14,20 @@ class EmMatrixField extends FieldBase
 			!isset($this->settings['localField'])
 			|| !isset($this->settings['finalTableCode'])
 			|| !isset($this->settings['finalTableField'])
-		) return [];
+		) return ['matrixValue'=>[]];
 		$isManyToMany = isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') : false;
 
 		if ($isManyToMany && (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']])))
-			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select(['from' => $this->settings['nodeTableCode']]);
+		{
+			$selectResult = $this->element->select(['from' => $this->settings['nodeTableCode']]);
+			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
 
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['finalTableCode']]))
-			self::$nodeTable[$this->settings['finalTableCode']] = $this->element->select(['from' => $this->settings['finalTableCode']]);
+		{
+			$selectResult = $this->element->select(['from' => $this->settings['finalTableCode']]);
+			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
 
 		$node = [];
 		$localFieldValue = $this->row[$this->settings['localField']];
@@ -38,7 +44,7 @@ class EmMatrixField extends FieldBase
 			$nodeTableField = $this->settings['nodeTableField'];
 			$nodeTableFinalTableField = $this->settings['nodeTableFinalTableField'];
 			if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
-				return [];
+				return ['matrixValue'=>[]];
 
 			$nodeSearchedFields = array_column(
 				array_filter(self::$nodeTable[$this->settings['nodeTableCode']]['items'],
@@ -57,7 +63,7 @@ class EmMatrixField extends FieldBase
 		else
 		{
 			if (empty(self::$nodeTable[$this->settings['finalTableCode']]) || empty(self::$nodeTable[$this->settings['finalTableCode']]['items']))
-				return [];
+				return ['matrixValue'=>[]];
 
 			$node = array_filter(self::$nodeTable[$this->settings['finalTableCode']]['items'],
 			function($element) use ($finalTableField, $localFieldValue)
@@ -67,7 +73,7 @@ class EmMatrixField extends FieldBase
 		}
 
 		if(empty($node))
-			return [];
+			return ['matrixValue'=>[]];
 
 		return ['matrixValue' => array_values($node)];
 	}
@@ -114,8 +120,7 @@ class EmMatrixField extends FieldBase
 			'nodeTableFinalTableField' => isset($this->settings['nodeTableFinalTableField']) ? $this->settings['nodeTableFinalTableField'] : null,
 			'finalTableCode'           => isset($this->settings['finalTableCode']) ? $this->settings['finalTableCode'] : null,
 			'finalTableField'          => isset($this->settings['finalTableField']) ? $this->settings['finalTableField'] : null,
-			'field'                    => isset($whereArray['value']['field']['code']) ? quotemeta($whereArray['value']['field']['code']) : null,
-			'fieldType'                => isset($whereArray['value']['field']['type']) ? $whereArray['value']['field']['type'] : null,
+			'field'                    => isset($whereArray['value']['field']) ? quotemeta($whereArray['value']['field']) : null,
 			'value'                    => isset($whereArray['value']['value']) ? quotemeta($whereArray['value']['value']) : null,
 		];
 

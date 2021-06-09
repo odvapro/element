@@ -17,7 +17,7 @@ class Element
 		$this->emTypes = $this->getEmTypes();
 
 		$groups = empty($di->get('user')) ? [$di->get('group')] : $di->get('user')->groups;
-		$this->dbHooks = new DBHooks($groups);
+		$this->dbHooks = new DBHooks($groups, $this->di);
 	}
 
 	/**
@@ -167,15 +167,22 @@ class Element
 	 */
 	public function count($selectParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('count', $selectParams);
-		if (!$beforeHookResult) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('count', $selectParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
 
 		$selectParams = $this->_prepareRequestParams($selectParams);
 
 		$result = $this->eldb->count($selectParams);
-		$afterHookResult = $this->dbHooks->after('count', $selectParams, $result);
+		try {
+			$afterHookResult = $this->dbHooks->after('count', $selectParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
 
-		return $afterHookResult;
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 
 	/**
@@ -185,15 +192,23 @@ class Element
 	 */
 	public function delete($deleteParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('delete', $deleteParams);
-		if (!$beforeHookResult) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('delete', $deleteParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
 
 		$deleteParams = $this->_prepareRequestParams($deleteParams);
 
 		$result = $this->eldb->delete($deleteParams);
-		$afterHookResult = $this->dbHooks->after('delete', $deleteParams, $result);
 
-		return $afterHookResult;
+		try {
+			$afterHookResult = $this->dbHooks->after('delete', $deleteParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 
 	/**
@@ -203,15 +218,20 @@ class Element
 	 */
 	public function select($selectParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('select', $selectParams);
-		if (!$beforeHookResult || empty($selectParams) || empty($selectParams['from'])) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('select', $selectParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		if (empty($selectParams) || empty($selectParams['from'])) return ['success' => false, 'message' => 'empty_request'];
 
 		$tableColumns = $this->getColumns($selectParams['from']);
 		$selectParams = $this->_prepareRequestParams($selectParams);
 		$selectResult = $this->eldb->select($selectParams);
 
 		if ($selectResult === false)
-			return false;
+			return ['success' => false, 'message' => 'select_error'];
 
 		$resultItems = [];
 		$resultColumns = [];
@@ -240,9 +260,14 @@ class Element
 		}, $selectResult);
 
 		$result = ['items' => $resultItems, 'columns_types' => $resultColumns];
-		$afterHookResult = $this->dbHooks->after('select', $selectParams, $result);
 
-		return $afterHookResult;
+		try {
+			$afterHookResult = $this->dbHooks->after('select', $selectParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'code' => $e->getMessage()];
+		}
+
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 
 	/**
@@ -251,8 +276,12 @@ class Element
 	 */
 	public function update($updateParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('update', $updateParams);
-		if (!$beforeHookResult || empty($updateParams) || empty($updateParams['set'])) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('update', $updateParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+		if (empty($updateParams) || empty($updateParams['set'])) return ['success' => false, 'message' => 'update_error'];
 
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
@@ -269,7 +298,7 @@ class Element
 				$field = new EmStringField($fieldValue,$settings,$updateParams['set']);
 
 			$fieldSaveValue = $field->saveValue();
-			if($fieldSaveValue === NULL)
+			if($fieldSaveValue === null)
 				$set[] = "{$fieldCode} = NULL";
 			else
 				$set[] = "{$fieldCode} = '{$fieldSaveValue}'";
@@ -277,9 +306,14 @@ class Element
 		$updateParams['set'] = $set;
 
 		$result = $this->eldb->update($updateParams);
-		$afterHookResult = $this->dbHooks->after('update', $updateParams, $result);
 
-		return $afterHookResult;
+		try {
+			$afterHookResult = $this->dbHooks->after('update', $updateParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 
 	/**
@@ -288,34 +322,57 @@ class Element
 	 */
 	public function insert($insertParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('insert', $insertParams);
-		if (!$beforeHookResult || empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values'])) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('insert', $insertParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values']) || !is_array($insertParams['values'][0])) return ['success' => false, 'message' => 'empty_request'];
 
 		$tableColumns = $this->getColumns($insertParams['table']);
 
-		$valuesSet = [];
-		foreach ($insertParams['values'] as $fieldCode => $fieldValue)
+		$dbInsertParams = [
+			'table' => $insertParams['table'],
+			'columns' => [],
+			'values' => [],
+		];
+
+		foreach ($insertParams['values'] as $insertValue)
 		{
-			if (!isset($tableColumns[$fieldCode]))
-				continue;
-			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
-			$settings   = $tableColumns[$fieldCode]['em']['settings'];
+			$valuesSet = [];
+			foreach ($insertValue as $fieldCode => $fieldValue)
+			{
+				if (!isset($tableColumns[$fieldCode]))
+					continue;
+				$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
-			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue,$settings,$insertParams['values']);
-			else
-				$field = new EmStringField($fieldValue,$settings,$insertParams['values']);
+				if (class_exists($fieldClass))
+					$field = new $fieldClass($fieldValue,$settings,$insertValue);
+				else
+					$field = new EmStringField($fieldValue,$settings,$insertValue);
 
-			$fieldSaveValue = $field->saveValue();
-			$valuesSet[]    = $fieldSaveValue;
+				$fieldSaveValue = $field->saveValue();
+				$valuesSet[]    = $fieldSaveValue;
+			}
+			$dbInsertParams['values'][] = $valuesSet;
+			if (empty($dbInsertParams['columns']))
+				$dbInsertParams['columns'] = array_keys($insertValue);
 		}
-		$insertParams['columns'] = array_keys($insertParams['values']);
-		$insertParams['values']  = $valuesSet;
 
-		$result = $this->eldb->insert($insertParams);
-		$afterHookResult = $this->dbHooks->after('insert', $insertParams, $result);
+		$result = $this->eldb->insert($dbInsertParams);
 
-		return $afterHookResult;
+		try {
+			$afterHookResult = $this->dbHooks->after('insert', $insertParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		if (!$result)
+			return ['success' => false, 'message' => 'insert_error'];
+
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 
 	/**
@@ -324,22 +381,32 @@ class Element
 	 */
 	public function duplicate($duplicateParams)
 	{
-		$beforeHookResult = $this->dbHooks->before('duplicate', $duplicateParams);
-		if (!$beforeHookResult || empty($duplicateParams) || empty($duplicateParams['from']) || empty($duplicateParams['where'])) return false;
+		try {
+			$beforeHookResult = $this->dbHooks->before('duplicate', $duplicateParams);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		if (empty($duplicateParams) || empty($duplicateParams['from']) || empty($duplicateParams['where'])) return ['success' => false, 'message' => 'duplicate_error'];
 
 		$duplicateParams['table']   = $duplicateParams['from'];
 		$duplicateParams['columns'] = [];
 		$columns                    = $this->getColumns($duplicateParams['table']);
 		unset($duplicateParams['from']);
 
-		if (empty($columns)) return false;
+		if (empty($columns)) return ['success' => false, 'message' => 'wrong_columns'];
 
 		foreach ($columns as $columnName => $column)
 			if ($column['em']['settings']['code'] !== 'em_primary') $duplicateParams['columns'][] = $columnName;
 
 		$result = $this->eldb->duplicate($duplicateParams);
-		$afterHookResult = $this->dbHooks->after('duplicate', $duplicateParams, $result);
 
-		return $afterHookResult;
+		try {
+			$afterHookResult = $this->dbHooks->after('duplicate', $duplicateParams, $result);
+		} catch (EmException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+
+		return ['success' => true, 'result' => $afterHookResult];
 	}
 }

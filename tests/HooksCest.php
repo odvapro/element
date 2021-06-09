@@ -19,7 +19,7 @@ class HooksCest
 
 		$I->sendGET('/el/select/',
 		[
-			'select'     => ['from' => 'pages', 'call_error' => true],
+			'select' => ['from' => 'pages', 'call_error' => true],
 		]);
 
 		$I->seeResponseContainsJson(['success' => false]);
@@ -35,8 +35,7 @@ class HooksCest
 
 		$I->sendGET('/el/select/',
 		[
-			'select' => ['from' => 'pages'],
-			'limit'  => 1000,
+			'select' => ['from' => 'pages', 'limit' => 1000],
 		]);
 
 		$I->seeResponseCodeIs(200);
@@ -47,8 +46,7 @@ class HooksCest
 
 		$I->sendGET('/el/select/',
 		[
-			'select' => ['from' => 'pages', 'not_empty_description' => true],
-			'limit'  => 1000,
+			'select' => ['from' => 'pages', 'not_empty_description' => true, 'limit' => 1000],
 		]);
 
 		$I->seeResponseCodeIs(200);
@@ -71,8 +69,7 @@ class HooksCest
 
 		$I->sendGET('/el/select/',
 		[
-			'select' => ['from' => 'pages', 'not_empty_description' => true],
-			'limit'  => 1000,
+			'select' => ['from' => 'pages', 'not_empty_description' => true, 'limit' => 1000],
 			'token'  => $token,
 		]);
 
@@ -84,8 +81,7 @@ class HooksCest
 
 		$I->sendGET('/el/select/',
 		[
-			'select' => ['from' => 'pages', 'call_error_by_group' => true],
-			'limit'  => 1000,
+			'select' => ['from' => 'pages', 'call_error_by_group' => true, 'limit' => 1000],
 			'token'  => $token,
 		]);
 		$I->seeResponseContainsJson(['success' => false]);

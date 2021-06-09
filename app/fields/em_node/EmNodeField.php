@@ -9,21 +9,29 @@ class EmNodeField extends FieldBase
 	 */
 	public function getValue()
 	{
-		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']]))
-			self::$nodeTable[$this->settings['nodeTableCode']] = $this->element->select([
-				'from' => $this->settings['nodeTableCode'],
+		$nodeTableCode = $this->settings['nodeTableCode'];
+		$nodeFieldCode = $this->settings['nodeFieldCode'];
+		$nodeFieldCode = $this->settings['nodeSearchCode'];
+		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
+		{
+			$selectResult = $this->element->select([
+				'from' => $nodeTableCode,
 				'fields' => [
-					$this->settings['nodeFieldCode'],
-					$this->settings['nodeSearchCode'],
+					$nodeFieldCode,
+					$nodeFieldCode,
 				]
 			]);
 
-		if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
+			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
+
+		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
 			return [];
 
 		$node = null;
-		foreach (self::$nodeTable[$this->settings['nodeTableCode']]['items'] as $nodeItem) {
-			if ($nodeItem[$this->settings['nodeFieldCode']] == $this->fieldValue)
+
+		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem) {
+			if ($nodeItem[$nodeFieldCode] == $this->fieldValue)
 			{
 				$node = $nodeItem;
 				break;
@@ -34,9 +42,9 @@ class EmNodeField extends FieldBase
 			return [];
 
 		return [
-			'id'   => $node[$this->settings['nodeFieldCode']],
-			'name' => $node[$this->settings['nodeSearchCode']],
-			'url'  => "/table/{$this->settings['nodeTableCode']}/el/{$node[$this->settings['nodeFieldCode']]}"
+			'id'   => $node[$nodeFieldCode],
+			'name' => $node[$nodeFieldCode],
+			'url'  => "/table/{$nodeTableCode}/el/{$node[$nodeFieldCode]}"
 		];
 	}
 
@@ -46,13 +54,13 @@ class EmNodeField extends FieldBase
 	public function saveValue()
 	{
 		if(empty($this->fieldValue))
-			return NULL;
+			return null;
 
 		if(is_numeric($this->fieldValue))
 			return intval($this->fieldValue);
 
 		if(is_string($this->fieldValue))
-			return NULL;
+			return null;
 
 		if(!is_array($this->fieldValue))
 			return intval($this->fieldValue);

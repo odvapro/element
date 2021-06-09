@@ -28,10 +28,10 @@ class EmMatrixCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$this->create($I, 'block_type_nodes', [
+		$this->create($I, 'block_type_nodes', [[
 			'block_type_id' => 1,
 			'name' => 'Test Block',
-		]);
+		]]);
 
 		$this->select($I, 1, 'block_type');
 
@@ -68,10 +68,10 @@ class EmMatrixCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		$this->create($I, 'pages_products', [
+		$this->create($I, 'pages_products', [[
 			'page_id' => 30,
 			'product_id' => 20,
-		]);
+		]]);
 
 		$this->select($I, 30, 'pages');
 
@@ -94,10 +94,7 @@ class EmMatrixCest
 				'code' => 'products',
 				'operation' => 'IS NOT EMPTY',
 				'value' => [
-					'field' => [
-						'code' => 'id',
-						'type' => 'em_primary',
-					],
+					'field' => 'id',
 					'value' => '',
 				],
 			]

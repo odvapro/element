@@ -58,7 +58,6 @@ class ElPagination
 		if($totalPages != $roundedTotal)
 			$totalPages++;
 
-
 		//Fix next
 		if($pageNumber < $totalPages)
 			$next = $pageNumber + 1;

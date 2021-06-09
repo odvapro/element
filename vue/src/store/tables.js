@@ -335,7 +335,7 @@ const table =
 		{
 			var newParams = Object.assign(store.state.selectRequest, {});
 			newParams.select.page = pageParams.page;
-			newParams.limit = pageParams.limit;
+			newParams.select.limit = pageParams.limit;
 			await store.dispatch('select', newParams);
 		},
 

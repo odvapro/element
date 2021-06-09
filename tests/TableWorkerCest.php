@@ -262,8 +262,7 @@ class TableWorkerCest
 		// тест на лимит
 		$I->sendGET('/el/select',
 		[
-			'select' => ['from' => 'products'],
-			'limit'=>10
+			'select' => ['from' => 'products', 'limit'=>10],
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
@@ -372,11 +371,36 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => [
+				'values' => [[
 					'name'  => '11',
 					'email' => 'qwe',
 					'col'   => '222222',
 					'avat'  => '222211211',
+				]],
+			]
+		]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
+			[
+				'table' => 'test_table',
+				'values' => [
+					[
+						'name'  => '11',
+						'email' => 'qwe',
+						'col'   => '222222',
+						'avat'  => '222211211',
+					],
+					[
+						'name'  => '22',
+						'email' => 'qwe@a.a',
+						'col'   => '43243',
+						'avat'  => '655310',
+					],
 				],
 			]
 		]);
@@ -406,12 +430,29 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => [
+				'values' => [[
+					'name' => '11',
+					'avat' => 'qwe',
+					'222222',
+					'222211211',
+				]],
+			]
+		]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
+			[
+				'table' => 'test_table',
+				'values' => [[
 					'name' => '11',
 					'avat' => 'qwe',
 					'222222',
 					'222211211'
-				]
+				]],
 			]
 		]);
 
@@ -423,7 +464,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => ['33', 'qwe', '222222', '222211211']
+				'values' => [['33', 'qwe', '222222', '222211211']]
 			]
 		]);
 
@@ -435,7 +476,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => ['44']
+				'values' => [['44']]
 			]
 		]);
 
@@ -570,7 +611,7 @@ class TableWorkerCest
 		$result = json_decode($I->grabResponse(), 1);
 
 		if (!empty(count($result['result']['items'])))
-			throw new Exception("Element already exist", 1);
+			throw new EmException("Element already exist", 1);
 
 
 
@@ -656,7 +697,7 @@ class TableWorkerCest
 		$result = json_decode($I->grabResponse(), 1);
 
 		if (empty(count($result['result']['items'])))
-			throw new Exception("Element wasn't created", 1);
+			throw new EmException("Element wasn't created", 1);
 
 	}
 

@@ -9,7 +9,7 @@
 				v-for="column,columnIndex in columns"
 				@click.native="changeFieldValue(column)"
 				:key="columnIndex"
-			>{{ column.code }}</SelectOption>
+			>{{ column }}</SelectOption>
 		</Select>
 		<input
 			type="text"
@@ -62,20 +62,8 @@
 			},
 			async getColumns()
 			{
-				const availableTypes = /em_int|em_string|em_primary|em_date|em_text|em_flag/;
 				const columnsData = this.$store.getters.getColumns(this.settings.finalTableCode);
-				const columns = [];
-
-				if (columnsData)
-				{
-					Object.values(columnsData).forEach(el => {
-						if (el.em && availableTypes.test(el.em.type_info.code+''))
-							columns.push({
-								code: el.field,
-								type: el.em.type_info.code,
-							});
-					});
-				}
+				const columns = Object.values(columnsData).map(el => el.field);
 
 				this.$set(this, 'columns', columns);
 			},

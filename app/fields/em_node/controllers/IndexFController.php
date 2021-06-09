@@ -33,15 +33,19 @@ class IndexFController extends ControllerBase
 			]
 		];
 
-		$nodes  = $this->element->select($select);
+		$selectResult  = $this->element->select($select);
+		$nodes  = $selectResult['success'] ? $selectResult['result'] : [];
 		$result = [];
 
-		foreach($nodes['items'] as $node)
+		if (!empty($nodes))
 		{
-			$result[] = [
-				'id'   => $node[$nodeField],
-				'name' => $node[$nodeSearch],
-			];
+			foreach($nodes['items'] as $node)
+			{
+				$result[] = [
+					'id'   => $node[$nodeField],
+					'name' => $node[$nodeSearch],
+				];
+			}
 		}
 
 		return $this->jsonResult(['success' => true, 'result' => $result]);
