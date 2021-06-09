@@ -371,11 +371,36 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => [
+				'values' => [[
 					'name'  => '11',
 					'email' => 'qwe',
 					'col'   => '222222',
 					'avat'  => '222211211',
+				]],
+			]
+		]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
+			[
+				'table' => 'test_table',
+				'values' => [
+					[
+						'name'  => '11',
+						'email' => 'qwe',
+						'col'   => '222222',
+						'avat'  => '222211211',
+					],
+					[
+						'name'  => '22',
+						'email' => 'qwe@a.a',
+						'col'   => '43243',
+						'avat'  => '655310',
+					],
 				],
 			]
 		]);
@@ -405,12 +430,29 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => [
+				'values' => [[
+					'name' => '11',
+					'avat' => 'qwe',
+					'222222',
+					'222211211',
+				]],
+			]
+		]);
+
+		$I->seeResponseCodeIs(200);
+		$I->seeResponseContainsJson(['success' => false]);
+
+		$I->sendPOST('/el/insert/',
+		[
+			'insert' =>
+			[
+				'table' => 'test_table',
+				'values' => [[
 					'name' => '11',
 					'avat' => 'qwe',
 					'222222',
 					'222211211'
-				]
+				]],
 			]
 		]);
 
@@ -422,7 +464,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => ['33', 'qwe', '222222', '222211211']
+				'values' => [['33', 'qwe', '222222', '222211211']]
 			]
 		]);
 
@@ -434,7 +476,7 @@ class TableWorkerCest
 			'insert' =>
 			[
 				'table' => 'test_table',
-				'values' => ['44']
+				'values' => [['44']]
 			]
 		]);
 

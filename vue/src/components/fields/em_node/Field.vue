@@ -91,7 +91,7 @@
 					{
 						table   :data.tableCode,
 						columns :setColumns,
-						values  :setValues,
+						values  :[setValues],
 					},
 				});
 				let result = await this.$axios.post('/el/insert/',insertData);

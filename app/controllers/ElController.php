@@ -75,7 +75,8 @@ class ElController extends ControllerBase
 		return $this->jsonResult([
 			'success' => true,
 			'result'  => $insertResult,
-			'lastid'  => $lastId
+			'firstid' => +$lastId,
+			'lastid'  => +$lastId + count($insert['values']) - 1,
 		]);
 	}
 

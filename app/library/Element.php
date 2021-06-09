@@ -328,30 +328,40 @@ class Element
 			return ['success' => false, 'message' => $e->getMessage()];
 		}
 
-		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values'])) return ['success' => false, 'message' => 'empty_request'];
+		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values']) || !is_array($insertParams['values'][0])) return ['success' => false, 'message' => 'empty_request'];
 
 		$tableColumns = $this->getColumns($insertParams['table']);
 
-		$valuesSet = [];
-		foreach ($insertParams['values'] as $fieldCode => $fieldValue)
+		$dbInsertParams = [
+			'table' => $insertParams['table'],
+			'columns' => [],
+			'values' => [],
+		];
+
+		foreach ($insertParams['values'] as $insertValue)
 		{
-			if (!isset($tableColumns[$fieldCode]))
-				continue;
-			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
-			$settings   = $tableColumns[$fieldCode]['em']['settings'];
+			$valuesSet = [];
+			foreach ($insertValue as $fieldCode => $fieldValue)
+			{
+				if (!isset($tableColumns[$fieldCode]))
+					continue;
+				$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
+				$settings   = $tableColumns[$fieldCode]['em']['settings'];
 
-			if (class_exists($fieldClass))
-				$field = new $fieldClass($fieldValue,$settings,$insertParams['values']);
-			else
-				$field = new EmStringField($fieldValue,$settings,$insertParams['values']);
+				if (class_exists($fieldClass))
+					$field = new $fieldClass($fieldValue,$settings,$insertValue);
+				else
+					$field = new EmStringField($fieldValue,$settings,$insertValue);
 
-			$fieldSaveValue = $field->saveValue();
-			$valuesSet[]    = $fieldSaveValue;
+				$fieldSaveValue = $field->saveValue();
+				$valuesSet[]    = $fieldSaveValue;
+			}
+			$dbInsertParams['values'][] = $valuesSet;
+			if (empty($dbInsertParams['columns']))
+				$dbInsertParams['columns'] = array_keys($insertValue);
 		}
-		$insertParams['columns'] = array_keys($insertParams['values']);
-		$insertParams['values']  = $valuesSet;
 
-		$result = $this->eldb->insert($insertParams);
+		$result = $this->eldb->insert($dbInsertParams);
 
 		try {
 			$afterHookResult = $this->dbHooks->after('insert', $insertParams, $result);

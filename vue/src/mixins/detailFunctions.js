@@ -22,7 +22,7 @@ export default
 				insert:
 				{
 					table   :data.tableCode,
-					values  :setValues
+					values  :[setValues]
 				}
 			});
 			let result = await this.$axios.post('/el/insert/',insertData);
