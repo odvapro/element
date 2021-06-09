@@ -38,24 +38,24 @@ class GroupsController extends ControllerBase
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
-			return $this->jsonResult(['success'=>false,'msg'=>'no group id or user id']);
+			return $this->jsonResult(['success' => false,'msg'=>'no group id or user id']);
 
 		$records = EmGroupsUsers::find([
 			'conditions'=>"group_id = ?0 AND user_id = ?1",
 			'bind'=>[$groupId,$userId]
 		]);
 		if(count($records))
-			return $this->jsonResult(['success'=>false,'msg'=>'User already in group']);
+			return $this->jsonResult(['success' => false,'msg'=>'User already in group']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
-			return $this->jsonResult(['success'=>false,'msg'=>'No such group']);
+			return $this->jsonResult(['success' => false,'msg'=>'No such group']);
 
 		$record = new EmGroupsUsers();
 		$record->group_id = $groupId;
 		$record->user_id = $userId;
 		if(!$record->save())
-			return $this->jsonResult(['success'=>false,'msg'=>'Something goes wrong']);
+			return $this->jsonResult(['success' => false,'msg'=>'Something goes wrong']);
 
 		return $this->jsonResult(['success'=>true]);
 	}
@@ -71,21 +71,21 @@ class GroupsController extends ControllerBase
 		$userId = $this->request->getPost('id');
 		$groupId = $this->request->getPost('group');
 		if(empty($groupId) || empty($userId))
-			return $this->jsonResult(['success'=>false,'msg'=>'no group id or user id']);
+			return $this->jsonResult(['success' => false,'msg'=>'no group id or user id']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
-			return $this->jsonResult(['success'=>false,'msg'=>'No such group']);
+			return $this->jsonResult(['success' => false,'msg'=>'No such group']);
 
 		$records = EmGroupsUsers::find([
 			'conditions'=>"group_id = ?0 AND user_id = ?1",
 			'bind'=>[$groupId,$userId]
 		]);
 		if(!count($records))
-			return $this->jsonResult(['success'=>false,'msg'=>'User alreadey out of group']);
+			return $this->jsonResult(['success' => false,'msg'=>'User alreadey out of group']);
 
 		if(!$records->delete())
-			return $this->jsonResult(['success'=>false,'msg'=>'Something goes wrong']);
+			return $this->jsonResult(['success' => false,'msg'=>'Something goes wrong']);
 
 		return $this->jsonResult(['success'=>true]);
 	}
@@ -102,14 +102,14 @@ class GroupsController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'msg' => 'unable to delete admin group']);
 
 		if(empty($groupId))
-			return $this->jsonResult(['success'=>false,'msg'=>'no group id']);
+			return $this->jsonResult(['success' => false,'msg'=>'no group id']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
-			return $this->jsonResult(['success'=>false,'msg'=>'group not found']);
+			return $this->jsonResult(['success' => false,'msg'=>'group not found']);
 
 		if(!$group->delete())
-			return $this->jsonResult(['success'=>false,'msg'=>'something goes wrong']);
+			return $this->jsonResult(['success' => false,'msg'=>'something goes wrong']);
 
 		return $this->jsonResult(['success'=>true]);
 	}
@@ -129,15 +129,15 @@ class GroupsController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'msg' => 'unable to rename admin group']);
 
 		if(empty($groupId) || empty($name))
-			return $this->jsonResult(['success'=>false,'msg'=>'no group id or name']);
+			return $this->jsonResult(['success' => false,'msg'=>'no group id or name']);
 
 		$group = EmGroups::findFirstById($groupId);
 		if(!$group)
-			return $this->jsonResult(['success'=>false,'msg'=>'group dont find']);
+			return $this->jsonResult(['success' => false,'msg'=>'group dont find']);
 
 		$group->name = $name;
 		if(!$group->update())
-			return $this->jsonResult(['success'=>false,'msg'=>'something goes wrong']);
+			return $this->jsonResult(['success' => false,'msg'=>'something goes wrong']);
 
 		return $this->jsonResult(['success'=>true]);
 	}

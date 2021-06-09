@@ -13,11 +13,11 @@ class TviewController extends ControllerBase
 		$filters = $this->request->get('filters');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1.0]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
 		$tview->filter = $filters;
 		$tview->save();
 
@@ -32,11 +32,11 @@ class TviewController extends ControllerBase
 		$sort    = $this->request->get('sort');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1.0]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
 		$tview->sort = $sort;
 		$tview->save();
 
@@ -48,11 +48,11 @@ class TviewController extends ControllerBase
 		$tviewId = $this->request->get('tviewId');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'empty id']);
+			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1.1]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview']);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
 
 		$allFieldsData = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
 
@@ -69,7 +69,7 @@ class TviewController extends ControllerBase
 
 		$selectResult = $this->element->select($select);
 		if (!$selectResult['success'])
-			return $this->jsonResult(['success' => false, 'code' => $selectResult['code']]);
+			return $this->jsonResult(['success' => false, 'message' => $selectResult['message'], 'code' => $selectResult['code']]);
 		$allFields = $selectResult['result'];
 
 		$lastItemName = array_key_last($allFieldsData);

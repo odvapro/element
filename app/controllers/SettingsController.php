@@ -188,7 +188,7 @@ class SettingsController extends ControllerBase
 		$tagsList    = json_decode($tagsList,true);
 		$lastVersion = reset($tagsList);
 		if($lastVersion['name'] == $currentVersion)
-			return $this->jsonResult(['success'=>false,'msg'=>'You have latest version!']);
+			return $this->jsonResult(['success' => false,'msg'=>'You have latest version!']);
 
 		$diffUrl = "https://api.github.com/repos/odvapro/element/compare/{$currentVersion}...{$lastVersion['name']}";
 		$diffJson = file_get_contents($diffUrl, false, $context);
