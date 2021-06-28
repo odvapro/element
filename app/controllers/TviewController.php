@@ -13,11 +13,11 @@ class TviewController extends ControllerBase
 		$filters = $this->request->get('filters');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1.0]);
+			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 10]);
 		$tview->filter = $filters;
 		$tview->save();
 
@@ -32,11 +32,11 @@ class TviewController extends ControllerBase
 		$sort    = $this->request->get('sort');
 
 		if (empty($tviewId))
-			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1.0]);
+			return $this->jsonResult(['success' => false, 'message' => 'empty id', 'code' => 1]);
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 10]);
 		$tview->sort = $sort;
 		$tview->save();
 
@@ -52,7 +52,7 @@ class TviewController extends ControllerBase
 
 		$tview = EmViews::findFirstById($tviewId);
 		if(!$tview)
-			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 13.1]);
+			return $this->jsonResult(['success' => false, 'message' => 'cant find tview', 'code' => 10]);
 
 		$allFieldsData = array_filter($tview->settings['columns'], function($field){return $field['visible'] === 'true';});
 

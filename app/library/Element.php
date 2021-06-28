@@ -224,14 +224,14 @@ class Element
 			return ['success' => false, 'message' => $e->getMessage(), 'code' => $e->getCode()];
 		}
 
-		if (empty($selectParams) || empty($selectParams['from'])) return ['success' => false, 'message' => 'empty_request', 'code' => 1.0];
+		if (empty($selectParams) || empty($selectParams['from'])) return ['success' => false, 'message' => 'empty_request', 'code' => 1];
 
 		$tableColumns = $this->getColumns($selectParams['from']);
 		$selectParams = $this->_prepareRequestParams($selectParams);
 		$selectResult = $this->eldb->select($selectParams);
 
 		if ($selectResult === false)
-			return ['success' => false, 'message' => 'select_error', 'code' => 12.2];
+			return ['success' => false, 'message' => 'select_error', 'code' => 6];
 
 		$resultItems = [];
 		$resultColumns = [];
@@ -281,7 +281,7 @@ class Element
 		} catch (EmException $e) {
 			return ['success' => false, 'message' => $e->getMessage(), 'code' => $e->getCode()];
 		}
-		if (empty($updateParams) || empty($updateParams['set'])) return ['success' => false, 'message' => 'update_error', 'code' => 12.3];
+		if (empty($updateParams) || empty($updateParams['set'])) return ['success' => false, 'message' => 'update_error', 'code' => 7];
 
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
@@ -329,7 +329,7 @@ class Element
 		}
 
 		if (empty($insertParams) || empty($insertParams['table']) || empty($insertParams['values']) || !is_array($insertParams['values'][0]))
-			return ['success' => false, 'message' => 'empty_request', 'code' => 1.0];
+			return ['success' => false, 'message' => 'empty_request', 'code' => 1];
 
 		$tableColumns = $this->getColumns($insertParams['table']);
 
@@ -371,7 +371,7 @@ class Element
 		}
 
 		if (!$result)
-			return ['success' => false, 'message' => 'insert_error', 'code' => 12.4];
+			return ['success' => false, 'message' => 'insert_error', 'code' => 8];
 
 		return ['success' => true, 'result' => $afterHookResult];
 	}
@@ -395,7 +395,7 @@ class Element
 		$columns                    = $this->getColumns($duplicateParams['table']);
 		unset($duplicateParams['from']);
 
-		if (empty($columns)) return ['success' => false, 'message' => 'wrong_columns', 'code' => 12.5];
+		if (empty($columns)) return ['success' => false, 'message' => 'wrong_columns', 'code' => 9];
 
 		foreach ($columns as $columnName => $column)
 			if ($column['em']['settings']['code'] !== 'em_primary') $duplicateParams['columns'][] = $columnName;

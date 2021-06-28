@@ -31,7 +31,7 @@
 		 */
 		mounted()
 		{
-			this.isChecked = this.fieldValue;
+			this.isChecked = !!this.fieldValue;
 		},
 		methods:
 		{
