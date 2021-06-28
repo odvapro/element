@@ -7,15 +7,15 @@
 			</div>
 			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
 				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem}}</span></div>
-				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.nodeTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
+				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.finalTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
 			</div>
-			<div class="em-matrix-row-add">
+			<div class="em-matrix-row-add" @click="popupForCreateMatrixElement()">
 				<div class="em-matrix-row-add__icon">
 					<svg width="9" height="9">
 						<use xlink:href="#plus-gray"></use>
 					</svg>
 				</div>
-				<div class="em-matrix-row-add__text" @click="popupForCreateMatrixElement()">
+				<div class="em-matrix-row-add__text">
 					New
 				</div>
 			</div>
@@ -40,6 +40,8 @@
 	import DetailPopup from '@/components/popups/DetailPopup';
 	export default
 	{
+		props: ['fieldValue','fieldSettings','mode', 'view'],
+		components:{DetailPopup},
 		mixins: [detailFunctions],
 		data()
 		{
@@ -52,8 +54,6 @@
 				detailElement: {},
 			};
 		},
-		components:{DetailPopup},
-		props: ['fieldValue','fieldSettings','mode', 'view'],
 		computed:
 		{
 			tableHead()
@@ -67,11 +67,15 @@
 				return tableCols;
 			},
 		},
+		mounted()
+		{
+			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
+		},
 		methods:
 		{
 			updateMatrixTableElement(element)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
 					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
@@ -83,12 +87,12 @@
 				if (typeof this.fieldValue.matrixValue == 'undefined')
 					this.$set(this.fieldValue, 'matrixValue', []);
 
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 				this.fieldValue.matrixValue.push(element);
 			},
 			removeMatrixTableElement(element)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
+				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
 					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
@@ -98,25 +102,24 @@
 			popupForEditMatrixColumn(row, rowIndex)
 			{
 				this.currentElement  = false;
-				let primaryKeyCode   = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
+				let primaryKeyCode   = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 				this.detailTableId   = row[primaryKeyCode];
-				this.detailTableCode = this.fieldSettings.nodeTableCode;
+				this.detailTableCode = this.fieldSettings.finalTableCode;
 				this.detailName      = false;
 				this.showDetail      = true;
 			},
 			bindDefaultColumnValues()
 			{
 				this.currentElement = [];
-				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
+				let table = this.$store.getters.getTable(this.fieldSettings.finalTableCode);
 				for (let column in table.columns)
 					this.currentElement[column] = '';
-
-				this.currentElement[this.fieldSettings.nodeField] = this.detailElement[this.fieldSettings.keyField];
+				this.currentElement[this.fieldSettings.finalTableField] = this.detailElement[this.fieldSettings.localField];
 			},
 			popupForCreateMatrixElement()
 			{
 				this.bindDefaultColumnValues();
-				this.detailTableCode = this.fieldSettings.nodeTableCode;
+				this.detailTableCode = this.fieldSettings.finalTableCode;
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},
@@ -133,7 +136,7 @@
 			{
 				if(result.data.success == true)
 				{
-					let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.nodeTableCode);
+					let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 					data.selectedElement[primaryKeyCode] = result.data.lastid;
 					this.createMatrixTableElement(data.selectedElement);
 					this.ElMessage(this.$t('elMessages.element_created'));
@@ -155,10 +158,6 @@
 				this.ElMessage(this.$t('elMessages.element_removed'));
 				this.removeMatrixTableElement(data.selectedElement);
 			},
-		},
-		mounted()
-		{
-			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
 		},
 	};
 </script>

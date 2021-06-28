@@ -11,14 +11,14 @@ class EmNodeField extends FieldBase
 	{
 		$nodeTableCode = $this->settings['nodeTableCode'];
 		$nodeFieldCode = $this->settings['nodeFieldCode'];
-		$nodeFieldCode = $this->settings['nodeSearchCode'];
+		$nodeSearchCode = $this->settings['nodeSearchCode'];
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
 			$selectResult = $this->element->select([
 				'from' => $nodeTableCode,
 				'fields' => [
 					$nodeFieldCode,
-					$nodeFieldCode,
+					$nodeSearchCode,
 				]
 			]);
 
@@ -43,7 +43,7 @@ class EmNodeField extends FieldBase
 
 		return [
 			'id'   => $node[$nodeFieldCode],
-			'name' => $node[$nodeFieldCode],
+			'name' => $node[$nodeSearchCode],
 			'url'  => "/table/{$nodeTableCode}/el/{$node[$nodeFieldCode]}"
 		];
 	}

@@ -70,9 +70,9 @@
 				if(!result.data.success)
 					return this.ElMessage(result.data.message);
 				this.$emit('removeElement', ...[data, result]);
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.detail-popup
