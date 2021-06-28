@@ -13,7 +13,7 @@ class AuthController extends ControllerBase
 		$password = $this->request->getPost('password');
 
 		if(empty($login) || empty($password))
-			return $this->jsonResult(['success' => false, 'message' => 'No params', 'code' => 1.0]);
+			return $this->jsonResult(['success' => false, 'message' => 'No params', 'code' => 1]);
 
 		$user = EmUsers::findFirst([
 			'conditions' => "password = ?1 AND (login = ?0 OR email = ?0)",
@@ -21,7 +21,7 @@ class AuthController extends ControllerBase
 		]);
 
 		if(!$user)
-			return $this->jsonResult(['success' => false, 'message' => 'User is not found', 'code' => 11.1]);
+			return $this->jsonResult(['success' => false, 'message' => 'User is not found', 'code' => 3]);
 
 		$this->session->set('auth', $user->id);
 		$result = [
@@ -48,7 +48,7 @@ class AuthController extends ControllerBase
 		$email = $this->request->getPost('email');
 
 		if(empty($email))
-			return $this->jsonResult(['success' => false, 'message' => 'No params', 'code' => 1.0]);
+			return $this->jsonResult(['success' => false, 'message' => 'No params', 'code' => 1]);
 
 		$user = EmUsers::findFirst([
 			'conditions' => "email = ?0",
@@ -56,7 +56,7 @@ class AuthController extends ControllerBase
 		]);
 
 		if(!$user)
-			return $this->jsonResult(['success' => false, 'message' => 'Incorrect email', 'code' => 11.1]);
+			return $this->jsonResult(['success' => false, 'message' => 'Incorrect email', 'code' => 3]);
 
 		$temporaryPass = uniqid();
 		$temporaryPass = substr($temporaryPass, -6);
@@ -66,7 +66,7 @@ class AuthController extends ControllerBase
 		]);
 
 		if($error)
-			return $this->jsonResult(['success' => false, 'message' => 'Error save', 'code' => 2.0]);
+			return $this->jsonResult(['success' => false, 'message' => 'Error save', 'code' => 2]);
 
 		mail($user->email, 'Forgot Password', "You new password: {$temporaryPass}", "From:no-reply@gmail.com");
 
@@ -79,7 +79,7 @@ class AuthController extends ControllerBase
 	public function isLoggedAction()
 	{
 		if(!$this->user && empty($this->user))
-			return $this->jsonResult(['success' => false, 'message' => 'no auth', 'code' => 11.2]);
+			return $this->jsonResult(['success' => false, 'message' => 'no auth', 'code' => 4]);
 
 		return $this->jsonResult(['success' => true, 'userid' => $this->user->id]);
 	}
