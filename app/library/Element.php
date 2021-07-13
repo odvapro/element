@@ -299,9 +299,13 @@ class Element
 
 			$fieldSaveValue = $field->saveValue();
 			if($fieldSaveValue === null)
-				$set[] = "{$fieldCode} = NULL";
-			else
-				$set[] = "{$fieldCode} = '{$fieldSaveValue}'";
+				$set[] = "`{$fieldCode}` = NULL";
+			else {
+				if (is_int($fieldSaveValue))
+					$set[] = "`{$fieldCode}` = {$fieldSaveValue}";
+				else
+					$set[] = "`{$fieldCode}` = '{$fieldSaveValue}'";
+			}
 		}
 		$updateParams['set'] = $set;
 

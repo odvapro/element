@@ -255,6 +255,8 @@
 				this.sortModified = !!tview.sort.length;
 				this.filterModified = !!tview.filter.length;
 
+				if (!tview.settings || !tview.settings.columns) return;
+
 				for (let column of Object.values(tview.settings.columns))
 					if (column.visible !== 'true') { this.propertiesModified = true; break; }
 			},

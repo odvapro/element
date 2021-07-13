@@ -36,7 +36,7 @@ class EmCheckField extends FieldBase
 	 */
 	public function saveValue()
 	{
-		if($this->fieldValue == 'false')
+		if($this->fieldValue == 'false' || empty($this->fieldValue))
 			return $this->getUnChechedString();
 		return $this->getChechedString();
 	}

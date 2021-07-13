@@ -51,7 +51,6 @@
 				detailTableId: false,
 				detailName: false,
 				currentElement: false,
-				detailElement: {},
 			};
 		},
 		computed:
@@ -66,10 +65,10 @@
 					tableCols.push(code);
 				return tableCols;
 			},
-		},
-		mounted()
-		{
-			this.detailElement = Object.assign(this.$store.state.tables.selectedElement, {});
+			detailElement()
+			{
+				return this.$store.state.tables.selectedElement;
+			},
 		},
 		methods:
 		{
@@ -80,7 +79,6 @@
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
 					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
 						return this.fieldValue.matrixValue[index] = element;
-
 			},
 			createMatrixTableElement(element)
 			{

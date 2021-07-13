@@ -72,6 +72,10 @@
 				deep: true,
 			},
 		},
+		mounted()
+		{
+			this.$set(this, 'localFieldValue', this.fieldValue);
+		},
 		methods:
 		{
 			async createElement(data)

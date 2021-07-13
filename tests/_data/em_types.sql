@@ -48,7 +48,9 @@ VALUES
   (21,'block_type','datetime','em_date',0,NULL,NULL),
   (22,'block_type','node','em_node',0,'{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}',NULL),
   (23,'block_type','matrix','em_matrix',0,'{\"finalTableCode\":\"block_type_nodes\",\"localField\":\"id\",\"finalTableField\":\"block_type_id\"}',NULL),
-  (24,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL);
+  (24,'block_type','int','em_int',0,'',NULL),
+  (25,'block_type','flag','em_check',0,'',NULL),
+  (26,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;

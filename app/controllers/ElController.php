@@ -91,7 +91,7 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => $updateResult['message'], 'code' => $updateResult['code']]);
 
 		$updateResult = $updateResult['result'];
-		return $this->jsonResult(['success' => true, 'result' => $updateResult]);
+		return $this->jsonResult(['success' => $updateResult, 'result' => $updateResult]);
 	}
 
 	/**
@@ -211,6 +211,7 @@ class ElController extends ControllerBase
 
 			$hasAccess = array_filter($table['access'], function ($accessItem) use ($groupsId) { return in_array($accessItem['group_id'], $groupsId); });
 			if (empty($hasAccess)) continue;
+
 			$emViewsTable = EmViews::findByTable($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
 
@@ -233,6 +234,12 @@ class ElController extends ControllerBase
 
 			foreach ($emViewsTable as $tview)
 			{
+				if (!empty($tview->settings['columns']))
+				{
+					$tview->settings['columns'] = array_intersect_key($tview->settings['columns'], $table['columns']);
+					$tview->save();
+					$tview->refresh();
+				}
 				$table['tviews'][] = $tview->toArray();
 				if ($tview->default != '1')
 					continue;

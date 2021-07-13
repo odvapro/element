@@ -6,13 +6,13 @@
 				type="number"
 				class="el-inp-noborder em-int-number"
 				@change="changeValue"
-				:value="fieldValue"
+				:value="localFieldValue"
 				:placeholder="$t('empty')"
 			/>
 		</template>
 		<template v-else>
-			{{ fieldValue }}
-			<span v-if="!fieldValue" class="el-empty">{{$t('empty')}}</span>
+			{{ localFieldValue }}
+			<span v-if="!localFieldValue" class="el-empty">{{$t('empty')}}</span>
 		</template>
 	</div>
 </template>
@@ -20,9 +20,16 @@
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
+		data()
+		{
+			return {
+				localFieldValue: 0,
+			};
+		},
 		mounted()
 		{
 			this.setDefaultSettings();
+			this.localFieldValue = +this.fieldValue || 0;
 		},
 		methods:
 		{
@@ -61,7 +68,7 @@
 			{
 				if (!this.validate(+event.target.value))
 				{
-					this.$refs.intInput.value = this.fieldValue;
+					this.$refs.intInput.value = this.localFieldValue;
 
 					return this.ElMessage.error(this.$t('fieldEmInteger.min_max_error', {
 						min: (this.fieldSettings.min && this.fieldSettings.min.value) ? this.fieldSettings.min.value : 0,

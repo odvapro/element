@@ -2,7 +2,7 @@
 	<Detail
 		:tableCode="$route.params.tableCode"
 		:name="$route.name"
-		:id="$route.params.id"
+		:id.sync="$route.params.id"
 		@cancel="cancel"
 		@openDetail="openDetail"
 		@saveElement="saveElementDetail"

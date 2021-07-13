@@ -65,7 +65,7 @@ class EmNodeField extends FieldBase
 		if(!is_array($this->fieldValue))
 			return intval($this->fieldValue);
 
-		return $this->fieldValue['id'];
+		return intval($this->fieldValue['id']);
 	}
 
 	/**

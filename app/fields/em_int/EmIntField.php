@@ -46,6 +46,6 @@ class EmIntField extends FieldBase
 				throw new EmException("{$this->settings['code']}: Minimum value is {$this->settings['min']['value']}", 14);
 		}
 
-		return $this->fieldValue;
+		return intval($this->fieldValue);
 	}
 }
