@@ -204,7 +204,8 @@ class SqlAdapter extends PdoAdapter
 		if (empty($columns) || empty($columns))
 			return false;
 
-		$columns   = implode(', ', $columns);
+		$columns   = implode('`, `', $columns);
+		$columns = "`" . $columns . "`";
 
 		$valuesStr = [];
 		foreach ($values as $valueSet) {
@@ -221,41 +222,7 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
-			$this->db->execute($sql,array_merge(...$values));
-		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
-				"insertRequest: {$sql}"
-			);
-			return false;
-		}
-
-		return true;
-	}
-	public function old_insert($requestParams)
-	{
-		$sql           = '';
-		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
-		$values        = isset($requestParams['values']) ? $requestParams['values'] : [];
-
-		if (empty($table) || empty($values))
-			return false;
-
-		if (empty($columns) || empty($columns))
-			return false;
-
-		$columns   = implode(', ', $columns);
-		$sqlValues = [];
-
-		foreach ($values as $insertValue)
-			$sqlValues[] = "?";
-
-		$sqlValues = implode(', ', $sqlValues);
-		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$sqlValues })";
-
-		try
-		{
-			$this->db->execute($sql,$values);
+			$this->db->execute($sql, array_merge(...$values));
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"insertRequest: {$sql}"

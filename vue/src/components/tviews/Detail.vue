@@ -85,6 +85,13 @@
 				fieldNames:{}
 			}
 		},
+		watch:
+		{
+			id(newId)
+			{
+				this.selectedElement.id = newId;
+			},
+		},
 		mounted()
 		{
 			this.selectElement();
