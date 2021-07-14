@@ -23,22 +23,27 @@
 </template>
 <script>
 	import EditorJS from '@editorjs/editorjs';
-	const Table = require('@editorjs/table');
-	const Header = require('@editorjs/header');
+	import Table from '@editorjs/table';
+	import Header from '@editorjs/header';
+	import RawTool from '@editorjs/raw';
+	import InlineCode from '@editorjs/inline-code';
+	import Quote from '@editorjs/quote';
+	import NestedList from '@editorjs/nested-list';
 	import ImageTool from '@editorjs/image';
+
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
-		components:{},
+		components: {},
 		data()
 		{
 			return {
-				localValue:this.fieldValue,
-				showEditor:false,
-				editor:false,
+				localValue: this.fieldValue,
+				showEditor: false,
+				editor: false,
 				fieldCode: '',
-				fieldName: ''
-			}
+				fieldName: '',
+			};
 		},
 		computed:
 		{
@@ -52,8 +57,7 @@
 					let time =(typeof this.localValue.time != 'undefined')?this.localValue.time:0;
 					return `${blocksCount} blocks, last edit ${time}`;
 				}
-
-			}
+			},
 		},
 		beforeDestroy()
 		{
@@ -104,17 +108,21 @@
 			{
 				this.showEditor = true;
 				this.getPopupTitle();
-				let data = {};
-				if(typeof this.localValue == 'string')
-					data = {blocks: [{"type": "paragraph", "data": {"text": this.localValue } } ] };
-				if(typeof this.localValue == 'object')
-					data = this.localValue;
+				let data = this.localValue && typeof this.localValue == 'object'
+					? this.localValue
+					: {blocks: [{"type": "paragraph", "data": {"text": this.localValue } } ] };
+
 				let self = this;
 				this.editor = new EditorJS({
+					logLevel: 'ERROR',
 					holderId : 'el-editor',
 					data     : data,
 					tools:
 					{
+						quote: Quote,
+						list: NestedList,
+						raw: RawTool,
+						inlineCode: InlineCode,
 						header: Header,
 						table:
 						{
