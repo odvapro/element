@@ -75,7 +75,7 @@
 
 	export default
 	{
-		props: ['tableCode', 'name', 'id', 'element'],
+		props: ['tableCode', 'name', 'id', 'element', 'updatedElAt'],
 		components: {MainField, MobileBurger},
 		data()
 		{
@@ -90,6 +90,10 @@
 			id(newId)
 			{
 				this.selectedElement.id = newId;
+			},
+			updatedElAt(val)
+			{
+				this.selectElement();
 			},
 		},
 		mounted()
@@ -169,23 +173,22 @@
 			/**
 			 * Сохранение элемента
 			 */
-			async saveElement()
+			saveElement()
 			{
-				await this.$emit('saveElement', {
+				this.$emit('saveElement', {
 					selectedElement : this.selectedElement,
-					tableCode       : this.tableCode
+					tableCode       : this.tableCode,
 				});
-				this.selectElement();
 			},
 
 			/**
 			 * Создание элемента переход на страницу редактирования
 			 */
-			async createElement()
+			createElement()
 			{
 				this.$emit('createElement', {
 					selectedElement : this.selectedElement,
-					tableCode       : this.tableCode
+					tableCode       : this.tableCode,
 				});
 			},
 
@@ -200,15 +203,15 @@
 			/**
 			 * Удаление элемента
 			 */
-			async remove()
+			remove()
 			{
 				this.$emit('removeElement', {
 					selectedElement : this.selectedElement,
-					tableCode       : this.tableCode
+					tableCode       : this.tableCode,
 				});
-			}
-		}
-	}
+			},
+		},
+	};
 </script>
 <style lang="scss">
 	.detail

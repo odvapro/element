@@ -8,6 +8,7 @@
 				:name="name"
 				:id="id"
 				:element="element"
+				:updatedElAt.sync="updatedElAt"
 				@cancel="cancel"
 				@openDetail="openDetail"
 				@saveElement="saveDetailElement"
@@ -25,6 +26,12 @@
 		props: ['tableCode', 'name', 'id', 'visible', 'element'],
 		components: {Detail},
 		mixins: [detailFunctions],
+		data()
+		{
+			return {
+				updatedElAt: new Date(),
+			};
+		},
 		computed:
 		{
 			isPopupVisible:
@@ -55,6 +62,7 @@
 				if(!result.data.success)
 					return this.ElMessage(result.data.message);
 				this.$emit('saveElement', ...[data, result]);
+				this.updatedElAt = new Date();
 			},
 			async createDetailElement(data)
 			{
