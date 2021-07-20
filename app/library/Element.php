@@ -152,7 +152,7 @@ class Element
 			else
 				$field = new EmStringField('',$settings);
 
-			$wherePart['code'] = $field->getCollationSql($wherePart);
+			$wherePart['code_sql'] = $field->getCollationSql($wherePart);
 			return $wherePart;
 
 		}, $selectParams['where']['fields']);

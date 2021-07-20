@@ -37,7 +37,7 @@ class SqlAdapter extends PdoAdapter
 	private function buildWhere($whereArray)
 	{
 		if(empty($whereArray['fields']))
-			return $whereArray['code'];
+			return isset($whereArray['code_sql']) ? $whereArray['code_sql'] : $whereArray['code'];
 
 		$fieldsSqls = [];
 		foreach ($whereArray['fields'] as $field)

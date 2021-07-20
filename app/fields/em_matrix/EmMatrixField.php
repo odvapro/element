@@ -3,8 +3,7 @@
 class EmMatrixField extends FieldBase
 {
 	static $nodeTable = [];
-	static $finalTable = [];
-
+	protected $settings = [];
 	/**
 	 * Достать значение поля
 	 */
@@ -12,34 +11,18 @@ class EmMatrixField extends FieldBase
 	{
 		if (
 			!isset($this->settings['localField'])
+			|| !isset($this->settings['localTableCode'])
 			|| !isset($this->settings['finalTableCode'])
 			|| !isset($this->settings['finalTableField'])
 		) return ['matrixValue'=>[]];
-		$isManyToMany = isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') : false;
-
-		if ($isManyToMany && (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['nodeTableCode']])))
-		{
-			$selectResult = $this->element->select(['from' => $this->settings['nodeTableCode']]);
-			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
-		}
-
-		if (empty(self::$nodeTable) || empty(self::$nodeTable[$this->settings['finalTableCode']]))
-		{
-			$selectResult = $this->element->select(['from' => $this->settings['finalTableCode']]);
-			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
-		}
-
-		$node = [];
+		$this->settings['isManyToMany'] = isset($this->settings['isManyToMany']) && isset($this->settings['nodeTableCode']) && isset($this->settings['nodeTableField']) && isset($this->settings['nodeTableFinalTableField']) ? ($this->settings['isManyToMany'] === 'true') : false;
+		$this->getMatrixTable();
+		$nodeTable = [];
 		$localFieldValue = $this->row[$this->settings['localField']];
 
 		$finalTableField = $this->settings['finalTableField'];
 
-		if (
-			$isManyToMany
-			&& isset($this->settings['nodeTableCode'])
-			&& isset($this->settings['nodeTableField'])
-			&& isset($this->settings['nodeTableFinalTableField'])
-		)
+		if ($this->settings['isManyToMany'])
 		{
 			$nodeTableField = $this->settings['nodeTableField'];
 			$nodeTableFinalTableField = $this->settings['nodeTableFinalTableField'];
@@ -78,6 +61,36 @@ class EmMatrixField extends FieldBase
 		return ['matrixValue' => array_values($node)];
 	}
 
+	public function getMatrixTable()
+	{
+		if ($this->settings['isManyToMany'] && empty(self::$nodeTable[$this->settings['nodeTableCode']]))
+		{
+			$selectResult = $this->element->select([
+				'from' => $this->settings['nodeTableCode'],
+				'fields' => $this->getColumnsForFetch($this->settings['nodeTableCode']),
+			]);
+			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
+
+		if (empty(self::$nodeTable[$this->settings['finalTableCode']]))
+		{
+			$selectResult = $this->element->select([
+				'from' => $this->settings['finalTableCode'],
+				'fields' => $this->getColumnsForFetch($this->settings['finalTableCode']),
+			]);
+			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
+		}
+	}
+
+	public function getColumnsForFetch($tableCode)
+	{
+		$columns = array_filter($this->element->getColumns($tableCode), function($column)
+		{
+			return $column['em']['type'] !== 'em_matrix';
+		});
+		return array_keys($columns);
+	}
+
 	/**
 	 * Сохранить значение
 	 */
@@ -105,6 +118,43 @@ class EmMatrixField extends FieldBase
 		];
 	}
 
+	public function getCollationSqlWhere($whereArray)
+	{
+		if (empty($whereArray['operation']) || empty($whereArray['code'])) return '';
+		switch ($whereArray['operation']) {
+			case 'IS NOT EMPTY':
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"\"";
+			case 'IS EMPTY':
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL";
+			case 'IS':
+				$whereArray['value'] = quotemeta($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = \"{$whereArray['value']}\"";
+			case 'IS NOT':
+				$whereArray['value'] = quotemeta($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"{$whereArray['value']}\" ";
+			case 'CONTAINS':
+				$whereArray['value'] = quotemeta($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} LIKE \"%{$whereArray['value']}%\"";
+			case 'DOES NOT CONTAIN':
+				$whereArray['value'] = quotemeta($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE \"%{$whereArray['value']}%\"";
+			case 'IS LARGER':
+				$whereArray['value'] = intval($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} >= \"{$whereArray['value']}\"";
+			case 'IS SMALLER':
+				$whereArray['value'] = intval($whereArray['value']);
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <= \"{$whereArray['value']}\"";
+		}
+		return '';
+	}
+
+	protected function getTemplate($where)
+	{
+		if ($this->settings['isManyToMany'])
+			return "{$this->settings['localField']} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} WHERE {$where} )";
+		return "{$this->settings['localField']} IN (SELECT {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} FROM {$this->settings['finalTableCode']} WHERE  {$where} )";
+	}
+
 	/**
 	 * Return collation SQL Where
 	 * @var $whereArray = ['code' => id, 'operation' => IS_NOT_EMPTY 'value' =>]
@@ -112,7 +162,8 @@ class EmMatrixField extends FieldBase
 	 */
 	public function getCollationSql($whereArray)
 	{
-		$settings = [
+		if (empty($whereArray['value']) || !is_array(array_values($whereArray['value'])[0])) return '';
+		$this->settings = [
 			'isManyToMany'             => isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') && isset($this->settings['nodeTableCode']) && isset($this->settings['nodeTableField']) && isset($this->settings['nodeTableFinalTableField']) : false,
 			'localField'               => isset($this->settings['localField']) ? $this->settings['localField'] : null,
 			'nodeTableCode'            => isset($this->settings['nodeTableCode']) ? $this->settings['nodeTableCode'] : null,
@@ -120,43 +171,23 @@ class EmMatrixField extends FieldBase
 			'nodeTableFinalTableField' => isset($this->settings['nodeTableFinalTableField']) ? $this->settings['nodeTableFinalTableField'] : null,
 			'finalTableCode'           => isset($this->settings['finalTableCode']) ? $this->settings['finalTableCode'] : null,
 			'finalTableField'          => isset($this->settings['finalTableField']) ? $this->settings['finalTableField'] : null,
-			'field'                    => isset($whereArray['value']['field']) ? quotemeta($whereArray['value']['field']) : null,
-			'value'                    => isset($whereArray['value']['value']) ? quotemeta($whereArray['value']['value']) : null,
 		];
 
 		// если не хватает конфига
 		if (
-			empty($settings['localField'])
-			|| empty($settings['finalTableCode'])
-			|| empty($settings['finalTableField'])
-			|| empty($settings['field'])
+			empty($this->settings['localField'])
+			|| empty($this->settings['finalTableCode'])
+			|| empty($this->settings['finalTableField'])
 		) return '';
 
-		$getTemplate = function($where) use ($settings)
-		{
-			if ($settings['isManyToMany'])
-				return "{$settings['localField']} IN (SELECT {$settings['nodeTableCode']}.{$settings['nodeTableField']} FROM {$settings['nodeTableCode']} JOIN {$settings['finalTableCode']} ON {$settings['finalTableCode']}.{$settings['finalTableField']} = {$settings['nodeTableCode']}.{$settings['nodeTableFinalTableField']} {$where} )";
-			return "{$settings['localField']} IN (SELECT {$settings['finalTableCode']}.{$settings['finalTableField']} FROM {$settings['finalTableCode']} {$where} )";
-		};
-
-		switch ($whereArray['operation']) {
-			case 'IS NOT EMPTY':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} <> \"\"");
-			case 'IS EMPTY':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} = \"\" OR {$settings['finalTableCode']}.{$settings['field']} IS NULL");
-			case 'IS':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} = \"{$settings['value']}\"");
-			case 'IS NOT':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} <> \"{$settings['value']}\" ");
-			case 'CONTAINS':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} LIKE \"%{$settings['value']}%\"");
-			case 'DOES NOT CONTAIN':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} LIKE \"%{$settings['value']}%\"");
-			case 'IS LARGER':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} >= \"{$settings['value']}\"");
-			case 'IS SMALLER':
-				return $getTemplate("WHERE {$settings['finalTableCode']}.{$settings['field']} <= \"{$settings['value']}\"");
+		$where = '';
+		foreach ($whereArray['value'] as $field) {
+			$collation = $this->getCollationSqlWhere($field);
+			if (!empty($where)) $collation = " {$whereArray['operation']} $collation";
+			$where .= $collation;
 		}
-		return '';
+		if (empty($where)) return '';
+
+		return $this->getTemplate($where);
 	}
 }
