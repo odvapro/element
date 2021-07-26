@@ -11,7 +11,6 @@ class EmMatrixField extends FieldBase
 	{
 		if (
 			!isset($this->settings['localField'])
-			|| !isset($this->settings['localTableCode'])
 			|| !isset($this->settings['finalTableCode'])
 			|| !isset($this->settings['finalTableField'])
 		) return ['matrixValue'=>[]];
