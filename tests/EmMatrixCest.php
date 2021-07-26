@@ -92,11 +92,11 @@ class EmMatrixCest
 		$this->select($I, 0, 'pages', [
 			[
 				'code' => 'products',
-				'operation' => 'IS NOT EMPTY',
-				'value' => [
-					'field' => 'id',
+				'value' => [[
+					'code' => 'id',
+					'operation' => 'IS NOT EMPTY',
 					'value' => '',
-				],
+				]],
 			]
 		]);
 		$result = json_decode($I->grabResponse(), true)['result'];

@@ -11,20 +11,30 @@ class SqlAdapter extends PdoAdapter
 	 * @param  string or array
 	 * @return string or array
 	 */
-	private function escapeRealStr($params)
+	private function escapeRealStr($params, $escapeQuotes = true)
 	{
 		if (!is_array($params))
-			return quotemeta($params);
+		{
+			if (!empty($params) && $escapeQuotes)
+				$params = preg_replace("/'/", "\'", quotemeta($params));
+			elseif (!empty($params))
+				$params = quotemeta($params);
+
+			return $params;
+		}
 
 		foreach ($params as &$item)
 		{
 			if (!is_array($item))
 			{
-				$item = quotemeta($item);
+				if (!empty($item) && $escapeQuotes)
+					$item = preg_replace("/'/", "\'", quotemeta($item));
+				elseif (!empty($item))
+					$item = quotemeta($item);
 				continue;
 			}
 
-			$item = $this->escapeRealStr($item);
+			$item = $this->escapeRealStr($item, $escapeQuotes);
 		}
 
 		return $params;
@@ -37,7 +47,7 @@ class SqlAdapter extends PdoAdapter
 	private function buildWhere($whereArray)
 	{
 		if(empty($whereArray['fields']))
-			return $whereArray['code'];
+			return isset($whereArray['code_sql']) ? $whereArray['code_sql'] : $whereArray['code'];
 
 		$fieldsSqls = [];
 		foreach ($whereArray['fields'] as $field)
@@ -107,6 +117,10 @@ class SqlAdapter extends PdoAdapter
 				$sql,
 				Phalcon\Db::FETCH_ASSOC
 			);
+			foreach ($select as &$selectItem) {
+				foreach ($selectItem as &$selectValue)
+					if (!empty($selectValue)) $selectValue = stripslashes($selectValue);
+			}
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"selectError: {$e->getMessage()}"
@@ -160,16 +174,28 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function update($requestParams)
 	{
+		$where         = isset($requestParams['where']) ? $this->escapeRealStr($requestParams['where'], false) : [];
+		unset($requestParams['where']);
 		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$set           = isset($requestParams['set']) ? $requestParams['set'] : [];
-		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$set           = isset($requestParams['set']) ? $this->escapeRealStr($requestParams['set']) : [];
 
 		if (empty($table) || empty($set))
 			return false;
 
-		$sql .= "UPDATE {$table} SET " . implode(', ', $set) . " ";
+		$setStr = '';
+		foreach ($set as $setField => $setItem) {
+			if ($setItem === null)
+				$setStr .= "`$setField` = NULL, ";
+			elseif (is_numeric($setItem))
+				$setStr .= "`$setField` = $setItem, ";
+			else
+				$setStr .= "`$setField` = '$setItem', ";
+		}
+
+		$setStr = preg_replace("/,\s$/", '', $setStr);
+		$sql .= "UPDATE {$table} SET $setStr ";
 
 		if (!empty($where))
 			$sql .= 'WHERE ' . $this->buildWhere($where);
@@ -272,10 +298,11 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function delete($requestParams)
 	{
+		$where         = isset($requestParams['where']) ? $this->escapeRealStr($requestParams['where'], false) : [];
+		unset($requestParams['where']);
 		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 
 		if (empty($table))
 			return false;

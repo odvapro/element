@@ -7,11 +7,13 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	protected $fieldValue = '';
 	protected $row        = [];
 	protected $settings   = [];
-	public function __construct($fieldValue = '', array $settings = [], array $row = [])
+	protected $table      = '';
+	public function __construct($fieldValue = '', array $settings = [], array $row = [], $table = '')
 	{
 		$this->fieldValue = $fieldValue;
 		$this->settings   = $settings;
 		$this->row        = $row;
+		$this->table      = $table;
 	}
 	abstract function getValue();
 	abstract function saveValue();

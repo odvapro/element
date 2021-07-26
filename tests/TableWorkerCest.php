@@ -307,7 +307,7 @@ class TableWorkerCest
 			'update' => [
 				'table' => 'test_table',
 				'set' => [
-					'email' => 'rrrrr',
+					'email' => "rr'rrr",
 					'col'   => '222222'
 				],
 				'where' => [
@@ -320,8 +320,7 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('test_table', ['id' => 2, 'email' => 'rrrrr', 'col'=>'222222']);
-
+		$I->seeInDatabase('test_table', ['id' => 2, 'email' => "rr\'rrr", 'col'=>'222222']);
 
 		$I->sendPOST('/el/update/',
 		[
@@ -375,7 +374,7 @@ class TableWorkerCest
 					'name'  => '11',
 					'email' => 'qwe',
 					'col'   => '222222',
-					'avat'  => '222211211',
+					'avat'  => "222211'211",
 				]],
 			]
 		]);

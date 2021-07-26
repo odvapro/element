@@ -152,7 +152,7 @@ class Element
 			else
 				$field = new EmStringField('',$settings);
 
-			$wherePart['code'] = $field->getCollationSql($wherePart);
+			$wherePart['code_sql'] = $field->getCollationSql($wherePart);
 			return $wherePart;
 
 		}, $selectParams['where']['fields']);
@@ -281,13 +281,13 @@ class Element
 		} catch (EmException $e) {
 			return ['success' => false, 'message' => $e->getMessage(), 'code' => $e->getCode()];
 		}
+
 		if (empty($updateParams) || empty($updateParams['set'])) return ['success' => false, 'message' => 'update_error', 'code' => 7];
 
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
 
-		$set = [];
-		foreach ($updateParams['set'] as $fieldCode => $fieldValue)
+		foreach ($updateParams['set'] as $fieldCode => &$fieldValue)
 		{
 			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];
 			$settings   = $tableColumns[$fieldCode]['em']['settings'];
@@ -297,17 +297,8 @@ class Element
 			else
 				$field = new EmStringField($fieldValue,$settings,$updateParams['set']);
 
-			$fieldSaveValue = $field->saveValue();
-			if($fieldSaveValue === null)
-				$set[] = "`{$fieldCode}` = NULL";
-			else {
-				if (is_int($fieldSaveValue))
-					$set[] = "`{$fieldCode}` = {$fieldSaveValue}";
-				else
-					$set[] = "`{$fieldCode}` = '{$fieldSaveValue}'";
-			}
+			$fieldValue = $field->saveValue();
 		}
-		$updateParams['set'] = $set;
 
 		$result = $this->eldb->update($updateParams);
 

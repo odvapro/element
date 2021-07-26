@@ -3,6 +3,7 @@
 		:tableCode="$route.params.tableCode"
 		:name="$route.name"
 		:id.sync="$route.params.id"
+		:updatedElAt.sync="updatedElAt"
 		@cancel="cancel"
 		@openDetail="openDetail"
 		@saveElement="saveElementDetail"
@@ -22,7 +23,8 @@
 		data()
 		{
 			return {
-				show:false
+				show:false,
+				updatedElAt: new Date(),
 			}
 		},
 		methods:
@@ -38,6 +40,7 @@
 			async saveElementDetail(data)
 			{
 				let result = await this.saveElement(data);
+				this.updatedElAt = new Date();
 				if (result.data.success)
 					this.ElMessage(this.$t('elMessages.element_saved'));
 			},
