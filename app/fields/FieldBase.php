@@ -46,35 +46,35 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 	{
 		switch ($whereArray['operation']) {
 			case 'IS':
-				return $whereArray['code'] . ' = ' . "'" . $whereArray['value'] . "'";
+				return $whereArray['code'] . ' = :value:';
 				break;
 
 			case 'IS NOT':
-				return $whereArray['code'] . ' <> ' . "'" . $whereArray['value'] . "'";
+				return $whereArray['code'] . ' <> :value:';
 				break;
 
 			case 'CONTAINS':
-				return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "%'";
+				return $whereArray['code'] . ' LIKE :value:';
 				break;
 
 			case 'DOES NOT CONTAIN':
-				return $whereArray['code'] . ' NOT LIKE ' . "'%" . $whereArray['value'] . "%'";
+				return $whereArray['code'] . ' NOT LIKE :value:';
 				break;
 
 			case 'START WITH':
-				return $whereArray['code'] . ' LIKE ' . "'" . $whereArray['value'] . "%'";
+				return $whereArray['code'] . ' LIKE :value:';
 				break;
 
 			case 'ENDS WITH':
-				return $whereArray['code'] . ' LIKE ' . "'%" . $whereArray['value'] . "'";
+				return $whereArray['code'] . ' LIKE :value:';
 				break;
 
 			case 'IS EMPTY':
-				return $whereArray['code'] . ' = ' . '""';
+				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
 				break;
 
 			case 'IS NOT EMPTY':
-				return $whereArray['code'] . ' <> ' . '""';
+				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
 				break;
 		}
 		return '';
