@@ -172,7 +172,6 @@ class SqlAdapter extends PdoAdapter
 		$set           = isset($requestParams['set']) ? $requestParams['set'] : [];
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
 		$params        = [];
-		$where['fields'][0]['value'] .= ' OR 1 ';
 
 		if (empty($table) || empty($set))
 			return false;
