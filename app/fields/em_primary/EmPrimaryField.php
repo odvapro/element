@@ -31,14 +31,14 @@ class EmPrimaryField extends FieldBase
 	public function getCollationSql($whereArray)
 	{
 		$dateFormat = isset($this->settings['includeTime']) && isset($this->settings['includeTime']) === 'true' ? "Y-m-d H:i:s" : "Y-m-d";
-
+		if (!empty($whereArray['value'])) $whereArray['value'] = intval($whereArray['value']);
 		switch ($whereArray['operation']) {
 			case 'IS':
-				return $whereArray['code'] . ' = ' . intval($whereArray['value']);
+				return $whereArray['code'] . ' = :value:';
 			break;
 
 			case 'IS NOT':
-				return $whereArray['code'] . ' <> ' . intval($whereArray['value']);
+				return $whereArray['code'] . ' <> :value:';
 			break;
 
 			case 'IS EMPTY':
@@ -50,11 +50,11 @@ class EmPrimaryField extends FieldBase
 			break;
 
 			case 'IS LARGER':
-				return $whereArray['code'] . ' > ' . intval($whereArray['value']);
+				return $whereArray['code'] . ' > :value:';
 			break;
 
 			case 'IS SMALLER':
-				return $whereArray['code'] . ' < ' . intval($whereArray['value']);
+				return $whereArray['code'] . ' < :value:';
 			break;
 		}
 		return '';

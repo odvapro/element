@@ -7,60 +7,33 @@ class SqlAdapter extends PdoAdapter
 	private $db = false;
 
 	/**
-	 * Экранировать специальные символы
-	 * @param  string or array
-	 * @return string or array
-	 */
-	private function escapeRealStr($params, $escapeQuotes = true)
-	{
-		if (!is_array($params))
-		{
-			if (!empty($params) && $escapeQuotes)
-				$params = preg_replace("/'/", "\'", quotemeta($params));
-			elseif (!empty($params))
-				$params = quotemeta($params);
-
-			return $params;
-		}
-
-		foreach ($params as &$item)
-		{
-			if (!is_array($item))
-			{
-				if (!empty($item) && $escapeQuotes)
-					$item = preg_replace("/'/", "\'", quotemeta($item));
-				elseif (!empty($item))
-					$item = quotemeta($item);
-				continue;
-			}
-
-			$item = $this->escapeRealStr($item, $escapeQuotes);
-		}
-
-		return $params;
-	}
-	/**
 	 * build where
 	 * @param  array
 	 * @return string
 	 */
 	private function buildWhere($whereArray)
 	{
-		if(empty($whereArray['fields']))
-			return isset($whereArray['code_sql']) ? $whereArray['code_sql'] : $whereArray['code'];
+		$result = ['', []];
+		if (empty($whereArray) || empty($whereArray['fields'])) return $result;
 
-		$fieldsSqls = [];
-		foreach ($whereArray['fields'] as $field)
-			$fieldsSqls[] = $this->buildWhere($field);
+		$whereResult = [];
+		foreach ($whereArray['fields'] as $whereKey => $whereValue) {
+			if (!isset($whereValue['code_sql'])) continue;
+			$whereResult[] = preg_replace("/:value:/", '?', $whereValue['code_sql']);
+			if (preg_match("/:value:/", $whereValue['code_sql']))
+			{
+				if ($whereValue['operation'] === 'CONTAINS' || $whereValue['operation'] === 'DOES NOT CONTAIN')
+					$whereValue['value'] = '%'.$whereValue['value'].'%';
+				elseif ($whereValue['operation'] === 'ENDS WITH')
+					$whereValue['value'] = '%'.$whereValue['value'];
+				elseif ($whereValue['operation'] === 'START WITH')
+					$whereValue['value'] = $whereValue['value'].'%';
 
-		$fieldsSqls = array_filter($fieldsSqls);
-
-		if (empty($fieldsSqls))
-			return "";
-
-		$fieldsSqls = '(' . implode(' ' . $whereArray['operation'] . ' ', $fieldsSqls) . ')';
-
-		return $fieldsSqls;
+				$result[1][] = $whereValue['value'];
+			}
+		}
+		if (!empty($whereResult)) $result[0] = implode(' '.$whereArray['operation'].' ', $whereResult);
+		return $result;
 	}
 
 	/**
@@ -85,42 +58,55 @@ class SqlAdapter extends PdoAdapter
 		$order         = isset($requestParams['order']) ? $requestParams['order'] : [];
 		$limit         = isset($requestParams['limit']) ? $requestParams['limit'] : '';
 		$offset        = isset($requestParams['offset']) ? $requestParams['offset'] : '';
+		$params        = [];
 
 		if (empty($fromTable))
 			return false;
 
 		if (empty($fields))
 			$sql = 'SELECT * ';
-		else
-			$sql = 'SELECT ' . implode(', ', $fields) . ' ';
+		else {
+			$sqlFields = implode('`, `', $fields);
+			$sqlFields = '`'.$sqlFields.'`';
+			$sql = "SELECT {$sqlFields} ";
+		}
 
 		$sql .= "FROM {$fromTable} ";
 
 		if (!empty($where) && !empty($where['fields']))
 		{
-			$whereSql = $this->buildWhere($where);
-			if (!empty($whereSql)) $sql .= 'WHERE ' . $whereSql;
+			$whereResult = $this->buildWhere($where);
+
+			if (!empty($whereResult[0]))
+			{
+				$sql .= 'WHERE ' . $whereResult[0];
+				$params = array_merge($params, $whereResult[1]);
+			}
 		}
 
-		if (!empty($order))
-			$sql .= ' ORDER BY ' . implode(', ', $order);
+		if (!empty($order)) {
+			$orderValues = [];
+			foreach ($order as $orderItemKey => $orderItem) {
+				$orderValues[] = '?';
+				$params[] = $orderItem;
+			}
+			$sql .= ' ORDER BY ' . implode(', ', $orderValues);
+		}
 
 		if (!empty($limit))
-			$sql .= ' LIMIT ' . $limit;
+			$sql .= ' LIMIT '.intval($limit);
 
 		if (!empty($offset))
-			$sql .= ' OFFSET ' . $offset;
+			$sql .= ' OFFSET ' . intval($offset);
 
 		try
 		{
+			$this->db->prepare($sql);
 			$select = $this->db->fetchAll(
 				$sql,
-				Phalcon\Db::FETCH_ASSOC
+				Phalcon\Db::FETCH_ASSOC,
+				$params
 			);
-			foreach ($select as &$selectItem) {
-				foreach ($selectItem as &$selectValue)
-					if (!empty($selectValue)) $selectValue = stripslashes($selectValue);
-			}
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"selectError: {$e->getMessage()}"
@@ -139,23 +125,30 @@ class SqlAdapter extends PdoAdapter
 	public function count($requestParams)
 	{
 		$sql           = '';
-		$fromTable     = isset($requestParams['from']) ? $requestParams['from'] : [];
+		$fromTable     = isset($requestParams['from']) ? addslashes($requestParams['from']) : '';
 		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
-
-		if (!empty($where) && !empty($where['fields']))
-			$sql .= 'WHERE ' . $this->buildWhere($where);
+		$params        = [];
 
 		$sql = 'SELECT COUNT(*) as count ';
 		$sql .= "FROM {$fromTable} ";
 
-		if (!empty($where) && !empty($where['fields']))
-			$sql .= 'WHERE ' . $this->buildWhere($where);
+		if (!empty($where) && !empty($where['fields'])) {
+			$whereResult = $this->buildWhere($where);
+
+			if (!empty($whereResult[0]))
+			{
+				$sql .= 'WHERE ' . $whereResult[0];
+				$params = $whereResult[1];
+			}
+		}
 
 		try
 		{
+			$this->db->prepare($sql);
 			$select = $this->db->fetchAll(
 				$sql,
-				Phalcon\Db::FETCH_ASSOC
+				Phalcon\Db::FETCH_ASSOC,
+				$params
 			);
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
@@ -174,12 +167,12 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function update($requestParams)
 	{
-		$where         = isset($requestParams['where']) ? $this->escapeRealStr($requestParams['where'], false) : [];
-		unset($requestParams['where']);
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
-		$set           = isset($requestParams['set']) ? $this->escapeRealStr($requestParams['set']) : [];
+		$set           = isset($requestParams['set']) ? $requestParams['set'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$params        = [];
+		$where['fields'][0]['value'] .= ' OR 1 ';
 
 		if (empty($table) || empty($set))
 			return false;
@@ -188,21 +181,33 @@ class SqlAdapter extends PdoAdapter
 		foreach ($set as $setField => $setItem) {
 			if ($setItem === null)
 				$setStr .= "`$setField` = NULL, ";
-			elseif (is_numeric($setItem))
-				$setStr .= "`$setField` = $setItem, ";
-			else
-				$setStr .= "`$setField` = '$setItem', ";
+			else {
+				$params[] = $setItem;
+				$setStr .= "`$setField` = ?, ";
+			}
 		}
 
 		$setStr = preg_replace("/,\s$/", '', $setStr);
 		$sql .= "UPDATE {$table} SET $setStr ";
 
-		if (!empty($where))
-			$sql .= 'WHERE ' . $this->buildWhere($where);
+		if (!empty($where) && !empty($where['fields']))
+		{
+			$whereResult = $this->buildWhere($where);
+
+			if (!empty($whereResult[0]))
+			{
+				$sql .= 'WHERE ' . $whereResult[0];
+				$params = array_merge($params, $whereResult[1]);
+			}
+		}
 
 		try
 		{
-			$this->db->execute($sql);
+			$this->db->prepare($sql);
+			$this->db->execute(
+				$sql,
+				$params
+			);
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"updateRequest: {$sql}"
@@ -273,14 +278,16 @@ class SqlAdapter extends PdoAdapter
 		if (empty($table) || empty($id) || empty($columns))
 			return false;
 
-		$sqlColumns = implode(', ', $columns);
+		$sqlColumns = implode('`, `', $columns);
+		$sqlColumns = '`'.$sqlColumns.'`';
 		$sql = "INSERT INTO {$table} ({$sqlColumns})
 				SELECT {$sqlColumns}
 				FROM {$table}
-				WHERE id = {$id}";
+				WHERE id = ?";
 		try
 		{
-			$this->db->execute($sql, $sqlColumns);
+			$this->db->prepare($sql);
+			$this->db->execute($sql, [$id]);
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"duplicateRequest: {$sql}"
@@ -298,23 +305,34 @@ class SqlAdapter extends PdoAdapter
 	 */
 	public function delete($requestParams)
 	{
-		$where         = isset($requestParams['where']) ? $this->escapeRealStr($requestParams['where'], false) : [];
-		unset($requestParams['where']);
-		$requestParams = $this->escapeRealStr($requestParams);
 		$sql           = '';
 		$table         = isset($requestParams['table']) ? $requestParams['table'] : [];
+		$where         = isset($requestParams['where']) ? $requestParams['where'] : [];
+		$params        = [];
 
 		if (empty($table))
 			return false;
 
 		$sql .= "DELETE FROM {$table} ";
 
-		if (!empty($where))
-			$sql .= 'WHERE ' . $this->buildWhere($where);
+		if (!empty($where) && !empty($where['fields']))
+		{
+			$whereResult = $this->buildWhere($where);
+
+			if (!empty($whereResult[0]))
+			{
+				$sql .= 'WHERE ' . $whereResult[0];
+				$params = array_merge($params, $whereResult[1]);
+			}
+		}
 
 		try
 		{
-			$this->db->execute($sql);
+			$this->db->prepare($sql);
+			$this->db->execute(
+				$sql,
+				$params
+			);
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"deleteRequest: {$sql}"

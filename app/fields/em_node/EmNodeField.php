@@ -92,11 +92,11 @@ class EmNodeField extends FieldBase
 	{
 		switch ($whereArray['operation']) {
 			case 'IS':
-				return $whereArray['code'] . ' = ' . "'" . $whereArray['value'] . "'";
+				return $whereArray['code'] . ' = :value:';
 				break;
 
 			case 'IS NOT':
-				return $whereArray['code'] . ' <> ' . "'" . $whereArray['value'] . "'";
+				return $whereArray['code'] . ' <> :value:';
 				break;
 
 			case 'IS EMPTY':

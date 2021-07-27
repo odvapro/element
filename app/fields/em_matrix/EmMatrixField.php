@@ -127,22 +127,22 @@ class EmMatrixField extends FieldBase
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL";
 			case 'IS':
 				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = \"{$whereArray['value']}\"";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = :value:";
 			case 'IS NOT':
 				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"{$whereArray['value']}\" ";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> :value: ";
 			case 'CONTAINS':
 				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} LIKE \"%{$whereArray['value']}%\"";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} LIKE :value:";
 			case 'DOES NOT CONTAIN':
-				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE \"%{$whereArray['value']}%\"";
+				$whereArray['value'] = '%'.$whereArray['value'].'%';
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE :value:";
 			case 'IS LARGER':
 				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} >= \"{$whereArray['value']}\"";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} >= :value:";
 			case 'IS SMALLER':
 				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <= \"{$whereArray['value']}\"";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <= :value:";
 		}
 		return '';
 	}

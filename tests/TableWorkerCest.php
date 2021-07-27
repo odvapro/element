@@ -320,7 +320,7 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('test_table', ['id' => 2, 'email' => "rr\'rrr", 'col'=>'222222']);
+		$I->seeInDatabase('test_table', ['id' => 2, 'email' => "rr'rrr", 'col'=>'222222']);
 
 		$I->sendPOST('/el/update/',
 		[
