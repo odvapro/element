@@ -213,6 +213,7 @@ export default
 	search: 'Поиск',
 	max: 'Максимум',
 	min: 'Минимум',
+	open: 'Открыть',
 	months:
 	[
 		'Январь',

@@ -39,12 +39,12 @@
 				</div>
 				<div class="table-item table-item--empty">
 					<div class="table__add-column-item">
-						<!-- <div class="table__add-col-img">
+						<div class="table__add-col-img">
 							<svg width="12" height="12">
 								<use xlink:href="#plus-white"></use>
 							</svg>
 						</div>
-						<span class="table__add-col-label">Add field</span> -->
+						<span class="table__add-col-label">Add field</span>
 					</div>
 				</div>
 			</div>
