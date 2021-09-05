@@ -313,7 +313,7 @@
 	};
 </script>
 <style lang="scss">
-	.index__wrapper { padding: 23px 0px 0px 21px; }
+	.index__wrapper { padding-top: 23px;}
 	.index__head
 	{
 		display: flex;
@@ -321,6 +321,7 @@
 		align-items: flex-end;
 		margin-bottom: 16px;
 		padding-right: 75px;
+		padding-left: 21px;
 	}
 	.index__head-name
 	{
@@ -433,7 +434,7 @@
 	.index__head-burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.index__wrapper { min-width: 375px; overflow: scroll; }
+		.index__wrapper { min-width: 375px; }
 		.index__head { padding-right: 14px; align-items: center; }
 		.index__overide-name { font-size: 18px; white-space: nowrap; }
 		.index__add-btn-text { display: none; }

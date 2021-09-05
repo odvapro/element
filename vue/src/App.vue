@@ -78,9 +78,9 @@
 	}
 </script>
 <style lang="scss">
+	html{overflow:hidden;}
 	.app{height: 100vh; }
 	*{box-sizing: border-box; }
-	.content-wrapper {overflow: hidden; }
 	.app__loader
 	{
 		position: absolute;

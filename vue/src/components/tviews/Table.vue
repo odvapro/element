@@ -671,6 +671,7 @@
 	}
 	.table-vertical-scroll
 	{
+		padding-left: 21px;
 		overflow: auto;
 		height: calc(100vh - 70px);
 	}
