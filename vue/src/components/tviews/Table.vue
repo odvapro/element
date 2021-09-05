@@ -3,7 +3,7 @@
 		@mousemove="resizeColumn($event)"
 		@mouseup="endResize($event, columnDrug.col)">
 		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
-			<div class="table-row no-hover">
+			<div class="table-row table-row__heading no-hover">
 				<div class="table-item table__many-box">
 					<Checkbox
 						:checked.sync="checkAll"
@@ -21,7 +21,7 @@
 				<div
 					class="table-item"
 					v-for="(column, index) of tableColumns"
-					v-if="column.visible"
+					:key="`colInd${index}`"
 					:class="`_table-col-${column.field}`"
 					:style="{ width: column.width + 'px'}"
 				>
@@ -37,7 +37,7 @@
 						@mousedown="registerEventResize($event, column)"
 					></div>
 				</div>
-				<div class="table-item table-item--empty">
+				<!-- <div class="table-item table-item--empty">
 					<div class="table__add-column-item">
 						<div class="table__add-col-img">
 							<svg width="12" height="12">
@@ -46,9 +46,14 @@
 						</div>
 						<span class="table__add-col-label">Add field</span>
 					</div>
-				</div>
+				</div> -->
 			</div>
-			<div class="table-row" data-test="table-row" v-for="(row, rowIndex) in tableContent.items">
+			<div
+				class="table-row"
+				data-test="table-row"
+				v-for="(row, rowIndex) in tableContent.items"
+				:key="`row${rowIndex}`"
+			>
 				<div class="table-item table__many-box">
 					<Checkbox
 						:checked.sync="selectedRows[rowIndex]"
@@ -67,8 +72,7 @@
 				<div
 					class="table-item"
 					v-for="(column, index) of tableColumns"
-					v-if="column.visible && typeof row[column.field] !== 'undefined'"
-					:key="`${column.field}${rowIndex}`"
+					:key="`${column.field}${rowIndex}${index}`"
 					:class="`_table-col-${column.field}`"
 					:style="{width: column.width + 'px'}"
 				>
@@ -104,7 +108,6 @@
 <script>
 	import MainField from '@/components/fields/MainField.vue';
 	import Pagination from '@/components/layouts/Pagination.vue';
-	import TableWork from '@/mixins/tableWork.js';
 	export default
 	{
 		props:['table', 'tview'],
@@ -176,7 +179,7 @@
 
 				return Object.values(this.table.columns).sort((item1, item2) => {
 					return item1.order - item2.order;
-				});
+				}).filter(column => column.visible === true);
 			},
 		},
 		watch:
@@ -612,10 +615,17 @@
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		position: relative;
-		&:last-child
+		z-index: 0;
+		&.table-row__heading
 		{
+			position: sticky;
+			top:0px;
+			background: #fff;
+			z-index: 1;
 			border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 		}
+		&:nth-child(2) { border-top: none; }
+		&:last-child { border-bottom: 1px solid rgba(103, 115, 135, 0.1); }
 		.em-check-label
 		{
 			margin-right: 8px;

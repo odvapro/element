@@ -9,13 +9,11 @@
 </template>
 
 <script>
-	import Vue from 'vue';
 	import Auth from './layouts/auth';
 	import Content from './layouts/content';
 	import Setup from './layouts/setup';
 	import Sprite from './components/layouts/Sprite.vue';
 	import Loader from '@/components/forms/Loader.vue';
-	import qs from 'qs';
 	export default
 	{
 		components: { Sprite, Setup, Content, Auth, Loader },
@@ -86,6 +84,7 @@
 	.app__loader
 	{
 		position: absolute;
+		z-index: 2;
 		top:0px;
 		left:0px;
 		width:100%;
@@ -95,6 +94,7 @@
 	.app__loader-block
 	{
 		position: absolute;
+		z-index: 2;
 		top:50%;
 		left:50%;
 		margin-left: -50px;

@@ -14,7 +14,6 @@
 </template>
 <script>
 	import Detail from '@/components/tviews/Detail.vue';
-	import qs from 'qs';
 	import detailFunctions from '@/mixins/detailFunctions.js';
 	export default
 	{
