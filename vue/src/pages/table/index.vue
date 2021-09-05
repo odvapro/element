@@ -28,7 +28,10 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						<div class="index__menu-item-title" :class="{ 'index__menu-item-title--modified': propertiesModified }">{{$t('properties')}}</div>
+						<div
+							class="index__menu-item-title"
+							:class="{ 'index__menu-item-title--modified': propertiesModified }"
+						>{{$t('properties')}}</div>
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
@@ -195,7 +198,6 @@
 				if(mutation.type == 'setTables')
 					this.activeTable();
 			});
-			this.checkModified();
 		},
 		methods:
 		{
@@ -253,7 +255,7 @@
 
 				const tview = this.table.tviews[0];
 				this.sortModified = !!tview.sort.length;
-				this.filterModified = !!tview.filter.length;
+				this.filterModified = (tview.filter.length === 0)?false:true;
 
 				if (!tview.settings || !tview.settings.columns) return;
 
@@ -288,6 +290,7 @@
 			{
 				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
 				this.propertiesPopupData = this.table.columns;
+				this.checkModified();
 			},
 			/**
 			 * переход на страницу создания элемента

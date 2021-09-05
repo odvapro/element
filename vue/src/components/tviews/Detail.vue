@@ -32,7 +32,11 @@
 			</div>
 		</div>
 		<div class="detail-feilds">
-			<div class="detail-feild" v-for="(column,columnCode) in selectedElement">
+			<div
+				class="detail-feild"
+				v-for="(column,columnCode) in selectedElement"
+				:key="`selItem${columnCode}`"
+			>
 				<div class="detail-field__name-wrap">
 					<img class="detail-field__icon-image" :src="require(`@/assets${columnEmSettings(columnCode).type_info.iconPath}`)">
 					<div class="detail-field-name">
