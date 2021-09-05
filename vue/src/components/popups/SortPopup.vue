@@ -1,7 +1,11 @@
 <template>
 	<div class="sort-popup__wrapper">
 		<div class="sort-popup__rows">
-			<div class="sort-popup__row" v-for="sortLine, sortLineIndex in sortArray">
+			<div
+				class="sort-popup__row"
+				v-for="sortLine, sortLineIndex in sortArray"
+				:key="`sortLine${sortLineIndex}`"
+			>
 				<div class="sort-popup__operators-wrapper">
 					<Select
 						class="sort-popup__select"
@@ -24,7 +28,10 @@
 						>{{sortItem}}</SelectOption>
 					</Select>
 				</div>
-				<div class="sort-popup__delete-row-icon-wrapper" @click.stop="deleteRowSort(sortLineIndex)">
+				<div
+					class="sort-popup__delete-row-icon-wrapper"
+					@click.stop="deleteRowSort(sortLineIndex)"
+				>
 					<div class="sort-popup__delete-row-icon">
 						<svg width="12" height="12">
 							<use xlink:href="#plus-white"></use>
@@ -245,6 +252,7 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 2px;
+		cursor: pointer;
 		&:hover
 		{
 			background-color: rgba(103, 115, 135, 0.1);
@@ -255,6 +263,7 @@
 		width: 12px;
 		height: 12px;
 		transform: rotate(45deg);
+		font-size: 0px;
 		svg{stroke:#677387;}
 	}
 	.sort-popup__row
