@@ -163,7 +163,6 @@
 		.app-wrapper { display: flex; }
 		.content-wrapper
 		{
-			overflow: auto;
 			max-height: 100vh;
 			&::-webkit-scrollbar { width: 0; }
 		}

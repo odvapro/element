@@ -169,6 +169,8 @@
 	{
 		display: flex;
 		flex-direction: column;
+		overflow: scroll;
+		height: calc(100vh - 70px);
 	}
 	.settings-tab-item
 	{
@@ -200,11 +202,12 @@
 	.settings-head__burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.settings-wrapper { min-width: 375px; }
+		.settings-wrapper { min-width: 375px; padding-bottom: 0; }
 		.settings-tab-wrapper
 		{
 			overflow-x: scroll;
 			max-width: calc(100vw - 46px);
+			height: 100%;
 		}
 		.settings-tabs-content-wrapper
 		{

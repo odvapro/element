@@ -222,7 +222,6 @@
 	{
 		padding: 23px 0 0px 21px;
 		height: 100%;
-	    overflow: auto;
 	}
 	.detail-head
 	{
@@ -260,7 +259,12 @@
 		text-transform: lowercase;
 	}
 	.detail-name-wrapper{padding-left:7px; }
-	.detail-feilds{border-top: 1px solid rgba(103, 115, 135, 0.1);}
+	.detail-feilds
+	{
+		border-top: 1px solid rgba(103, 115, 135, 0.1);
+		overflow: auto;
+		height: calc(100vh - 85px);
+	}
 	.detail-feild
 	{
 		min-height: 40px;
@@ -350,8 +354,11 @@
 		.detail-field-box { min-width: 150px; }
 		.detail__buttons
 		{
+			position: sticky;
+			bottom: 0;
+			background-color: #fff;
 			display: block;
-			padding-top: 20px;
+			padding: 10px 0;
 			margin-top: auto;
 			button { margin-left: 10px; &:first-child { margin-left: 0; } }
 		}
