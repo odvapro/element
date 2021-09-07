@@ -29,7 +29,10 @@ class SqlAdapter extends PdoAdapter
 				elseif ($whereValue['operation'] === 'START WITH')
 					$whereValue['value'] = $whereValue['value'].'%';
 
-				$result[1][] = $whereValue['value'];
+				if (is_array($whereValue['value']))
+					$result[1] = array_merge($result[1], array_column($whereValue['value'], 'value'));
+				else
+					$result[1][] = $whereValue['value'];
 			}
 		}
 		if (!empty($whereResult)) $result[0] = implode(' '.$whereArray['operation'].' ', $whereResult);
@@ -85,12 +88,7 @@ class SqlAdapter extends PdoAdapter
 		}
 
 		if (!empty($order)) {
-			$orderValues = [];
-			foreach ($order as $orderItemKey => $orderItem) {
-				$orderValues[] = '?';
-				$params[] = $orderItem;
-			}
-			$sql .= ' ORDER BY ' . implode(', ', $orderValues);
+			$sql .= ' ORDER BY ' . quotemeta(implode(', ', $order));
 		}
 
 		if (!empty($limit))

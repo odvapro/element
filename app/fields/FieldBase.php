@@ -70,11 +70,11 @@ abstract class FieldBase extends Phalcon\Mvc\User\Plugin
 				break;
 
 			case 'IS EMPTY':
-				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
+				return "({$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" )";
 				break;
 
 			case 'IS NOT EMPTY':
-				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
+				return "({$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" )";
 				break;
 		}
 		return '';

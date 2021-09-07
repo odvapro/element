@@ -26,9 +26,10 @@ class EmDateField extends FieldBase
 	 */
 	public function saveValue()
 	{
+		$format = isset($this->settings['includeTime']) && $this->settings['includeTime'] === 'true' ? "Y-m-d H:i:s" : "Y-m-d";
 		if(empty($this->fieldValue) || strtotime($this->fieldValue) === false)
 			return null;
-		return $this->fieldValue;
+		return date($format, strtotime($this->fieldValue));
 	}
 	/**
 	 * Gets collations
@@ -66,11 +67,11 @@ class EmDateField extends FieldBase
 			break;
 
 			case 'IS EMPTY':
-				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
+				return "({$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" )";
 			break;
 
 			case 'IS NOT EMPTY':
-				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
+				return "({$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" )";
 			break;
 
 			case 'IS LARGER':

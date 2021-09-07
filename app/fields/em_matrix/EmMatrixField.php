@@ -124,7 +124,7 @@ class EmMatrixField extends FieldBase
 			case 'IS NOT EMPTY':
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"\"";
 			case 'IS EMPTY':
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL";
+				return "({$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL)";
 			case 'IS':
 				$whereArray['value'] = quotemeta($whereArray['value']);
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = :value:";
@@ -139,10 +139,10 @@ class EmMatrixField extends FieldBase
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE :value:";
 			case 'IS LARGER':
 				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} >= :value:";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} > :value:";
 			case 'IS SMALLER':
 				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <= :value:";
+				return "{$this->settings['finalTableCode']}.{$whereArray['code']} < :value:";
 		}
 		return '';
 	}

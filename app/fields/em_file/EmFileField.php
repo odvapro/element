@@ -263,11 +263,11 @@ class EmFileField extends FieldBase
 		switch ($whereArray['operation'])
 		{
 			case 'IS EMPTY':
-				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
+				return "({$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" )";
 			break;
 
 			case 'IS NOT EMPTY':
-				return "{$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" ";
+				return "({$whereArray['code']} IS NOT NULL OR {$whereArray['code']} <> \"\" )";
 			break;
 		}
 		return '';
