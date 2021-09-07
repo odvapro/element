@@ -88,7 +88,7 @@ class SqlAdapter extends PdoAdapter
 		}
 
 		if (!empty($order)) {
-			$sql .= ' ORDER BY ' . quotemeta(implode(', ', $order));
+			$sql .= ' ORDER BY ' . implode(', ', $order);
 		}
 
 		if (!empty($limit))
