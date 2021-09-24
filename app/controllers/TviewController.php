@@ -88,6 +88,10 @@ class TviewController extends ControllerBase
 			foreach ($fieldData as $rowDataName => $rowData)
 			{
 				$valueToContent = $rowData ?? "";
+
+				if(is_array($valueToContent))
+					$valueToContent = "json";
+
 				if ($rowDataName !== $lastColumnName)
 					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
 				else
