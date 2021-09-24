@@ -288,8 +288,9 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: 2px;
+		cursor: pointer;
 		&:hover {background-color: rgba(103, 115, 135, 0.1); }
-		svg{stroke:#c2c7cf;}
+		svg{stroke:#677387;}
 	}
 	.filters-popup__delete-row-icon
 	{

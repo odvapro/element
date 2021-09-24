@@ -82,12 +82,16 @@ class TviewController extends ControllerBase
 				$fileContent .= json_encode($fieldDataName, JSON_UNESCAPED_UNICODE) . ",";
 		}
 
-		foreach ($allFields as $fieldData)
+		foreach ($allFields['items'] as $fieldData)
 		{
 			$lastColumnName = array_key_last($fieldData);
 			foreach ($fieldData as $rowDataName => $rowData)
 			{
 				$valueToContent = $rowData ?? "";
+
+				if(is_array($valueToContent))
+					$valueToContent = "json";
+
 				if ($rowDataName !== $lastColumnName)
 					$fileContent .= json_encode($valueToContent, JSON_UNESCAPED_UNICODE) . ",";
 				else
@@ -95,6 +99,7 @@ class TviewController extends ControllerBase
 			}
 		}
 		$fileName = "{$tview->table}.csv";
+		header("Content-Encoding: UTF-8");
 		header("Content-type: text/csv");
 		header("Content-disposition: attachment; filename = {$fileName}");
 		echo $fileContent;

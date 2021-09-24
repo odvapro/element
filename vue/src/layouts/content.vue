@@ -144,6 +144,7 @@
 	.content__loader
 	{
 		position: absolute;
+		z-index: 2;
 		top:0px;
 		left:0px;
 		width:100%;
@@ -162,7 +163,6 @@
 		.app-wrapper { display: flex; }
 		.content-wrapper
 		{
-			overflow: auto;
 			max-height: 100vh;
 			&::-webkit-scrollbar { width: 0; }
 		}

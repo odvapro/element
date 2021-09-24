@@ -44,10 +44,6 @@
 		width: 100%;
 		height: 100%;
 		cursor: pointer;
-		&:hover
-		{
-			.em-primary-hint { opacity: 1; }
-		}
 	}
 	.em-primary
 	{
@@ -60,8 +56,8 @@
 		font-size: 12px;
 		color: rgba(25, 28, 33, 0.7);
 		display: inline-block;
-		// &:hover{background: rgba(58, 132, 6, 0.1);}
 	}
+	.table-row:hover .em-primary-hint { opacity: 1; }
 	.em-primary-hint
 	{
 		position: absolute;
@@ -75,7 +71,7 @@
 		background-color: #fff;
 		display: flex;
 		align-items: center;
-		padding: 5px 12px;
+		padding: 5px 12px 5px 10px;
 		opacity: 0;
 		&:hover { background: #f0f1f3; }
 	}
@@ -83,7 +79,7 @@
 	{
 		font-size: 0;
 		line-height: 0;
-		margin-right: 8px;
+		margin-right: 5px;
 	}
 	.em-primary-hint__text
 	{

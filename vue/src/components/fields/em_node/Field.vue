@@ -7,7 +7,7 @@
 		>
 			<template v-slot:selected>
 				<ListOption
-					v-if="localFieldValue.id"
+					v-if="localFieldValue && localFieldValue.id"
 					@remove="removeItem"
 					:current=true
 				>{{ localFieldValue.name }}</ListOption>

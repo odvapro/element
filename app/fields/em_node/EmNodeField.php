@@ -100,11 +100,11 @@ class EmNodeField extends FieldBase
 				break;
 
 			case 'IS EMPTY':
-				return "{$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" ";
+				return "({$whereArray['code']} IS NULL OR {$whereArray['code']} = \"\" )";
 			break;
 
 			case 'IS NOT EMPTY':
-				return "{$whereArray['code']} IS NOT NULL AND {$whereArray['code']} <> \"\" ";
+				return "({$whereArray['code']} IS NOT NULL AND {$whereArray['code']} <> \"\" )";
 			break;
 		}
 		return '';

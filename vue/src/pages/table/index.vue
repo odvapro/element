@@ -28,7 +28,10 @@
 						:class="{active: popups.isPropertiesPopupShow}"
 						@click="openPopup('isPropertiesPopupShow')"
 					>
-						<div class="index__menu-item-title" :class="{ 'index__menu-item-title--modified': propertiesModified }">{{$t('properties')}}</div>
+						<div
+							class="index__menu-item-title"
+							:class="{ 'index__menu-item-title--modified': propertiesModified }"
+						>{{$t('properties')}}</div>
 						<Properties
 							v-if="popups.isPropertiesPopupShow && propertiesPopupData"
 							:columns="propertiesPopupData"
@@ -195,7 +198,6 @@
 				if(mutation.type == 'setTables')
 					this.activeTable();
 			});
-			this.checkModified();
 		},
 		methods:
 		{
@@ -253,7 +255,7 @@
 
 				const tview = this.table.tviews[0];
 				this.sortModified = !!tview.sort.length;
-				this.filterModified = !!tview.filter.length;
+				this.filterModified = (tview.filter.length === 0)?false:true;
 
 				if (!tview.settings || !tview.settings.columns) return;
 
@@ -288,6 +290,7 @@
 			{
 				this.table = this.$store.getters.getTable(this.$route.params.tableCode);
 				this.propertiesPopupData = this.table.columns;
+				this.checkModified();
 			},
 			/**
 			 * переход на страницу создания элемента
@@ -310,7 +313,7 @@
 	};
 </script>
 <style lang="scss">
-	.index__wrapper { padding: 23px 0px 0px 21px; }
+	.index__wrapper { padding-top: 23px;}
 	.index__head
 	{
 		display: flex;
@@ -318,6 +321,7 @@
 		align-items: flex-end;
 		margin-bottom: 16px;
 		padding-right: 75px;
+		padding-left: 21px;
 	}
 	.index__head-name
 	{
@@ -430,7 +434,7 @@
 	.index__head-burger { margin-right: 20px; }
 	@media (max-width: 768px)
 	{
-		.index__wrapper { min-width: 375px; overflow: scroll; }
+		.index__wrapper { min-width: 375px; }
 		.index__head { padding-right: 14px; align-items: center; }
 		.index__overide-name { font-size: 18px; white-space: nowrap; }
 		.index__add-btn-text { display: none; }

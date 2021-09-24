@@ -475,7 +475,7 @@ BEGIN
         DECLARE s1_len, s2_len, i, j, c, c_temp, cost INT;
         DECLARE s1_char CHAR;
         -- max strlen=255
-        DECLARE cv0, cv1 VARBINARY(256);
+        DECLARE cv0, cv1 VARCHAR(256);
 
         SET s1_len = CHAR_LENGTH(s1),
             s2_len = CHAR_LENGTH(s2),

@@ -213,6 +213,7 @@ export default
 	search: 'Search',
 	max: 'Max',
 	min: 'Min',
+	open: 'Open',
 	months:
 	[
 		'January',
