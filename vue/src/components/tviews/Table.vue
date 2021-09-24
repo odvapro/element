@@ -615,7 +615,6 @@
 		display: flex;
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		position: relative;
-		z-index: 0;
 		&.table-row__heading
 		{
 			position: sticky;
