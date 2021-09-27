@@ -2,7 +2,7 @@
 	<div class="table-vertical-scroll"
 		@mousemove="resizeColumn($event)"
 		@mouseup="endResize($event, columnDrug.col)">
-		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}">
+		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}" v-if="renderTable">
 			<div class="table-row table-row__heading no-hover">
 				<div class="table-item table__many-box">
 					<Checkbox
@@ -72,7 +72,7 @@
 				<div
 					class="table-item"
 					v-for="(column, index) of tableColumns"
-					:key="`${column.field}${rowIndex}${index}`"
+					:key="`table-row_${rowIndex}_table-item_${column.field}${rowIndex}`"
 					:class="`_table-col-${column.field}`"
 					:style="{width: column.width + 'px'}"
 				>
@@ -122,7 +122,8 @@
 				openProperties: false,
 				openedEditRowIndex:false,
 				checkAll:false,
-				selectedRows:{}
+				selectedRows:{},
+				renderTable: 1,
 			}
 		},
 		computed:
@@ -132,6 +133,10 @@
 			 */
 			tableContent()
 			{
+				this.renderTable = 0;
+				this.$nextTick(() => {
+					this.renderTable = 1;
+				});
 				return this.$store.state.tables.tableContent;
 			},
 
