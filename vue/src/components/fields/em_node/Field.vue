@@ -78,27 +78,8 @@
 		},
 		methods:
 		{
-			async createElement(data)
+			async createElement(data, result)
 			{
-				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(data.tableCode);
-				let setColumns  = [];
-				let setValues  = [];
-				for(let fieldCode in data.selectedElement)
-				{
-					if(primaryKeyCode == fieldCode) continue;
-					setColumns.push(fieldCode);
-					setValues.push(data.selectedElement[fieldCode]);
-				}
-
-				let insertData = qs.stringify({
-					insert:
-					{
-						table   :data.tableCode,
-						columns :setColumns,
-						values  :[setValues],
-					},
-				});
-				let result = await this.$axios.post('/el/insert/',insertData);
 				if(result.data.success == true)
 				{
 					let listItem = {};
