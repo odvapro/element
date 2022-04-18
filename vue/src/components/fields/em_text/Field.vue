@@ -239,4 +239,5 @@
 	{
 		.em-text { min-width: unset; }
 	}
+	.em-text .ce-settings{left: 0;}
 </style>
