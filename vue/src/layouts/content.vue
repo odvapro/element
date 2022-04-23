@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<div class="app-wrapper">
+		<div class="app-wrapper" :class="{'app-wrapper--dragging':points.isDrug}">
 			<transition name="el-sidebar-transition">
 				<div
 					class="app-wrapper__sidebar"
@@ -37,7 +37,7 @@
 			return {
 				sidebar:
 				{
-					flexBasis: '400px',
+					flexBasis: '0px',
 				},
 				points:
 				{
@@ -109,7 +109,7 @@
 					if (!self.points.isDrug)
 						return false;
 
-					if (event.pageX < 200 || event.pageX > 480)
+					if (event.pageX < 200 || event.pageX > 600)
 						return false;
 
 					self.points.posX = event.pageX;
@@ -131,6 +131,7 @@
 		position: relative;
 		display: flex;
 	}
+	.app-wrapper--dragging{user-select: none; }
 	.app-wrapper__sidebar
 	{
 		flex-basis: 400px;

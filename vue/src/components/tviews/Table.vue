@@ -2,7 +2,11 @@
 	<div class="table-vertical-scroll"
 		@mousemove="resizeColumn($event)"
 		@mouseup="endResize($event, columnDrug.col)">
-		<div class="table__min-width" :style="{'min-width': getTableMinWidth + 'px'}" v-if="renderTable">
+		<div
+			class="table__min-width"
+			:style="{'min-width': getTableMinWidth + 'px'}" v-if="renderTable"
+			:class="{'table--drugging':columnDrug.isDrug}"
+		>
 			<div class="table-row table-row__heading no-hover">
 				<div class="table-item table__many-box">
 					<Checkbox
@@ -557,6 +561,7 @@
 	};
 </script>
 <style lang="scss">
+	.table--drugging{user-select: none;}
 	.table-item-img
 	{
 		width: 14px;
