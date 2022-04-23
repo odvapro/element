@@ -1,6 +1,11 @@
 <template>
 	<transition name="popup-fade">
-		<div class="popup-overlay" @click=closeByClickoutside v-if="visible" ref="popup" @keydown.esc=closeByEsc tabindex="1">
+		<div
+			class="popup-overlay"
+			@click=closeByClickoutside v-if="visible"
+			ref="popup"
+			@keydown.esc="closeByEsc" tabindex="1"
+		>
 			<div
 				ref=popupBlock
 				class="popup-block"
@@ -31,6 +36,11 @@
 			{
 				type: Array,
 				default: () => ([]),
+			},
+			canCloseByEsc:
+			{
+				type: Boolean,
+				default: true
 			},
 		},
 		methods:
@@ -64,6 +74,9 @@
 			},
 			closeByEsc()
 			{
+				if(this.canCloseByEsc == false)
+					return false;
+
 				const innerPopup = this.$refs.popupBlock ? this.$refs.popupBlock.querySelector('.popup-block') : null;
 				if (!innerPopup)
 					this.close();

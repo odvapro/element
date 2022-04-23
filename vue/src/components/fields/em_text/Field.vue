@@ -4,7 +4,7 @@
 			{{ previewText }}
 			<span class="el-empty" v-if="!previewText">{{ $t('empty') }}</span>
 		</div>
-		<Popup class="em-text__popup" :visible.sync="showEditor">
+		<Popup class="em-text__popup" :visible.sync="showEditor" :canCloseByEsc="false">
 			<div class="em-text__editor-wrapper">
 				<div class="em-text__popup-head">
 					<div class="em-text__label-wrapper">
