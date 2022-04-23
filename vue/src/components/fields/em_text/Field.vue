@@ -120,7 +120,10 @@
 					tools:
 					{
 						quote: Quote,
-						list: NestedList,
+						list: {
+							class: NestedList,
+							inlineToolbar: true,
+						},
 						raw: RawTool,
 						inlineCode: InlineCode,
 						header: Header,
