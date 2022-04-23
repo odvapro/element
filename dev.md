@@ -1,6 +1,16 @@
 #For developers
 Instructions for developers
 
+## Installation - docker-compose
+- git clone https://github.com/odvapro/element.git
+- cd to elemenet
+- cp sample.env .env
+- change .env - describe
+- docker-compose up -d
+- set nginx
+- open
+
+
 ## Run tests
 ```
 vendor/bin/codecept run
