@@ -1,18 +1,15 @@
 <template>
-	<div class="em-string">
-		<template v-if="mode == 'edit'">
-			<input
-				type="text"
-				class="el-inp-noborder"
-				@change="changeValue"
-				:value="fieldValue"
-				:placeholder="$t('empty')"
-			/>
-		</template>
-		<template v-else>
-			{{ fieldValue }}
-			<span v-if="!fieldValue" class="el-empty">{{$t('empty')}}</span>
-		</template>
+	<div class="em-string__wrapper">
+		<div class="em-string" @click="openEdit()">{{ fieldValue }}</div>
+		<div
+			class="em-string__edit"
+			v-click-outside="closeEdit"
+			v-if="showEdit"
+			ref="editString"
+			contenteditable
+			@input="changeValue"
+			@keydown.esc="closeEdit"
+		></div>
 	</div>
 </template>
 <script>
@@ -22,12 +19,8 @@
 		data()
 		{
 			return {
-				localFieldValue:''
+				showEdit:false
 			}
-		},
-		mounted()
-		{
-			this.localFieldValue = this.fieldValue;
 		},
 		methods:
 		{
@@ -37,20 +30,58 @@
 			changeValue(event)
 			{
 				this.$emit('onChange', {
-					value     : event.target.value,
+					value     : event.target.innerText,
 					settings  : this.fieldSettings
 				});
-			}
+			},
+			/**
+			 * Opens block with text editor
+			 */
+			openEdit()
+			{
+				if(this.mode != 'edit')
+					return false;
+
+				this.showEdit = true;
+				this.$nextTick(function()
+				{
+					this.$refs.editString.innerText = this.fieldValue;
+					let range = document.createRange();
+					range.selectNodeContents(this.$refs.editString);
+					range.collapse(false);
+					let selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
+				});
+			},
+			/**
+			 * Closes block with text editor
+			 */
+			closeEdit()
+			{
+				this.showEdit = false;
+			},
+			onEditString(e)
+			{
+				this.fieldValue =  e.target.innerText;
+			},
 		}
 	}
 </script>
 <style lang="scss">
+	.em-string__wrapper
+	{
+		height: 100%;
+		min-width: 100%;
+		position: absolute;
+		left: 0px;
+	}
 	.em-string
 	{
 		line-height: 49px;
 		font-size: 12px;
 		color: #677387;
-		text-transform: capitalize;
+		text-transform: none;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -63,6 +94,31 @@
 		padding-right: 10px;
 		input { word-break: break-all; }
 	}
-	.detail-field-box .em-string{padding:0px;}
-	.detail-field-box .em-string .el-inp-noborder{line-height:1.15}
+	.em-string--focused
+	{
+		background-color: #efefef;
+	}
+	.detail-field-box .em-string{line-height: 41px;}
+
+	.em-string__edit
+	{
+		position: absolute;
+		top:-5px;
+		left:-5px;
+		width:calc(100% + 10px);
+		min-width: 169px;
+		min-height: 60px;
+		background: #fff;
+		padding-left:10px;
+		z-index: 1;
+		border-radius: 2px;
+		box-shadow: 0px 4px 6px rgba(200, 200, 200, 0.25);
+		border: 1px solid rgba(103, 115, 135, 0.1);
+		padding-bottom:10px;
+		padding-top:10px;
+
+		line-height: 18px;
+		font-size: 12px;
+		color: #677387;
+	}
 </style>

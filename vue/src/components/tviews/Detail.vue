@@ -326,11 +326,6 @@
 			max-height: 40px;
 			position: relative;
 		}
-		.em-string
-		{
-			max-height: 16px;
-			line-height: 1.15;
-		}
 		.ql-editor
 		{
 			padding: 0;
