@@ -174,6 +174,19 @@
 			flex-shrink: 0;
 		}
 	}
-	.el-sidebar-transition-enter-active, .el-sidebar-transition-leave-active { transition: all ease .5s; }
-	.el-sidebar-transition-enter, .el-sidebar-transition-leave-to { flex-basis: 0px!important; min-width: 0px!important; }
+	.app-wrapper__sidebar
+	{
+		&.el-sidebar-transition-enter-active,
+		&.el-sidebar-transition-leave-active
+		{
+			transition: all ease-in .2s;
+			white-space: nowrap;
+		}
+		&.el-sidebar-transition-enter,
+		&.el-sidebar-transition-leave-to
+		{
+			flex-basis: 0px!important;
+			min-width: 0px!important;
+		}
+	}
 </style>

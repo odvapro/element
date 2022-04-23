@@ -1,10 +1,13 @@
 <template>
 	<div v-click-outside=closeSidebar class="sidebar-wrapper">
-		<router-link to="/" class="sidebar-logo-wrapper">
-			<svg width="125" height="25">
-				<use xlink:href="#logo"></use>
-			</svg>
-		</router-link>
+		<div class="sidebar-logo-wrapper">
+			<router-link to="/">
+				<svg width="125" height="25">
+					<use xlink:href="#logo"></use>
+				</svg>
+			</router-link>
+			<MobileBurger />
+		</div>
 		<div class="sidebar-options">
 			<ul class="sidebar-options-list">
 				<li class="sidebar__user" v-if="$store.state.users.authUser">
@@ -90,9 +93,11 @@
 </template>
 <script>
 	import { mapGetters } from 'vuex';
+	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 
 	export default
 	{
+		components:{MobileBurger},
 		data()
 		{
 			return {
@@ -235,7 +240,9 @@
 	.sidebar-logo-wrapper
 	{
 		padding: 20px 20px 0;
-		display: block;
+		display: flex;
+		justify-content:space-between;
+		align-items: center;
 	}
 	.sidebar-wrapper
 	{

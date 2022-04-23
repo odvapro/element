@@ -2,7 +2,7 @@
 	<div class="index__wrapper">
 		<div class="index__head" v-if="table">
 			<div class="index__head-name">
-				<div class="index__head-burger"><MobileBurger/></div>
+				<div class="index__head-burger" :class="{'hidden': isShowSidebar}"><MobileBurger/></div>
 				<div @click="openPopup('isEmojiPickerShow')" class="index__icon-wrapper">
 					<svg v-if="!tableEmoji" width="14" height="13">
 						<use xlink:href="#tableicon"></use>
@@ -130,6 +130,7 @@
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
 	import SearchBlock from '@/components/blocks/SearchBlock.vue';
 	import EmojiPicker from '@/components/popups/EmojiPicker.vue';
+	import { mapGetters } from 'vuex';
 
 	export default
 	{
@@ -187,6 +188,10 @@
 					return this.table.tviews[0].settings.emoji;
 				return false;
 			},
+
+			...mapGetters([
+				'isShowSidebar',
+			]),
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -431,7 +436,11 @@
 		&--mobile { display: none; }
 		&--modified { color: #2F80ED; background-color: rgba(#2F80ED, 0.1); }
 	}
-	.index__head-burger { margin-right: 20px; }
+	.index__head-burger
+	{
+		margin-right: 20px;
+		&.hidden{display: none;}
+	}
 	@media (max-width: 768px)
 	{
 		.index__wrapper { min-width: 375px; }

@@ -8,6 +8,7 @@ Instructions for developers
 - change .env - describe
 - docker-compose up -d
 - set nginx
+- build vueproject
 - open
 
 

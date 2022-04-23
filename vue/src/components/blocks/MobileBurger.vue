@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="el-burder"
-		@click=updateSidebarState
+		@click="updateSidebarState"
 	>
 		<span></span>
 		<span></span>
@@ -35,11 +35,11 @@ export default
 		span
 		{
 			display: block;
-			background-color: #191C21;
+			background-color: #5E6064;
 			border-radius: 4px;
 			height: 2px;
-			width: 25px;
-			margin-bottom: 5px;
+			width: 20px;
+			margin-bottom: 4px;
 			&:last-child { margin-bottom: 0; }
 		}
 	}
