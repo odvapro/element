@@ -9,6 +9,7 @@ Instructions for developers
 - docker-compose up -d
 - set nginx
 - build vueproject
+- install composer
 - open
 
 

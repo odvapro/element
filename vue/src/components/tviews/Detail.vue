@@ -1,7 +1,7 @@
 <template>
 	<div class="detail">
 		<div class="detail-head">
-			<div class="detail-head__burger"><MobileBurger/></div>
+			<div class="detail-head__burger" :class="{'hidden':isShowSidebar}"><MobileBurger/></div>
 			<div class="detail-head-name">
 				<div class="detail-icon-wrapper">
 					<svg width="14" height="13">
@@ -76,11 +76,18 @@
 	import MainField from '@/components/fields/MainField.vue';
 	import qs from 'qs';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
+	import { mapGetters } from 'vuex';
 
 	export default
 	{
 		props: ['tableCode', 'name', 'id', 'element', 'updatedElAt'],
 		components: {MainField, MobileBurger},
+		computed:
+		{
+			...mapGetters([
+				'isShowSidebar',
+			]),
+		},
 		data()
 		{
 			return {
@@ -338,7 +345,11 @@
 		}
 	}
 	.detail__buttons { display: none; }
-	.detail-head__burger { margin-right: 20px; }
+	.detail-head__burger
+	{
+		margin-right: 20px;
+		&.hidden{display: none;}
+	}
 	@media (max-width: 768px)
 	{
 		.detail { padding: 10px 0 0px 10px; }
