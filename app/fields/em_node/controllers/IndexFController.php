@@ -22,7 +22,7 @@ class IndexFController extends ControllerBase
 
 		$select  = [
 			'from'  => $nodeTable,
-			'limit' => 7,
+			'limit' => 20,
 			'where' => [
 				'operation' => 'and',
 				'fields'    => [[
