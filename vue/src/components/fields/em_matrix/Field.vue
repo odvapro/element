@@ -1,23 +1,38 @@
 <template>
 	<div class="em-matrix">
 		<div class="em-matrix-table" v-if="view=='detail'">
-			<div class="em-matrix-row-head" v-if="tableHead.length">
-				<div class="em-matrix-head-field" v-for="fieldCode in tableHead"><span class="em-matrix-field__content">{{fieldCode}}</span></div>
-				<div class="em-matrix-head-field em-matrix-head-field__remove"></div>
-			</div>
-			<div class="em-matrix-row" v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
-				<div class="em-matrix-field em-matrix-field__name" v-for="columnItem in tableRow"><span class="em-matrix-field__content">{{columnItem}}</span></div>
-				<div class="em-matrix-field__hover-btns"><div class="em-matrix-field em-matrix-field__edit" @click="popupForEditMatrixColumn(tableRow, rowIndex)">{{$t('edit')}}</div><div class="em-matrix-field em-matrix-field__remove" @click="removeMatrixElement({tableCode:fieldSettings.finalTableCode, selectedElement: tableRow})">{{$t('remove')}}</div></div>
-			</div>
+			<table v-if="fieldValue.matrixValue.length">
+				<tr>
+					<th v-for="fieldCode in tableHead">{{fieldCode}}</th>
+					<th></th>
+				</tr>
+				<tr v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
+					<td v-for="columnItem in tableRow">{{columnItem}}</td>
+					<td class="em-matrix-table__edit-btns">
+						<div class="em-matrix-field__hover-btns">
+							<div
+								class="em-matrix-field em-matrix-field__edit"
+								@click="popupForEditMatrixColumn(tableRow, rowIndex)"
+							>
+								{{$t('edit')}}
+							</div>
+							<div
+								class="em-matrix-field em-matrix-field__remove"
+								@click="removeMatrixElement({tableCode:fieldSettings.finalTableCode, selectedElement: tableRow})"
+							>
+								{{$t('remove')}}
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
 			<div class="em-matrix-row-add" @click="popupForCreateMatrixElement()">
 				<div class="em-matrix-row-add__icon">
 					<svg width="9" height="9">
 						<use xlink:href="#plus-gray"></use>
 					</svg>
 				</div>
-				<div class="em-matrix-row-add__text">
-					New
-				</div>
+				<div class="em-matrix-row-add__text"> New </div>
 			</div>
 		</div>
 		<div v-else>
@@ -168,85 +183,28 @@
 	.detail-field-box .em-matrix
 	{
 		width: 100vw;
+		max-width: 100vw;
 		margin-left: -14px;
+		overflow: scroll;
 	}
-	.em-matrix-row,
-	.em-matrix-row-head
+	.em-matrix-table__edit-btns
 	{
-		display: grid;
-		grid-template-columns: repeat(auto-fit, 100px);
-		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
-		grid-template-rows: 32px;
+		position: sticky;
+		right:0px;
+		background:#fff;
+		opacity: 0;
 	}
-	.em-matrix-row
-	{
-		&:last-child
-		{
-			border-bottom: none;
-		}
-		&:hover
-		{
-			.em-matrix-field__remove,
-			.em-matrix-field__edit
-			{
-				opacity: 1;
-			}
-		}
-	}
-
-	.em-matrix-head-field,
-	.em-matrix-field
-	{
-		font-size: 10px;
-		border-right: 1px solid rgba(103, 115, 135, 0.1);
-		border-top: none;
-		border-left: none;
-		border-bottom: none;
-		min-height: 31px;
-		display: flex;
-		align-items: center;
-		&:last-child
-		{
-			border-right: none;
-		}
-	}
-	.em-matrix-head-field
-	{
-		justify-content: center;
-	}
-	.em-matrix-field__content
-	{
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding: 5px;
-	}
-	.em-matrix-field__name
-	{
-		justify-content: center;
-	}
-	.em-matrix-field__key
-	{
-		justify-content: center;
-	}
-	.em-matrix-field__edit
-	{
-		padding-left: 14px;
-	}
-	.em-matrix-field__edit,
-	.em-matrix-field__remove
+	tr:hover .em-matrix-table__edit-btns{opacity: 1; }
+	.em-matrix-field__edit, .em-matrix-field__remove
 	{
 		padding-left: 14px;
 		border: none;
 		color: #677387;
 		cursor: pointer;
-		opacity: 0;
 		transition: all .125s;
 	}
-	.em-matrix-field__remove
-	{
-		color: rgba(208, 18, 70, 0.7);
-	}
+	.em-matrix-field__edit {padding-left: 0px; }
+	.em-matrix-field__remove {color: rgba(208, 18, 70, 0.7); }
 	.em-matrix-row-add
 	{
 		cursor: pointer;
@@ -265,5 +223,30 @@
 	{
 		color: #677387;
 		font-size: 10px;
+	}
+
+	.em-matrix-table
+	{
+		overflow: scroll;
+		max-width: 100%;
+		table
+		{
+			width:calc(100%);
+			font-size: 12px;
+			border-collapse: collapse;
+			margin:-1px;
+			th{text-transform:capitalize; }
+			td,th
+			{
+				text-align: left;
+				border:1px solid #efefef;
+				padding:15px 13px;
+				min-width: 50px;
+				max-width: 200px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow:ellipsis;
+			}
+		}
 	}
 </style>

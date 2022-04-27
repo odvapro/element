@@ -92,7 +92,8 @@
 		.detail
 		{
 			padding:0;
-			height:calc(100% - 144px);
+			max-height:calc(100% - 144px);
+			height: auto;
 			overflow: unset;
 			display: flex;
 			flex-direction: column;
@@ -100,6 +101,8 @@
 			{
 				margin-top: auto;
 				margin-bottom: auto;
+				height: calc(100% + 85px);
+				overflow: visible;
 			}
 		}
 		.detail-head{padding-right: 0px; }
