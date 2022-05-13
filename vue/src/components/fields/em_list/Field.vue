@@ -3,6 +3,7 @@
 		<List
 			:searchText.sync="searchText"
 			:settings="{placeholder: $t('empty')}"
+			:multiple="fieldSettings.multiple === 'true'"
 		>
 			<template v-slot:selected>
 				<ListOption
@@ -54,6 +55,7 @@
 
 			/**
 			 * Выдаем отфильтрованный список опций
+			 * исключаем опции которые уже выбраны
 			 */
 			itemsList()
 			{
@@ -83,7 +85,17 @@
 			 */
 			selectItem(listItem)
 			{
-				this.localFieldValue = [listItem.key];
+				if( !(this.localFieldValue instanceof Array) )
+					this.localFieldValue = [];
+
+				if(this.localFieldValue.indexOf(listItem.key) !== -1)
+					return;
+
+				if(this.fieldSettings.multiple)
+					this.localFieldValue.push(listItem.key);
+				else
+					this.localFieldValue = [listItem.key];
+
 				this.$emit('onChange', {
 					value: this.localFieldValue,
 					settings: this.fieldSettings
@@ -116,6 +128,11 @@
 		left:0px;
 		cursor: pointer;
 		.list{padding-left:10px; }
+		.list__search
+		{
+			width:calc(100% + 10px);
+			min-width: 200px;
+		}
 	}
-	.detail-field-box .em-list .list{padding-left:0px;}
+	.detail-field-box .em-list .list {padding-left:0px; }
 </style>

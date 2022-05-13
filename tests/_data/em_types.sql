@@ -45,11 +45,12 @@ VALUES
   (18,'block_type','file','em_file',0,'{\"savePath\":\"element\\/public\\/upload\\/\",\"resolutions\":[{\"code\":\"small\",\"width\":\"50\",\"height\":\"50\",\"required\":\"1\"}]}',NULL),
   (19,'block_type','text','em_text',0,NULL,NULL),
   (20,'block_type','date','em_date',0,NULL,NULL),
-  (21,'block_type','datetime','em_date',0,NULL,NULL),
+  (21,'block_type','datetime','em_date',0,'{\"includeTime\":\"true\"}',NULL),
   (22,'block_type','node','em_node',0,'{\"nodeTableCode\":\"products\",\"nodeFieldCode\":\"id\",\"nodeSearchCode\":\"name\"}',NULL),
   (23,'block_type','matrix','em_matrix',0,'{\"finalTableCode\":\"block_type_nodes\",\"localField\":\"id\",\"finalTableField\":\"block_type_id\"}',NULL),
   (24,'block_type','int','em_int',0,'',NULL),
   (25,'block_type','flag','em_check',0,'',NULL),
+  (27, 'block_type', 'list', 'em_list', 0, '{\"list\":[{\"key\":\"first\",\"value\":\"\\u041f\\u0435\\u0440\\u0432\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"second\",\"value\":\"\\u0412\\u0442\\u043e\\u0440\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"third\",\"value\":\"\\u0422\\u0440\\u0435\\u0442\\u0435\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"forth\",\"value\":\"\\u0427\\u0435\\u0442\\u0432\\u0435\\u0440\\u0442\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"}],\"multiple\":\"false\"}', NULL),
   (26,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;

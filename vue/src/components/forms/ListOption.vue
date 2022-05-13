@@ -28,7 +28,7 @@
 				if (this.current)
 					return;
 				this.$emit('select');
-				setTimeout(() => { this.$parent.closePopup(); }, 100);
+				setTimeout(() => { this.$parent.selectEvent(); }, 100);
 			},
 			/**
 			 * Remove item
@@ -36,6 +36,7 @@
 			remove()
 			{
 				this.$emit('remove');
+				setTimeout(() => { this.$parent.removeEvent(); }, 100);
 			}
 		}
 	}
@@ -44,25 +45,20 @@
 	.list-option
 	{
 		position: relative;
-		width:100%;
 		min-height: 20px;
 		span
 		{
-			top:50%;
-			margin-top: -10px;
 			height:20px;
 			line-height: 20px;
 			padding:0 8px;
 			background-color: rgba(124, 119, 145, 0.1);
 			border-radius: 2px;
 			font-size: 10px;
-			margin-right: 2px;
+			margin-right: 4px;
 			color: #7C7791;
-			position: absolute;
 			white-space: nowrap;
-			text-overflow: ellipsis;
-			max-width: calc(100% - 20px);
-			overflow: hidden;
+			display:inline-flex;
+			position: relative;
 		}
 	}
 	.list-option__remove

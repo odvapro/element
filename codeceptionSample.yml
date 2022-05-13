@@ -17,6 +17,7 @@ suites:
                     dump:
                         - 'tests/_data/dump.sql'
                         - 'tests/_data/block_type_nodes.sql'
+                        - 'tests/_data/block_type.sql'
                         - 'tests/_data/em_types.sql'
                         - 'tests/_data/em_groups.sql'
                         - 'tests/_data/em_users.sql'

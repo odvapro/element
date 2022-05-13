@@ -21,7 +21,7 @@ class EmListField extends FieldBase
 		if(is_array($this->fieldValue))
 			return implode(',',$this->fieldValue);
 		else
-			return '';
+			return null;
 	}
 
 	/**

@@ -1,5 +1,16 @@
 <template>
 	<div class="em-list-settings">
+		<div class="popup__field">
+			<div class="popup__field-name">Multiple</div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.multiple"
+				></Checkbox>
+			</div>
+		</div>
+		<div class="popup__field">
+			<div class="popup__field-name">Options List</div>
+		</div>
 		<div class="em-list-settings__line">
 			<div class="em-list-settings__key-block">{{$t('fieldEmList.settings.key')}}</div>
 			<div class="em-list-settings__key-block">{{$t('fieldEmList.settings.value')}}</div>
@@ -56,7 +67,8 @@
 				{
 					list: [
 						{key: '', value: ''}
-					]
+					],
+					multiple:false
 				},
 			}
 		},
@@ -89,7 +101,8 @@
 			save()
 			{
 				let formData = {
-					list: this.localSettings.list
+					list: this.localSettings.list,
+					multiple: this.localSettings.multiple
 				};
 
 				this.$emit('save', formData);
@@ -105,7 +118,10 @@
 				if(typeof this.settings[index] == 'undefined')
 					continue;
 
-				this.$set(this.localSettings, index, this.settings[index])
+				if (this.settings[index] === 'false')
+					this.$set(this.localSettings, index, false);
+				else
+					this.$set(this.localSettings, index, this.settings[index])
 			}
 		}
 	}

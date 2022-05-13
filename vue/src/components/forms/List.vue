@@ -4,17 +4,20 @@
 			<span v-if="!hasSelectedSlot" class="el-empty">{{ placeholder }}</span>
 			<slot name="selected"></slot>
 		</div>
-		<div class="list__search" v-if="showPopup">
+		<div
+			class="list__search"
+			v-if="showPopup"
+			@keydown.esc="closePopup"
+			tabindex="1"
+		>
 			<div class="list__search-popup-head">
+				<slot name="selected"></slot>
 				<input
 					ref="searchInput"
-					v-if="!hasSelectedSlot"
 					class="el-inp-noborder"
 					type="text"
-					:placeholder="$t('forms.list.search_for_an_option')"
 					v-model="localSearchText"
 				/>
-				<slot name="selected"></slot>
 			</div>
 			<div class="list__options">
 				<slot></slot>
@@ -25,7 +28,14 @@
 <script>
 	export default
 	{
-		props:['searchText','settings'],
+		props:{
+			searchText: {type: String},
+			settings: {type: Object},
+			multiple: {
+				type: Boolean,
+				default: false
+			}
+		},
 		/**
 		 * Глобальные переменные страницы
 		 */
@@ -86,6 +96,25 @@
 			{
 				this.showPopup = false;
 			},
+
+			/**
+			 * Срабатывает при выборе пункт
+			 */
+			selectEvent()
+			{
+				if(!this.multiple)
+					this.closePopup();
+
+				this.$refs.searchInput.focus();
+			},
+
+			/**
+			 * Срабатывает при удалении выбранной опции
+			 */
+			removeEvent()
+			{
+				this.$refs.searchInput.focus();
+			}
 		},
 		mounted()
 		{
@@ -108,17 +137,20 @@
 		height: 100%;
 		display: flex;
 		align-items: center;
+		justify-content: flex-start;
+		overflow: hidden;
 	}
 	.list__search-popup-head
 	{
-		height: 30px;
 		display: flex;
+		flex-wrap:wrap;
 		align-items: center;
-		padding: 0 9px;
+		padding: 8px 9px;
 		font-size: 10px;
 		background-color: rgba(103, 115, 135, 0.05);
 		color: rgba(25, 28, 33, 0.4);
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
+		row-gap: 4px;
 	}
 	.list__search
 	{
@@ -128,17 +160,17 @@
 		border-radius: 2px;
 		background: white;
 		position: absolute;
-		top: -2px;
+		top: -5px;
 		background: white;
 		z-index: 2;
-		left: -2px;
+		left: -5px;
 	}
 	.list__options
 	{
 		max-height: 190px;
 		overflow: auto;
 		margin:5px 0;
-		.list-option{padding:5px 0 5px 10px; height: 30px;}
+		.list-option{padding:5px 0 5px 10px;}
 		.list-option:hover{background: rgba(103, 115, 135, 0.1);}
 	}
 	.list__search-popup-head .list-option__remove{display: inline-block;}

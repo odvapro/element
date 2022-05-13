@@ -16,6 +16,8 @@ Instructions for developers
 ## Run tests
 ```
 vendor/bin/codecept run
+vendor/bin/codecept run api  EmDateCest
+vendor/bin/codecept run api  EmDateCest:save
 ```
 
 ## Run cypress tests

@@ -1,5 +1,5 @@
 <?php
-class EmDateCest
+class EmListCest
 {
 	/**
 	 * Save tests
@@ -10,25 +10,25 @@ class EmDateCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		// check incorect date save
+		// check incorect list code
 		$this->saveField($I, 'incorrect value', 1);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'date' => null]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'list' => null]);
 
-		// check correct date field type
-		$this->saveField($I, date('Y-m-d H:i',time()), 1);
+		// check correct list
+		$this->saveField($I, ['first'], 1);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'date' => date('Y-m-d',time()) ]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'list' => 'first' ]);
 
-		// check correct datetime field type
-		$this->saveField($I, date('Y-m-d H:i:00',time()), 1, 'datetime');
+		// check multiple list
+		$this->saveField($I, ['first','second','third'], 1);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'datetime' => date('Y-m-d H:i:00',time()) ]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'list' => 'first,second,third' ]);
 
 		// save empty date
 		$this->saveField($I, '', 1);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'date' => null ]);
+		$I->seeInDatabase('block_type', ['id' => 1, 'list' => null ]);
 	}
 
 	/**
@@ -41,12 +41,12 @@ class EmDateCest
 		$I->seeResponseContainsJson(['success' => true]);
 
 		// check incorect date save
-		$this->getField($I, 2);
+		// $this->getField($I, 2);
 		// $I->seeResponseContainsJson(['success' => true]);
 	}
 
 
-	protected function saveField(ApiTester $I, $newValue, Int $id, $fieldName='date')
+	protected function saveField(ApiTester $I, $newValue, Int $id, $fieldName='list')
 	{
 		$I->sendPOST('/el/update/',
 		[

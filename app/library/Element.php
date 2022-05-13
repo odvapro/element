@@ -282,7 +282,8 @@ class Element
 			return ['success' => false, 'message' => $e->getMessage(), 'code' => $e->getCode()];
 		}
 
-		if (empty($updateParams) || empty($updateParams['set'])) return ['success' => false, 'message' => 'update_error', 'code' => 7];
+		if (empty($updateParams) || empty($updateParams['set']))
+			return ['success' => false, 'message' => 'update_error', 'code' => 7];
 
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
