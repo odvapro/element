@@ -9,8 +9,8 @@ class EmNodeField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$nodeTableCode = $this->settings['nodeTableCode'];
-		$nodeFieldCode = $this->settings['nodeFieldCode'];
+		$nodeTableCode  = $this->settings['nodeTableCode'];
+		$nodeFieldCode  = $this->settings['nodeFieldCode'];
 		$nodeSearchCode = $this->settings['nodeSearchCode'];
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
@@ -28,44 +28,53 @@ class EmNodeField extends FieldBase
 		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
 			return [];
 
-		$node = null;
+		$node = [];
+		$fieldValueArray = explode(',', $this->fieldValue);
 
-		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem) {
-			if ($nodeItem[$nodeFieldCode] == $this->fieldValue)
+		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
+		{
+			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
-				$node = $nodeItem;
-				break;
+				$node[] = [
+					'id'   => $nodeItem[$nodeFieldCode],
+					'name' => $nodeItem[$nodeSearchCode],
+					'url'  => "/table/{$nodeTableCode}/el/{$nodeItem[$nodeFieldCode]}"
+				];
 			}
 		}
 
-		if(empty($node))
-			return [];
-
-		return [
-			'id'   => $node[$nodeFieldCode],
-			'name' => $node[$nodeSearchCode],
-			'url'  => "/table/{$nodeTableCode}/el/{$node[$nodeFieldCode]}"
-		];
+		return $node;
 	}
 
 	/**
 	 * Сохранить значение
+	 * Format of saving data
+	 * empty []
+	 * one node [1]
+	 * multiple nodes [1,2,3]
+	 * each item should be int
 	 */
 	public function saveValue()
 	{
 		if(empty($this->fieldValue))
 			return null;
 
+		if(!is_numeric($this->fieldValue) && !is_array($this->fieldValue))
+			throw new EmException("Incorrect field value, should be int or array of int", 1);
+
 		if(is_numeric($this->fieldValue))
 			return intval($this->fieldValue);
 
-		if(is_string($this->fieldValue))
-			return null;
+		if(is_array($this->fieldValue))
+		{
+			foreach ($this->fieldValue as $fielValueItem)
+				if (!is_int($fielValueItem) && !is_numeric($fielValueItem))
+					throw new EmException("Array of node values should be array of integers", 2);
 
-		if(!is_array($this->fieldValue))
-			return intval($this->fieldValue);
+			return implode(',', $this->fieldValue);
+		}
 
-		return intval($this->fieldValue['id']);
+		return null;
 	}
 
 	/**

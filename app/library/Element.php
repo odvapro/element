@@ -298,7 +298,15 @@ class Element
 			else
 				$field = new EmStringField($fieldValue,$settings,$updateParams['set']);
 
-			$fieldValue = $field->saveValue();
+			try {
+				$fieldValue = $field->saveValue();
+			} catch (EmException $e) {
+				return [
+					'success' => false,
+					'message' => $e->getMessage(),
+					'code' => $e->getCode()
+				];
+			}
 		}
 
 		$result = $this->eldb->update($updateParams);

@@ -1,6 +1,14 @@
 <template>
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
+			<div class="popup__field-name">Multiple</div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.multiple"
+				></Checkbox>
+			</div>
+		</div>
+		<div class="popup__field">
 			<div class="popup__field-name">
 				{{$t('table')}}
 				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
@@ -65,6 +73,7 @@
 			return {
 				localSettings :
 				{
+					multiple  : false,
 					nodeTableCode  : false,
 					nodeFieldCode  : false,
 					nodeSearchCode : false,
@@ -150,10 +159,9 @@
 			save()
 			{
 				var error = false;
-
 				for(var index in this.localSettings)
 				{
-					if(this.localSettings[index] != false)
+					if(this.localSettings[index] != false || index == 'multiple')
 						continue;
 
 					this.$set(this.errors, index, {message: 'Field is required'})
@@ -208,7 +216,10 @@
 				if(typeof this.settings[index] == 'undefined')
 					continue;
 
-				this.$set(this.localSettings, index, this.settings[index])
+				if (this.settings[index] === 'false' || this.settings[index] === 'true')
+					this.$set(this.localSettings, index, (this.settings[index] === 'true'));
+				else
+					this.$set(this.localSettings, index, this.settings[index])
 			}
 		}
 	}

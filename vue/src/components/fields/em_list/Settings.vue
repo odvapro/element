@@ -118,8 +118,8 @@
 				if(typeof this.settings[index] == 'undefined')
 					continue;
 
-				if (this.settings[index] === 'false')
-					this.$set(this.localSettings, index, false);
+				if (this.settings[index] === 'false' || this.settings[index] === 'true')
+					this.$set(this.localSettings, index, (this.settings[index] === 'true'));
 				else
 					this.$set(this.localSettings, index, this.settings[index])
 			}

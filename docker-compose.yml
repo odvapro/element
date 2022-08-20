@@ -8,14 +8,10 @@ services:
       default: {}
     image: ${IMAGE_NAME}
     container_name: ${CONTAINER_NAME}
-    restart: 'always'
+    restart: 'no'
     ports:
       - "${PORT}:80"
     volumes:
       - ${PHP_INI}:/usr/local/etc/php/php.ini
       - ${ELEMENT_DIR}:/var/www/element
       - ${PUBLIC_DIR}:/var/www/public
-networks:
-  default:
-    external: true
-    name: ${NETWORK}

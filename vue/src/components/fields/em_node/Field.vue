@@ -4,13 +4,15 @@
 			:searchText.sync="query"
 			@onopen="getNodes()"
 			:settings="{placeholder: $t('empty')}"
+			:multiple="fieldSettings.multiple === 'true'"
 		>
 			<template v-slot:selected>
 				<ListOption
-					v-if="localFieldValue && localFieldValue.id"
-					@remove="removeItem"
+					v-for="localFieldItem in localFieldValue"
+					@remove="removeItem(localFieldItem)"
+					:key="localFieldItem.id"
 					:current=true
-				>{{ localFieldValue.name }}</ListOption>
+				>{{ localFieldItem.name }}</ListOption>
 			</template>
 			<ListOption
 				v-for="listItem in list"
@@ -18,12 +20,8 @@
 				@select="selectItem(listItem)"
 			>{{ listItem.name }}</ListOption>
 			<div class="em-node__footer" @click="createItem()" v-if="newTag">
-				<div class="em-node__btn">
-					{{$t('create')}}
-				</div>
-				<div class="em-node__new-tag">
-					{{newTag}}
-				</div>
+				<div class="em-node__btn"> {{$t('create')}} </div>
+				<div class="em-node__new-tag"> {{newTag}} </div>
 			</div>
 		</List>
 		<DetailPopup
@@ -37,7 +35,6 @@
 </template>
 <script>
 	import DetailPopup from '@/components/popups/DetailPopup';
-	import qs from 'qs';
 	export default
 	{
 		components:{DetailPopup},
@@ -62,15 +59,7 @@
 			{
 				this.newTag = this.query;
 				this.getNodes();
-			},
-			fieldValue:
-			{
-				handler(value)
-				{
-					this.$set(this, 'localFieldValue', value);
-				},
-				deep: true,
-			},
+			}
 		},
 		mounted()
 		{
@@ -108,16 +97,6 @@
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},
-			/**
-			 * Send change current value
-			 */
-			changeValue(newValue)
-			{
-				this.$emit('onChange', {
-					value     : newValue,
-					settings  : this.fieldSettings,
-				});
-			},
 
 			/**
 			 * Get nodes from server
@@ -153,9 +132,19 @@
 			 */
 			selectItem(listItem)
 			{
-				this.localFieldValue = listItem;
+				let resArray = [];
+				if(this.fieldSettings.multiple === 'true')
+				{
+					this.localFieldValue.push(listItem);
+					this.localFieldValue.forEach(item=>{
+						resArray.push(item.id);
+					});
+				}
+				else
+					this.localFieldValue = [listItem];
+
 				this.$emit('onChange', {
-					value    : this.localFieldValue,
+					value    : resArray,
 					settings : this.fieldSettings,
 				});
 			},
@@ -163,12 +152,23 @@
 			/**
 			 * Удаление выбранной опции
 			 */
-			removeItem()
+			removeItem(localFieldItem)
 			{
-				this.localFieldValue = '';
+				let resArray = [];
+				if(this.fieldSettings.multiple === 'true')
+				{
+					let keyIndex = this.localFieldValue.indexOf(localFieldItem);
+					this.localFieldValue.splice(keyIndex,1);
+					this.localFieldValue.forEach(item=>{
+						resArray.push(item.id);
+					});
+				}
+				else
+					this.localFieldValue = [];
+
 				this.$emit('onChange', {
-					value     : this.localFieldValue,
-					settings  : this.fieldSettings,
+					value     : resArray,
+					settings  : this.fieldSettings
 				});
 			},
 		},
@@ -221,6 +221,11 @@
 		left:0px;
 		cursor: pointer;
 		.list{padding-left:10px; }
+		.list__search
+		{
+			width:calc(100% + 10px);
+			min-width: 200px;
+		}
 	}
 	.detail-field-box .em-node .list{padding-left:0px;}
 </style>

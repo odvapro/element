@@ -7,7 +7,7 @@ CREATE TABLE `block_type` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(50) DEFAULT 'text',
   `name` varchar(50) DEFAULT NULL,
-  `node` int(11) DEFAULT NULL,
+  `node` varchar(50) DEFAULT NULL,
   `list` varchar(50) DEFAULT NULL,
   `file` text,
   `text` text,

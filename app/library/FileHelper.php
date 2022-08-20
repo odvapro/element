@@ -46,7 +46,8 @@ class FileHelper
 		if(array_key_exists($mimeType, self::$fileTypes))
 			return self::$fileTypes[$mimeType];
 
-		return false;
+		$mimeArray = explode('/',$mimeType);
+		return '.'.end($mimeArray);
 	}
 
 	/**

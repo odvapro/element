@@ -15,6 +15,20 @@
 composer create-project odvapro/element --no-dev
 ```
 
+## Docker
+Склонировать проект
+скопировать sample.env в .env
+Запустить docker-compose build
+Запустить docker-compose uo -d
+Зайти внутри контейнера
+Запустить npm i
+Запустить npm build
+
+```
+composer create-project odvapro/element --no-dev
+```
+
+
 ## Настройки сервера
 ### Apache
 Убедиться в том что включен mod_rewrite
