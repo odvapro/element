@@ -27,19 +27,9 @@ Temporary Items
 /api/app/cache/
 !/api/app/cache/readme.md
 
-# vue build
-/vue/public/upload/
-!/vue/public/upload/.gitkeep
-/vue/public/tmp/
+# upload & tmp
 /public/tmp/
 /public/upload/
-!/vue/public/tmp/.gitkeep
-!/public/tmp/.gitkeep
-!/public/upload/.gitkeep
-!/public/upload/.gitkeep
-!/public/tmp/.gitkeep
-!/public/.gitkeep
-/public
 
 app/logs/
 !app/logs/.gitkeep

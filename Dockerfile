@@ -59,17 +59,4 @@ RUN sed -i 's/\/html//g' /etc/apache2/sites-available/000-default.conf
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
 RUN apt-get -y install nodejs
 
-WORKDIR /var/www/
-
 RUN echo "<?php\nheader('Location: /element/');" > index.php
-
-WORKDIR /var/www/public
-WORKDIR /var/www/element
-
-RUN rm -rf *
-
-# server files
-VOLUME /usr/local/etc/php/php.ini
-
-VOLUME /var/www/element
-VOLUME /var/www/public
