@@ -5,7 +5,7 @@ services:
     build:
       context: ./
     networks:
-      default: {}
+      - element
     image: ${IMAGE_NAME-element}
     container_name: ${CONTAINER_NAME-element}
     restart: 'no'
@@ -15,6 +15,9 @@ services:
       - ${ELEMENT_DIR-./}:/var/www/element
     working_dir: ${WORKDIR-/var/www/element}
 networks:
-  default:
-    external: true
-    name: ${NETWORK-element_default}
+  element:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.100.1.0/24

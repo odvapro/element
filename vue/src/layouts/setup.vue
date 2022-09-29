@@ -69,7 +69,7 @@ export default
 			successCheck: false,
 			config:
 			{
-				host     : {value: 'localhost', error: false},
+				host     : {value: '10.100.1.1', error: false},
 				dbname   : {value: '', error: false},
 				username : {value: '', error: false},
 				adapter  : {value: 'Mysql', error: false},
