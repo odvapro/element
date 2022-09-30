@@ -27,7 +27,7 @@ composer create-project odvapro/element --no-dev
 
   or
 
-https://github.com/odvapro/element.git
+git clone https://github.com/odvapro/element.git
 ```
 
 Navigate to the created "element" folder and run the following command:
