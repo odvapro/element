@@ -5,6 +5,7 @@
 	>
 		<List
 			:settings="{placeholder: $t('select_an_option') }"
+			:searchText.sync="searchText"
 		>
 			<template v-slot:selected>
 				<ListOption
@@ -35,7 +36,9 @@
 			return {
 				query: '',
 				list: [],
-				localFieldValue: false
+				localFieldValue: false,
+				searchText: '',
+				timeout: null,
 			}
 		},
 		computed:
@@ -48,6 +51,14 @@
 				return true;
 			}
 		},
+		watch:
+		{
+			searchText(value)
+			{
+				clearTimeout(this.timeout);
+				this.timeout = setTimeout(() => this.getNodes(), 500)
+			}
+		},
 		methods:
 		{
 			/**
@@ -56,6 +67,7 @@
 			changeValue(newValue)
 			{
 				this.$emit('onChange', newValue);
+				this.getNodes();
 			},
 			async getNodes()
 			{
@@ -63,7 +75,7 @@
 				data.append('nodeFieldCode', this.settings.nodeFieldCode);
 				data.append('nodeTableCode', this.settings.nodeTableCode);
 				data.append('nodeSearchCode', this.settings.nodeSearchCode);
-				data.append('q', this.query);
+				data.append('q', this.searchText);
 
 				let result = await this.$axios({
 					method : 'POST',

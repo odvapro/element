@@ -141,7 +141,10 @@
 					});
 				}
 				else
+				{
 					this.localFieldValue = [listItem];
+					resArray.push(listItem.id);
+				}
 
 				this.$emit('onChange', {
 					value    : resArray,
