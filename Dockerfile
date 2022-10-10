@@ -55,8 +55,4 @@ RUN a2enmod rewrite headers
 # element
 RUN sed -i 's/\/html//g' /etc/apache2/sites-available/000-default.conf
 
-# RUN apt-get update
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
-RUN apt-get -y install nodejs
-
 RUN echo "<?php\nheader('Location: /element/');" > index.php
