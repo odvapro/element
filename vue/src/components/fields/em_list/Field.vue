@@ -91,7 +91,7 @@
 				if(this.localFieldValue.indexOf(listItem.key) !== -1)
 					return;
 
-				if(this.fieldSettings.multiple)
+				if(this.fieldSettings.multiple === 'true')
 					this.localFieldValue.push(listItem.key);
 				else
 					this.localFieldValue = [listItem.key];

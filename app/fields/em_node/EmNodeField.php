@@ -59,22 +59,10 @@ class EmNodeField extends FieldBase
 		if(empty($this->fieldValue))
 			return null;
 
-		if(!is_numeric($this->fieldValue) && !is_array($this->fieldValue))
-			throw new EmException("Incorrect field value, should be int or array of int", 1);
+		if(!is_array($this->fieldValue))
+			throw new EmException("Incorrect field value, should array", 1);
 
-		if(is_numeric($this->fieldValue))
-			return intval($this->fieldValue);
-
-		if(is_array($this->fieldValue))
-		{
-			foreach ($this->fieldValue as $fielValueItem)
-				if (!is_int($fielValueItem) && !is_numeric($fielValueItem))
-					throw new EmException("Array of node values should be array of integers", 2);
-
-			return implode(',', $this->fieldValue);
-		}
-
-		return null;
+		return implode(',', array_column($this->fieldValue, 'id'));
 	}
 
 	/**

@@ -137,13 +137,13 @@
 				{
 					this.localFieldValue.push(listItem);
 					this.localFieldValue.forEach(item=>{
-						resArray.push(item.id);
+						resArray.push(item);
 					});
 				}
 				else
 				{
 					this.localFieldValue = [listItem];
-					resArray.push(listItem.id);
+					resArray.push(listItem);
 				}
 
 				this.$emit('onChange', {
