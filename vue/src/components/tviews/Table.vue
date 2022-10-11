@@ -775,7 +775,7 @@
 		.table-vertical-scroll
 		{
 			width: 100%;
-			overflow: initial;
+			overflow: scroll;
 		}
 	}
 </style>
