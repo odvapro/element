@@ -1,5 +1,5 @@
 <?php
-use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+use Phalcon\Db\Adapter\PdoFactory as DbAdapter;
 
 if(file_exists(__DIR__ . "/../app/config/config.php"))
 {
@@ -31,16 +31,18 @@ if (empty($_POST) ||
 try
 {
 	$_POST['password'] = preg_replace("/[\\\]/", '', $_POST['password']);
-	$connection = new DbAdapter([
-		'adapter'  => $_POST['adapter'],
-		'host'     => $_POST['host'],
-		'username' => $_POST['username'],
-		'password' => $_POST['password'],
-		'dbname'   => $_POST['dbname'],
-		"options" => [
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+	$connection = (new DbAdapter)->newInstance(
+		$_POST['adapter'],
+		[
+			'host'     => $_POST['host'],
+			'username' => $_POST['username'],
+			'password' => $_POST['password'],
+			'dbname'   => $_POST['dbname'],
+			"options" => [
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+			]
 		]
-	]);
+	);
 
 	if (!is_dir('../app/config') or !is_writable('../app/config'))
 	{
@@ -58,6 +60,7 @@ try
 	}
 
 	$installSql = file_get_contents(__DIR__.'/install.sql');
+
 	$connection->execute($installSql);
 
 	$config = file_get_contents(__DIR__."/../app/config/configSample.php");

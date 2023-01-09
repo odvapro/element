@@ -163,14 +163,14 @@
 					let keyIndex = this.localFieldValue.indexOf(localFieldItem);
 					this.localFieldValue.splice(keyIndex,1);
 					this.localFieldValue.forEach(item=>{
-						resArray.push(item.id);
+						resArray.push(item);
 					});
 				}
 				else
 					this.localFieldValue = [];
 
 				this.$emit('onChange', {
-					value     : resArray,
+					value     : !resArray.lenght ? '' : resArray,
 					settings  : this.fieldSettings
 				});
 			},

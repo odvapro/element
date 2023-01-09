@@ -6,6 +6,16 @@
 			</div>
 			<div class="setup-content">
 				<label class="setup-label">
+					Adapter
+					<input
+						type="text"
+						class="el-inp setup__input"
+						:class="{'el-inp--error':config.host.error}"
+						v-model="config.adapter.value"
+						placeholder="Enter Adapter"
+					/>
+				</label>
+				<label class="setup-label">
 					Host
 					<input
 						type="text"
@@ -72,7 +82,7 @@ export default
 				host     : {value: '10.100.1.1', error: false},
 				dbname   : {value: '', error: false},
 				username : {value: '', error: false},
-				adapter  : {value: 'Mysql', error: false},
+				adapter  : {value: 'mysql', error: false},
 				password : {value: '', error: false},
 				baseUrl  : {value: '/element/', error: false},
 			},

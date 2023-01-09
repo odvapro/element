@@ -16,8 +16,12 @@ class AuthController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'No params', 'code' => 1]);
 
 		$user = EmUsers::findFirst([
-			'conditions' => "password = ?1 AND (login = ?0 OR email = ?0)",
-			'bind'       => [$login, md5($password)]
+			"password = ?2 AND (login = ?0 OR email = ?1)",
+			'bind'       => [
+				0 => $login,
+				1 => $login,
+				2 => md5($password)
+			]
 		]);
 
 		if(!$user)

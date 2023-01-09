@@ -2,7 +2,7 @@
 /**
  * Abstract class for field type
  */
-abstract class FieldBase extends Phalcon\Mvc\User\Plugin
+abstract class FieldBase extends \Phalcon\Di\Injectable
 {
 	protected $fieldValue = '';
 	protected $row        = [];

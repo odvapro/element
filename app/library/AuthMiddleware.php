@@ -1,7 +1,7 @@
 <?php
 use \Phalcon\Mvc\Dispatcher as PhDispatcher;
 
-class AuthMiddleware extends Phalcon\Mvc\User\Plugin
+class AuthMiddleware extends \Phalcon\Di\Injectable
 {
 	/**
 	 * @var Phalcon\Acl\Adapter\Memory
@@ -22,8 +22,8 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 		if(!$this->_acl)
 		{
 			$acl = new Phalcon\Acl\Adapter\Memory();
-			$acl->setDefaultAction(Phalcon\Acl::DENY);
-			$acl->setNoArgumentsDefaultAction(Phalcon\Acl::DENY);
+			$acl->setDefaultAction(\Phalcon\Acl\Enum::DENY);
+			$acl->setNoArgumentsDefaultAction(\Phalcon\Acl\Enum::DENY);
 
 			$acl = $this->registerRolesAndResources($acl);
 			$acl = $this->setResourcesAccess($acl);
@@ -77,15 +77,15 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 
 		// add public resources
 		foreach ($resources['public'] as $resource)
-			$acl->addResource(new Phalcon\Acl\Resource($resource), '*');
+			$acl->addComponent(new Phalcon\Acl\Component($resource), '*');
 
 		// add private resources
 		foreach ($resources['private'] as $resourceName => $resource)
-			$acl->addResource(new Phalcon\Acl\Resource($resourceName), array_keys($resource));
+			$acl->addComponent(new Phalcon\Acl\Component($resourceName), array_keys($resource));
 
 		// add admin resources
 		foreach ($resources['admin'] as $resourceName => $resource)
-			$acl->addResource(new Phalcon\Acl\Resource($resourceName), $resource);
+			$acl->addComponent(new Phalcon\Acl\Component($resourceName), $resource);
 
 		return $acl;
 	}
@@ -216,7 +216,7 @@ class AuthMiddleware extends Phalcon\Mvc\User\Plugin
 
 		$allowed = $acl->isAllowed($role, $controller, $action, ['user' => $this->user, 'group' => $this->group]);
 
-		if($allowed != Phalcon\Acl::ALLOW)
+		if($allowed != \Phalcon\Acl\Enum::ALLOW)
 		{
 			echo json_encode(['success' => false, 'message' => 'you dont have access']);
 			exit();

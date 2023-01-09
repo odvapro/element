@@ -1,11 +1,12 @@
 <?php
 
-$loader = new \Phalcon\Loader();
+$loader = new \Phalcon\Autoload\Loader();
 
 /**
  * We're a registering a set of directories taken from the configuration file
  */
-$loader->registerDirs([
+
+$loader->setDirectories([
 	$config->application->controllersDir,
 	$config->application->modelsDir,
 	$config->application->libraryDir,
@@ -13,6 +14,6 @@ $loader->registerDirs([
 	$config->application->hooksDir,
 ])->register();
 
-$loader->registerNamespaces([
+$loader->setNamespaces([
 	'Element\Hooks' => $config->application->hooksDir,
 ]);

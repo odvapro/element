@@ -1,5 +1,5 @@
 <?php
-class Image extends Phalcon\Mvc\User\Plugin
+class Image extends \Phalcon\Di\Injectable
 {
 	const CROPTOP = 1;
 	const CROPCENTRE = 2;

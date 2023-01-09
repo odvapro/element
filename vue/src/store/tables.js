@@ -513,6 +513,7 @@ const table =
 					}
 				}
 			});
+
 			let result = await axios.post('/el/update/',data);
 
 			if (!result.data.success)

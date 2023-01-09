@@ -16,7 +16,7 @@ class EmTextField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$result = json_decode($this->fieldValue,true);
+		$result = json_decode($this->fieldValue ?? '',true);
 		if(json_last_error() === JSON_ERROR_NONE)
 			return $result;
 

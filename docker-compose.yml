@@ -2,11 +2,9 @@ version: "3"
 
 services:
   element:
-    build:
-      context: ./
+    image: odva/php-apache-phalcon5
     networks:
       - element
-    image: ${IMAGE_NAME-element}
     container_name: ${CONTAINER_NAME-element}
     restart: 'no'
     ports:

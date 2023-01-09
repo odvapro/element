@@ -41,7 +41,7 @@ class EmUsers extends ModelBase
 		return "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $this->email ) ) ) . "?d=" . urlencode( 'image.png' ) . "&s=40";
 	}
 
-	public function toArray($collumns="")
+	public function toArray($columns = null) : array
 	{
 		$userArr = parent::toArray();
 		$userArr['avatar'] = $this->getAvatar();

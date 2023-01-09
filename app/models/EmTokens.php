@@ -9,7 +9,7 @@ class EmTokens extends ModelBase
 		]);
 	}
 
-	public function toArray($columns='')
+	public function toArray($columns = null) : array
 	{
 		$token = parent::toArray();
 		$token['group_name'] = $this->group->name;
