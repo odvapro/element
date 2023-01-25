@@ -62,6 +62,9 @@ class HooksCest
 	{
 		$I->copyDir('./tests/_data/hooks/', './app/hooks/');
 		$I->copyDir('./tests/_data/group_hooks/', './app/hooks/Api/');
+
+		$this->logIn($I, 'admin', 'adminpass');
+
 		$groupId = $this->addGroup($I, 'Api');
 		$token = $this->createToken($I, $groupId);
 

@@ -45,7 +45,7 @@ class Element
 				if(strpos($fieldCode, '.') !== false || !is_dir($fieldDirPath))
 					continue;
 
-				$loader->registerDirs([$fieldDirPath], true)->register();
+				$loader->setDirectories([$fieldDirPath], true)->register();
 
 				if(class_exists($fieldComponent))
 				{

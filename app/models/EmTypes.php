@@ -56,7 +56,7 @@ class EmTypes extends ModelBase
 	 * @param  Array $columns Массив полей которые нужны
 	 * @return Array          Массив полей модели
 	 */
-	public function toArray($columns = null)
+	public function toArray($columns = null) : array
 	{
 		$result             = parent::toArray($columns);
 		$result['settings'] = $this->getSettings();

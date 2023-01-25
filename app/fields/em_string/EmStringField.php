@@ -16,7 +16,7 @@ class EmStringField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval(strip_tags($this->fieldValue));
+		return strval(strip_tags($this->fieldValue ?? ''));
 	}
 
 	/**

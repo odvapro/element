@@ -2,11 +2,9 @@ version: "3"
 
 services:
   element:
-    build:
-      context: ./
+    image: odva/phalcon:5.0
     networks:
       - element
-    image: ${IMAGE_NAME-element}
     container_name: ${CONTAINER_NAME-element}
     restart: 'no'
     ports:
@@ -20,4 +18,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.100.1.0/24
+        - subnet: 10.100.${SITE_ID-1}.0/24

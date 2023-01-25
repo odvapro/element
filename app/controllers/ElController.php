@@ -171,9 +171,11 @@ class ElController extends ControllerBase
 					'operation' => 'CONTAINS',
 					'value'     => $search,
 				];
-				$select['order'][] = "levenshtein('{$search}', {$columnKey})";
+				$select['order'][] = "LEVENSHTEIN('{$search}', {$columnKey})";
 			}
-			$select['order'] = [ 'LEAST('.implode(', ', $select['order']).')' ];
+
+			// if(!empty($select['order']) && count($select['order']) > 1)
+				$select['order'] = [ 'LEAST('.implode(', ', $select['order']).')' ];
 		}
 
 		$selectResult = $this->element->select($select);

@@ -37,7 +37,7 @@ class FieldController extends ControllerBase
 		if(is_dir($fldModelsDir))
 		{
 			global $loader;
-			$loader->registerDirs([$fldModelsDir])->register();
+			$loader->setDirectories([$fldModelsDir])->register();
 		}
 
 		$contr = new $fldControllerName();

@@ -15,7 +15,7 @@ class EmNodeCest
 		$I->seeResponseContainsJson(['success' => false]);
 
 		// check correct node
-		$this->saveField($I, 20, 1);
+		$this->saveField($I, [['id' => 20]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => 20 ]);
 
@@ -25,12 +25,12 @@ class EmNodeCest
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => null ]);
 
 		// check saving multiple nodes
-		$this->saveField($I, [20,23,24], 1);
+		$this->saveField($I, [['id' => 20],['id' => 23],['id' => 24]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
 
 		// check incorrect node
-		$this->saveField($I, ['id'=>20,'name'=>'some name'], 2);
+		$this->saveField($I, [['id'=>20],['id'=>'some name']], 2);
 		$I->seeResponseContainsJson(['success' => false]);
 	}
 

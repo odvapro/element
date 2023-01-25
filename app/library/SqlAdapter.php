@@ -102,11 +102,11 @@ class SqlAdapter extends PdoAdapter
 			$this->db->prepare($sql);
 			$select = $this->db->fetchAll(
 				$sql,
-				Phalcon\Db::FETCH_ASSOC,
+				Phalcon\Db\Enum::FETCH_ASSOC,
 				$params
 			);
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"selectError: {$e->getMessage()}"
 			);
 			return false;
@@ -145,7 +145,7 @@ class SqlAdapter extends PdoAdapter
 			$this->db->prepare($sql);
 			$select = $this->db->fetchAll(
 				$sql,
-				Phalcon\Db::FETCH_ASSOC,
+				Phalcon\Db\Enum::FETCH_ASSOC,
 				$params
 			);
 		} catch (Exception $e) {
@@ -252,7 +252,7 @@ class SqlAdapter extends PdoAdapter
 		{
 			$this->db->execute($sql, array_merge(...$values));
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"insertRequest: {$sql}"
 			);
 			return false;
@@ -354,7 +354,7 @@ class SqlAdapter extends PdoAdapter
 			WHERE TABLE_TYPE='BASE TABLE'
 			AND TABLE_SCHEMA=:database
 			ORDER BY t.TABLE_NAME",
-			Phalcon\Db::FETCH_ASSOC,
+			Phalcon\Db\Enum::FETCH_ASSOC,
 			[ 'database' => $this->db->getDescriptor()['dbname'] ]
 		);
 
@@ -395,7 +395,7 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
-			$res = $this->db->fetchAll("SHOW COLUMNS  FROM " . $tableName, Phalcon\Db::FETCH_ASSOC);
+			$res = $this->db->fetchAll("SHOW COLUMNS  FROM " . $tableName, Phalcon\Db\Enum::FETCH_ASSOC);
 		}
 		catch (Exception $e)
 		{

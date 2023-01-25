@@ -1,7 +1,8 @@
 <?php
 $router = new \Phalcon\Mvc\Router();
 
-$router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI );
+// echo "<pre>".htmlentities(print_r(get_class_methods($router), true))."</pre>";exit();
+// $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI );
 
 $router->add(
 	"/notfound/", [
@@ -33,7 +34,7 @@ $router->add(
 	)
 );
 
-$router->handle();
+$router->handle($_SERVER['REQUEST_URI']);
 return $router;
 
 ?>

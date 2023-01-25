@@ -67,7 +67,7 @@ class EmGroups extends ModelBase
 			$groupAccesses->delete();
 	}
 
-	public function toArray($columns='')
+	public function toArray($columns = null) : array
 	{
 		$group = parent::toArray();
 

@@ -1,6 +1,6 @@
 <?php
 
-return new \Phalcon\Config(array(
+return new \Phalcon\Config\Config(array(
 	'database' => array(
 		'adapter'     => '#adapter#',
 		'host'        => '#host#',

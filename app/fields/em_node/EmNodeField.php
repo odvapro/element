@@ -29,7 +29,7 @@ class EmNodeField extends FieldBase
 			return [];
 
 		$node = [];
-		$fieldValueArray = explode(',', $this->fieldValue);
+		$fieldValueArray = explode(',', $this->fieldValue ?? '');
 
 		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
 		{
@@ -59,10 +59,23 @@ class EmNodeField extends FieldBase
 		if(empty($this->fieldValue))
 			return null;
 
-		if(!is_array($this->fieldValue))
-			throw new EmException("Incorrect field value, should array", 1);
+		if(!is_numeric($this->fieldValue) && !is_array($this->fieldValue))
+			throw new EmException("Incorrect field value, should be int or array of int", 1);
 
-		return implode(',', array_column($this->fieldValue, 'id'));
+		$nodes = [];
+
+		if(is_array($this->fieldValue))
+		{
+			$nodes = array_column($this->fieldValue, 'id');
+
+			foreach ($nodes as $node)
+				if (!is_int($node) && !is_numeric($node))
+					throw new EmException("Array of node values should be array of integers", 2);
+
+			return implode(',', $nodes);
+		}
+
+		return null;
 	}
 
 	/**

@@ -109,7 +109,7 @@
 			{
 				let keyIndex = this.localFieldValue.indexOf(listItem.key);
 				this.localFieldValue.splice(keyIndex,1);
-				let curValue = (this.localFieldValue.length == 0)?'':this.localFieldValue;
+				let curValue = (this.localFieldValue.length == 0) ? '' : this.localFieldValue;
 				this.$emit('onChange', {
 					value     : curValue,
 					settings  : this.fieldSettings

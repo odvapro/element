@@ -333,8 +333,10 @@
 				// set sibible settings
 				let tview = false;
 				for (var cTview of table.tviews)
-					if (cTview.default === '1')
+				{
+					if (cTview.default === 1)
 						tview = cTview;
+				}
 
 				let data = qs.stringify({
 					tviewId : tview.id,

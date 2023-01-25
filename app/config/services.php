@@ -2,17 +2,18 @@
 
 use Phalcon\DI\FactoryDefault;
 
-use Phalcon\Mvc\Dispatcher as PhDispatcher;
+use Phalcon\Dispatcher\Exception as PhDispatcher;
 
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 
-use Phalcon\Db\Adapter\Pdo\Factory;
+use Phalcon\Db\Adapter\PdoFactory;
 
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
-use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Session\Adapter\Stream as SessionAdapter;
+use Phalcon\Logger\Adapter\Stream as FileAdapter;
+use Phalcon\Logger\Logger;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -62,7 +63,12 @@ $di->set('dispatcher', function() use ($di)
  */
 $di->set('logger', function() use($config)
 {
-	return new FileAdapter(ROOT . '/app/logs/element.log');
+	return new Logger(
+		'messages',
+		[
+			'main' => new FileAdapter(ROOT . '/app/logs/element.log'),
+		]
+	);
 }, true);
 
 /**
@@ -94,21 +100,22 @@ $di->set('view', function () use ($config)
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$options = [
-	'host'     => $config->database->host,
-	'username' => $config->database->username,
-	'password' => $config->database->password,
-	'dbname'   => $config->database->dbname,
-	'adapter'  => $config->database->adapter,
-	"options" => [
-		PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4'"
+
+$db  = (new PdoFactory)->newInstance(
+	$config->database->adapter,
+	[
+		'host'     => $config->database->host,
+		'username' => $config->database->username,
+		'password' => $config->database->password,
+		'dbname'   => $config->database->dbname,
 	]
-];
-$db  = Factory::load($options);
+);
+
 $di->set('eldb', function () use ($config,$db)
 {
-	$dbs = ['Mysql'=>'Sql','Posgres'=>'Sql'];
+	$dbs = ['mysql'=>'Sql','posgres'=>'Sql'];
 	$adpterName = "{$dbs[$config->database->adapter]}Adapter";
+
 	$eldb       = new $adpterName($db);
 	return $eldb;
 });
@@ -153,8 +160,11 @@ $di->set('config', function() use ($config)
  */
 $di->set('session', function()
 {
-	$session = new SessionAdapter();
-	$session->start();
+	$session = new Phalcon\Session\Manager();
+	$files = new SessionAdapter([
+		'savePath' => '/tmp',
+	]);
+	$session->setAdapter($files)->start();
 	return $session;
 });
 

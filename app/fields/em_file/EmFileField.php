@@ -12,7 +12,7 @@ class EmFileField extends FieldBase
 		else
 			$domain = '';
 
-		$resArray = json_decode($this->fieldValue, true);
+		$resArray = json_decode($this->fieldValue ?? '', true);
 
 		if(empty($resArray)) return [];
 
