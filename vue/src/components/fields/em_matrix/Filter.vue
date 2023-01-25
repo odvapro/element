@@ -58,7 +58,7 @@
 			},
 			saveValue()
 			{
-				this.$emit('onChange', this.value);
+				this.$emit('onchange', this.value);
 			},
 			async getColumns()
 			{
