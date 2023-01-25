@@ -2,7 +2,7 @@ version: "3"
 
 services:
   element:
-    image: odva/php-apache-phalcon5
+    image: odva/phalcon:5.0
     networks:
       - element
     container_name: ${CONTAINER_NAME-element}
@@ -18,4 +18,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.100.1.0/24
+        - subnet: 10.100.${SITE_ID-1}.0/24
