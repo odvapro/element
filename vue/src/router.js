@@ -81,6 +81,8 @@ router.beforeEach(async function(to, from, next)
 	let userCookies = router.app.$cookie.get('user');
 	if (!valid.data.success || !userCookies)
 	{
+		store.commit('setNextUrl', to.fullPath);
+
 		store.commit('setAuth', false);
 		return false;
 	}
