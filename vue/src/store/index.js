@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		showLoader     : false,
 		layoutSelected : false,
 		showSidebar    : true,
+		nextUrl: null
 	},
 	getters:
 	{
@@ -74,6 +75,14 @@ const store = new Vuex.Store({
 		updateShowSidebar(state, status)
 		{
 			state.showSidebar = !!status;
+		},
+
+		/**
+		 * используется для редиректа после авторизации
+		 */
+		setNextUrl(state, status)
+		{
+			state.nextUrl = status;
 		},
 	}
 });

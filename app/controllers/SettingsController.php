@@ -141,7 +141,7 @@ class SettingsController extends ControllerBase
 	{
 		$composerJson   = file_get_contents(ROOT."/composer.json");
 		$composerJson   = json_decode($composerJson,true);
-		$currentVersion = $composerJson['verstion'];
+		$currentVersion = $composerJson['version'];
 		return $this->jsonResult(['success'=>true, 'version'=>$currentVersion]);
 	}
 
@@ -153,7 +153,7 @@ class SettingsController extends ControllerBase
 	{
 		$composerJson   = file_get_contents(ROOT."/composer.json");
 		$composerJson   = json_decode($composerJson,true);
-		$currentVersion = $composerJson['verstion'];
+		$currentVersion = $composerJson['version'];
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
@@ -180,7 +180,7 @@ class SettingsController extends ControllerBase
 		// остальные - добавляем/удаляем/обновляем
 		$composerJson   = file_get_contents(ROOT."/composer.json");
 		$composerJson   = json_decode($composerJson,true);
-		$currentVersion = $composerJson['verstion'];
+		$currentVersion = $composerJson['version'];
 
 		$opts        = ['http' => ['method' => 'GET', 'header' => ['User-Agent: PHP'] ] ];
 		$context     = stream_context_create($opts);
