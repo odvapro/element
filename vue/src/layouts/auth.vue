@@ -116,6 +116,7 @@ export default
 			if (!this.validateAuth())
 				return false;
 
+			const nextUrl = this.$store.state.nextUrl;
 			var data = new FormData();
 			let user;
 			data.append('login', this.user.login.value);
@@ -139,7 +140,11 @@ export default
 			this.$cookie.set('user', JSON.stringify(user), 12);
 
 			await this.setLanguage(user.language, user.id);
-			this.$router.push('/');
+
+			if(nextUrl != null)
+				this.$router.push(nextUrl);
+			else
+				this.$router.push('/');
 		},
 		async setLanguage(language, id)
 		{
