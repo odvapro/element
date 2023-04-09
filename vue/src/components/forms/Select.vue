@@ -161,8 +161,10 @@
 		border-top: 0;
 		position: absolute;
 		min-width: 150px;
+		max-width:300px;
+		max-height:350px;
 		top: calc(100% + 2px);
-		right: 0;
+		overflow: auto;
 		left: 0;
 		z-index: 999;
 		margin: 0;
@@ -178,6 +180,10 @@
 		height: 40px;
 		line-height: 40px;
 		cursor: pointer;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		padding-right: 10px;
 	}
 	.select__dropdown li:hover, .select__dropdown li.active
 	{
