@@ -12,7 +12,6 @@
 		</div>
 		<div class="property-item-names-wrapper">
 			<div class="property-item-overide-name">{{ getColName(column) }}</div>
-			<div class="property-item-real-name">{{ column.field }}</div>
 		</div>
 		<div class="property-item-checkbox-wrapper">
 			<Checkbox :checked.sync="column.visible"></Checkbox>
@@ -76,14 +75,12 @@
 	{
 		color: #677387;
 		font-size: 12px;
-		padding-right: 20px;
+		padding-right: 25px;
 	    text-transform: capitalize;
-	}
-	.property-item-real-name
-	{
-		color: rgba(103, 115, 135, 0.4);
-		font-size: 10px;
-		padding-right: 20px;
+	    white-space: nowrap;
+	    max-width: 200px;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.property-item-checkbox-wrapper
 	{
