@@ -271,15 +271,22 @@
 		border-top: 1px solid rgba(103, 115, 135, 0.1);
 		overflow: auto;
 		height: calc(100vh - 85px);
+		padding-bottom: 150px;
 	}
 	.detail-feild
 	{
-		min-height: 40px;
+		min-height: 50px;
 		display: flex;
 		align-items: flex-start;
 		border-bottom: 1px solid rgba(103, 115, 135, 0.1);
 	}
-	.detail-field__name-wrap {display: flex; margin-top: 6px;padding-left: 21px;}
+	.detail-field__name-wrap
+	{
+		display: flex;
+		padding-left: 21px;
+		height: 50px;
+		align-items: center;
+	}
 	.detail-field__icon-image{margin-right: 15px;width: 13px;}
 	.detail-field-name
 	{
@@ -311,7 +318,7 @@
 	{
 		position: relative;
 		min-width: 400px;
-		min-height: 40px;
+		min-height: 50px;
 		border-left: 1px solid rgba(103, 115, 135, 0.1);
 		padding-left: 14px;
 		display: flex;

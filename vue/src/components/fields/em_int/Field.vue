@@ -105,4 +105,5 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
+	.em-int-number[type=number] {-moz-appearance: textfield; }
 </style>
