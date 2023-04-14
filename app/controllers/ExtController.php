@@ -34,7 +34,7 @@ class ExtController extends ControllerBase
 		if(is_dir($extModelsDir))
 		{
 			global $loader;
-			$loader->setDirectories([$extModelsDir])->register();
+			$loader->setDirectories([$extModelsDir], true)->register();
 		}
 
 		$contr = new $extControllerName();
