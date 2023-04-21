@@ -1,5 +1,12 @@
 <template>
 	<div class="detail">
+		<ConfirmPopup
+			name="confirmRemove"
+			:buttons="confirmDeleteButtons"
+			:message="removeMessage"
+			@confirm="onConfirmRemove"
+			@cancel="onCancelRemove"
+		/>
 		<div class="detail-head">
 			<div class="detail-head__burger" :class="{'hidden':isShowSidebar}"><MobileBurger/></div>
 			<div class="detail-head-name">
@@ -15,7 +22,7 @@
 					</div>
 					<div class="detail-head__buttons">
 						<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
-						<button @click="remove" class="el-gbtn">{{$t('remove')}}</button>
+						<button @click="confirmRemove" class="el-gbtn">{{$t('remove')}}</button>
 						<button @click="saveElement" class="el-btn">{{$t('save')}}</button>
 					</div>
 				</template>
@@ -62,7 +69,7 @@
 		<div class="detail__buttons">
 			<template v-if="name != 'tableAddElement'">
 				<button @click="cancel" class="el-gbtn">{{$t('cancel')}}</button>
-				<button @click="remove" class="el-gbtn">{{$t('remove')}}</button>
+				<button @click="confirmRemove" class="el-gbtn">{{$t('remove')}}</button>
 				<button @click="saveElement" class="el-btn">{{$t('save')}}</button>
 			</template>
 			<template v-else>
@@ -73,6 +80,7 @@
 	</div>
 </template>
 <script>
+	// import ConfirmPopup from '@/components/popups/ConfirmPopup.vue';
 	import MainField from '@/components/fields/MainField.vue';
 	import qs from 'qs';
 	import MobileBurger from '@/components/blocks/MobileBurger.vue';
@@ -93,7 +101,16 @@
 			return {
 				columns:{},
 				selectedElement:{},
-				fieldNames:{}
+				fieldNames:{},
+				removeMessage: this.$t('popups.confirmDeletePopup.remove'),
+				confirmDeleteButtons: {
+					confirm: {
+						text: this.$t('popups.confirmDeletePopup.confirm_delete'),
+					},
+					cancel: {
+						text: this.$t('popups.confirmDeletePopup.cancel'),
+					},
+				}
 			}
 		},
 		watch:
@@ -214,6 +231,23 @@
 			/**
 			 * Удаление элемента
 			 */
+
+			confirmRemove()
+			{
+				this.$modal.show('confirmRemove');
+			},
+
+			onConfirmRemove()
+			{
+				this.remove();
+				this.$modal.hide('confirmRemove');
+			},
+
+			onCancelRemove()
+			{
+				this.$modal.hide('confirmRemove');
+			},
+
 			remove()
 			{
 				this.$emit('removeElement', {

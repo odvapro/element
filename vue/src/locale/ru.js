@@ -153,9 +153,12 @@ export default
 		{
 			add_sort: 'Добавить сортировку',
 		},
-		confirmPopup:
+		confirmDeletePopup:
 		{
-			are_you_sure: 'Вы уверены?'
+			remove: 'Вы уверены, что хотите удалить этот элемент навсегда?',
+			removeSelected: 'Вы уверены, что хотите удалить эти элементы навсегда?',
+			confirm_delete: 'Да, Удалить',
+			cancel: 'Отменить',
 		},
 		addUser:
 		{

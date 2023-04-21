@@ -34,6 +34,13 @@ pre
 	border:0px;
 	&:hover,&focus{background: rgba(25, 28, 33, 0.5); }
 	&:active{background: rgba(25, 28, 33, 0.3); }
+	&--gray
+	{
+		background: #fff;
+		border: 1px solid rgba(124, 119, 145, 0.7);
+		color: #191C21;
+		&:hover,&focus{background: #fff; }
+	}
 }
 // gray
 .el-gbtn
@@ -49,6 +56,13 @@ pre
     cursor: pointer;
 	&:hover,&focus{background-color: rgba(103, 115, 135, 0.2);}
 	&:active{background: rgba(103, 115, 135, 0.3); }
+	&--red
+	{
+		background: rgba(208, 18, 70, 0.1);
+		border: 1px solid rgba(208, 18, 70, 0.7);
+		color: rgba(208, 18, 70, 1);
+		&:hover,&focus{background-color: rgba(208, 18, 70, 0.1);}
+	}
 }
 // INPUTS
 .el-inp

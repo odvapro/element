@@ -153,14 +153,17 @@ export default
 		{
 			add_sort: 'Add sort',
 		},
-		confirmPopup:
+		confirmDeletePopup:
 		{
-			are_you_sure: 'Are you sure?'
+			remove: 'Are you sure you want to delete this item permanently?',
+			removeSelected: 'Are you sure you want to delete this items permanently?',
+			confirm_delete: 'Delete',
+			cancel: 'Cancel',
 		},
 		addUser:
 		{
 			this_field_required: 'This field required'
-		}
+		},
 	},
 	yes: 'Yes',
 	no: 'No',

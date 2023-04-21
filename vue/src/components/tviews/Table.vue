@@ -2,6 +2,13 @@
 	<div class="table-vertical-scroll"
 		@mousemove="resizeColumn($event)"
 		@mouseup="endResize($event, columnDrug.col)">
+		<ConfirmPopup
+			name="removeSelected"
+			:buttons="confirmDeleteButtons"
+			:message="removeSelectedMessage"
+			@confirm="onConfirmRemove('removeSelected')"
+			@cancel="onCancelRemove('removeSelected')"
+		/>
 		<div
 			class="table__min-width"
 			:style="{'min-width': getTableMinWidth + 'px'}" v-if="renderTable"
@@ -18,7 +25,7 @@
 					</svg>
 					<div class="table__many-modal" v-if="openedEditRowIndex === 'all'" v-click-outside="closeEditModal">
 						<ul>
-							<li @click="removeSelected()" class="table__many-delete">{{$t('delete')}}</li>
+							<li @click="confirmRemove('removeSelected')" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
 				</div>
@@ -65,11 +72,18 @@
 					<svg class="table__many-arrow" width="7" height="13" @click="openedEditRowIndex = rowIndex">
 						<use xlink:href="#arrow"></use>
 					</svg>
+					<ConfirmPopup
+						:name="'remove' + rowIndex"
+						:buttons="confirmDeleteButtons"
+						:message="removeMessage"
+						@confirm="onConfirmRemove('remove', [row,rowIndex])"
+						@cancel="onCancelRemove('remove' + rowIndex)"
+					/>
 					<div class="table__many-modal" v-if="openedEditRowIndex === rowIndex" v-click-outside="closeEditModal">
 						<ul>
 							<li @click="openDetail(row,rowIndex)">{{$t('edit')}}</li>
 							<li @click="duplicate(row)">{{$t('duplicate')}}</li>
-							<li @click="remove(row,rowIndex)" class="table__many-delete">{{$t('delete')}}</li>
+							<li @click="confirmRemove('remove' + rowIndex)" class="table__many-delete">{{$t('delete')}}</li>
 						</ul>
 					</div>
 				</div>
@@ -128,6 +142,16 @@
 				checkAll:false,
 				selectedRows:{},
 				renderTable: 1,
+				removeMessage: this.$t('popups.confirmDeletePopup.remove'),
+				removeSelectedMessage: this.$t('popups.confirmDeletePopup.removeSelected'),
+				confirmDeleteButtons: {
+					confirm: {
+						text: this.$t('popups.confirmDeletePopup.confirm_delete'),
+					},
+					cancel: {
+						text: this.$t('popups.confirmDeletePopup.cancel'),
+					},
+				}
 			}
 		},
 		computed:
@@ -516,6 +540,30 @@
 					}
 				});
 				this.openedEditRowIndex = false;
+			},
+
+			confirmRemove(name)
+			{
+				this.$modal.show(name);
+			},
+
+			onConfirmRemove(handler, args = false)
+			{
+				if(args)
+				{
+					this[handler](...args);
+					this.$modal.hide(handler + args[1]);
+				}
+				else
+				{
+					this[handler]();
+					this.$modal.hide(handler);
+				}
+			},
+
+			onCancelRemove(name)
+			{
+				this.$modal.hide(name);
 			},
 			/**
 			 * Удаляет запись
