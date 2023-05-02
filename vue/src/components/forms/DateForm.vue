@@ -48,6 +48,7 @@
 				inputDate:'',
 				inputTime:'',
 				currentLang: locales.en,
+				currentTimeString: false,
 			}
 		},
 		mounted()
@@ -119,7 +120,10 @@
 			changeInputTime(event)
 			{
 				let newTimeString = event.target.value;
-				let timeArray = newTimeString.split(':');
+				if(!newTimeString || newTimeString.length < 2)
+					return;
+
+				let timeArray = newTimeString.match(/.{2}/g);
 				if(timeArray.length != 2 || timeArray[0].length < 2 || timeArray[1].length < 2)
 					return false;
 				let huors = ('0'+timeArray[0]).slice(-2);
