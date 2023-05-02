@@ -120,10 +120,16 @@
 			changeInputTime(event)
 			{
 				let newTimeString = event.target.value;
-				if(!newTimeString || newTimeString.length < 2)
-					return;
 
-				let timeArray = newTimeString.match(/.{2}/g);
+				if(
+					!newTimeString ||
+					newTimeString.length < 2 ||
+					event.keyCode == 8
+				)
+					return false;
+
+				let timeArray = newTimeString.match(/.{1,2}/g) || [];
+
 				if(timeArray.length != 2 || timeArray[0].length < 2 || timeArray[1].length < 2)
 					return false;
 				let huors = ('0'+timeArray[0]).slice(-2);
