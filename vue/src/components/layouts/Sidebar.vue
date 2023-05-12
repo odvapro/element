@@ -82,7 +82,7 @@
 			<a href="https://odva.pro" target="_blank" class="sidebar-develop-wrapper">
 				<span class="sidebar-develop-label">{{$t('developed_by')}}</span>
 				<div class="sidebar-develop-img">
-					<svg width="38" height="31" fill="none">
+					<svg width="38" height="34" fill="none">
 						<use xlink:href="#logo-dev"></use>
 					</svg>
 				</div>
@@ -406,19 +406,17 @@
 	}
 	.sidebar-develop-wrapper
 	{
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		width: 154px;
 		height: 32px;
-		margin: 0 auto;
 		text-decoration: none;
-		justify-content: space-between;
 	}
+	.sidebar-develop-img{height:34px;margin-left: 14px;}
 	.sidebar-develop-label
 	{
 		font-family: $mainFont;
 		font-size: 14px;
-		color: #677387;
+		color: #282C34;
 	}
 	.sidebar-footer
 	{
@@ -427,6 +425,7 @@
 		bottom: 0px;
 		width: 100%;
 		background:#F0F1F3;
+		text-align: center;
 	}
 	.sidebar-tables-wrapper{flex-grow: 1;}
 	@media (max-width: 768px)
