@@ -18,6 +18,8 @@
 				v-for="listItem in list"
 				:key="listItem.code"
 				@select="selectItem(listItem)"
+				@remove="removeItem(listItem)"
+				:selected=isSelected(listItem)
 			>{{ listItem.name }}</ListSection>
 			<div class="em-section__footer" @click="createItem()" v-if="newTag">
 				<div class="em-section__btn"> {{$t('create')}} </div>
@@ -76,6 +78,19 @@
 		},
 		methods:
 		{
+			isSelected(listItem)
+			{
+				let selected = false;
+				for (let selectedSectionKey in this.localFieldValue)
+				{
+					if(listItem.id == this.localFieldValue[selectedSectionKey].id)
+					{
+						selected = true
+						break;
+					}
+				}
+				return selected;
+			},
 			async createElement(data, result)
 			{
 				if(result.data.success == true)
@@ -124,7 +139,7 @@
 						method : 'POST',
 						data   : data,
 						headers: { 'Content-Type': 'multipart/form-data' },
-						url    : '/field/em_node/index/autoComplete/'
+						url    : '/field/em_section/index/autoComplete/'
 					});
 
 					if (!result.data.success)
