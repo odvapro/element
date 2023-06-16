@@ -12,13 +12,20 @@
 						<div class="em-text__popup-code">{{fieldCode}}</div>
 					</div>
 					<div class="em_text__button-wrapper">
-						<button class="el-gbtn em-text__popup-cancel-btn" @click="closeEditor()" >Cancel</button>
+						<button class="el-gbtn em-text__popup-cancel-btn" @click="confirmClose()" >Cancel</button>
 						<button class="el-btn" @click="closeAndSaveEditor()">Save</button>
 					</div>
 				</div>
 				<div id="el-editor"></div>
 			</div>
 		</Popup>
+		<ConfirmPopup
+			:name="eventName"
+			:buttons="confirmCloseButtons"
+			:message="closeMessage"
+			@confirm="onConfirmClose"
+			@cancel="onCancelClose"
+		/>
 	</div>
 </template>
 <script>
@@ -43,6 +50,15 @@
 				editor: false,
 				fieldCode: '',
 				fieldName: '',
+				closeMessage: this.$t('popups.confirmCloseButtons.close'),
+				confirmCloseButtons: {
+					confirm: {
+						text: this.$t('popups.confirmCloseButtons.confirm_close'),
+					},
+					cancel: {
+						text: this.$t('popups.confirmCloseButtons.cancel'),
+					},
+				}
 			};
 		},
 		computed:
@@ -58,6 +74,10 @@
 					return `${blocksCount} blocks, last edit ${time}`;
 				}
 			},
+			eventName()
+			{
+				return 'confirmCloseEdit' + this._uid;
+			}
 		},
 		beforeDestroy()
 		{
@@ -95,15 +115,33 @@
 			},
 			closeEditor()
 			{
-				if (this.editor && this.editor.destroy)
-					this.editor.destroy();
+				// if (this.editor && this.editor.destroy)
+				// 	this.editor.destroy();
 				this.showEditor = false;
+				// this.$set(this, 'showEditor', false);
+				console.log(this);
 			},
 			closeAndSaveEditor()
 			{
 				this.saveEditorContent();
 				this.closeEditor();
 			},
+
+			confirmClose()
+			{
+				this.$modal.show('confirmCloseEdit' + this._uid);
+			},
+
+			onConfirmClose()
+			{
+				this.$modal.hide('confirmCloseEdit' + this._uid);
+				this.closeEditor();
+			},
+			onCancelClose()
+			{
+				this.$modal.hide('confirmCloseEdit' + this._uid);
+			},
+
 			openEditor()
 			{
 				this.showEditor = true;

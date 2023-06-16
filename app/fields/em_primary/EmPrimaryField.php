@@ -30,7 +30,6 @@ class EmPrimaryField extends FieldBase
 
 	public function getCollationSql($whereArray)
 	{
-		if (!empty($whereArray['value'])) $whereArray['value'] = intval($whereArray['value']);
 		switch ($whereArray['operation']) {
 			case 'IS':
 				return $whereArray['code'] . ' = :value:';
@@ -54,6 +53,11 @@ class EmPrimaryField extends FieldBase
 
 			case 'IS SMALLER':
 				return $whereArray['code'] . ' < :value:';
+			break;
+			case 'IN':
+				return $whereArray['code'] . ' IN ('.implode(
+					',', array_fill(0, count($whereArray['value']), ':value:')
+				).')';
 			break;
 		}
 		return '';

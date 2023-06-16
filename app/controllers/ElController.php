@@ -147,48 +147,50 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1]);
 
 		$search = !empty($select['search']) ? $select['search'] : '';
-		unset($select['search']);
 		$page   = !empty($select['page']) ? $select['page'] : 1;
-		$limit  = empty($select['limit']) || intval($select['limit']) <= 0 ? 100 : intval($select['limit']);
+		$limit  = !isset($select['limit']) || intval($select['limit']) <= 0 ? 100 : intval($select['limit']);
 		unset($select['limit']);
-
-		$columns = $this->element->getColumns($select['from']);
-		$searchedFields = [];
 
 		if (!empty($search))
 		{
-			$select['where'] = [
-				'operation' => 'OR',
-				'fields' => [],
-			];
-			$select['order'] = [];
-			foreach ($columns as $columnKey => $columnInfo) {
-				if (!in_array($columnInfo['em']['settings']['code'], ['em_string','em_text']))
-					continue;
+			$ids = $this->getSearchIds($select['from'], $search);
 
-				$select['where']['fields'][] = [
-					'code'      => $columnKey,
-					'operation' => 'CONTAINS',
-					'value'     => $search,
-				];
-				$select['order'][] = "LEVENSHTEIN('{$search}', {$columnKey})";
-			}
-
-			// if(!empty($select['order']) && count($select['order']) > 1)
-				$select['order'] = [ 'LEAST('.implode(', ', $select['order']).')' ];
+			$selectResult = $this->element->select([
+				'from' => $select['from'],
+				'where' => [
+					'operation' => 'AND',
+					'fields' => [[
+						'code' => 'id',
+						'operation' => 'IN',
+						'value' => $ids
+					]]
+				]
+			]);
 		}
+		else
+		{
+			// Define count of element
+			$itemsCount = $this->element->count($select);
+			if (!$itemsCount['success'])
+				return $this->jsonResult(['success' => false, 'message' => $itemsCount['message'], 'code' => $itemsCount['code']]);
 
-		$selectResult = $this->element->select($select);
+			$itemsCount = $itemsCount['result'];
+
+			$select['limit'] = $limit;
+			$selectResult = $this->element->select($select);
+
+		}
 
 		if (!$selectResult['success'])
 			return $this->jsonResult(['success' => false, 'message' => $selectResult['message'], 'code' => $selectResult['code']]);
-		$result = $selectResult['result'];
 
+		$result = $selectResult['result'];
 		$paginator = new ElPagination([
-			'count' => count($result['items']),
+			'count' => !isset($itemsCount) ? count($result['items']) : $itemsCount,
 			'limit' => $limit,
 			'page'  => $page,
 		]);
+
 		$pagination = $paginator->getPaginate();
 		$result['items'] = array_slice($result['items'], $pagination['offset'], $limit);
 
@@ -295,5 +297,34 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'some_error', 'code' => 2]);
 
 		return $this->jsonResult(['success' => true]);
+	}
+
+	public function getSearchIds($from, $search)
+	{
+		$columns = $this->element->getColumns($from);
+		$filteredColumns = array_filter($columns, function($column){
+			return in_array($column['em']['settings']['code'], ['em_string','em_text']);
+		});
+
+		$concatRow = "CONCAT_WS(' ', " . implode(',', array_keys($filteredColumns)) . ")";
+		$sql = "SELECT id FROM {$from} WHERE {$concatRow} LIKE '%{$search}%'";
+
+		try
+		{
+			$this->db->prepare($sql);
+			$select = $this->db->fetchAll(
+				$sql,
+				Phalcon\Db\Enum::FETCH_ASSOC,
+			);
+		} catch (Exception $e) {
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
+				"selectError: {$e->getMessage()}"
+			);
+			return false;
+		}
+
+		$result = array_column($select, 'id');
+
+		return empty($result) ? ['NULL'] : $result;
 	}
 }

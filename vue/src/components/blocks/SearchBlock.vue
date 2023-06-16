@@ -1,7 +1,8 @@
 <template>
 	<div @click=openSearch class="search-block">
 		<div class="search-block__icon">
-			<svg width="12" height="12"><use xlink:href="#search-icon"></use></svg>
+			<svg v-if="showLoader" width="20" height="20"><use xlink:href="#loader"></use></svg>
+			<svg v-else width="12" height="12"><use xlink:href="#search-icon"></use></svg>
 		</div>
 		<div v-if=opened class="search-block__search">
 			<input
@@ -26,6 +27,7 @@
 				searchValue: '',
 				opened: false,
 				updateTimeout: 0,
+				showSearchLoader: false
 			};
 		},
 		computed:
@@ -41,6 +43,10 @@
 					if(tview.id == tviewId)
 						return tview;
 			},
+			showLoader()
+			{
+				return this.showSearchLoader;
+			}
 		},
 		watch:
 		{
@@ -75,6 +81,8 @@
 			},
 			async updateSearchValue(value)
 			{
+				this.showSearchLoader = true;
+
 				let requestParams = {select : {}, };
 				if (this.tview.filter)
 					requestParams.select.where = this.tview.filter;
@@ -93,7 +101,7 @@
 				await this.$store.dispatch('search', requestParams);
 
 				this.$store.commit('showLoader',false);
-
+				this.showSearchLoader = false;
 			},
 			setSearchValue(value)
 			{

@@ -30,12 +30,20 @@ class SqlAdapter extends PdoAdapter
 					$whereValue['value'] = $whereValue['value'].'%';
 
 				if (is_array($whereValue['value']))
-					$result[1] = array_merge($result[1], array_column($whereValue['value'], 'value'));
+				{
+					$values = array_column($whereValue['value'], 'value');
+
+					if(!$values)
+						$result[1] = array_merge($result[1], $whereValue['value']);
+					else
+						$result[1] = array_merge($result[1], array_column($whereValue['value'], 'value'));
+				}
 				else
 					$result[1][] = $whereValue['value'];
 			}
 		}
 		if (!empty($whereResult)) $result[0] = implode(' '.$whereArray['operation'].' ', $whereResult);
+
 		return $result;
 	}
 
