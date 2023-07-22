@@ -9,36 +9,37 @@ class EmSectionField extends FieldBase
 	 */
 	public function getValue()
 	{
-		$nodeTableCode  = $this->settings['nodeTableCode'];
-		$nodeFieldCode  = $this->settings['nodeFieldCode'];
-		$nodeSearchCode = $this->settings['nodeSearchCode'];
-		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
+		$sectionTableCode        = $this->settings['sectionTableCode'];
+		$sectionFieldCode        = $this->settings['sectionFieldCode'];
+		$sectionSearchCode       = $this->settings['sectionSearchCode'];
+		$sectionParentsFieldCode = $this->settings['sectionParentsFieldCode'];
+		if (empty(self::$nodeTable) || empty(self::$nodeTable[$sectionTableCode]))
 		{
 			$selectResult = $this->element->select([
-				'from' => $nodeTableCode,
+				'from' => $sectionTableCode,
 				'fields' => [
-					$nodeFieldCode,
-					$nodeSearchCode,
+					$sectionFieldCode,
+					$sectionSearchCode,
 				]
 			]);
 
-			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
+			self::$nodeTable[$sectionTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 
-		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
+		if (empty(self::$nodeTable[$sectionTableCode]) || empty(self::$nodeTable[$sectionTableCode]['items']))
 			return [];
 
 		$node = [];
 		$fieldValueArray = explode(',', $this->fieldValue ?? '');
 
-		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
+		foreach (self::$nodeTable[$sectionTableCode]['items'] as $nodeItem)
 		{
-			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
+			if (in_array($nodeItem[$sectionFieldCode], $fieldValueArray))
 			{
 				$node[] = [
-					'id'   => $nodeItem[$nodeFieldCode],
-					'name' => $nodeItem[$nodeSearchCode],
-					'url'  => "/table/{$nodeTableCode}/el/{$nodeItem[$nodeFieldCode]}"
+					'id'   => $nodeItem[$sectionFieldCode],
+					'name' => $nodeItem[$sectionSearchCode],
+					'url'  => "/table/{$sectionTableCode}/el/{$nodeItem[$sectionFieldCode]}"
 				];
 			}
 		}

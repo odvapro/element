@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Адрес: 127.0.0.1 (MySQL 5.7.26)
-# Схема: element
-# Время создания: 2020-03-01 14:31:05 +0000
+# Адрес: 127.0.0.1 (MySQL 5.7.37)
+# Схема: dz-element
+# Время создания: 2023-07-22 16:22:16 +0000
 # ************************************************************
 
 
@@ -50,8 +50,9 @@ VALUES
   (23,'block_type','matrix','em_matrix',0,'{\"finalTableCode\":\"block_type_nodes\",\"localField\":\"id\",\"finalTableField\":\"block_type_id\"}',NULL),
   (24,'block_type','int','em_int',0,'',NULL),
   (25,'block_type','flag','em_check',0,'',NULL),
-  (27, 'block_type', 'list', 'em_list', 0, '{\"list\":[{\"key\":\"first\",\"value\":\"\\u041f\\u0435\\u0440\\u0432\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"second\",\"value\":\"\\u0412\\u0442\\u043e\\u0440\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"third\",\"value\":\"\\u0422\\u0440\\u0435\\u0442\\u0435\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"forth\",\"value\":\"\\u0427\\u0435\\u0442\\u0432\\u0435\\u0440\\u0442\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"}],\"multiple\":\"false\"}', NULL),
-  (26,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL);
+  (26,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL),
+  (27,'block_type','list','em_list',0,'{\"list\":[{\"key\":\"first\",\"value\":\"\\u041f\\u0435\\u0440\\u0432\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"second\",\"value\":\"\\u0412\\u0442\\u043e\\u0440\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"third\",\"value\":\"\\u0422\\u0440\\u0435\\u0442\\u0435\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"forth\",\"value\":\"\\u0427\\u0435\\u0442\\u0432\\u0435\\u0440\\u0442\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"}],\"multiple\":\"false\"}',NULL),
+  (28,'block_type','section','em_section',0,'{\"sectionTableCode\":\"sections\",\"sectionFieldCode\":\"id\",\"sectionSearchCode\":\"name\",\"sectionParentsFieldCode\":\"parent_section\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
