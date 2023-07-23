@@ -1,27 +1,28 @@
 <template>
 	<div class="list-section">
-		<div class="list-section__left">
-			<button
-				class="list-section__fold"
-				:class="{'list-section__fold--open':open}"
-				@click.stop="fold"
-			>
-				<svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<g clip-path="url(#clip0_2631_4952)">
-						<path d="M2.92048 1.6811L2.92051 1.68113L7.24789 6.00005L2.92048 10.3275C2.76752 10.4804 2.76752 10.7289 2.92048 10.8819C3.07343 11.0348 3.32193 11.0348 3.47488 10.8819L8.07101 6.28575C8.1473 6.20945 8.18572 6.11336 8.18572 6.00855C8.18572 5.91281 8.14768 5.80802 8.07101 5.73135L3.47533 1.13567C3.32232 0.973609 3.07346 0.973718 2.92048 1.12669C2.76752 1.27965 2.76752 1.52814 2.92048 1.6811Z" fill="#677387" stroke="#677387" stroke-width="0.0846154"/>
-					</g>
-					<defs>
-						<clipPath id="clip0_2631_4952">
-							<rect width="11" height="11" fill="white" transform="translate(0 11.5) rotate(-90)"/>
-						</clipPath>
-					</defs>
-				</svg>
-			</button>
-			<span>
-				<slot></slot>
-			</span>
-		</div>
-		<div class="list-section__right">
+		<div class="list-section__top">
+			<div class="list-section__left">
+				<button
+					class="list-section__fold"
+					:class="{'list-section__fold--open':open}"
+					@click.stop="fold"
+				>
+					<svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clip-path="url(#clip0_2631_4952)">
+							<path d="M2.92048 1.6811L2.92051 1.68113L7.24789 6.00005L2.92048 10.3275C2.76752 10.4804 2.76752 10.7289 2.92048 10.8819C3.07343 11.0348 3.32193 11.0348 3.47488 10.8819L8.07101 6.28575C8.1473 6.20945 8.18572 6.11336 8.18572 6.00855C8.18572 5.91281 8.14768 5.80802 8.07101 5.73135L3.47533 1.13567C3.32232 0.973609 3.07346 0.973718 2.92048 1.12669C2.76752 1.27965 2.76752 1.52814 2.92048 1.6811Z" fill="#677387" stroke="#677387" stroke-width="0.0846154"/>
+						</g>
+						<defs>
+							<clipPath id="clip0_2631_4952">
+								<rect width="11" height="11" fill="white" transform="translate(0 11.5) rotate(-90)"/>
+							</clipPath>
+						</defs>
+					</svg>
+				</button>
+				<span>
+					<slot></slot>
+				</span>
+			</div>
+			<div class="list-section__right">
 			<button v-if="!selected" class="list-section__select" @click.stop="select"> выбрать </button>
 			<button v-if="selected" class="list-section__remove" @click.stop="remove">
 				<svg width="9" height="9">
@@ -29,6 +30,8 @@
 				</svg>
 			</button>
 		</div>
+		</div>
+		<div class="list-section__childs" v-if="open"></div>
 	</div>
 </template>
 <script>
@@ -36,15 +39,15 @@
 	{
 		props:
 		{
-			selected: {
-				type: Boolean,
-				default: false,
-			},
+			selected: {type: Boolean, default: false},
+			settings: {type: Object, default: false},
+			item:{type: Object, default: false}
 		},
 		data()
 		{
 			return {
-				open:false
+				open:false,
+				childs:false
 			}
 		},
 		methods:
@@ -70,15 +73,41 @@
 			/**
 			 * Fold/unfold section
 			 */
-			fold(section)
+			async fold(section)
 			{
 				this.open = !this.open;
+				if(this.open)
+				{
+					this.getChilds();
+					this.childs = true;
+				}
+			},
+			async getChilds()
+			{
+				var data = new FormData();
+					data.append('sectionTableCode', this.settings.sectionTableCode);
+					data.append('sectionFieldCode', this.settings.sectionFieldCode);
+					data.append('sectionSearchCode', this.settings.sectionSearchCode);
+					data.append('sectionParentsFieldCode', this.settings.sectionParentsFieldCode);
+					data.append('parentId', this.item.id);
+
+				let result = await this.$axios({
+					method : 'POST',
+					data   : data,
+					headers: { 'Content-Type': 'multipart/form-data' },
+					url    : '/field/em_section/index/autoComplete/'
+				});
+
+				if (!result.data.success)
+						return false;
+				this.childs = result.data.result;
+
 			}
 		}
 	}
 </script>
 <style lang="scss">
-	.list-section
+	.list-section__top
 	{
 		position: relative;
 		display: flex;
@@ -142,16 +171,20 @@
 		font-weight: normal;
 		background: none;
 		cursor: pointer;
+		white-space: nowrap;
 	}
 	.list-section__left
 	{
 		display: flex;
-		align-items:center;	
+		align-items:center;
+		overflow: hidden;
+		text-overflow:ellipsis;
 	}
 	.list-section__right
 	{
 		display: flex;
 		align-items:center;
-		padding-right: 3px;
+		padding: 0 3px;
 	}
+	.list-section__childs{margin-left: 15px; }
 </style>

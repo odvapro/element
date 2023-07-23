@@ -2,6 +2,68 @@
 class EmSectionCest
 {
 	/**
+	 * Проверяем что возвращает методо автокомплита
+	 */
+	public function autoComplete(ApiTester $I)
+	{
+		// TODO
+		// нужно еще доставать - есть ли у раздела дочерние элементы
+
+		// Авторизуемся
+		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+
+		// по умочанию долежен достать только родительские разделы
+		$I->sendPOST('/field/em_section/index/autoComplete', [
+			'sectionTableCode'        => 'sections',
+			'sectionFieldCode'        => 'id',
+			'sectionSearchCode'       => 'name',
+			'sectionParentsFieldCode' => 'parent_section'
+		]);
+
+		$resResult = json_decode($I->grabResponse(), true);
+		$I->assertEquals($resResult['result'][0]['id'],1);
+		$I->assertEquals($resResult['result'][1]['id'],5);
+
+		// но если передать родительский раздел - нужно достать только его дочерние элементы
+		$I->sendPOST('/field/em_section/index/autoComplete', [
+			'sectionTableCode'        => 'sections',
+			'sectionFieldCode'        => 'id',
+			'sectionSearchCode'       => 'name',
+			'sectionParentsFieldCode' => 'parent_section',
+			'parentId'                => '13'
+		]);
+		$resResult = json_decode($I->grabResponse(), true);
+		$I->assertEquals($resResult['result'][0]['id'],14);
+		$I->assertEquals($resResult['result'][1]['id'],15);
+
+
+		// а если передать еще и поиск по имени, то должны придти только разделы с совпадениями
+		$I->sendPOST('/field/em_section/index/autoComplete', [
+			'sectionTableCode'        => 'sections',
+			'sectionFieldCode'        => 'id',
+			'sectionSearchCode'       => 'name',
+			'sectionParentsFieldCode' => 'parent_section',
+			'parentId'                => '13',
+			'q'                       => 'Boxes'
+		]);
+		$resResult = json_decode($I->grabResponse(), true);
+		$I->assertEquals($resResult['result'][0]['id'],15);
+
+		// пример с пустым результатом
+		$I->sendPOST('/field/em_section/index/autoComplete', [
+			'sectionTableCode'        => 'sections',
+			'sectionFieldCode'        => 'id',
+			'sectionSearchCode'       => 'name',
+			'sectionParentsFieldCode' => 'parent_section',
+			'parentId'                => '13',
+			'q'                       => 'empty case'
+		]);
+		$resResult = json_decode($I->grabResponse(), true);
+		$I->assertEquals($resResult['result'],[]);
+	}
+
+	/**
 	 * Save tests
 	 */
 	public function save(ApiTester $I)

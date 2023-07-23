@@ -19,6 +19,8 @@
 				:key="listItem.code"
 				@select="selectItem(listItem)"
 				@remove="removeItem(listItem)"
+				:settings=fieldSettings
+				:item=listItem
 				:selected=isSelected(listItem)
 			>{{ listItem.name }}</ListSection>
 			<div class="em-section__footer" @click="createItem()" v-if="newTag">
@@ -97,7 +99,7 @@
 				{
 					let listItem = {};
 					listItem['id'] = result.data.lastid;
-					listItem[this.fieldSettings.nodeSearchCode] = this.newTag;
+					listItem[this.fieldSettings.sectionSearchCode] = this.newTag;
 					this.selectItem(listItem);
 					this.ElMessage(this.$t('elMessages.element_created'));
 					this.showDetail = false;
@@ -112,7 +114,7 @@
 				for (let column in table.columns)
 					this.currentElement[column] = '';
 
-				this.currentElement[this.fieldSettings.nodeSearchCode] = this.newTag;
+				this.currentElement[this.fieldSettings.sectionSearchCode] = this.newTag;
 			},
 			popupForCreateElement()
 			{
@@ -130,9 +132,10 @@
 				clearTimeout(this.nodesTimeout);
 				this.nodesTimeout = setTimeout(async ()=> {
 					var data = new FormData();
-					data.append('nodeFieldCode', this.fieldSettings.nodeFieldCode);
-					data.append('nodeTableCode', this.fieldSettings.nodeTableCode);
-					data.append('nodeSearchCode', this.fieldSettings.nodeSearchCode);
+					data.append('sectionTableCode', this.fieldSettings.sectionTableCode);
+					data.append('sectionFieldCode', this.fieldSettings.sectionFieldCode);
+					data.append('sectionSearchCode', this.fieldSettings.sectionSearchCode);
+					data.append('sectionParentsFieldCode', this.fieldSettings.sectionParentsFieldCode);
 					data.append('q', this.query);
 
 					let result = await this.$axios({

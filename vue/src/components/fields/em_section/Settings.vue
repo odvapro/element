@@ -81,9 +81,9 @@
 				return {
 					localSettings :
 					{
-						sectionTableCode  : false,
-						sectionFieldCode  : false,
-						sectionSearchCode : false,
+						sectionTableCode        : false,
+						sectionFieldCode        : false,
+						sectionSearchCode       : false,
 						sectionParentsFieldCode : false,
 					},
 					errors: {}

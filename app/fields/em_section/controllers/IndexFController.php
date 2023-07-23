@@ -4,50 +4,42 @@ class IndexFController extends ControllerBase
 {
 	/**
 	 * Поиск полей для автокомплита, работает только при ajax запросах
-	 * @var $_POST['nodeTableCode'] string таблица привязки
-	 * @var $_POST['nodeFieldCode'] string поле привязки - например id
-	 * @var $_POST['nodeSearchCode'] string поле по которому ищется привязываемый элемент - например name
+	 * @var $_POST['sectionFieldCode'] string таблица привязки
+	 * @var $_POST['sectionTableCode'] string поле привязки - например id
+	 * @var $_POST['sectionSearchCode'] string поле по которому ищется привязываемый элемент - например name
+	 * @var $_POST['parentId'] int значение родительского id
 	 * @var $_POST['q'] string строка поиска
 	 * @return JSON
 	 */
 	public function autoCompleteAction()
 	{
-		$nodeField  = $this->request->getPost('nodeFieldCode');
-		$nodeTable  = $this->request->getPost('nodeTableCode');
-		$nodeSearch = $this->request->getPost('nodeSearchCode');
-		$q          = $this->request->getPost('q');
+		$sectionTableCode        = $this->request->getPost('sectionTableCode');
+		$sectionFieldCode        = $this->request->getPost('sectionFieldCode');
+		$sectionSearchCode       = $this->request->getPost('sectionSearchCode');
+		$sectionParentsFieldCode = $this->request->getPost('sectionParentsFieldCode');
+		$parentId                = $this->request->getPost('parentId');
+		$q                       = $this->request->getPost('q');
 
-		if(empty($nodeField) || empty($nodeTable))
+		if(empty($sectionTableCode) || empty($sectionFieldCode))
 			return $this->jsonResult(['success' => false, 'message' => 'некорректные настройки']);
 
-		$select  = [
-			'from'  => $nodeTable,
-			'limit' => 20,
-			'where' => [
-				'operation' => 'and',
-				'fields'    => [[
-					'code'      => $nodeSearch,
-					'operation' => 'CONTAINS',
-					'value'     => $q
-				]]
-			]
-		];
+		// TODO
+		// переделать - не безоспастно
+		$db = $this->di->get('db');
+		$parentId = empty($parentId)?'IS NULL':"= {$parentId}";
+		$q = empty($q)?'':"AND a.{$sectionSearchCode} LIKE '%{$q}%'";
+		$sql = "SELECT
+					a.{$sectionFieldCode},a.{$sectionSearchCode},a.{$sectionParentsFieldCode}, COUNT(b.{$sectionFieldCode}) childsCount
+					FROM {$sectionTableCode} a
+				LEFT JOIN {$sectionTableCode} b ON a.{$sectionFieldCode} = b.{$sectionParentsFieldCode}
+				WHERE a.{$sectionParentsFieldCode} {$parentId} {$q}
+				GROUP BY a.{$sectionFieldCode}, a.{$sectionSearchCode}";
 
-		$selectResult  = $this->element->select($select);
-		$nodes  = $selectResult['success'] ? $selectResult['result'] : [];
-		$result = [];
+		// Send a SQL statement to the database system
+		$db->prepare($sql);
+		$select = $db->fetchAll($sql, \Phalcon\Db\Enum::FETCH_ASSOC, [] );
 
-		if (!empty($nodes))
-		{
-			foreach($nodes['items'] as $node)
-			{
-				$result[] = [
-					'id'   => $node[$nodeField],
-					'name' => $node[$nodeSearch],
-				];
-			}
-		}
-
-		return $this->jsonResult(['success' => true, 'result' => $result]);
+		$sections  = count($select) > 0 ? $select : [];
+		return $this->jsonResult(['success' => true, 'result' => $sections]);
 	}
 }
