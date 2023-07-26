@@ -36,7 +36,7 @@ class EmNodeField extends FieldBase
 			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
 				$node[] = [
-					'id'   => $nodeItem[$nodeFieldCode],
+					'value'   => $nodeItem[$nodeFieldCode],
 					'name' => $nodeItem[$nodeSearchCode],
 					'url'  => "/table/{$nodeTableCode}/el/{$nodeItem[$nodeFieldCode]}"
 				];
@@ -59,23 +59,12 @@ class EmNodeField extends FieldBase
 		if(empty($this->fieldValue))
 			return null;
 
-		if(!is_numeric($this->fieldValue) && !is_array($this->fieldValue))
+		if(!is_array($this->fieldValue))
 			throw new EmException("Incorrect field value, should be int or array of int", 1);
 
-		$nodes = [];
+		$nodes = array_column($this->fieldValue, 'value');
 
-		if(is_array($this->fieldValue))
-		{
-			$nodes = array_column($this->fieldValue, 'id');
-
-			foreach ($nodes as $node)
-				if (!is_int($node) && !is_numeric($node))
-					throw new EmException("Array of node values should be array of integers", 2);
-
-			return implode(',', $nodes);
-		}
-
-		return null;
+		return implode(',', $nodes);
 	}
 
 	/**

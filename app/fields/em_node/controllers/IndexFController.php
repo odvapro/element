@@ -42,7 +42,7 @@ class IndexFController extends ControllerBase
 			foreach($nodes['items'] as $node)
 			{
 				$result[] = [
-					'id'   => $node[$nodeField],
+					'value'   => $node[$nodeField],
 					'name' => $node[$nodeSearch],
 				];
 			}

@@ -8,7 +8,7 @@
 		>
 			<template v-slot:selected>
 				<ListOption
-					v-for="localFieldItem in localFieldValue"
+					v-for="localFieldItem in selectedItems"
 					@remove="removeItem(localFieldItem)"
 					:key="localFieldItem.id"
 					:current=true
@@ -48,7 +48,8 @@
 				currentElement: false,
 				list: [],
 				query: '',
-				localFieldValue:this.fieldValue,
+				localFieldValue: this.fieldValue,
+				storableData: [],
 				newTag: '',
 				nodesTimeout: '',
 			};
@@ -61,9 +62,15 @@
 				this.getNodes();
 			}
 		},
-		mounted()
+		computed:
 		{
-			this.$set(this, 'localFieldValue', this.fieldValue);
+			selectedItems()
+			{
+				if (!this.localFieldValue || !this.localFieldValue.length)
+					return [];
+
+				return this.localFieldValue;
+			}
 		},
 		methods:
 		{
@@ -132,22 +139,16 @@
 			 */
 			selectItem(listItem)
 			{
-				let resArray = [];
+				if(this.localFieldValue.indexOf(listItem) !== -1)
+					return;
+
 				if(this.fieldSettings.multiple === 'true')
-				{
 					this.localFieldValue.push(listItem);
-					this.localFieldValue.forEach(item=>{
-						resArray.push(item);
-					});
-				}
 				else
-				{
 					this.localFieldValue = [listItem];
-					resArray.push(listItem);
-				}
 
 				this.$emit('onChange', {
-					value    : resArray,
+					value    : this.localFieldValue,
 					settings : this.fieldSettings,
 				});
 			},
@@ -157,24 +158,20 @@
 			 */
 			removeItem(localFieldItem)
 			{
-				let resArray = [];
 				if(this.fieldSettings.multiple === 'true')
 				{
 					let keyIndex = this.localFieldValue.indexOf(localFieldItem);
 					this.localFieldValue.splice(keyIndex,1);
-					this.localFieldValue.forEach(item=>{
-						resArray.push(item);
-					});
 				}
 				else
 					this.localFieldValue = [];
 
 				this.$emit('onChange', {
-					value     : !resArray.lenght ? '' : resArray,
+					value     : this.localFieldValue,
 					settings  : this.fieldSettings
 				});
 			},
-		},
+		}
 	};
 </script>
 <style lang="scss">
