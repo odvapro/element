@@ -139,6 +139,9 @@
 			 */
 			selectItem(listItem)
 			{
+				if( !(this.localFieldValue instanceof Array) )
+					this.localFieldValue = [];
+
 				if(this.localFieldValue.indexOf(listItem) !== -1)
 					return;
 
