@@ -157,7 +157,7 @@ class SqlAdapter extends PdoAdapter
 				$params
 			);
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"countError: {$e->getMessage()}"
 			);
 			return false;
@@ -214,7 +214,7 @@ class SqlAdapter extends PdoAdapter
 				$params
 			);
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"updateRequest: {$sql}"
 			);
 			return false;
@@ -294,7 +294,7 @@ class SqlAdapter extends PdoAdapter
 			$this->db->prepare($sql);
 			$this->db->execute($sql, [$id]);
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"duplicateRequest: {$sql}"
 			);
 			return false;
@@ -339,7 +339,7 @@ class SqlAdapter extends PdoAdapter
 				$params
 			);
 		} catch (Exception $e) {
-			Phalcon\Di::getDefault()->get('logger')->error(
+			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"deleteRequest: {$sql}"
 			);
 			return false;
