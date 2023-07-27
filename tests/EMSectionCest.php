@@ -44,7 +44,6 @@ class EmSectionCest
 			'sectionFieldCode'        => 'id',
 			'sectionSearchCode'       => 'name',
 			'sectionParentsFieldCode' => 'parent_section',
-			'parentId'                => '13',
 			'q'                       => 'Boxes'
 		]);
 		$resResult = json_decode($I->grabResponse(), true);

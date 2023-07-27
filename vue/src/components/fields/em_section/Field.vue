@@ -17,10 +17,11 @@
 			<ListSection
 				v-for="listItem in list"
 				:key="listItem.code"
-				@select="selectItem(listItem)"
-				@remove="removeItem(listItem)"
+				@select="selectItem"
+				@remove="removeItem"
 				:settings=fieldSettings
 				:item=listItem
+				:listValue=fieldValue
 				:selected=isSelected(listItem)
 			>{{ listItem.name }}</ListSection>
 			<div class="em-section__footer" @click="createItem()" v-if="newTag">
@@ -110,7 +111,7 @@
 			bindDefaultColumnValues()
 			{
 				this.currentElement = [];
-				let table = this.$store.getters.getTable(this.fieldSettings.nodeTableCode);
+				let table = this.$store.getters.getTable(this.fieldSettings.sectionTableCode);
 				for (let column in table.columns)
 					this.currentElement[column] = '';
 
@@ -119,7 +120,7 @@
 			popupForCreateElement()
 			{
 				this.bindDefaultColumnValues();
-				this.detailTableCode = this.fieldSettings.nodeTableCode;
+				this.detailTableCode = this.fieldSettings.sectionTableCode;
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},

@@ -6,6 +6,7 @@
 					class="list-section__fold"
 					:class="{'list-section__fold--open':open}"
 					@click.stop="fold"
+					v-if="item.childsCount > 0"
 				>
 					<svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<g clip-path="url(#clip0_2631_4952)">
@@ -23,24 +24,39 @@
 				</span>
 			</div>
 			<div class="list-section__right">
-			<button v-if="!selected" class="list-section__select" @click.stop="select"> выбрать </button>
-			<button v-if="selected" class="list-section__remove" @click.stop="remove">
+			<button v-if="!selected" class="list-section__select" @click.stop="select(item)"> выбрать </button>
+			<button v-if="selected" class="list-section__remove" @click.stop="remove(item)">
 				<svg width="9" height="9">
 					<use xlink:href="#plus-white"></use>
 				</svg>
 			</button>
 		</div>
 		</div>
-		<div class="list-section__childs" v-if="open"></div>
+		<div class="list-section__childs" v-if="open">
+			<ListSection
+				v-for="child in childs"
+				:key="child.code"
+				@select=select
+				@remove=remove
+				:settings=settings
+				:item=child
+				:selected=isSelected(child)
+				:listValue=listValue
+			>{{child.name}}</ListSection>
+		</div>
 	</div>
 </template>
 <script>
+	import ListSection from '@/components/forms/ListSection';
 	export default
 	{
+		name: "ListSection",
+		components:{ListSection},
 		props:
 		{
 			selected: {type: Boolean, default: false},
 			settings: {type: Object, default: false},
+			listValue: {type: [Boolean, Object, Array], default: false},
 			item:{type: Object, default: false}
 		},
 		data()
@@ -52,21 +68,48 @@
 		},
 		methods:
 		{
+			isSelected(listItem)
+			{
+				let selected = false;
+				for (let selectedSectionKey in this.listValue)
+				{
+					if(listItem.id == this.listValue[selectedSectionKey].id)
+					{
+						selected = true
+						break;
+					}
+				}
+				return selected;
+			},
 			/**
 			 * Choose option and close dropdown
+			 * child -  object если работа идет вложенным элементом - обрабатывается он
 			 */
-			select:function(event)
+			select:function(child)
 			{
+				if(typeof child != 'undefined')
+				{
+					this.$emit('select',child);
+					return;
+				}
+
 				if (this.selected)
 					return;
-				this.$emit('select');
+				this.$emit('select', this.item);
 				setTimeout(() => { this.$parent.selectEvent(); }, 100);
 			},
 			/**
 			 * Remove item
+			 * child - object если работа идет вложенным элементом - обрабатывается он
 			 */
-			remove()
+			remove(child)
 			{
+				if(typeof child != 'undefined')
+				{
+					this.$emit('remove',child);
+					return;
+				}
+
 				this.$emit('remove');
 				setTimeout(() => { this.$parent.removeEvent(); }, 100);
 			},
@@ -186,5 +229,5 @@
 		align-items:center;
 		padding: 0 3px;
 	}
-	.list-section__childs{margin-left: 15px; }
+	.list-section__childs{margin-left: 21px; }
 </style>

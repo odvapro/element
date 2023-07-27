@@ -25,14 +25,16 @@ class IndexFController extends ControllerBase
 
 		// TODO
 		// переделать - не безоспастно
-		$db = $this->di->get('db');
-		$parentId = empty($parentId)?'IS NULL':"= {$parentId}";
-		$q = empty($q)?'':"AND a.{$sectionSearchCode} LIKE '%{$q}%'";
+		$db             = $this->di->get('db');
+		$parentId       = empty($parentId)?"(a.{$sectionParentsFieldCode} IS NULL OR a.{$sectionParentsFieldCode} = 0)":" a.{$sectionParentsFieldCode} = {$parentId}";
+		$q              = empty($q)?'':"a.{$sectionSearchCode} LIKE '%{$q}%'";
+		$whereCondition = !empty($q)?$q:$parentId;
+
 		$sql = "SELECT
 					a.{$sectionFieldCode},a.{$sectionSearchCode},a.{$sectionParentsFieldCode}, COUNT(b.{$sectionFieldCode}) childsCount
 					FROM {$sectionTableCode} a
 				LEFT JOIN {$sectionTableCode} b ON a.{$sectionFieldCode} = b.{$sectionParentsFieldCode}
-				WHERE a.{$sectionParentsFieldCode} {$parentId} {$q}
+				WHERE  {$whereCondition}
 				GROUP BY a.{$sectionFieldCode}, a.{$sectionSearchCode}";
 
 		// Send a SQL statement to the database system
