@@ -66,7 +66,7 @@
 						<div class="settings-table-item category-font">
 							<input class="settings-table-input-name" type="text" v-model="column.em.name" @change="changeColumnName(table.code, column)" :placeholder="$t('set_something') + $t('name')">
 						</div>
-						<div class="settings-table-item centered">
+						<div class="settings-table-item">
 							<Select
 								:defaultText="column.em.type_info.name"
 							>

@@ -1,6 +1,14 @@
 	<template>
 		<div class="settings-popup-row-params">
 			<div class="popup__field">
+				<div class="popup__field-name">Multiple</div>
+				<div class="popup__field-input">
+					<Checkbox
+						:checked.sync="localSettings.multiple"
+					></Checkbox>
+				</div>
+			</div>
+			<div class="popup__field">
 				<div class="popup__field-name">
 					Sections table
 					<small v-if="errors.sectionTableCode" class="popup__field-error">{{ errors.sectionTableCode.message }}</small>
@@ -81,6 +89,7 @@
 				return {
 					localSettings :
 					{
+						multiple                : false,
 						sectionTableCode        : false,
 						sectionFieldCode        : false,
 						sectionSearchCode       : false,

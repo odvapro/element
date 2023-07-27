@@ -8,7 +8,7 @@ CREATE TABLE `block_type` (
   `value` varchar(50) DEFAULT 'text',
   `name` varchar(50) DEFAULT NULL,
   `node` varchar(50) DEFAULT NULL,
-  `section` int(11) DEFAULT NULL,
+  `section` varchar(50) DEFAULT NULL,
   `list` varchar(50) DEFAULT NULL,
   `file` text,
   `text` text,
