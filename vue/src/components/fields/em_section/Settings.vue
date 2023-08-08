@@ -71,6 +71,61 @@
 					</Select>
 				</div>
 			</div>
+			<div class="popup__field">
+				<div class="popup__field-name">Save in foreign table</div>
+				<div class="popup__field-input">
+					<Checkbox
+						:checked.sync="localSettings.saveInForeign"
+					></Checkbox>
+				</div>
+			</div>
+			<div class="popup__field" v-if="localSettings.saveInForeign">
+				<div class="popup__field-name">
+					Foreign table
+					<small v-if="errors.foreignTableCode" class="popup__field-error">{{ errors.foreignTableCode.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedForeignTable">
+						<SelectOption
+							v-for="table,tableIndex in tables"
+							:key="tableIndex"
+							@click.native="selectForeignTable(table)"
+						>{{ table.name }}</SelectOption>
+					</Select>
+				</div>
+			</div>
+			<div class="popup__field" v-if="localSettings.saveInForeign">
+				<div class="popup__field-name">
+					Element id field
+					<small v-if="errors.sectionSearchCode" class="popup__field-error">{{ errors.sectionSearchCode.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedForeignElementField" :disabled="(foreignTableFields === false)">
+						<SelectOption
+							v-if="foreignTableFields"
+							v-for="field,fieldIndex in foreignTableFields"
+							:key="fieldIndex"
+							@click.native="selectForeignElementField(field)"
+						>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
+					</Select>
+				</div>
+			</div>
+			<div class="popup__field" v-if="localSettings.saveInForeign">
+				<div class="popup__field-name">
+					Section id field
+					<small v-if="errors.sectionSearchCode" class="popup__field-error">{{ errors.sectionSearchCode.message }}</small>
+				</div>
+				<div class="popup__field-input">
+					<Select :defaultText="selectedForeignSectionField" :disabled="(foreignTableFields === false)">
+						<SelectOption
+							v-if="foreignTableFields"
+							v-for="field,fieldIndex in foreignTableFields"
+							:key="fieldIndex"
+							@click.native="selectForeignSectionField(field)"
+						>{{ (field.em.name) ? field.em.name : field.field }}</SelectOption>
+					</Select>
+				</div>
+			</div>
 			<div class="popup__buttons">
 				<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
 				<button @click="save()" class="el-btn">{{$t('save_settings')}}</button>
@@ -94,6 +149,11 @@
 						sectionFieldCode        : false,
 						sectionSearchCode       : false,
 						sectionParentsFieldCode : false,
+
+						saveInForeign           : false,
+						foreignTableCode        : false,
+						foreignElementFieldCode : false,
+						foreignSectionFieldCode : false,
 					},
 					errors: {}
 				}
@@ -107,6 +167,7 @@
 				{
 					return this.$store.state.tables.tables;
 				},
+
 				/**
 				 * Get fields list for current table
 				 */
@@ -114,6 +175,15 @@
 				{
 					return this.$store.getters.getColumns(this.localSettings.sectionTableCode);
 				},
+
+				/**
+				 * Get fields list for foreign table
+				 */
+				foreignTableFields()
+				{
+					return this.$store.getters.getColumns(this.localSettings.foreignTableCode);
+				},
+
 				/**
 				 * Default text on select table
 				 */
@@ -130,6 +200,56 @@
 					return table.name;
 
 				},
+
+				/**
+				 * Default text on select table
+				 */
+				selectedForeignTable()
+				{
+					let table = false;
+
+					if(this.localSettings.foreignTableCode !== false)
+						table = this.$store.getters.getTable(this.localSettings.foreignTableCode)
+
+					if(table === false)
+						return 'Foreign Table';
+
+					return table.name;
+
+				},
+
+				/**
+				 * Default text on foreign element field
+				 */
+				selectedForeignElementField()
+				{
+					let field = false;
+
+					if(this.localSettings.foreignElementFieldCode !== false)
+						field = this.$store.getters.getColumn(this.localSettings.foreignTableCode, this.localSettings.foreignElementFieldCode)
+
+					if(field === false)
+						return 'Select table';
+
+					return (field.em.name) ? field.em.name : field.field;
+				},
+
+				/**
+				 * Default text on foreign element field
+				 */
+				selectedForeignSectionField()
+				{
+					let field = false;
+
+					if(this.localSettings.foreignSectionFieldCode !== false)
+						field = this.$store.getters.getColumn(this.localSettings.foreignTableCode, this.localSettings.foreignSectionFieldCode)
+
+					if(field === false)
+						return 'Select table';
+
+					return (field.em.name) ? field.em.name : field.field;
+				},
+
 				/**
 				 * Default text on select table
 				 */
@@ -145,6 +265,7 @@
 
 					return (field.em.name) ? field.em.name : field.field;
 				},
+
 				/**
 				 * Default text on select table
 				 */
@@ -246,6 +367,37 @@
 				{
 					this.localSettings.sectionParentsFieldCode = field.field;
 					this.$delete(this.errors, 'sectionParentsFieldCode');
+				},
+
+				/**
+				 * Select foreign table
+				 */
+				selectForeignTable(table)
+				{
+					if(this.localSettings.foreignTableCode == table.code)
+						return;
+					this.localSettings.foreignTableCode        = table.code;
+					this.localSettings.foreignElementFieldCode = false;
+					this.localSettings.foreignSectionFieldCode = false;
+					this.$delete(this.errors, 'foreignTableCode');
+				},
+
+				/**
+				 * Select foreign Element Field
+				 */
+				selectForeignElementField(field)
+				{
+					this.localSettings.foreignElementFieldCode = field.field;
+					this.$delete(this.errors, 'foreignElementFieldCode');
+				},
+
+				/**
+				 * Select foreign Element Field
+				 */
+				selectForeignSectionField(field)
+				{
+					this.localSettings.foreignSectionFieldCode = field.field;
+					this.$delete(this.errors, 'foreignSectionFieldCode');
 				},
 			},
 			/**
