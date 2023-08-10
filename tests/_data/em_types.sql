@@ -52,11 +52,10 @@ VALUES
   (25,'block_type','flag','em_check',0,'',NULL),
   (26,'pages','products','em_matrix',0,'{\"isManyToMany\":\"true\",\"localField\":\"id\",\"nodeTableCode\":\"pages_products\",\"nodeTableField\":\"page_id\",\"nodeTableFinalTableField\":\"product_id\",\"finalTableCode\":\"products\",\"finalTableField\":\"id\"}',NULL),
   (27,'block_type','list','em_list',0,'{\"list\":[{\"key\":\"first\",\"value\":\"\\u041f\\u0435\\u0440\\u0432\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"second\",\"value\":\"\\u0412\\u0442\\u043e\\u0440\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"third\",\"value\":\"\\u0422\\u0440\\u0435\\u0442\\u0435\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"},{\"key\":\"forth\",\"value\":\"\\u0427\\u0435\\u0442\\u0432\\u0435\\u0440\\u0442\\u043e\\u0435 \\u0437\\u043d\\u0430\\u0447\\u0435\\u043d\\u0438\\u0435\"}],\"multiple\":\"false\"}',NULL),
-  (28,'block_type','section','em_section',0,'{\"sectionTableCode\":\"sections\",\"sectionFieldCode\":\"id\",\"sectionSearchCode\":\"name\",\"sectionParentsFieldCode\":\"parent_section\"}',NULL);
+  (28,'block_type','section','em_section',0,'{\"multiple\":\"false\",\"sectionTableCode\":\"sections\",\"sectionFieldCode\":\"id\",\"sectionSearchCode\":\"name\",\"sectionParentsFieldCode\":\"parent_section\",\"saveInForeign\":\"true\",\"foreignTableCode\":\"block_sections\",\"foreignElementFieldCode\":\"block_id\",\"foreignSectionFieldCode\":\"section_id\"}',NULL);
 
 /*!40000 ALTER TABLE `em_types` ENABLE KEYS */;
 UNLOCK TABLES;
-
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

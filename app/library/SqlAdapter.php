@@ -17,7 +17,8 @@ class SqlAdapter extends PdoAdapter
 		if (empty($whereArray) || empty($whereArray['fields'])) return $result;
 
 		$whereResult = [];
-		foreach ($whereArray['fields'] as $whereKey => $whereValue) {
+		foreach ($whereArray['fields'] as $whereKey => $whereValue)
+		{
 			if (!isset($whereValue['code_sql'])) continue;
 			$whereResult[] = preg_replace("/:value:/", '?', $whereValue['code_sql']);
 			if (preg_match("/:value:/", $whereValue['code_sql']))

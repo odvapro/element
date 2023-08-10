@@ -31,3 +31,25 @@ VALUES
 
 /*!40000 ALTER TABLE `sections` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `block_sections`;
+
+CREATE TABLE `block_sections` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `section_id` int(11) DEFAULT NULL,
+  `block_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `block_sections` WRITE;
+/*!40000 ALTER TABLE `block_sections` DISABLE KEYS */;
+
+INSERT INTO `block_sections` (`id`, `section_id`, `block_id`)
+VALUES
+  (1,13,1),
+  (2,14,1),
+  (3,2,2);
+
+/*!40000 ALTER TABLE `block_sections` ENABLE KEYS */;
+UNLOCK TABLES;

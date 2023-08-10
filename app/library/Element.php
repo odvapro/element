@@ -288,6 +288,17 @@ class Element
 		$tableColumns = $this->getColumns($updateParams['table']);
 		$updateParams = $this->_prepareRequestParams($updateParams);
 
+		// select updated row - for fields
+		$selectParams = ['from' => $updateParams['table']];
+		if(!empty($updateParams['where']))
+			$selectParams['where'] = $updateParams['where'];
+
+		$selectResult = $this->eldb->select($selectParams);
+		if (empty($selectResult))
+			return ['success' => false, 'message' => 'select_error', 'code' => 6];
+
+		$updateParams['set'] = array_merge(reset($selectResult),$updateParams['set']);
+
 		foreach ($updateParams['set'] as $fieldCode => &$fieldValue)
 		{
 			$fieldClass = $tableColumns[$fieldCode]['em']['type_info']['fieldComponent'];

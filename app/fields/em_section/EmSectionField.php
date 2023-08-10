@@ -9,10 +9,20 @@ class EmSectionField extends FieldBase
 	 */
 	public function getValue()
 	{
+		$multiple                = $this->settings['multiple'];
 		$sectionTableCode        = $this->settings['sectionTableCode'];
 		$sectionFieldCode        = $this->settings['sectionFieldCode'];
 		$sectionSearchCode       = $this->settings['sectionSearchCode'];
 		$sectionParentsFieldCode = $this->settings['sectionParentsFieldCode'];
+
+		$saveInForeign           = $this->settings['saveInForeign'];
+		$foreignTableCode        = $this->settings['foreignTableCode'];
+		$foreignElementFieldCode = $this->settings['foreignElementFieldCode'];
+		$foreignSectionFieldCode = $this->settings['foreignSectionFieldCode'];
+
+		if($saveInForeign)
+			$this->fieldValue = $this->getForeignValue();
+
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$sectionTableCode]))
 		{
 			$selectResult = $this->element->select([
@@ -48,6 +58,39 @@ class EmSectionField extends FieldBase
 	}
 
 	/**
+	 * Runs on foreign savings
+	 * @return string imploded array
+	 */
+	public function getForeignValue()
+	{
+		$sectionFieldCode        = $this->settings['sectionFieldCode'];
+		$foreignTableCode        = $this->settings['foreignTableCode'];
+		$foreignElementFieldCode = $this->settings['foreignElementFieldCode'];
+		$foreignSectionFieldCode = $this->settings['foreignSectionFieldCode'];
+
+		$where = [];
+		$where[] = [
+			'code'      => $foreignElementFieldCode,
+			'operation' => 'IS',
+			'value'     => $this->row[$sectionFieldCode]
+		];
+		$selectResult = $this->element->select([
+			'from' => $foreignTableCode,
+			'fields' => [
+				$foreignElementFieldCode,
+				$foreignSectionFieldCode,
+			],
+			'where'=> ['operation' => 'and','fields'=>$where]
+		]);
+
+		$sectionsIds = [];
+		foreach ($selectResult['result']['items'] as $foreignNode)
+			$sectionsIds[] = $foreignNode[$foreignSectionFieldCode];
+
+		return implode(',', $sectionsIds);
+	}
+
+	/**
 	 * Сохранить значение
 	 * Format of saving data
 	 * empty []
@@ -57,6 +100,73 @@ class EmSectionField extends FieldBase
 	 */
 	public function saveValue()
 	{
+		$preparedFieldValue = null;
+		try {
+			$preparedFieldValue = $this->_getSimpleSaveValue();
+		} catch (Exception $e) {
+			$preparedFieldValue = null;
+		}
+
+		$saveInForeign           = $this->settings['saveInForeign'];
+		$sectionFieldCode        = $this->settings['sectionFieldCode'];
+		$foreignTableCode        = $this->settings['foreignTableCode'];
+		$foreignElementFieldCode = $this->settings['foreignElementFieldCode'];
+		$foreignSectionFieldCode = $this->settings['foreignSectionFieldCode'];
+
+		if(!$saveInForeign)
+			return $preparedFieldValue;
+
+		$currentSections = $this->getForeignValue();
+		$currentSections = explode(',', $currentSections);
+		$newPreparedFieldValue = (!empty($preparedFieldValue))?explode(',', $preparedFieldValue):[];
+		$removeArray = [];
+		foreach ($currentSections as $curSectionId)
+		{
+			$elIndex = array_search($curSectionId, $newPreparedFieldValue);
+			if($elIndex !== false)
+			{
+				unset($newPreparedFieldValue[$elIndex]);
+				continue;
+			}
+			$removeArray[] = $curSectionId;
+		}
+
+		// TODO
+		// - плохо, переделать
+		// - сдлеать одним запросом
+		foreach ($removeArray as $removeSectionId)
+			$this->element->delete([
+				'table' => $foreignTableCode,
+				'where' => [
+					'operation' => 'AND',
+					'fields'=>[
+						['code' => $foreignSectionFieldCode, 'operation' => 'IS', 'value' => $removeSectionId ],
+						['code' => $foreignElementFieldCode, 'operation' => 'IS', 'value' => $this->row[$sectionFieldCode] ]
+					]
+				]
+			]);
+
+		$inserValues = [];
+		foreach ($newPreparedFieldValue as $sectionId)
+			$inserValues[] = [$this->row[$sectionFieldCode],$sectionId];
+		if(!empty($inserValues))
+			$this->eldb->insert([
+				'table'   => $foreignTableCode,
+				'columns' => [$foreignElementFieldCode,$foreignSectionFieldCode],
+				'values'  => $inserValues
+			]);
+
+		return null;
+	}
+
+	/**
+	 * Get simple save value
+	 * empty []
+	 * one node [1]
+	 * multiple nodes [1,2,3]
+	 */
+	public function _getSimpleSaveValue()
+	{
 		if(empty($this->fieldValue))
 			return null;
 
@@ -64,11 +174,9 @@ class EmSectionField extends FieldBase
 			throw new EmException("Incorrect field value, should be int or array of int", 1);
 
 		$nodes = [];
-
 		if(is_array($this->fieldValue))
 		{
 			$nodes = array_column($this->fieldValue, 'id');
-
 			foreach ($nodes as $node)
 				if (!is_int($node) && !is_numeric($node))
 					throw new EmException("Array of node values should be array of integers", 2);

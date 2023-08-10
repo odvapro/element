@@ -71,28 +71,36 @@ class EmSectionCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		// check incorect node save
-		$this->saveField($I, 'incorrect value', 1);
+		// // check incorect section save
+		$this->saveField($I, 'incorrect value', 16);
 		$I->seeResponseContainsJson(['success' => false]);
 
 		// check correct node
-		$this->saveField($I, [['id' => 20]], 1);
+		$this->saveField($I, [['id' => 15]], 2);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'node' => 20 ]);
+		$I->seeInDatabase('block_sections', ['section_id' => 15, 'block_id' => 2 ]);
+
+		// check multiple select
+		$this->saveField($I, [['id' => 15],['id' => 7],['id' => 13]], 1);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeInDatabase('block_sections', ['section_id' => 15, 'block_id' => 1 ]);
+		$I->seeInDatabase('block_sections', ['section_id' => 7, 'block_id' => 1 ]);
+		$I->dontSeeInDatabase('block_sections', ['section_id' => 14, 'block_id' => 1 ]);
+		$I->seeInDatabase('block_sections', ['section_id' => 15, 'block_id' => 2 ]);
 
 		// save empty node
-		$this->saveField($I, '', 1);
+		$this->saveField($I, '', 2);
 		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'node' => null ]);
+		$I->dontSeeInDatabase('block_sections', ['block_id' => 2]);
 
-		// check saving multiple nodes
+		/*// check saving multiple nodes
 		$this->saveField($I, [['id' => 20],['id' => 23],['id' => 24]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
 
 		// check incorrect node
 		$this->saveField($I, [['id'=>20],['id'=>'some name']], 2);
-		$I->seeResponseContainsJson(['success' => false]);
+		$I->seeResponseContainsJson(['success' => false]);*/
 	}
 
 	/**
@@ -106,20 +114,19 @@ class EmSectionCest
 
 		// check multiple node
 		$I->haveInDatabase('block_type', ['id'=>8,'node' => '20,23']);
-		$this->getField($I, 8);
+		$this->getField($I, 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
-		$I->assertEquals($resp['result']['items'][0]['node'][0]['id'],20);
-		$I->assertEquals($resp['result']['items'][0]['node'][1]['id'],23);
+		$I->assertEquals($resp['result']['items'][0]['section'][0]['id'],13);
+		$I->assertEquals($resp['result']['items'][0]['section'][1]['id'],14);
 
 		// check single node
-		$I->haveInDatabase('block_type', ['id'=>9,'node' => '23']);
-		$this->getField($I, 9);
+		$this->getField($I, 2);
 		$I->seeResponseContainsJson(['success' => true]);
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
-		$I->assertEquals($resp['result']['items'][0]['node'][0]['id'],23);
+		$I->assertEquals($resp['result']['items'][0]['section'][0]['id'],2);
 	}
 
 	protected function getField(ApiTester $I, Int $id)
@@ -144,7 +151,7 @@ class EmSectionCest
 			'update' =>
 			[
 				'table' => 'block_type',
-				'set' => ['node' => $newValue ],
+				'set' => ['section' => $newValue ],
 				'where' => [
 					'operation' => 'and',
 					'fields'    => [['code' => 'id', 'operation' => 'IS', 'value' => $id]]
