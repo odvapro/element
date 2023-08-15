@@ -272,6 +272,7 @@ class Element
 
 	/**
 	 * Update request
+	 * Update only one record
 	 * @return array
 	 */
 	public function update($updateParams)
@@ -294,8 +295,8 @@ class Element
 			$selectParams['where'] = $updateParams['where'];
 
 		$selectResult = $this->eldb->select($selectParams);
-		if (empty($selectResult))
-			return ['success' => false, 'message' => 'select_error', 'code' => 6];
+		if(empty($selectResult))
+			return ['success' => false, 'message' => 'cant update multile records', 'code' => 6];
 
 		$updateParams['set'] = array_merge(reset($selectResult),$updateParams['set']);
 

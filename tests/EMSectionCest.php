@@ -92,15 +92,6 @@ class EmSectionCest
 		$this->saveField($I, '', 2);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->dontSeeInDatabase('block_sections', ['block_id' => 2]);
-
-		/*// check saving multiple nodes
-		$this->saveField($I, [['id' => 20],['id' => 23],['id' => 24]], 1);
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
-
-		// check incorrect node
-		$this->saveField($I, [['id'=>20],['id'=>'some name']], 2);
-		$I->seeResponseContainsJson(['success' => false]);*/
 	}
 
 	/**

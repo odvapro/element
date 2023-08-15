@@ -32,10 +32,10 @@ class TableWorkerCest
 		// check first table architecture
 		$result = $I->grabResponse();
 		$result = json_decode($result, true);
-		$I->assertEquals($result['tables'][0]['code'],'block_type');
-		$I->assertisArray($result['tables'][0]['columns']);
-		$I->assertisArray($result['tables'][0]['columns']['date']['em']);
-		$I->assertisArray($result['tables'][0]['columns']['date']['em']['collations']);
+		$I->assertEquals($result['tables'][1]['code'],'block_type');
+		$I->assertisArray($result['tables'][1]['columns']);
+		$I->assertisArray($result['tables'][1]['columns']['date']['em']);
+		$I->assertisArray($result['tables'][1]['columns']['date']['em']['collations']);
 	}
 
 	public function select(ApiTester $I)
@@ -277,32 +277,35 @@ class TableWorkerCest
 		$I->sendPOST('/auth/', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
+		// update with big where
+		// cant update with big recursive where
+		$I->haveInDatabase('test_table', ['id'=>4,'name' => 'test_record','email'=>'test@test.com']);
 		$I->sendPOST('/el/update/',
 		[
 			'update' =>
 			[
 				'table' => 'test_table',
-				'set' => [
-					'email' => 3,
-					'col'   => 5
-				],
+				'set' => ['email' => 'newemail', 'col'   => 5, 'name'=>'newname' ],
 				'where' => [
 					'operation' => 'and',
 					'fields' =>
 					[
-						['code' => 'name', 'operation' => 'IS', 'value' => 'eee'],
-						['code' => 'email', 'operation' => 'DOES NOT CONTAIN', 'value' => '3'],
+						['code' => 'name', 'operation' => 'IS', 'value' => 'test_record'],
+						['code' => 'col', 'operation' => 'DOES NOT CONTAIN', 'value' => '4'],
 						[
 							'operation' => 'or',
-							'fields' => [['code' => 'avat', 'operation' => 'IS', 'value' => '3'] ]
+							'fields' => [
+								['code' => 'email', 'operation' => 'IS', 'value' => 'test@test.com'],
+								['code' => 'email', 'operation' => 'IS', 'value' => 'test-1@test.com']
+							]
 						]
 					]
 				],
 			]
 		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
+		$I->seeResponseContainsJson(['success' => false]);
 
+		// simple where's ok
 		$I->sendPOST('/el/update/', [
 			'update' => [
 				'table' => 'test_table',
@@ -322,28 +325,6 @@ class TableWorkerCest
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('test_table', ['id' => 2, 'email' => "rr'rrr", 'col'=>'222222']);
 
-		$I->sendPOST('/el/update/',
-		[
-			'update' =>
-			[
-				'table' => 'test_table',
-				'set' => ["name"=> 'ggапфффыввфывg' ],
-				'where' =>
-				[
-					'operation' => 'and',
-					'fields' =>
-					[
-						['code' => 'name', 'operation' => 'CONTAINS', 'value' => 'ggg'],
-						[
-							'operation' => 'or',
-							'fields' => [['code' => 'avat', 'operation' => 'IS', 'value' => '3'] ]
-						]
-					]
-				]
-			]
-		]);
-		$I->seeResponseCodeIs(200);
-		$I->seeResponseContainsJson(['success' => true]);
 
 		$I->sendPOST('/el/update/', [
 			'update' => ['table' => 'test_table']

@@ -88,9 +88,8 @@ class SqlAdapter extends PdoAdapter
 			}
 		}
 
-		if (!empty($order)) {
+		if (!empty($order))
 			$sql .= ' ORDER BY ' . implode(', ', $order);
-		}
 
 		if (!empty($limit))
 			$sql .= ' LIMIT '.intval($limit);
@@ -101,11 +100,7 @@ class SqlAdapter extends PdoAdapter
 		try
 		{
 			$this->db->prepare($sql);
-			$select = $this->db->fetchAll(
-				$sql,
-				Phalcon\Db\Enum::FETCH_ASSOC,
-				$params
-			);
+			$select = $this->db->fetchAll($sql, Phalcon\Db\Enum::FETCH_ASSOC, $params );
 		} catch (Exception $e) {
 			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"selectError: {$e->getMessage()}"
@@ -202,10 +197,7 @@ class SqlAdapter extends PdoAdapter
 		try
 		{
 			$this->db->prepare($sql);
-			$this->db->execute(
-				$sql,
-				$params
-			);
+			$res = $this->db->execute($sql, $params);
 		} catch (Exception $e) {
 			Phalcon\Di::getDefault()->get('logger')->error(
 				"updateRequest: {$sql}"

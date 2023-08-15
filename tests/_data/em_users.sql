@@ -18,7 +18,7 @@ LOCK TABLES `em_users` WRITE;
 
 INSERT INTO `em_users` (`id`, `login`, `name`, `password`, `email`, `language`)
 VALUES
-  (1, 'admin', 'Михаил', '25e4ee4e9229397b6b17776bfceaf8e7', 'axel0726@gmail.com', 'en'),
+  (1, 'admin', 'Untiteled', '25e4ee4e9229397b6b17776bfceaf8e7', 'axel0726@gmail.com', 'en'),
   (2, 'user1', 'Morris Wilson', '25e4ee4e9229397b6b17776bfceaf8e7', 'axel0726@gmail.com', 'en'),
   (3, 'user2', 'Courtney Mckinney', '25e4ee4e9229397b6b17776bfceaf8e7', 'axel0726@gmail.com', 'en');
 

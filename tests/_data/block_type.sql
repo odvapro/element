@@ -29,7 +29,7 @@ VALUES
   (2,'product-card','cart',NULL,NULL,'','2019-08-24',NULL,NULL,3,'1'),
   (3,'small-card','cart2',NULL,NULL,'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',NULL,NULL,NULL,1,'0'),
   (4,'slider','slider',NULL,NULL,'',NULL,NULL,NULL,4,'1'),
-  (6,'form-order','Форма заказа',NULL,NULL,'',NULL,NULL,NULL,NULL,'1');
+  (6,'form-order','Order form',NULL,NULL,'',NULL,NULL,NULL,NULL,'1');
 
 /*!40000 ALTER TABLE `block_type` ENABLE KEYS */;
 UNLOCK TABLES;
