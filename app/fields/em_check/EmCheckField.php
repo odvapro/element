@@ -39,8 +39,8 @@ class EmCheckField extends FieldBase
 	public function saveValue()
 	{
 		if($this->fieldValue == 'false' || empty($this->fieldValue))
-			return boolval($this->getUnCheckedString());
+			return $this->getUnCheckedString();
 
-		return boolval($this->getCheckedString());
+		return $this->getCheckedString();
 	}
 }
