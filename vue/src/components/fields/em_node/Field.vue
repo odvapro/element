@@ -167,7 +167,7 @@
 					this.localFieldValue.splice(keyIndex,1);
 				}
 				else
-					this.localFieldValue = [];
+					this.localFieldValue = '';
 
 				this.$emit('onChange', {
 					value     : this.localFieldValue,
