@@ -27,21 +27,9 @@
 		name: 'Popup',
 		props:
 		{
-			visible:
-			{
-				type: Boolean,
-				default: false
-			},
-			popupBlockClasses:
-			{
-				type: Array,
-				default: () => ([]),
-			},
-			canCloseByEsc:
-			{
-				type: Boolean,
-				default: true
-			},
+			visible: {type: Boolean, default: false },
+			popupBlockClasses: {type: Array, default: () => ([]), },
+			canCloseByEsc: {type: Boolean, default: true },
 		},
 		methods:
 		{

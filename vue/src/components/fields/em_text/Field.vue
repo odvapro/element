@@ -4,7 +4,7 @@
 			{{ previewText }}
 			<span class="el-empty" v-if="!previewText">{{ $t('empty') }}</span>
 		</div>
-		<Popup class="em-text__popup" :visible.sync="showEditor" :canCloseByEsc="false">
+		<Popup class="em-text__popup" :visible="showEditor" :canCloseByEsc="false">
 			<div class="em-text__editor-wrapper">
 				<div class="em-text__popup-head">
 					<div class="em-text__label-wrapper">
@@ -35,7 +35,7 @@
 	import RawTool from '@editorjs/raw';
 	import InlineCode from '@editorjs/inline-code';
 	import Quote from '@editorjs/quote';
-	import NestedList from '@editorjs/nested-list';
+	import List from "@editorjs/list";
 	import ImageTool from '@editorjs/image';
 
 	export default
@@ -115,11 +115,7 @@
 			},
 			closeEditor()
 			{
-				// if (this.editor && this.editor.destroy)
-				// 	this.editor.destroy();
 				this.showEditor = false;
-				// this.$set(this, 'showEditor', false);
-				console.log(this);
 			},
 			closeAndSaveEditor()
 			{
@@ -158,9 +154,10 @@
 					tools:
 					{
 						quote: Quote,
-						list: {
-							class: NestedList,
+						list:{
+							class: List,
 							inlineToolbar: true,
+							config: {defaultStyle: 'unordered'}
 						},
 						raw: RawTool,
 						inlineCode: InlineCode,

@@ -153,6 +153,11 @@ export default
 		{
 			add_sort: 'Add sort',
 		},
+		confirmCloseButtons:{
+			close:'Are you sure you want to close popup?',
+			confirm_close: 'Close',
+			cancel: 'Cancel'
+		},
 		confirmDeletePopup:
 		{
 			remove: 'Are you sure you want to delete this item permanently?',

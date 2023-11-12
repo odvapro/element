@@ -13,10 +13,7 @@ module.exports = {
 				})
 				.end()
 		})
-		config.module
-		.rule('vue')
-		.use('vue-loader')
-		.tap(options => {
+		config.module.rule('vue').use('vue-loader').tap(options => {
 			options.compilerOptions.modules = [
 				{
 					preTransformNode(astEl) {
@@ -46,6 +43,15 @@ module.exports = {
 		{
 			extensions: ['.js', '.vue', '.json'],
 			alias: {'vue$': 'vue/dist/vue.esm.js', }
+		},
+		module: {
+			rules: [{
+				test: /\.mjs$/,
+				loader: 'esbuild-loader',
+				options: {
+					target: 'es2015'
+ 				}
+			}],
 		}
 	},
 }

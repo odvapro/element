@@ -153,6 +153,11 @@ export default
 		{
 			add_sort: 'Добавить сортировку',
 		},
+		confirmCloseButtons:{
+			close:'Вы уверены, что хотите закрыть редактор?',
+			confirm_close: 'Закрыть',
+			cancel: 'Не закрывать'
+		},
 		confirmDeletePopup:
 		{
 			remove: 'Вы уверены, что хотите удалить этот элемент навсегда?',
