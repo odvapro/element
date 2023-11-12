@@ -1,4 +1,7 @@
 # vue
+Requirments
+Node 20v
+NPM 10v
 
 ## Project setup
 ```
