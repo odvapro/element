@@ -65,7 +65,7 @@
 					return [];
 
 				return this.fieldSettings.list.filter(listItem => {
-					return listItem.value.indexOf(this.searchText) !== -1;
+					return listItem.value.toLowerCase().indexOf(this.searchText.toLowerCase()) !== -1;
 				});
 			},
 		},
