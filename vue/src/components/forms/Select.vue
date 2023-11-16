@@ -9,7 +9,7 @@
 				disabled: disabled
 			}"
 		>
-			<div class="select__content" v-html="content"></div>
+			<div class="select__content"><slot name="selected">{{ content }}</slot></div>
 			<template v-if=!disabled>
 				<span class="select__arrow">
 					<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">

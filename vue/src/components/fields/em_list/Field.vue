@@ -11,12 +11,14 @@
 					:key="listItem.key"
 					@remove="removeItem(listItem)"
 					:current=true
+					:color="listItem.color"
 				>{{ listItem.value }}</ListOption>
 			</template>
 			<ListOption
 				v-for="listItem in itemsList"
 				:key="listItem.key"
 				@select="selectItem(listItem)"
+				:color="listItem.color"
 			>{{ listItem.value }}</ListOption>
 		</List>
 	</div>

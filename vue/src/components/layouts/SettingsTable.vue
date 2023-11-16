@@ -88,7 +88,7 @@
 				</div>
 			</div>
 		</div>
-		<Popup :visible.sync="settingsPopup">
+		<Popup :visible.sync="settingsPopup" :popupBlockClasses="[`settings-table__popup-${settingsColumn.field}`]">
 			<div class="popup__name">{{ $t('settings_of', { of_what: (settingsColumn && settingsColumn.field) || '' }) }}</div>
 			<component
 				:is="settingsComponent"
@@ -130,7 +130,7 @@
 				settingsFielType:'',
 				currentSettings:null,
 				settingsTable:null,
-				settingsColumn:null,
+				settingsColumn:{field:'none'},
 				showTableGroupsCode:false,
 				showPopupAddGroup:false,
 			};

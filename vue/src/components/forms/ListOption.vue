@@ -1,6 +1,6 @@
 <template>
 	<div class="list-option" @click="select">
-		<span>
+		<span :style="{background:color}">
 			<slot></slot>
 			<svg width="9" height="9" @click.stop="remove" class="list-option__remove">
 				<use xlink:href="#plus-white"></use>
@@ -13,10 +13,8 @@
 	{
 		props:
 		{
-			current: {
-				type: Boolean,
-				default: false,
-			},
+			current: {type: Boolean, default: false, },
+			color: {type: String, default: 'rgba(124, 119, 145, 0.1)', },
 		},
 		methods:
 		{

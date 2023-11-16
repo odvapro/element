@@ -3,9 +3,7 @@
 		<div class="settings-head">
 			<div class="settings-head__burger"><MobileBurger/></div>
 			<div class="settings-head-name">
-				<div class="settings-icon-wrapper">
-					⚙️
-				</div>
+				<div class="settings-icon-wrapper"> ⚙️ </div>
 				<div class="settings-name-wrapper">
 					<div class="settings-head-label">{{$t('settings')}}</div>
 					<div class="settings-head-descr">{{$t('pages.settings.user_and_table_settings')}}</div>
