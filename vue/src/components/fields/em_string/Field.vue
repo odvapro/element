@@ -1,6 +1,9 @@
 <template>
 	<div class="em-string__wrapper">
-		<div class="em-string" @click="openEdit()">{{ fieldValue }}</div>
+		<div class="em-string" @click="openEdit()">
+			{{ fieldValue }}
+			<span v-if="!fieldValue" class="el-empty">{{$t('empty')}}</span>
+		</div>
 		<div
 			class="em-string__edit"
 			v-click-outside="closeEdit"
@@ -72,7 +75,7 @@
 	.em-string__wrapper
 	{
 		height: 100%;
-		min-width: 100%;
+		width: 100%;
 		position: absolute;
 		left: 0px;
 	}
@@ -98,7 +101,7 @@
 	{
 		background-color: #efefef;
 	}
-	.detail-field-box .em-string{line-height: 41px;}
+	.detail-field-box .em-string{line-height: 50px;}
 
 	.em-string__edit
 	{

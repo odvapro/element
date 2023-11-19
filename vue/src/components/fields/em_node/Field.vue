@@ -10,8 +10,10 @@
 				<ListOption
 					v-for="localFieldItem in selectedItems"
 					@remove="removeItem(localFieldItem)"
+					@click.native.stop="openNodePage(localFieldItem)"
 					:key="localFieldItem.id"
 					:current=true
+					class="em-node__tag"
 				>{{ localFieldItem.name }}</ListOption>
 			</template>
 			<ListOption
@@ -31,6 +33,12 @@
 			:element="currentElement"
 			@createElement="createElement"
 		></DetailPopup>
+		<DetailPopup
+			:visible.sync="showDetailInfo"
+			:tableCode="detailTableCode"
+			:name="detailName"
+			:id="detailInfoId"
+		></DetailPopup>
 	</div>
 </template>
 <script>
@@ -45,6 +53,7 @@
 				detailTableCode: false,
 				detailName: false,
 				showDetail: false,
+				showDetailInfo:false,
 				currentElement: false,
 				list: [],
 				query: '',
@@ -52,6 +61,7 @@
 				storableData: [],
 				newTag: '',
 				nodesTimeout: '',
+				detailInfoId:false
 			};
 		},
 		watch:
@@ -74,6 +84,13 @@
 		},
 		methods:
 		{
+			openNodePage(node)
+			{
+				this.detailTableCode = this.fieldSettings.nodeTableCode;
+				this.detailName = node.name;
+				this.detailInfoId = node.value;
+				this.showDetailInfo = true;
+			},
 			async createElement(data, result)
 			{
 				if(result.data.success == true)
@@ -231,4 +248,26 @@
 		}
 	}
 	.detail-field-box .em-node .list{padding-left:0px;}
+	.em-node__tag span
+	{
+		height: 28px;
+		line-height: 28px;
+		padding:0 14px 0 10px;
+		position: relative;
+		&::after{
+			content: '';
+			position: absolute;
+			width: 5px;
+			height: 5px;
+			right:5px;
+			top:5px;
+			border-top:2px solid #929292;
+			border-right:2px solid #929292;
+		}
+	}
+	.em-node
+	{
+		.list__search-popup-head .em-node__tag span{padding-right: 30px;}
+		.list-option__remove{right:13px;}
+	}
 </style>

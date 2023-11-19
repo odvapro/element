@@ -46,14 +46,14 @@
 		min-height: 20px;
 		span
 		{
-			height:20px;
-			line-height: 20px;
+			height:24px;
+			line-height: 24px;
 			padding:0 8px;
 			background-color: rgba(124, 119, 145, 0.1);
 			border-radius: 2px;
 			font-size: 10px;
 			margin-right: 4px;
-			color: #7C7791;
+			color: rgba(25, 28, 33, 0.70);
 			white-space: nowrap;
 			display:inline-flex;
 			position: relative;
