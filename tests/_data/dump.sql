@@ -434,7 +434,6 @@ DELIMITER ;;
 # ------------------------------------------------------------
 
 /*!50003 DROP FUNCTION IF EXISTS `levenshtein` */;;
-/*!50003 SET SESSION SQL_MODE="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"*/;;
 /*!50003 CREATE*/ /*!50020 DEFINER=`root`@`127.0.0.1`*/ /*!50003 FUNCTION `levenshtein`( s1 VARCHAR(255), s2 VARCHAR(255) ) RETURNS int(11)
     DETERMINISTIC
 BEGIN

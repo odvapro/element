@@ -19,10 +19,12 @@ import SelectOption from './components/forms/SelectOption.vue';
 import DateForm from './components/forms/DateForm.vue';
 import Table from './components/tviews/Table.vue';
 import './plugins/highlightjs/main.js';
+import { VueMaskDirective } from 'v-mask';
 
 Vue.use(VueCookie);
 Vue.use(Meta);
 Vue.use(Popup);
+Vue.directive('mask', VueMaskDirective);
 Vue.config.productionTip = false;
 
 Vue.component('Checkbox', Checkbox);
