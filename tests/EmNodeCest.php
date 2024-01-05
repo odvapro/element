@@ -15,22 +15,24 @@ class EmNodeCest
 		$I->seeResponseContainsJson(['success' => false]);
 
 		// check correct node
-		$this->saveField($I, [['id' => 20]], 1);
+		$this->saveField($I, [['value' => 20]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => 20 ]);
 
-		// save empty node
+		// /* // save empty node
 		$this->saveField($I, '', 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => null ]);
 
 		// check saving multiple nodes
-		$this->saveField($I, [['id' => 20],['id' => 23],['id' => 24]], 1);
+		$this->saveField($I, [['value' => 20],['value' => 23],['value' => 24]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
 
 		// check incorrect node
-		$this->saveField($I, [['id'=>20],['id'=>'some name']], 2);
+		$this->saveField($I, [
+			['value'=>20],
+			['value'=>'some name'] ], 2);
 		$I->seeResponseContainsJson(['success' => false]);
 	}
 
@@ -49,8 +51,8 @@ class EmNodeCest
 		$I->seeResponseContainsJson(['success' => true]);
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
-		$I->assertEquals($resp['result']['items'][0]['node'][0]['id'],20);
-		$I->assertEquals($resp['result']['items'][0]['node'][1]['id'],23);
+		$I->assertEquals($resp['result']['items'][0]['node'][0]['value'],20);
+		$I->assertEquals($resp['result']['items'][0]['node'][1]['value'],23);
 
 		// check single node
 		$I->haveInDatabase('block_type', ['id'=>9,'node' => '23']);
@@ -58,7 +60,7 @@ class EmNodeCest
 		$I->seeResponseContainsJson(['success' => true]);
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
-		$I->assertEquals($resp['result']['items'][0]['node'][0]['id'],23);
+		$I->assertEquals($resp['result']['items'][0]['node'][0]['value'],23);
 	}
 
 	protected function getField(ApiTester $I, Int $id)
