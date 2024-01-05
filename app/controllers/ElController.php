@@ -209,6 +209,7 @@ class ElController extends ControllerBase
 	{
 		$tables = $this->eldb->getTables();
 
+
 		foreach ($tables as &$table)
 		{
 			$groupsId = array_column($this->user->groups->toArray(), 'id');

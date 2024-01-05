@@ -89,7 +89,6 @@ class Element
 				continue;
 
 			$fieldClass = new $this->emTypes[$emFieldsTypes->type]['fieldComponent']('', $emFieldsTypes->settings);
-
 			$emFieldArray = [
 				'name'         => $emFieldsTypes->name,
 				'type'         => $emFieldsTypes->type,

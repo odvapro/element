@@ -5,6 +5,7 @@
 			v-model="localValue"
 			placeholder="Empty"
 			@change="changeValue"
+			v-mask="mask"
 		/>
 	</div>
 </template>
@@ -15,12 +16,15 @@
 		data()
 		{
 			return {
-				localValue:false
+				localValue:false,
+				mask:false
 			}
 		},
 		mounted()
 		{
 			this.localValue = this.fieldValue;
+			if(this.fieldSettings.useMask && this.fieldSettings.mask != '')
+				this.mask = this.fieldSettings.mask;
 		},
 		methods:
 		{
