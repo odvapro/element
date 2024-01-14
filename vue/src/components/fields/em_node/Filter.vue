@@ -9,7 +9,7 @@
 		>
 			<template v-slot:selected>
 				<ListOption
-					v-if="localFieldValue.id"
+					v-if="localFieldValue.value"
 					@remove="removeItem"
 					:current=true
 				>{{ localFieldValue.name }}</ListOption>
@@ -87,16 +87,16 @@
 				if (!result.data.success)
 					return false;
 				this.list = result.data.result;
-				this.localFieldValue = this.list.filter(item => {return Number(item.id) === Number(this.filter.value)})[0] || { id: false };
+				this.localFieldValue = this.list.filter(item => {return Number(item.value) === Number(this.filter.value)})[0] || { id: false };
 			},
 			selectItem(listItem)
 			{
-				this.changeValue(listItem.id);
+				this.changeValue(listItem.value);
 			},
 			removeItem()
 			{
-				this.localFieldValue = { id: false };
-				this.changeValue('');
+				this.localFieldValue = { value: false };
+				this.changeValue(false);
 			}
 		},
 		mounted()
@@ -113,18 +113,17 @@
 		align-items: center;
 		border:1px solid rgba(103,115,135,0.4);
 		height: 30px;
-		padding-left: 4px;
+		padding-left: 2px;
 		padding-right: 10px;
 		border-radius: 2px;
 		margin-right: 10px;
-		min-width: 160px;
 		&:hover{border: 1px solid rgba(103,115,135,0.7);}
 	}
 	.em-node__filter-select-arrow
 	{
-		top: 13px;
-		right: 10px;
-		margin-top: 1px;
+		position: relative;
+		top: -2px;
+		right: 0px;
 		margin-left: 5px;
 	}
 </style>

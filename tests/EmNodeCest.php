@@ -45,14 +45,30 @@ class EmNodeCest
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
 
-		// check multiple node
 		$I->haveInDatabase('block_type', ['id'=>8,'node' => '20,23']);
+		// check multiple node
 		$this->getField($I, 8);
 		$I->seeResponseContainsJson(['success' => true]);
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
 		$I->assertEquals($resp['result']['items'][0]['node'][0]['value'],20);
 		$I->assertEquals($resp['result']['items'][0]['node'][1]['value'],23);
+
+		// filter by node value
+		$I->sendPOST('/el/select/',
+		[
+			'select' =>
+			[
+				'from' => 'block_type',
+				'where' => [
+					'operation' => 'and',
+					'fields'    => [['code' => 'node', 'operation' => 'CONTAINS', 'value' => 20]]
+				],
+			]
+		]);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$I->assertEquals($resp['result']['items'][0]['id'],8);
 
 		// check single node
 		$I->haveInDatabase('block_type', ['id'=>9,'node' => '23']);

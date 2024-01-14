@@ -101,6 +101,10 @@ class EmNodeField extends FieldBase
 				return $whereArray['code'] . ' = :value:';
 				break;
 
+			case 'CONTAINS':
+				return $whereArray['code'] . ' LIKE :value:';
+				break;
+
 			case 'IS NOT':
 				return $whereArray['code'] . ' <> :value:';
 				break;
