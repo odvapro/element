@@ -55,30 +55,14 @@ class TableWorkerCest
 					'operation' => 'and',
 					'fields' =>
 					[
-						[
-							'code' => 'jil',
-							'operation' => 'IS',
-							'value' => 'aa'
-						],
-						[
-							'code' => 'jil2',
-							'operation' => 'IS NOT',
-							'value' => 'ff'
-						],
+						[ 'code' => 'jil', 'operation' => 'IS', 'value' => 'aa' ],
+						[ 'code' => 'jil2', 'operation' => 'IS NOT', 'value' => 'ff' ],
 						[
 							'operation' => 'or',
 							'fields' =>
 							[
-								[
-									'code' => 'jil2',
-									'operation' => 'CONTAINS',
-									'value' => 'fa'
-								],
-								[
-									'code' => 'jil2',
-									'operation' => 'START WITH',
-									'value' => 'fa'
-								]
+								[ 'code' => 'jil2', 'operation' => 'CONTAINS', 'value' => 'fa' ],
+								[ 'code' => 'jil2', 'operation' => 'START WITH', 'value' => 'fa' ]
 							]
 						]
 					]
@@ -110,6 +94,8 @@ class TableWorkerCest
 		]);
 		$I->seeResponseCodeIs(200);
 		$I->seeResponseContainsJson(['success' => true]);
+		$result = $I->grabResponse();
+		$result = json_decode($result, true);
 		$I->seeResponseJsonMatchesJsonPath('$.result.items');
 
 		// тест
@@ -124,24 +110,13 @@ class TableWorkerCest
 					'operation' => 'and',
 					'fields' =>
 					[
-						[
-							'code' => 'name',
-							'operation' => 'IS',
-							'value' => 'eee'
-						],
-						[
-							'code' => 'email',
-							'operation' => 'CONTAINS',
-							'value' => '3'
-						],
+						[ 'code' => 'name', 'operation' => 'IS', 'value' => 'eee' ],
+						[ 'code' => 'email', 'operation' => 'CONTAINS', 'value' => '3' ],
 						[
 							'operation' => 'or',
 							'fields' =>
 							[
-								[
-									'code' => 'avat',
-									'operation' => 'IS EMPTY'
-								]
+								[ 'code' => 'avat', 'operation' => 'IS EMPTY' ]
 							]
 						]
 					]
@@ -165,25 +140,13 @@ class TableWorkerCest
 					'operation' => 'and',
 					'fields' =>
 					[
-						[
-							'code' => 'name',
-							'operation' => 'IS',
-							'value' => 'eee'
-						],
-						[
-							'code' => 'email',
-							'operation' => 'DOES NOT CONTAIN',
-							'value' => '3'
-						],
+						[ 'code' => 'name', 'operation' => 'IS', 'value' => 'eee' ],
+						[ 'code' => 'email', 'operation' => 'DOES NOT CONTAIN', 'value' => '3' ],
 						[
 							'operation' => 'or',
 							'fields' =>
 							[
-								[
-									'code' => 'avat',
-									'operation' => 'IS',
-									'value' => '3'
-								]
+								[ 'code' => 'avat', 'operation' => 'IS', 'value' => '3' ]
 							]
 						]
 					]
