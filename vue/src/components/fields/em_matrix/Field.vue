@@ -51,21 +51,22 @@
 	</div>
 </template>
 <script>
+	import MainField from '@/components/fields/MainField.vue';
 	import detailFunctions from '@/mixins/detailFunctions.js';
 	import DetailPopup from '@/components/popups/DetailPopup';
 	export default
 	{
 		props: ['fieldValue','fieldSettings','mode', 'view'],
-		components:{DetailPopup},
+		components:{DetailPopup,MainField},
 		mixins: [detailFunctions],
 		data()
 		{
 			return {
-				showDetail: false,
+				showDetail     : false,
 				detailTableCode: false,
-				detailTableId: false,
-				detailName: false,
-				currentElement: false,
+				detailTableId  : false,
+				detailName     : false,
+				currentElement : false,
 			};
 		},
 		computed:
@@ -95,6 +96,7 @@
 					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
 						return this.fieldValue.matrixValue[index] = element;
 			},
+
 			createMatrixTableElement(element)
 			{
 				if (typeof this.fieldValue.matrixValue == 'undefined')
@@ -103,6 +105,7 @@
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 				this.fieldValue.matrixValue.push(element);
 			},
+
 			removeMatrixTableElement(element)
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
@@ -121,6 +124,7 @@
 				this.detailName      = false;
 				this.showDetail      = true;
 			},
+
 			bindDefaultColumnValues()
 			{
 				this.currentElement = [];
@@ -129,6 +133,7 @@
 					this.currentElement[column] = '';
 				this.currentElement[this.fieldSettings.finalTableField] = this.detailElement[this.fieldSettings.localField];
 			},
+
 			popupForCreateMatrixElement()
 			{
 				this.bindDefaultColumnValues();
@@ -136,6 +141,7 @@
 				this.detailName      = 'tableAddElement';
 				this.showDetail      = true;
 			},
+
 			savePopupMatrixElement(data, result)
 			{
 				if (result.data.success)
@@ -145,6 +151,7 @@
 					this.showDetail = false;
 				}
 			},
+
 			createPopupMatrixElement(data, result)
 			{
 				if(result.data.success == true)
@@ -158,6 +165,7 @@
 				else
 					this.ElMessage.error(this.$t('elMessages.cant_create_element'));
 			},
+
 			removeMatrixElement(data)
 			{
 				this.removeElement(data);
@@ -165,6 +173,7 @@
 				this.ElMessage(this.$t('elMessages.element_removed'));
 				this.removeMatrixTableElement(data.selectedElement);
 			},
+
 			removePopupMatrixElement(data, result)
 			{
 				this.showDetail = false;

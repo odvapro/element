@@ -106,6 +106,10 @@
 				</Select>
 			</div>
 		</div>
+		<MatrixTableSettings
+			v-if="finalTableFields"
+			:fields.sync="localSettings.columnsSettings"
+		/>
 		<div class="popup__buttons">
 			<button @click="cancel()" class="el-gbtn">{{$t('cancel')}}</button>
 			<button @click="save()" class="el-btn">{{$t('save_settings')}}</button>
@@ -113,8 +117,10 @@
 	</div>
 </template>
 <script>
+	import MatrixTableSettings from './MatrixTableSettings.vue';
 	export default
 	{
+		components:{MatrixTableSettings},
 		props: ['settings', 'currentTable'],
 		/**
 		 * Глобальные переменные странциы
@@ -124,11 +130,6 @@
 			return {
 				localSettings:
 				{
-					/*
-					nodeTableCode  : false,
-					keyField  : false,
-					nodeField : false,
-					 */
 					isManyToMany             : false,
 					localField               : false,
 
@@ -138,6 +139,14 @@
 
 					finalTableCode           : false,
 					finalTableField          : false,
+
+					/**
+					 * Array
+					 * - key - string
+					 * - name - string
+					 * - visibility - boolean
+					 */
+					columnsSettings: []
 				},
 				errors: {},
 			};
@@ -156,7 +165,19 @@
 			 */
 			finalTableFields()
 			{
-				return this.$store.getters.getColumns(this.localSettings.finalTableCode);
+				let finalFields = this.$store.getters.getColumns(this.localSettings.finalTableCode);
+				if(this.localSettings.columnsSettings.length != 0)
+					return finalFields;
+
+				let order = 0;
+				for (const fieldKey in finalFields)
+					this.localSettings.columnsSettings.push({
+						key       : finalFields[fieldKey].field,
+						name      : finalFields[fieldKey].em.name,
+						oder      : order++,
+						visibility: false,
+					});
+				return finalFields;
 			},
 			/**
 			 * Get fields list for node table
@@ -303,6 +324,7 @@
 			 */
 			selectTable(table, code='finalTable')
 			{
+				this.localSettings.columnsSettings = [];
 				if (typeof this.localSettings[code+'Code'] === 'undefined' || this.localSettings[code+'Code'] === table.code)
 					return;
 
@@ -340,9 +362,13 @@
 					this.$set(this.localSettings, index, this.settings[index]);
 			}
 			this.localSettings.isManyToMany = this.localSettings.isManyToMany === 'true';
+			if(this.localSettings.columnsSettings.length != 0)
+				for (const columnKey in this.localSettings.columnsSettings)
+					this.localSettings.columnsSettings[columnKey].visibility = this.localSettings.columnsSettings[columnKey].visibility === 'true';
 		},
 	};
 </script>
 <style>
+	.settings-table__popup-matrix{width:680px;}
 	.em-matrix--lowercase { text-transform: lowercase; }
 </style>
