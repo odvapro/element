@@ -369,6 +369,6 @@
 	};
 </script>
 <style>
-	.settings-table__popup-matrix{width:680px;}
+	.settings-table__popup-em_matrix{width:680px;}
 	.em-matrix--lowercase { text-transform: lowercase; }
 </style>

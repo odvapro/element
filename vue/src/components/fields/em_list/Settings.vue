@@ -182,7 +182,7 @@
 	}
 </script>
 <style lang="scss">
-	.settings-table__popup-list{width:680px; }
+	.settings-table__popup-em_list{width:680px; }
 	.em-list-settings{margin-top:30px;}
 	.em-list-settings .popup__buttons{margin-top:30px;}
 	.em-list-settings__line

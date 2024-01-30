@@ -3,11 +3,21 @@
 		<div class="em-matrix-table" v-if="view=='detail'">
 			<table v-if="fieldValue.matrixValue.length">
 				<tr>
-					<th v-for="fieldCode in tableHead">{{fieldCode}}</th>
+					<th v-for="fieldObj of headFields">{{ fieldObj.name }}</th>
 					<th></th>
 				</tr>
 				<tr v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
-					<td v-for="columnItem in tableRow">{{columnItem}}</td>
+					<td v-for="(columnItem,colKey) in tableRow" v-if="getColumnSettings(colKey).visibility == 'true'">
+							<MainField
+								mode="view"
+								view="detail"
+								:fieldName="getColumnSettings(colKey).settings.code"
+								:params="{
+									value     : columnItem,
+									settings  : $store.getters.getColumnSettings(fieldSettings.finalTableCode, colKey, columnItem)
+								}"
+							/>
+					</td>
 					<td class="em-matrix-table__edit-btns">
 						<div class="em-matrix-field__hover-btns">
 							<div
@@ -26,13 +36,15 @@
 					</td>
 				</tr>
 			</table>
-			<div class="em-matrix-row-add" @click="popupForCreateMatrixElement()">
-				<div class="em-matrix-row-add__icon">
-					<svg width="9" height="9">
-						<use xlink:href="#plus-gray"></use>
-					</svg>
-				</div>
-				<div class="em-matrix-row-add__text"> New </div>
+			<div class="em-matrix-row-add">
+				<button @click="popupForCreateMatrixElement()">
+					<div class="em-matrix-row-add__icon">
+						<svg width="9" height="9">
+							<use xlink:href="#plus-gray"></use>
+						</svg>
+					</div>
+					<div class="em-matrix-row-add__text"> New Element</div>
+				</button>
 			</div>
 		</div>
 		<div v-else>
@@ -67,20 +79,12 @@
 				detailTableId  : false,
 				detailName     : false,
 				currentElement : false,
+				headFields : []
 			};
 		},
 		computed:
 		{
-			tableHead()
-			{
-				if (typeof this.fieldValue.matrixValue == 'undefined' || !this.fieldValue.matrixValue.length)
-					return [];
 
-				let tableCols = [];
-				for (let code in this.fieldValue.matrixValue[0])
-					tableCols.push(code);
-				return tableCols;
-			},
 			detailElement()
 			{
 				return this.$store.state.tables.selectedElement;
@@ -180,7 +184,41 @@
 				this.ElMessage(this.$t('elMessages.element_removed'));
 				this.removeMatrixTableElement(data.selectedElement);
 			},
+
+			getColumnSettings(colCode)
+			{
+				for (const column of this.fieldSettings.columnsSettings)
+				{
+					column.settings = this.$store.getters.getColumnSettings(this.fieldSettings.finalTableCode, colCode, false);
+					if(column.key == colCode)
+					{
+						column.name = (column.name != '')?column.name:column.key;
+						return column;
+					}
+				}
+				return false;
+			},
+
+			setHeadLine()
+			{
+				if (typeof this.fieldValue.matrixValue == 'undefined' || !this.fieldValue.matrixValue.length)
+					return;
+
+				for (let code in this.fieldValue.matrixValue[0])
+				{
+					let hedField = this.getColumnSettings(code);
+					if(hedField.visibility != "true")
+						continue;
+
+					this.headFields.push(hedField);
+				}
+
+			}
 		},
+		mounted()
+		{
+			this.setHeadLine();
+		}
 	};
 </script>
 <style lang="scss">
@@ -216,11 +254,25 @@
 	.em-matrix-field__remove {color: rgba(208, 18, 70, 0.7); }
 	.em-matrix-row-add
 	{
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		padding-left: 13px;
-		min-height: 31px;
+		min-height: 50px;
+		button
+		{
+			background: #fff;
+			border: 0px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 10px;
+			border-radius: 3px;
+			&:hover
+			{
+				cursor: pointer;
+				background:rgba(103, 115, 135, 0.2);
+			}
+		}
 	}
 	.em-matrix-row-add__icon
 	{
@@ -240,7 +292,7 @@
 		max-width: 100%;
 		table
 		{
-			width:calc(100%);
+			max-width:calc(100%);
 			font-size: 12px;
 			border-collapse: collapse;
 			margin:-1px;
@@ -249,13 +301,18 @@
 			{
 				text-align: left;
 				border:1px solid #efefef;
-				padding:15px 13px;
-				min-width: 50px;
-				max-width: 200px;
+				padding:0px 0px 0px 15px;
+				min-width: 300px;
+				max-width: 400px;
+				min-height: 50px;
 				white-space: nowrap;
-				overflow: hidden;
+				overflow: visible;
+				height: 50px;
 				text-overflow:ellipsis;
+				position: relative;
+				&:last-child{border-right: 0px;}
 			}
+			th{padding: 13px 15px;}
 		}
 	}
 </style>
