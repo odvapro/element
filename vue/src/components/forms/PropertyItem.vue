@@ -1,8 +1,8 @@
 <template>
 	<div class="property-item-list-item" @click.stop>
 		<div class="property-item-small-icon">
-			<svg width="6" height="5">
-				<use xlink:href="#lines"></use>
+			<svg width="8" height="12">
+				<use xlink:href="#dotts-for-drag"></use>
 			</svg>
 		</div>
 		<div>

@@ -44,6 +44,14 @@
 				<line x1="0.5" y1="4.5" x2="8.5" y2="4.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/>
 				<line x1="4.5" y1="8.5" x2="4.5" y2="0.5" stroke="#C2C7CF" stroke-linecap="round"/>
 			</symbol>
+			<symbol id="dotts-for-drag" viewBox="0 0 8 12">
+				<circle cx="1.45946" cy="1.45946" r="1.45946" fill="#D9D9D9"/>
+				<circle cx="1.45946" cy="5.99999" r="1.45946" fill="#D9D9D9"/>
+				<circle cx="1.45946" cy="10.5405" r="1.45946" fill="#D9D9D9"/>
+				<circle cx="5.99999" cy="1.45946" r="1.45946" fill="#D9D9D9"/>
+				<circle cx="5.99999" cy="5.99999" r="1.45946" fill="#D9D9D9"/>
+				<circle cx="5.99999" cy="10.5405" r="1.45946" fill="#D9D9D9"/>
+			</symbol>
 			<symbol id="lines" viewBox="0 0 6 5">
 				<g clip-path="url(#clip0)">
 				<line x1="5.5" y1="0.5" x2="0.5" y2="0.5" stroke="#677387" stroke-opacity="0.4" stroke-linecap="round"/>

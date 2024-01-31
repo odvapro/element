@@ -12,13 +12,8 @@
 		>
 			<div v-for="field in fields" class="matrix-table-settings__line" :key="field.order">
 				<div class="matrix-table-settings__block matrix-table-settings__block--drag">
-					<svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<circle cx="1.45946" cy="1.45946" r="1.45946" fill="#D9D9D9"/>
-						<circle cx="1.45946" cy="5.99999" r="1.45946" fill="#D9D9D9"/>
-						<circle cx="1.45946" cy="10.5405" r="1.45946" fill="#D9D9D9"/>
-						<circle cx="5.99999" cy="1.45946" r="1.45946" fill="#D9D9D9"/>
-						<circle cx="5.99999" cy="5.99999" r="1.45946" fill="#D9D9D9"/>
-						<circle cx="5.99999" cy="10.5405" r="1.45946" fill="#D9D9D9"/>
+					<svg width="8" height="12">
+						<use xlink:href="#dotts-for-drag"></use>
 					</svg>
 				</div>
 				<div class="matrix-table-settings__block">{{ field.key }}</div>
