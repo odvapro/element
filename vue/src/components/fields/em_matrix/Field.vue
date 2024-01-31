@@ -3,7 +3,10 @@
 		<div class="em-matrix-table" v-if="view=='detail'">
 			<table v-if="fieldValue.matrixValue.length">
 				<tr>
-					<th v-for="fieldObj of headFields">{{ fieldObj.name }}</th>
+					<th v-for="fieldObj of headFields">
+						{{ fieldObj.name }}
+						<small>{{ fieldObj.key }}</small>
+					</th>
 					<th></th>
 				</tr>
 				<tr v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
@@ -296,7 +299,17 @@
 			font-size: 12px;
 			border-collapse: collapse;
 			margin:-1px;
-			th{text-transform:capitalize; }
+			th
+			{
+				text-transform:capitalize;
+				font-weight: normal;
+				small{
+					display: block;
+					color: rgba(103, 115, 135, 0.4);
+					margin-top: 3px;
+					text-transform: lowercase;
+				}
+			}
 			td,th
 			{
 				text-align: left;
