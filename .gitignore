@@ -52,3 +52,4 @@ composer.lock
 package-lock.json
 *.sublime-project
 *.sublime-workspace
+*.vscode
