@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   element:
     image: odva/phalcon:5.0
