@@ -63,13 +63,6 @@ class EmNodeField extends FieldBase
 			throw new EmException("Incorrect field value, should be int or array of int", 1);
 
 		$nodes = array_column($this->fieldValue, 'value');
-		foreach ($nodes as $node)
-			if(!is_numeric($node))
-			{
-				throw new EmException("Incorrect field value, should be int or array of int", 1);
-				break;
-			}
-
 
 		return implode(',', $nodes);
 	}
