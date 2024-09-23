@@ -38,7 +38,7 @@ config.php
 !app/fields/em_*
 
 # PROJECT
-.env
+.env*
 sftp-config.json
 node_modules
 googleSecrets.json

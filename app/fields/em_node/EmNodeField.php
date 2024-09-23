@@ -12,14 +12,33 @@ class EmNodeField extends FieldBase
 		$nodeTableCode  = $this->settings['nodeTableCode'];
 		$nodeFieldCode  = $this->settings['nodeFieldCode'];
 		$nodeSearchCode = $this->settings['nodeSearchCode'];
+		$fieldValueArray = explode(',', $this->fieldValue ?? '');
+		$node = [];
+
+		// define primary key
+		$columns = $this->element->getColumns($nodeTableCode);
+		$primaryKeyCode = 'id';
+		foreach ($columns as $columnKey => $column)
+			if($column['key'] == 'PRI')
+			{
+				$primaryKeyCode = $columnKey;
+				break;
+			}
+
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
+			$where = ['operation' => 'or', 'fields'=>[] ];
+			foreach ($fieldValueArray as $fieldValueItem)
+				$where['fields'][] = ['code' => $nodeFieldCode, 'operation' => 'IS', 'value' => $fieldValueItem];
+
 			$selectResult = $this->element->select([
 				'from' => $nodeTableCode,
 				'fields' => [
 					$nodeFieldCode,
 					$nodeSearchCode,
-				]
+					$primaryKeyCode
+				],
+				'where' => $where
 			]);
 
 			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
@@ -28,17 +47,16 @@ class EmNodeField extends FieldBase
 		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
 			return [];
 
-		$node = [];
-		$fieldValueArray = explode(',', $this->fieldValue ?? '');
-
 		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
 		{
 			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
 				$node[] = [
-					'value'   => $nodeItem[$nodeFieldCode],
-					'name' => $nodeItem[$nodeSearchCode],
-					'url'  => "/table/{$nodeTableCode}/el/{$nodeItem[$nodeFieldCode]}"
+					'value'          => $nodeItem[$nodeFieldCode],
+					'name'           => $nodeItem[$nodeSearchCode],
+					'url'            => "/table/{$nodeTableCode}/el/{$nodeItem[$primaryKeyCode]}",
+					'primaryKey'     => $nodeItem[$primaryKeyCode],
+					'primaryKeyCode' => $primaryKeyCode
 				];
 			}
 		}

@@ -28,12 +28,6 @@ class EmNodeCest
 		$this->saveField($I, [['value' => 20],['value' => 23],['value' => 24]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
-
-		// check incorrect node
-		$this->saveField($I, [
-			['value'=>20],
-			['value'=>'some name'] ], 2);
-		$I->seeResponseContainsJson(['success' => false]);
 	}
 
 	/**

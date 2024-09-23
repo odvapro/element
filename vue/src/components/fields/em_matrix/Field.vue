@@ -87,7 +87,6 @@
 		},
 		computed:
 		{
-
 			detailElement()
 			{
 				return this.$store.state.tables.selectedElement;
@@ -220,7 +219,8 @@
 		},
 		mounted()
 		{
-			this.setHeadLine();
+			if(this.view != 'table')
+				this.setHeadLine();
 		}
 	};
 </script>
