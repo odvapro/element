@@ -5,7 +5,7 @@ class EmMatrixCest
 	 * Проверка фильтров при связи один ко многиим
 	 * без промежуточной таблицы
 	 */
-	public function oneToManyFilters(ApiTester $I)
+	public function oneToManyContainsFilters(ApiTester $I)
 	{
 		// подготовка
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
@@ -91,7 +91,7 @@ class EmMatrixCest
 	 * Проверка фильтров при связи один ко многиим
 	 * без промежуточной таблицы
 	 */
-	public function manyToManyFilters(ApiTester $I)
+	public function manyToManyContainsFilters(ApiTester $I)
 	{
 		// подготовка
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
@@ -173,6 +173,15 @@ class EmMatrixCest
 		$I->assertNotContains(16,$ids);
 	}
 
+	/**
+	 * Проверка фильтров при связи один ко многиим
+	 * без промежуточной таблицы
+	 */
+	public function oneToManyEmptyFilters(ApiTester $I)
+	{
+		exit('надо доработать, при проверке на пустоту матричного поля, надо не само поле проверять как сейчас, а саму матрицу');
+	}
+
 
 	/**
 	 * Save tests
@@ -234,30 +243,6 @@ class EmMatrixCest
 
 		$I->assertArrayHasKey(0, $resultMatrixValue);
 		$I->assertArrayNotHasKey(1, $resultMatrixValue);
-	}
-
-	/**
-	 * Filter test
-	 */
-	public function filter(ApiTester $I)
-	{
-		/*$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
-		$I->seeResponseContainsJson(['success' => true]);
-
-		$this->select($I, 0, 'pages', [
-			[
-				'code' => 'products',
-				'value' => [[
-					'code' => 'id',
-					'operation' => 'IS NOT EMPTY',
-					'value' => '',
-				]],
-			]
-		]);
-		$result = json_decode($I->grabResponse(), true)['result'];
-
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseContainsJson(['total_items' => 6]);*/
 	}
 
 	/**
