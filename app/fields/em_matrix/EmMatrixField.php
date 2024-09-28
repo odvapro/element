@@ -106,14 +106,10 @@ class EmMatrixField extends FieldBase
 	{
 		$locales = json_decode($this->getLocales());
 		return [
-			["name" =>$locales->is_not_empty,    "code"=>"IS NOT EMPTY"],
-			["name" =>$locales->is_empty,        "code"=>"IS EMPTY"],
-			["name" =>$locales->is,              "code"=>"IS"],
-			["name" =>$locales->is_not,          "code"=>"IS NOT"],
-			["name" =>$locales->contains,        "code"=>"CONTAINS"],
+			["name" =>$locales->is_not_empty, "code"=>"IS NOT EMPTY"],
+			["name" =>$locales->is_empty, "code"=>"IS EMPTY"],
+			["name" =>$locales->contains, "code"=>"CONTAINS"],
 			["name" =>$locales->does_not_contain,"code"=>"DOES NOT CONTAIN"],
-			["name" =>$locales->is_larger,       "code"=>"IS LARGER"],
-			["name" =>$locales->is_smaller,      "code"=>"IS SMALLER"],
 		];
 	}
 
@@ -125,24 +121,12 @@ class EmMatrixField extends FieldBase
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"\"";
 			case 'IS EMPTY':
 				return "({$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL)";
-			case 'IS':
-				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} = :value:";
-			case 'IS NOT':
-				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> :value: ";
 			case 'CONTAINS':
 				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} LIKE :value:";
+				return "{$this->settings['finalTableCode']}.id = :value:";
 			case 'DOES NOT CONTAIN':
 				$whereArray['value'] = '%'.$whereArray['value'].'%';
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE :value:";
-			case 'IS LARGER':
-				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} > :value:";
-			case 'IS SMALLER':
-				$whereArray['value'] = intval($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} < :value:";
 		}
 		return '';
 	}
@@ -161,7 +145,8 @@ class EmMatrixField extends FieldBase
 	 */
 	public function getCollationSql($whereArray)
 	{
-		if (empty($whereArray['value']) || !is_array(array_values($whereArray['value'])[0])) return '';
+		if (empty($whereArray['value']))
+			return '';
 		$this->settings = [
 			'isManyToMany'             => isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') && isset($this->settings['nodeTableCode']) && isset($this->settings['nodeTableField']) && isset($this->settings['nodeTableFinalTableField']) : false,
 			'localField'               => isset($this->settings['localField']) ? $this->settings['localField'] : null,
@@ -179,12 +164,7 @@ class EmMatrixField extends FieldBase
 			|| empty($this->settings['finalTableField'])
 		) return '';
 
-		$where = '';
-		foreach ($whereArray['value'] as $field) {
-			$collation = $this->getCollationSqlWhere($field);
-			if (!empty($where)) $collation = " {$whereArray['operation']} $collation";
-			$where .= $collation;
-		}
+		$where = $this->getCollationSqlWhere($whereArray);
 		if (empty($where)) return '';
 
 		return $this->getTemplate($where);

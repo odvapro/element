@@ -27,18 +27,13 @@ class EmNodeField extends FieldBase
 
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
-			$where = ['operation' => 'or', 'fields'=>[] ];
-			foreach ($fieldValueArray as $fieldValueItem)
-				$where['fields'][] = ['code' => $nodeFieldCode, 'operation' => 'IS', 'value' => $fieldValueItem];
-
 			$selectResult = $this->element->select([
 				'from' => $nodeTableCode,
 				'fields' => [
 					$nodeFieldCode,
 					$nodeSearchCode,
 					$primaryKeyCode
-				],
-				'where' => $where
+				]
 			]);
 
 			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
@@ -48,7 +43,6 @@ class EmNodeField extends FieldBase
 			return [];
 
 		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
-		{
 			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
 				$node[] = [
@@ -59,7 +53,6 @@ class EmNodeField extends FieldBase
 					'primaryKeyCode' => $primaryKeyCode
 				];
 			}
-		}
 
 		return $node;
 	}

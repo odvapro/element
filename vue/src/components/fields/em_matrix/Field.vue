@@ -292,10 +292,10 @@
 	.em-matrix-table
 	{
 		overflow: scroll;
-		max-width: 100%;
+		width: 100%;
 		table
 		{
-			max-width:calc(100%);
+			width:100%;
 			font-size: 12px;
 			border-collapse: collapse;
 			margin:-1px;
@@ -315,7 +315,7 @@
 				text-align: left;
 				border:1px solid #efefef;
 				padding:0px 0px 0px 15px;
-				min-width: 300px;
+				min-width: 200px;
 				max-width: 400px;
 				min-height: 50px;
 				white-space: nowrap;
