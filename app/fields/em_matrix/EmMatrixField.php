@@ -146,7 +146,7 @@ class EmMatrixField extends FieldBase
 			$notCollation = 'NOT';
 
 		if ($this->settings['isManyToMany'])
-			return "{$this->settings['localField']} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} WHERE {$where} )";
+			return "{$this->settings['localField']} {$notCollation} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} WHERE {$where} )";
 		return "{$this->settings['localField']} {$notCollation} IN (SELECT {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} FROM {$this->settings['finalTableCode']} WHERE  {$where} )";
 	}
 
