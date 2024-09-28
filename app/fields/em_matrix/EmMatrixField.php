@@ -108,34 +108,46 @@ class EmMatrixField extends FieldBase
 		return [
 			["name" =>$locales->is_not_empty, "code"=>"IS NOT EMPTY"],
 			["name" =>$locales->is_empty, "code"=>"IS EMPTY"],
-			["name" =>$locales->contains, "code"=>"CONTAINS"],
-			["name" =>$locales->does_not_contain,"code"=>"DOES NOT CONTAIN"],
+			["name" =>$locales->contains, "code"=>"MATRIX CONTAINS"],
+			["name" =>$locales->does_not_contain,"code"=>"MATRIX DOES NOT CONTAIN"],
 		];
 	}
 
 	public function getCollationSqlWhere($whereArray)
 	{
 		if (empty($whereArray['operation']) || empty($whereArray['code'])) return '';
-		switch ($whereArray['operation']) {
+		switch ($whereArray['operation'])
+		{
 			case 'IS NOT EMPTY':
 				return "{$this->settings['finalTableCode']}.{$whereArray['code']} <> \"\"";
 			case 'IS EMPTY':
 				return "({$this->settings['finalTableCode']}.{$whereArray['code']} = \"\" OR {$this->settings['finalTableCode']}.{$whereArray['code']} IS NULL)";
-			case 'CONTAINS':
-				$whereArray['value'] = quotemeta($whereArray['value']);
-				return "{$this->settings['finalTableCode']}.id = :value:";
-			case 'DOES NOT CONTAIN':
-				$whereArray['value'] = '%'.$whereArray['value'].'%';
-				return "{$this->settings['finalTableCode']}.{$whereArray['code']} NOT LIKE :value:";
+			case 'MATRIX CONTAINS':
+			case 'MATRIX DOES NOT CONTAIN':
+				if(!is_array($whereArray['value']))
+				{
+					$whereArray['value'] = intval($whereArray['value']);
+					return "{$this->settings['finalTableCode']}.id = {$whereArray['value']}";
+				}
+				else
+				{
+					$whereArray['value'] = array_map('intval', $whereArray['value']);
+					$whereArray['value'] = implode(',',$whereArray['value']);
+					return "{$this->settings['finalTableCode']}.id IN({$whereArray['value']})";
+				}
 		}
 		return '';
 	}
 
-	protected function getTemplate($where)
+	protected function getTemplate($whereArray,$where)
 	{
+		$notCollation = '';
+		if($whereArray['operation'] == 'MATRIX DOES NOT CONTAIN')
+			$notCollation = 'NOT';
+
 		if ($this->settings['isManyToMany'])
 			return "{$this->settings['localField']} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} WHERE {$where} )";
-		return "{$this->settings['localField']} IN (SELECT {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} FROM {$this->settings['finalTableCode']} WHERE  {$where} )";
+		return "{$this->settings['localField']} {$notCollation} IN (SELECT {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} FROM {$this->settings['finalTableCode']} WHERE  {$where} )";
 	}
 
 	/**
@@ -167,6 +179,6 @@ class EmMatrixField extends FieldBase
 		$where = $this->getCollationSqlWhere($whereArray);
 		if (empty($where)) return '';
 
-		return $this->getTemplate($where);
+		return $this->getTemplate($whereArray,$where);
 	}
 }
