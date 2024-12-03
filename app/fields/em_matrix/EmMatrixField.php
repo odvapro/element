@@ -145,6 +145,12 @@ class EmMatrixField extends FieldBase
 		if($whereArray['operation'] == 'MATRIX DOES NOT CONTAIN')
 			$notCollation = 'NOT';
 
+		if($whereArray['operation'] == 'IS NOT EMPTY' && $this->settings['isManyToMany'])
+			return "{$this->settings['localField']} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} )";
+
+		if($whereArray['operation'] == 'IS EMPTY' && $this->settings['isManyToMany'])
+			return "{$this->settings['localField']} NOT IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} )";
+
 		if ($this->settings['isManyToMany'])
 			return "{$this->settings['localField']} {$notCollation} IN (SELECT {$this->settings['nodeTableCode']}.{$this->settings['nodeTableField']} FROM {$this->settings['nodeTableCode']} JOIN {$this->settings['finalTableCode']} ON {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} = {$this->settings['nodeTableCode']}.{$this->settings['nodeTableFinalTableField']} WHERE {$where} )";
 		return "{$this->settings['localField']} {$notCollation} IN (SELECT {$this->settings['finalTableCode']}.{$this->settings['finalTableField']} FROM {$this->settings['finalTableCode']} WHERE  {$where} )";
@@ -157,8 +163,6 @@ class EmMatrixField extends FieldBase
 	 */
 	public function getCollationSql($whereArray)
 	{
-		if (empty($whereArray['value']))
-			return '';
 		$this->settings = [
 			'isManyToMany'             => isset($this->settings['isManyToMany']) ? ($this->settings['isManyToMany'] === 'true') && isset($this->settings['nodeTableCode']) && isset($this->settings['nodeTableField']) && isset($this->settings['nodeTableFinalTableField']) : false,
 			'localField'               => isset($this->settings['localField']) ? $this->settings['localField'] : null,
