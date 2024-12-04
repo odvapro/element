@@ -38,7 +38,7 @@ config.php
 !app/fields/em_*
 
 # PROJECT
-.env
+.env*
 sftp-config.json
 node_modules
 googleSecrets.json
@@ -52,3 +52,4 @@ composer.lock
 package-lock.json
 *.sublime-project
 *.sublime-workspace
+*.vscode

@@ -28,12 +28,10 @@ composer create-project odvapro/element --no-dev
   or
 
 git clone https://github.com/odvapro/element.git
-```
 
-Navigate to the created "element" folder and run the following command:
+cd element
+docker compose up -d
 
-```
-docker-compose up -d
 ```
 
 ## Nginx settings

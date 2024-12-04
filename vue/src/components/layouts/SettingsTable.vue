@@ -88,7 +88,7 @@
 				</div>
 			</div>
 		</div>
-		<Popup :visible.sync="settingsPopup" :popupBlockClasses="[`settings-table__popup-${settingsColumn.field}`]">
+		<Popup :visible.sync="settingsPopup" :popupBlockClasses="[`settings-table__popup-${ getColumnFiledType(settingsColumn) }`]">
 			<div class="popup__name">{{ $t('settings_of', { of_what: (settingsColumn && settingsColumn.field) || '' }) }}</div>
 			<component
 				:is="settingsComponent"
@@ -263,6 +263,14 @@
 				let table = this.getTableByCode(values.table, this.tables);
 
 				this.$set(table.columns[values.column], 'em', result.data.settings);
+			},
+
+			getColumnFiledType(fieldSettings)
+			{
+				if(typeof fieldSettings.em !== 'undefined')
+					return fieldSettings.em.type;
+
+				return '';
 			},
 
 			/**

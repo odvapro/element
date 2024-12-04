@@ -28,12 +28,6 @@ class EmNodeCest
 		$this->saveField($I, [['value' => 20],['value' => 23],['value' => 24]], 1);
 		$I->seeResponseContainsJson(['success' => true]);
 		$I->seeInDatabase('block_type', ['id' => 1, 'node' => '20,23,24' ]);
-
-		// check incorrect node
-		$this->saveField($I, [
-			['value'=>20],
-			['value'=>'some name'] ], 2);
-		$I->seeResponseContainsJson(['success' => false]);
 	}
 
 	/**
@@ -77,6 +71,21 @@ class EmNodeCest
 		$resp = $I->grabResponse();
 		$resp = json_decode($resp,true);
 		$I->assertEquals($resp['result']['items'][0]['node'][0]['value'],23);
+
+		// check multilrow select
+		$I->haveInDatabase('block_type', ['id'=>10,'node' => '38']);
+		$I->haveInDatabase('block_type', ['id'=>11,'node' => '23']);
+		$I->sendPOST('/el/select/', ['select' => ['from' => 'block_type'] ]);
+		$I->seeResponseContainsJson(['success' => true]);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		foreach ($resp['result']['items'] as $item)
+		{
+			if($item['id'] == 10)
+				$I->assertEquals($item['node'][0]['value'],38);
+			if($item['id'] == 11)
+				$I->assertEquals($item['node'][0]['value'],23);
+		}
 	}
 
 	protected function getField(ApiTester $I, Int $id)

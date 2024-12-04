@@ -2,22 +2,227 @@
 class EmMatrixCest
 {
 	/**
-	 * Select test
+	 * Проверка фильтров при связи один ко многиим
+	 * без промежуточной таблицы
 	 */
-	public function oneToManySelect(ApiTester $I)
+	public function oneToManyContainsFilters(ApiTester $I)
 	{
+		// подготовка
 		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
 		$I->seeResponseContainsJson(['success' => true]);
+		$I->haveInDatabase('block_type_nodes', ['id'=>3,'block_type_id' => 2, 'name'=> 'Fisrt test']);
+		$I->haveInDatabase('block_type_nodes', ['id'=>4,'block_type_id' => 2, 'name'=> 'Second test']);
 
-		$this->select($I, 1, 'block_type');
+		// фильтр проверки вхождения одного значения
+		$select = [
+			'select' => [
+				'from' => 'block_type',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'matrix', 'operation' => 'MATRIX CONTAINS', 'value' => 3]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$I->assertEquals(count($resp['result']['items']),1);
+		$I->assertEquals($resp['result']['items'][0]['id'],2);
 
-		$I->seeResponseContainsJson(['success' => true]);
+		// фильтр проверки вхождения нескольних значений
+		$select = [
+			'select' => [
+				'from' => 'block_type',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'matrix', 'operation' => 'MATRIX CONTAINS', 'value' => [3,4]]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$I->assertEquals(count($resp['result']['items']),1);
+		$I->assertEquals($resp['result']['items'][0]['id'],2);
 
-		$resultMatrixValue = json_decode($I->grabResponse(), true)['result']['items'][0]['matrix']['matrixValue'];
+		// фильтр проверки не вхождения одного значения
+		$select = [
+			'select' => [
+				'from' => 'block_type',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'matrix', 'operation' => 'MATRIX DOES NOT CONTAIN', 'value' => 3]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$ids = array_column($resp['result']['items'], 'id');
+		$I->assertNotContains(2,$ids);
 
-		$I->assertArrayHasKey(1, $resultMatrixValue);
-		$I->assertArrayNotHasKey(2, $resultMatrixValue);
+		// фильтр проверки не вхождения нескольких значений
+		$select = [
+			'select' => [
+				'from' => 'block_type',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'matrix', 'operation' => 'MATRIX DOES NOT CONTAIN', 'value' => [3,2]]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$ids = array_column($resp['result']['items'], 'id');
+		$I->assertNotContains(2,$ids);
+		$I->assertNotContains(1,$ids);
 	}
+
+	/**
+	 * Проверка фильтров при связи один ко многиим
+	 * с промежуточной таблицей
+	 */
+	public function manyToManyContainsFilters(ApiTester $I)
+	{
+		// подготовка
+		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->haveInDatabase('pages_products', ['id'=>12,'page_id' => 4, 'product_id'=> 69]);
+		$I->haveInDatabase('pages_products', ['id'=>13,'page_id' => 4, 'product_id'=> 70]);
+
+		$I->wantTo('фильтр проверки вхождения одного значения');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'MATRIX CONTAINS', 'value' => 69]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$I->assertEquals(count($resp['result']['items']),1);
+		$I->assertEquals($resp['result']['items'][0]['id'],4);
+
+		$I->wantTo('фильтр проверки вхождения нескольких элементов сразу');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'MATRIX CONTAINS', 'value' => [69,70] ]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$I->assertEquals(count($resp['result']['items']),1);
+		$I->assertEquals($resp['result']['items'][0]['id'],4);
+
+		$I->wantTo('фильтр проверки не вхождения одного значения');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'MATRIX DOES NOT CONTAIN', 'value' => 69]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$ids = array_column($resp['result']['items'], 'id');
+		$I->assertNotContains(4,$ids);
+
+		$I->wantTo('фильтр проверки не вхождения нескольких значений');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'MATRIX DOES NOT CONTAIN', 'value' => [69,24]]
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		$ids = array_column($resp['result']['items'], 'id');
+		$I->assertNotContains(4,$ids);
+		$I->assertNotContains(16,$ids);
+	}
+
+	/**
+	 * Проверка фильтров при связи один ко многиим
+	 * без промежуточной таблицы
+	 */
+	public function oneToManyEmptyFilters(ApiTester $I)
+	{
+		// подготовка
+		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
+		$I->seeResponseContainsJson(['success' => true]);
+		$I->haveInDatabase('pages_products', ['id'=>12,'page_id' => 4, 'product_id'=> 69]);
+		$I->haveInDatabase('pages_products', ['id'=>13,'page_id' => 4, 'product_id'=> 70]);
+
+		$I->wantTo('проверка выдачи страниц продуктами');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'IS NOT EMPTY']
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		foreach ($resp['result']['items'] as $item)
+			$I->assertEquals(empty($item['products']['matrixValue']),false);
+
+		$I->wantTo('проверка выдачи страниц без продуктов');
+		$select = [
+			'select' => [
+				'from' => 'pages',
+				'where' => [
+					'operation' => 'and',
+					'fields' => [
+						['code' => 'products', 'operation' => 'IS EMPTY']
+					],
+				],
+			],
+		];
+		$I->sendGET('/el/select', $select);
+		$resp = $I->grabResponse();
+		$resp = json_decode($resp,true);
+		foreach ($resp['result']['items'] as $item)
+			$I->assertEquals(empty($item['products']['matrixValue']),true);
+
+	}
+
 
 	/**
 	 * Save tests
@@ -79,30 +284,6 @@ class EmMatrixCest
 
 		$I->assertArrayHasKey(0, $resultMatrixValue);
 		$I->assertArrayNotHasKey(1, $resultMatrixValue);
-	}
-
-	/**
-	 * Filter test
-	 */
-	public function filter(ApiTester $I)
-	{
-		$I->sendPOST('/auth', ['login' => 'admin', 'password' => 'adminpass']);
-		$I->seeResponseContainsJson(['success' => true]);
-
-		$this->select($I, 0, 'pages', [
-			[
-				'code' => 'products',
-				'value' => [[
-					'code' => 'id',
-					'operation' => 'IS NOT EMPTY',
-					'value' => '',
-				]],
-			]
-		]);
-		$result = json_decode($I->grabResponse(), true)['result'];
-
-		$I->seeResponseContainsJson(['success' => true]);
-		$I->seeResponseContainsJson(['total_items' => 6]);
 	}
 
 	/**

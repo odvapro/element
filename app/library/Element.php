@@ -141,8 +141,7 @@ class Element
 			if(empty($wherePart['code']) || empty($tableColumns[$wherePart['code']]))
 				return $wherePart;
 
-			$columnEm = $tableColumns[$wherePart['code']]['em'];
-
+			$columnEm   = $tableColumns[$wherePart['code']]['em'];
 			$fieldClass = $columnEm['type_info']['fieldComponent'];
 			$settings   = $columnEm['settings'];
 
@@ -224,7 +223,6 @@ class Element
 		}
 
 		if (empty($selectParams) || empty($selectParams['from'])) return ['success' => false, 'message' => 'empty_request', 'code' => 1];
-
 		$tableColumns = $this->getColumns($selectParams['from']);
 		$selectParams = $this->_prepareRequestParams($selectParams);
 		$selectResult = $this->eldb->select($selectParams);

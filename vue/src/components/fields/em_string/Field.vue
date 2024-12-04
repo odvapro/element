@@ -52,6 +52,7 @@
 		width: 100%;
 		position: absolute;
 		left: 0px;
+		top:0px;
 	}
 	.detail-field-box .em-string{line-height: 50px;}
 

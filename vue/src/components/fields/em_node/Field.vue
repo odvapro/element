@@ -88,7 +88,7 @@
 			{
 				this.detailTableCode = this.fieldSettings.nodeTableCode;
 				this.detailName = node.name;
-				this.detailInfoId = node.value;
+				this.detailInfoId = node.primaryKey;
 				this.showDetailInfo = true;
 			},
 			async createElement(data, result)

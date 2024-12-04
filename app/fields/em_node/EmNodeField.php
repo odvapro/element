@@ -12,6 +12,19 @@ class EmNodeField extends FieldBase
 		$nodeTableCode  = $this->settings['nodeTableCode'];
 		$nodeFieldCode  = $this->settings['nodeFieldCode'];
 		$nodeSearchCode = $this->settings['nodeSearchCode'];
+		$fieldValueArray = explode(',', $this->fieldValue ?? '');
+		$node = [];
+
+		// define primary key
+		$columns = $this->element->getColumns($nodeTableCode);
+		$primaryKeyCode = 'id';
+		foreach ($columns as $columnKey => $column)
+			if($column['key'] == 'PRI')
+			{
+				$primaryKeyCode = $columnKey;
+				break;
+			}
+
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
 			$selectResult = $this->element->select([
@@ -19,6 +32,7 @@ class EmNodeField extends FieldBase
 				'fields' => [
 					$nodeFieldCode,
 					$nodeSearchCode,
+					$primaryKeyCode
 				]
 			]);
 
@@ -28,20 +42,17 @@ class EmNodeField extends FieldBase
 		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
 			return [];
 
-		$node = [];
-		$fieldValueArray = explode(',', $this->fieldValue ?? '');
-
 		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
-		{
 			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
 				$node[] = [
-					'value'   => $nodeItem[$nodeFieldCode],
-					'name' => $nodeItem[$nodeSearchCode],
-					'url'  => "/table/{$nodeTableCode}/el/{$nodeItem[$nodeFieldCode]}"
+					'value'          => $nodeItem[$nodeFieldCode],
+					'name'           => $nodeItem[$nodeSearchCode],
+					'url'            => "/table/{$nodeTableCode}/el/{$nodeItem[$primaryKeyCode]}",
+					'primaryKey'     => $nodeItem[$primaryKeyCode],
+					'primaryKeyCode' => $primaryKeyCode
 				];
 			}
-		}
 
 		return $node;
 	}
@@ -63,13 +74,6 @@ class EmNodeField extends FieldBase
 			throw new EmException("Incorrect field value, should be int or array of int", 1);
 
 		$nodes = array_column($this->fieldValue, 'value');
-		foreach ($nodes as $node)
-			if(!is_numeric($node))
-			{
-				throw new EmException("Incorrect field value, should be int or array of int", 1);
-				break;
-			}
-
 
 		return implode(',', $nodes);
 	}

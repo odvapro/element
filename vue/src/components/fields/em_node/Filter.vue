@@ -113,7 +113,7 @@
 		align-items: center;
 		border:1px solid rgba(103,115,135,0.4);
 		height: 30px;
-		padding-left: 2px;
+		padding-left: 10px;
 		padding-right: 10px;
 		border-radius: 2px;
 		margin-right: 10px;
