@@ -10,7 +10,7 @@ class EmCheckField extends FieldBase
 		if(isset($this->settings['checkedString']))
 			return $this->settings['checkedString'];
 
-		return true;
+		return 1;
 	}
 
 	/**
@@ -22,7 +22,7 @@ class EmCheckField extends FieldBase
 		if(isset($this->settings['uncheckedString']))
 			return $this->settings['uncheckedString'];
 
-		return false;
+		return 0;
 	}
 
 	/**
