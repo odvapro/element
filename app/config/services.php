@@ -15,6 +15,11 @@ use Phalcon\Session\Adapter\Stream as SessionAdapter;
 use Phalcon\Logger\Adapter\Stream as FileAdapter;
 use Phalcon\Logger\Logger;
 
+use Phalcon\Cache\Adapter\Stream;
+use Phalcon\Storage\SerializerFactory;
+use Phalcon\Cache\Cache;
+
+
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
  */
@@ -195,4 +200,20 @@ $di->set('group', function () use ($di)
 	}
 
 	return $group;
+});
+
+$di->set('cache', function () use ($di)
+{
+	$serializerFactory = new SerializerFactory();
+
+	$options = [
+		'defaultSerializer' => 'Json',
+		'lifetime'          => 7200,
+		'storageDir'        => '/var/www/element/app/cache',
+	];
+
+	$adapter = new Stream($serializerFactory, $options);
+
+
+	return (new Cache($adapter));
 });

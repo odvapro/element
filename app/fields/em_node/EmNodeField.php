@@ -14,27 +14,41 @@ class EmNodeField extends FieldBase
 		$nodeSearchCode = $this->settings['nodeSearchCode'];
 		$fieldValueArray = explode(',', $this->fieldValue ?? '');
 		$node = [];
-
-		// define primary key
-		$columns = $this->element->getColumns($nodeTableCode);
 		$primaryKeyCode = 'id';
-		foreach ($columns as $columnKey => $column)
-			if($column['key'] == 'PRI')
-			{
-				$primaryKeyCode = $columnKey;
-				break;
-			}
 
 		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
 		{
-			$selectResult = $this->element->select([
-				'from' => $nodeTableCode,
-				'fields' => [
-					$nodeFieldCode,
-					$nodeSearchCode,
-					$primaryKeyCode
-				]
-			]);
+			$nodesCount = $this->eldb->count(['from' => $nodeTableCode]);
+			$cached = $this->cache->has($nodeTableCode);
+
+			if ($cached)
+				$selectResult = json_decode($this->cache->get($nodeTableCode), true);
+
+			if (!$cached && $nodesCount <= 500)
+			{
+				$selectResult = $this->element->select([
+					'from' => $nodeTableCode,
+					'fields' => [
+						$nodeFieldCode,
+						$nodeSearchCode,
+						$primaryKeyCode
+					]
+				]);
+
+				$this->cache->set($nodeTableCode, json_encode($selectResult));
+			}
+
+			if (!$cached && $nodesCount > 500)
+			{
+				$selectResult = $this->element->select([
+					'from' => $nodeTableCode,
+					'fields' => [
+						$nodeFieldCode,
+						$nodeSearchCode,
+						$primaryKeyCode
+					]
+				]);
+			}
 
 			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
