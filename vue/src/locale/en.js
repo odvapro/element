@@ -152,6 +152,8 @@ export default
 		sortPopup:
 		{
 			add_sort: 'Add sort',
+			asc: 'Ascenging',
+			desc: 'Descending',
 		},
 		confirmCloseButtons:{
 			close:'Are you sure you want to close popup?',

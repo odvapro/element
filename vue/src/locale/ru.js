@@ -152,6 +152,8 @@ export default
 		sortPopup:
 		{
 			add_sort: 'Добавить сортировку',
+			asc: 'По возрастанию',
+			desc: 'По убыванию',
 		},
 		confirmCloseButtons:{
 			close:'Вы уверены, что хотите закрыть редактор?',

@@ -57,8 +57,8 @@
 				sortArray: [],
 				sortValues:
 				{
-					ASC: 'Ascenging',
-					DESC: 'Descending'
+					ASC: this.$t('popups.sortPopup.asc'),
+					DESC: this.$t('popups.sortPopup.desc')
 				},
 				finalSort: [],
 				sendRequest: true,

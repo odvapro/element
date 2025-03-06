@@ -18,7 +18,7 @@ class EmDateField extends FieldBase
 	 */
 	public function getValue()
 	{
-		return strval(strip_tags($this->fieldValue ?? ''));
+		return strval(strip_tags($this->fieldValue ?? null));
 	}
 
 	/**
@@ -27,8 +27,10 @@ class EmDateField extends FieldBase
 	public function saveValue()
 	{
 		$format = isset($this->settings['includeTime']) && $this->settings['includeTime'] === 'true' ? "Y-m-d H:i:s" : "Y-m-d";
+
 		if(empty($this->fieldValue) || strtotime($this->fieldValue) === false)
-			return null;
+			return NULL;
+
 		return date($format, strtotime($this->fieldValue));
 	}
 	/**

@@ -86,5 +86,8 @@
 		min-width: 200px;
 		background-color: #fff;
 		transform: translate(calc(50% - 40px));
+		height: 90vh;
+		overflow-y: scroll;
+		overflow-x: hidden;
 	}
 </style>
