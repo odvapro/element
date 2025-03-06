@@ -2,7 +2,7 @@
 
 use Phalcon\Mvc\Model\Resultset;
 
-class SqlAdapter extends PdoAdapter
+class PgsqlAdapter extends PdoAdapter
 {
 	private $db = false;
 
@@ -185,10 +185,10 @@ class SqlAdapter extends PdoAdapter
 		$setStr = '';
 		foreach ($set as $setField => $setItem) {
 			if ($setItem === null)
-				$setStr .= "`$setField` = NULL, ";
+				$setStr .= "$setField = NULL, ";
 			else {
 				$params[] = $setItem;
-				$setStr .= "`$setField` = ?, ";
+				$setStr .= "$setField = ?, ";
 			}
 		}
 
@@ -234,14 +234,14 @@ class SqlAdapter extends PdoAdapter
 		$columns       = isset($requestParams['columns']) ? $requestParams['columns'] : [];
 		$values        = isset($requestParams['values']) ? $requestParams['values'] : [];
 
+		// echo '<pre>' . htmlentities(print_r($values, true)) . '</pre>';exit();
 		if (empty($table) || empty($values))
 			return false;
 
 		if (empty($columns) || empty($columns))
 			return false;
 
-		$columns   = implode('`, `', $columns);
-		$columns = "`" . $columns . "`";
+		$columns   = implode(', ', $columns);
 
 		$valuesStr = [];
 		foreach ($values as $valueSet) {
@@ -254,11 +254,15 @@ class SqlAdapter extends PdoAdapter
 		}
 		$valuesStr = implode(', ', $valuesStr);
 
-		$sql = "INSERT INTO {$table} ({$columns}) VALUES {$valuesStr}";
+		$sql = "INSERT INTO {$table} ({$columns}) VALUES {$valuesStr} RETURNING id";
 
 		try
 		{
-			$this->db->execute($sql, array_merge(...$values));
+			$result = $this->db->query($sql, array_merge(...$values));
+			$result->setFetchMode(PDO::FETCH_ASSOC);
+			
+			$lastId = $result->fetch()['id'];
+
 		} catch (Exception $e) {
 			Phalcon\Di\Di::getDefault()->get('logger')->error(
 				"insertRequest: {$sql}"
@@ -266,7 +270,7 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
-		return $this->getLastInsertId();
+		return $lastId;
 	}
 
 	/**
@@ -355,26 +359,22 @@ class SqlAdapter extends PdoAdapter
 	public function getTables()
 	{
 		$tables = [];
+
 		$dbTables = $this->db->fetchAll(
-			"SELECT t.TABLE_NAME, gt.group_id, gt.access
-			FROM information_schema.TABLES AS t
-			LEFT JOIN em_groups_tables AS gt ON gt.table_name = t.TABLE_NAME
-			WHERE TABLE_TYPE='BASE TABLE'
-			AND TABLE_SCHEMA=:database
-			ORDER BY t.TABLE_NAME",
+			"SELECT table_name FROM information_schema.tables WHERE table_schema = :schema",
 			Phalcon\Db\Enum::FETCH_ASSOC,
-			[ 'database' => $this->db->getDescriptor()['dbname'] ]
+			["schema" => 'public']
 		);
 
 		foreach ($dbTables as $table)
 		{
-			if(strpos($table['TABLE_NAME'], 'em_') === 0)
+			if(strpos($table['table_name'], 'em_') === 0)
 				continue;
 
-			if (empty($tables[$table['TABLE_NAME']]))
-				$tables[$table['TABLE_NAME']] = [
-					'code'    => $table['TABLE_NAME'],
-					'name'    => $table['TABLE_NAME'],
+			if (empty($tables[$table['table_name']]))
+				$tables[$table['table_name']] = [
+					'code'    => $table['table_name'],
+					'name'    => $table['table_name'],
 					'access'  => [[
 						'group_id' => Access::ADMINS_GROUP_ID,
 						'access'   => Access::FULL,
@@ -382,12 +382,13 @@ class SqlAdapter extends PdoAdapter
 				];
 
 			if (isset($table['group_id']) && isset($table['access']))
-				$tables[$table['TABLE_NAME']]['access'][] =
+				$tables[$table['table_name']]['access'][] =
 				[
 					'group_id' => $table['group_id'],
 					'access'   => $table['access'],
 				];
 		}
+
 
 		return array_values($tables);
 	}
@@ -403,7 +404,24 @@ class SqlAdapter extends PdoAdapter
 
 		try
 		{
-			$res = $this->db->fetchAll("SHOW COLUMNS  FROM " . $tableName, Phalcon\Db\Enum::FETCH_ASSOC);
+			$sql = "SELECT 
+				a.attname AS column_name,
+				pg_catalog.format_type(a.atttypid, a.atttypmod) AS column_type,
+				CASE WHEN i.indisprimary THEN true ELSE false END AS is_pkey,
+				CASE WHEN a.attnotnull THEN false ELSE true END AS is_nullable
+			FROM pg_attribute a
+			JOIN pg_class c ON a.attrelid = c.oid
+			JOIN pg_namespace n ON c.relnamespace = n.oid
+			LEFT JOIN pg_index i ON i.indrelid = c.oid AND a.attnum = ANY(i.indkey) AND i.indisprimary
+			WHERE c.relname = :table
+			AND n.nspname = 'public'
+			AND a.attnum > 0
+			AND NOT a.attisdropped
+			ORDER BY a.attnum";
+
+			$res = $this->db->fetchAll($sql, Phalcon\Db\Enum::FETCH_ASSOC, [
+				"table"  => $tableName
+			]);
 		}
 		catch (Exception $e)
 		{
@@ -416,7 +434,12 @@ class SqlAdapter extends PdoAdapter
 			if (is_array($fieldDbArray))
 				$fieldDbArray = array_change_key_case($fieldDbArray);
 
-			$columns[$fieldDbArray['field']] = $fieldDbArray;
+			$columns[$fieldDbArray['column_name']] = [
+				'field'  => $fieldDbArray['column_name'],
+				'key'  => $fieldDbArray['is_pkey'] == 1 ? 'PRI' : 'MUL',
+				'type' => $fieldDbArray['column_type'],
+				'null' => $fieldDbArray['is_nullable'] == 1 ? 'YES' : 'NO',
+			];
 		}
 
 		return $columns;

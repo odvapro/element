@@ -596,7 +596,7 @@
 			 * Opens detail page
 			 */
 			openDetail(row,rowIndex)
-			{
+			{	
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.table.code);
 				this.$router.push({name:'tableDetail', params:{tableCode:this.table.code, id:row[primaryKeyCode] }});
 			},

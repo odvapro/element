@@ -31,18 +31,18 @@ if (empty($_POST) ||
 try
 {
 	$_POST['password'] = preg_replace("/[\\\]/", '', $_POST['password']);
-	$connection = (new DbAdapter)->newInstance(
-		$_POST['adapter'],
-		[
-			'host'     => $_POST['host'],
-			'username' => $_POST['username'],
-			'password' => $_POST['password'],
-			'dbname'   => $_POST['dbname'],
-			"options" => [
-				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-			]
-		]
-	);
+
+	$dbConfig = [
+		'host'     => $_POST['host'],
+		'username' => $_POST['username'],
+		'password' => $_POST['password'],
+		'dbname'   => $_POST['dbname'],
+		'port'     => $_POST['port'],
+	];
+
+	$dbAdapter = 'Phalcon\\Db\\Adapter\Pdo\\'. ucfirst($_POST['adapter']);
+	$connection = new $dbAdapter($dbConfig);
+
 
 	if (!is_dir('../app/config') or !is_writable('../app/config'))
 	{
@@ -59,7 +59,9 @@ try
 		exit();
 	}
 
-	$installSql = file_get_contents(__DIR__.'/install.sql');
+	$installFileName = sprintf('/install_%s.sql', $_POST['adapter']);
+
+	$installSql = file_get_contents(__DIR__ . $installFileName);
 
 	$connection->execute($installSql);
 
@@ -69,6 +71,7 @@ try
 	$config = preg_replace('/#host#/', $_POST['host'], $config);
 	$config = preg_replace('/#dbname#/', $_POST['dbname'], $config);
 	$config = preg_replace('/#password#/', $_POST['password'], $config);
+	$config = preg_replace('/#port#/', $_POST['port'], $config);
 	$config = preg_replace('/#baseuri#/', $_POST['baseUrl'], $config);
 
 	file_put_contents('../app/config/config.php', $config);

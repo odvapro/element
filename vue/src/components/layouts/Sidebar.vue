@@ -168,7 +168,7 @@
 				let tview = false;
 				for (let cTview of table.tviews)
 				{
-					if(cTview.default != 1)
+					if(cTview.default_view != 1)
 						continue;
 
 					tview = cTview;

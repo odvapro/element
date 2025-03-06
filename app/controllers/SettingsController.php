@@ -19,7 +19,7 @@ class SettingsController extends ControllerBase
 			$type = 'em_string';
 
 		$emTypes = EmTypes::findFirst([
-			'conditions' => 'table = ?0 and field = ?1',
+			'conditions' => 'table_name = ?0 and field = ?1',
 			'bind' => [
 				$table, $field
 			]
@@ -61,14 +61,14 @@ class SettingsController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'required fields is not found']);
 
 		$field = EmTypes::findFirst([
-			'table = ?0 and field = ?1',
+			'table_name = ?0 and field = ?1',
 			'bind' => [$tableName, $columnName]
 		]);
 		if (!$field)
 			$field = new EmTypes();
 
 		$field->field    = $columnName;
-		$field->table    = $tableName;
+		$field->table_name    = $tableName;
 		$field->type     = $fieldType;
 
 		if ($field->save() === false)
@@ -106,14 +106,14 @@ class SettingsController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => 'incorrect field type']);
 
 		$field = EmTypes::findFirst([
-			'table = ?0 and field = ?1',
+			'table_name = ?0 and field = ?1',
 			'bind' => [$tableName, $columnName ]
 		]);
 		if (!$field)
 			$field = new EmTypes();
 
 		$field->field    = $columnName;
-		$field->table    = $tableName;
+		$field->table_name    = $tableName;
 		$field->type     = $fieldType;
 
 		if (isset($settings['required']))

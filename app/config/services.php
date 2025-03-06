@@ -7,7 +7,8 @@ use Phalcon\Dispatcher\Exception as PhDispatcher;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 
-use Phalcon\Db\Adapter\PdoFactory;
+// use Phalcon\Db\Adapter\PdoFactory;
+// use Phalcon\Db\Adapter\Pdo\Factory;
 
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
@@ -106,19 +107,21 @@ $di->set('view', function () use ($config)
  * Database connection is created based in the parameters defined in the configuration file
  */
 
-$db  = (new PdoFactory)->newInstance(
-	$config->database->adapter,
-	[
-		'host'     => $config->database->host,
-		'username' => $config->database->username,
-		'password' => $config->database->password,
-		'dbname'   => $config->database->dbname,
-	]
-);
+$dbConfig = [
+	'host'     => $config->database->host,
+	'username' => $config->database->username,
+	'password' => $config->database->password,
+	'dbname'   => $config->database->dbname,
+	'port'     => $config->database->port,
+];
+
+$dbAdapter = 'Phalcon\\Db\\Adapter\Pdo\\'. ucfirst($config->database->adapter);
+
+$db = new $dbAdapter($dbConfig);
 
 $di->set('eldb', function () use ($config,$db)
 {
-	$dbs = ['mysql'=>'Sql','posgres'=>'Sql'];
+	$dbs = ['mysql'=>'Sql','postgresql'=>'Pgsql'];
 	$adpterName = "{$dbs[$config->database->adapter]}Adapter";
 
 	$eldb       = new $adpterName($db);

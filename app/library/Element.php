@@ -78,7 +78,7 @@ class Element
 		// если нет переопределения - ставим тип em_string
 
 		$emFields = EmTypes::find([
-			'conditions' => 'table = ?0',
+			'conditions' => 'table_name = ?0',
 			'bind'       => [$tableName]
 		]);
 
@@ -230,6 +230,7 @@ class Element
 		if ($selectResult === false)
 			return ['success' => false, 'message' => 'select_error', 'code' => 6];
 
+		// echo '<pre>' . htmlentities(print_r($tableColumns, true)) . '</pre>';exit();
 		$resultItems = [];
 		$resultColumns = [];
 		foreach ($tableColumns as $column)

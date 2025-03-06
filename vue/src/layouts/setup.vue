@@ -26,6 +26,16 @@
 					/>
 				</label>
 				<label class="setup-label">
+					Port
+					<input
+						type="text"
+						class="el-inp setup__input"
+						:class="{'el-inp--error':config.port.error}"
+						v-model="config.port.value"
+						placeholder="Enter Port"
+					/>
+				</label>
+				<label class="setup-label">
 					Database username
 					<input
 						type="text"
@@ -80,6 +90,7 @@ export default
 			config:
 			{
 				host     : {value: '10.100.1.1', error: false},
+				port     : {value: 5432, error: false},
 				dbname   : {value: '', error: false},
 				username : {value: '', error: false},
 				adapter  : {value: 'mysql', error: false},
