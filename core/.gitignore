@@ -1,0 +1,8 @@
+.vscode
+.idea
+.ide
+sftp-config.json
+
+vendor
+storage
+.env
