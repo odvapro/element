@@ -19,7 +19,7 @@ class Handler
 				404,
 			],
 			default => [
-				['other' => 'something go wrong'],
+				['other' => $exception->getMessage()],
 				400,
 			]
 		};

@@ -18,6 +18,8 @@ class Kernel
 		$this->container = new ContainerBuilder();
 		
 		require __DIR__ . '/../config/services.php';
+
+		$this->container->compile();
 	}
 
 	public function handle(Request $request): Response
@@ -29,7 +31,7 @@ class Kernel
 
 		try {
 			$parameters = $matcher->match($request->getPathInfo());
-			$controller = $this->container->get($parameters['_controller']);
+			$controller = new $parameters['_controller'];
 			$method = $parameters['_method'] ?? '__invoke';
 
 			return call_user_func([$controller, $method], $request, $parameters);

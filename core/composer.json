@@ -6,7 +6,9 @@
 	  "symfony/dependency-injection": "^6.0",
 	  "symfony/config": "^6.0",
 	  "symfony/http-kernel": "^6.0",
-	  "symfony/validator": "^6.0"
+	  "symfony/validator": "^6.0",
+		"doctrine/dbal": "^4.2",
+		"symfony/dotenv": "^7.2"
 	},
 	"autoload": {
 	  "psr-4": {
@@ -14,4 +16,3 @@
 	  }
 	}
   }
-  
