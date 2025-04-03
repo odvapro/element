@@ -51,7 +51,7 @@ class IndexFController extends ControllerBase
 
 		// Получаем настройки поля
 		$emField = EmTypes::findFirst([
-			'field = ?0 and table = ?1',
+			'field = ?0 and table_name = ?1',
 			'bind' => [
 				$fieldCode, $tableCode
 			]
