@@ -77,8 +77,7 @@ class PgsqlAdapter extends PdoAdapter
 		if (empty($fields))
 			$sql = 'SELECT * ';
 		else {
-			$sqlFields = implode('`, `', $fields);
-			$sqlFields = '`'.$sqlFields.'`';
+			$sqlFields = implode(', ', $fields);
 			$sql = "SELECT {$sqlFields} ";
 		}
 
