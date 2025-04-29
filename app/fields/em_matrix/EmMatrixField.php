@@ -48,10 +48,11 @@ class EmMatrixField extends FieldBase
 				return ['matrixValue'=>[]];
 
 			$node = array_filter(self::$nodeTable[$this->settings['finalTableCode']]['items'],
-			function($element) use ($finalTableField, $localFieldValue)
-			{
-				return $element[$finalTableField] == $localFieldValue;
-			});
+				function($element) use ($finalTableField, $localFieldValue)
+				{
+					return $element[$finalTableField][0]['value'] == $localFieldValue;
+				}
+			);
 		}
 
 		if(empty($node))
@@ -68,6 +69,7 @@ class EmMatrixField extends FieldBase
 				'from' => $this->settings['nodeTableCode'],
 				'fields' => $this->getColumnsForFetch($this->settings['nodeTableCode']),
 			]);
+
 			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 
@@ -77,6 +79,7 @@ class EmMatrixField extends FieldBase
 				'from' => $this->settings['finalTableCode'],
 				'fields' => $this->getColumnsForFetch($this->settings['finalTableCode']),
 			]);
+
 			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 	}

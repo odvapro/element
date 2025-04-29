@@ -168,9 +168,7 @@ const table =
 				return false;
 
 			for(let columnCode in table.columns)
-			{
-				console.log(table.columns[columnCode]);
-				
+			{	
 				let column = table.columns[columnCode];
 				if(column.key != 'PRI')
 					continue;
