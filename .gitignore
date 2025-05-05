@@ -32,6 +32,7 @@ Temporary Items
 /public/upload/
 
 app/logs/
+app/cache
 !app/logs/.gitkeep
 config.php
 .phalcon/migration-version

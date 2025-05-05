@@ -1,8 +1,8 @@
 services:
   element:
-    image: odva/phalcon:5.0
+    build: .
     networks:
-      - element
+      - pgsql_default
     container_name: ${CONTAINER_NAME-element}
     restart: 'no'
     ports:
@@ -11,9 +11,6 @@ services:
       - ${ELEMENT_DIR-./}:/var/www/element
     working_dir: ${WORKDIR-/var/www/element}
 networks:
-  element:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.100.${SITE_ID-1}.0/24
+  pgsql_default:
+    driver: default
+    external: true

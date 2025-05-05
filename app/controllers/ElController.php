@@ -56,7 +56,6 @@ class ElController extends ControllerBase
 	public function insertAction()
 	{
 		$insert = $this->request->getPost('insert');
-
 		if (empty($insert))
 			return $this->jsonResult(['success' => false, 'message' => 'empty_request', 'code' => 1]);
 
@@ -65,13 +64,12 @@ class ElController extends ControllerBase
 			return $this->jsonResult(['success' => false, 'message' => $insertResult['message'], 'code' => $insertResult['code']]);
 
 		$insertResult = $insertResult['result'];
-		$lastId = $this->eldb->getLastInsertId();
 
 		return $this->jsonResult([
 			'success' => true,
-			'result'  => $insertResult,
-			'firstid' => +$lastId,
-			'lastid'  => +$lastId + count($insert['values']) - 1,
+			'result'  => boolval($insertResult),
+			'firstid' => $insertResult,
+			'lastid'  => $insertResult,
 		]);
 	}
 
@@ -217,15 +215,15 @@ class ElController extends ControllerBase
 			$hasAccess = array_filter($table['access'], function ($accessItem) use ($groupsId) { return in_array($accessItem['group_id'], $groupsId); });
 			if (empty($hasAccess)) continue;
 
-			$emViewsTable = EmViews::findByTable($table['code']);
+			$emViewsTable = EmViews::findByTableName($table['code']);
 			$table['columns'] = $this->element->getColumns($table['code']);
 
 			if (!count($emViewsTable))
 			{
 				$tableEmView = new EmViews();
 				$tableEmView->name = 'Default view';
-				$tableEmView->table = $table['code'];
-				$tableEmView->default = '1';
+				$tableEmView->table_name = $table['code'];
+				$tableEmView->default_view = 1;
 				$tableEmView->save();
 
 				$table['tviews'][] = $tableEmView->toArray();
@@ -246,7 +244,7 @@ class ElController extends ControllerBase
 					$tview->refresh();
 				}
 				$table['tviews'][] = $tview->toArray();
-				if ($tview->default != '1')
+				if ($tview->default_view != 1)
 					continue;
 				else if (empty($defaultTview))
 					$defaultTview = $tview->toArray();
@@ -255,7 +253,7 @@ class ElController extends ControllerBase
 					$table['name'] = $tview->settings['table']['name'];
 
 				if (isset($tview->settings['table']['visible']))
-					$table['visible'] = ($tview->settings['table']['visible'] == "false")?false:true;
+					$table['visible'] = ($tview->settings['table']['visible'] == "false") ? false :true;
 				else
 					$table['visible'] = false;
 			}

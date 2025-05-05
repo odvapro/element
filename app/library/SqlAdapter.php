@@ -266,7 +266,7 @@ class SqlAdapter extends PdoAdapter
 			return false;
 		}
 
-		return true;
+		return $this->getLastInsertId();
 	}
 
 	/**

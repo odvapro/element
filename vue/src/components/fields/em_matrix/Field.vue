@@ -9,7 +9,7 @@
 					</th>
 					<th></th>
 				</tr>
-				<tr v-for="(tableRow, rowIndex) in fieldValue.matrixValue">
+				<tr v-for="(tableRow, rowIndex) in localValue.matrixValue">
 					<td v-for="(columnItem,colKey) in tableRow" v-if="getColumnSettings(colKey).visibility == 'true'">
 							<MainField
 								mode="view"
@@ -82,7 +82,8 @@
 				detailTableId  : false,
 				detailName     : false,
 				currentElement : false,
-				headFields : []
+				headFields : [],
+				localValue: [],
 			};
 		},
 		computed:
@@ -99,7 +100,7 @@
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 
 				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
-					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
+					if (matrixValue[primaryKeyCode] == element[primaryKeyCode])
 						return this.fieldValue.matrixValue[index] = element;
 			},
 
@@ -116,9 +117,9 @@
 			{
 				let primaryKeyCode = this.$store.getters.getPrimaryKeyCode(this.fieldSettings.finalTableCode);
 
-				for (let [index, matrixValue] of this.fieldValue.matrixValue.entries())
-					if (+matrixValue[primaryKeyCode] == +element[primaryKeyCode])
-							return this.fieldValue.matrixValue.splice(index, 1);
+				for (let [index, matrixValue] of this.localValue.matrixValue.entries())
+					if (matrixValue[primaryKeyCode] == element[primaryKeyCode])
+							return this.localValue.matrixValue.splice(index, 1);
 			},
 
 			popupForEditMatrixColumn(row, rowIndex)
@@ -132,12 +133,12 @@
 			},
 
 			bindDefaultColumnValues()
-			{
+			{	
 				this.currentElement = [];
 				let table = this.$store.getters.getTable(this.fieldSettings.finalTableCode);
 				for (let column in table.columns)
 					this.currentElement[column] = '';
-				this.currentElement[this.fieldSettings.finalTableField] = this.detailElement[this.fieldSettings.localField];
+				this.currentElement[this.fieldSettings.finalTableField] = [{...this.fieldSettings.primaryKey, name: this.fieldSettings.primaryKey.value}] ;
 			},
 
 			popupForCreateMatrixElement()
@@ -221,6 +222,8 @@
 		{
 			if(this.view != 'table')
 				this.setHeadLine();
+
+			this.localValue = this.fieldValue;
 		}
 	};
 </script>

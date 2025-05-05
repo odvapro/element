@@ -74,7 +74,7 @@ CREATE TABLE `em_views` (
   `table` varchar(200) NOT NULL DEFAULT '',
   `filter` text,
   `sort` text,
-  `default` int(11) DEFAULT NULL,
+  `default_view` int(11) DEFAULT NULL,
   `settings` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

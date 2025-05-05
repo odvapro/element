@@ -27,6 +27,7 @@
 			{
 				if (typeof this.fieldName == 'undefined' || this.fieldName === false)
 					return false;
+
 				return () => import(`@/components/fields/${this.fieldName}/Field.vue`);
 			}
 		},

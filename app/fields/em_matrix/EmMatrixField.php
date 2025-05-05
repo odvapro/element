@@ -28,13 +28,24 @@ class EmMatrixField extends FieldBase
 			if (empty(self::$nodeTable[$this->settings['nodeTableCode']]) || empty(self::$nodeTable[$this->settings['nodeTableCode']]['items']))
 				return ['matrixValue'=>[]];
 
-			$nodeSearchedFields = array_column(
+			$nodeSearchedFieldsBuff = array_column(
 				array_filter(self::$nodeTable[$this->settings['nodeTableCode']]['items'],
 					function($element) use ($localFieldValue, $nodeTableField)
 					{
-						return $localFieldValue == $element[$nodeTableField];
+						if (empty($element[$nodeTableField]))
+							return false;
+
+						if (gettype($element[$nodeTableField]) != 'array')
+							return $localFieldValue == $element[$nodeTableField];
+
+						return $localFieldValue == $element[$nodeTableField][0]['value'];
 					}) ?? [],
 				$nodeTableFinalTableField);
+
+			$nodeSearchedFields = [];
+
+			foreach($nodeSearchedFieldsBuff as $item)
+					$nodeSearchedFields[] = $item[0]['value'];
 
 			$node = array_filter(self::$nodeTable[$this->settings['finalTableCode']]['items'],
 			function($element) use ($nodeSearchedFields, $finalTableField)
@@ -48,10 +59,17 @@ class EmMatrixField extends FieldBase
 				return ['matrixValue'=>[]];
 
 			$node = array_filter(self::$nodeTable[$this->settings['finalTableCode']]['items'],
-			function($element) use ($finalTableField, $localFieldValue)
-			{
-				return $element[$finalTableField] == $localFieldValue;
-			});
+				function($element) use ($finalTableField, $localFieldValue)
+				{
+					if (empty($element[$finalTableField]))
+						return false;
+
+					if (gettype($element[$finalTableField]) != "array")
+						return $element[$finalTableField] == $localFieldValue;
+
+					return $element[$finalTableField][0]['value'] == $localFieldValue;
+				}
+			);
 		}
 
 		if(empty($node))
@@ -68,6 +86,7 @@ class EmMatrixField extends FieldBase
 				'from' => $this->settings['nodeTableCode'],
 				'fields' => $this->getColumnsForFetch($this->settings['nodeTableCode']),
 			]);
+
 			self::$nodeTable[$this->settings['nodeTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 
@@ -77,6 +96,7 @@ class EmMatrixField extends FieldBase
 				'from' => $this->settings['finalTableCode'],
 				'fields' => $this->getColumnsForFetch($this->settings['finalTableCode']),
 			]);
+
 			self::$nodeTable[$this->settings['finalTableCode']] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 	}
