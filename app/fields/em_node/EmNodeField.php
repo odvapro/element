@@ -24,7 +24,7 @@ class EmNodeField extends FieldBase
 			if ($cached)
 				$selectResult = json_decode($this->cache->get($nodeTableCode), true);
 
-			if (!$cached && $nodesCount <= 500)
+			if (!$cached && $nodesCount >= 500)
 			{
 				$selectResult = $this->element->select([
 					'from' => $nodeTableCode,
@@ -38,7 +38,7 @@ class EmNodeField extends FieldBase
 				$this->cache->set($nodeTableCode, json_encode($selectResult));
 			}
 
-			if (!$cached && $nodesCount > 500)
+			if (!$cached && $nodesCount < 500)
 			{
 				$selectResult = $this->element->select([
 					'from' => $nodeTableCode,
