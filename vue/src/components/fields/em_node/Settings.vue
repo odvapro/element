@@ -170,7 +170,7 @@
 				var error = false;
 				for(var index in this.localSettings)
 				{
-					if(this.localSettings[index] != false || index == 'multiple')
+					if(this.localSettings[index] != false || index == 'multiple' || index == 'disabled')
 						continue;
 
 					this.$set(this.errors, index, {message: 'Field is required'})

@@ -1,5 +1,5 @@
 <template>
-	<div class="em-node" :class="fieldSettings.disabled ? 'disabled' : ''">
+	<div class="em-node" :class="fieldSettings.disabled == 'true' ? 'disabled' : ''">
 		<List
 			:searchText.sync="query"
 			@onopen="getNodes()"

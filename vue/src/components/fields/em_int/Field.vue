@@ -1,5 +1,5 @@
 <template>
-	<div class="em-int" :class="fieldSettings.disabled ? 'disabled' : ''">
+	<div class="em-int" :class="fieldSettings.disabled == 'true' ? 'disabled' : ''">
 		<template v-if="mode == 'edit'">
 			<input
 				ref="intInput"
