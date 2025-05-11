@@ -1,6 +1,14 @@
 <template>
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
+			<div class="popup__field-name">Disabled <span class="em_field--beta">(beta)</span></div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.disabled"
+				></Checkbox>
+			</div>
+		</div>
+		<div class="popup__field">
 			<div class="popup__field-name">{{$t('min')}}</div>
 			<div class="popup__field-input">
 				<div class="em-int__field-input">
@@ -47,6 +55,7 @@
 			return {
 				localSettings:
 				{
+					disabled: false,
 					min: {
 						value: 0,
 						enabled: false,
@@ -67,6 +76,8 @@
 					this.localSettings[valueCode].value = +this.settings[valueCode].value || 0;
 					this.localSettings[valueCode].enabled = !!+this.settings[valueCode].enabled;
 				}
+
+			this.localSettings.disabled = this.settings.disabled;
 		},
 		methods:
 		{
@@ -90,6 +101,7 @@
 							enabled: +this.localSettings.min.enabled,
 							value: this.localSettings.min.value,
 						},
+						disabled: this.localSettings.disabled,
 					});
 				}
 				this.ElMessage.error(this.$t('fieldEmInteger.settings.min_max'));

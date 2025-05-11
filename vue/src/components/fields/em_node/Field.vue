@@ -1,5 +1,5 @@
 <template>
-	<div class="em-node">
+	<div class="em-node" :class="fieldSettings.disabled ? 'disabled' : ''">
 		<List
 			:searchText.sync="query"
 			@onopen="getNodes()"
@@ -269,5 +269,11 @@
 	{
 		.list__search-popup-head .em-node__tag span{padding-right: 30px;}
 		.list-option__remove{right:13px;}
+	}
+
+	.em-node.disabled
+	{
+		pointer-events: none;
+  		opacity: 0.5;
 	}
 </style>

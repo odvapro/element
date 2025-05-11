@@ -9,6 +9,14 @@
 			</div>
 		</div>
 		<div class="popup__field">
+			<div class="popup__field-name">Disabled <span class="em_field--beta">(beta)</span></div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.disabled"
+				></Checkbox>
+			</div>
+		</div>
+		<div class="popup__field">
 			<div class="popup__field-name">
 				{{$t('table')}}
 				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
@@ -74,6 +82,7 @@
 				localSettings :
 				{
 					multiple  : false,
+					disabled  : false,
 					nodeTableCode  : false,
 					nodeFieldCode  : false,
 					nodeSearchCode : false,

@@ -1,5 +1,5 @@
 <template>
-	<div class="em-int">
+	<div class="em-int" :class="fieldSettings.disabled ? 'disabled' : ''">
 		<template v-if="mode == 'edit'">
 			<input
 				ref="intInput"
@@ -106,4 +106,9 @@
 		margin: 0;
 	}
 	.em-int-number[type=number] {-moz-appearance: textfield; }
+	.em-int.disabled
+	{
+		pointer-events: none;
+  		opacity: 0.5;
+	}
 </style>

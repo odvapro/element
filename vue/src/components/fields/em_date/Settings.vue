@@ -1,6 +1,14 @@
 <template>
 	<div class="settings-popup-row-params">
 		<div class="popup__field">
+			<div class="popup__field-name">Current timestamp <span class="em_field--beta">(beta)</span></div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.current_timestamp"
+				></Checkbox>
+			</div>
+		</div>
+		<div class="popup__field">
 			<div class="popup__field-name">{{$t('fieldEmDate.settings.include_time')}}</div>
 			<div class="popup__field-input">
 				<Checkbox
@@ -23,6 +31,7 @@
 			return {
 				localSettings:
 				{
+					current_timestamp: false,
 					includeTime: false,
 				}
 			}
@@ -31,6 +40,9 @@
 		{
 			if(typeof this.settings.includeTime != 'undefined')
 				this.localSettings.includeTime = this.settings.includeTime === "true";
+
+			if(typeof this.settings.current_timestamp != 'undefined')
+				this.localSettings.current_timestamp = this.settings.current_timestamp === "true";
 		},
 		methods:
 		{

@@ -28,6 +28,9 @@ class EmDateField extends FieldBase
 	{
 		$format = isset($this->settings['includeTime']) && $this->settings['includeTime'] === 'true' ? "Y-m-d H:i:s" : "Y-m-d";
 
+		if (isset($this->settings['current_timestamp']) && $this->settings['current_timestamp'] == 'true')
+			return date($format, strtotime('now'));
+
 		if(empty($this->fieldValue) || strtotime($this->fieldValue) === false)
 			return NULL;
 

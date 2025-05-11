@@ -27,6 +27,9 @@ class EmIntField extends FieldBase
 	 */
 	public function saveValue()
 	{
+		if (isset($this->settings['disabled']) && $this->settings['disabled'])
+			return;
+
 		if (isset($this->fieldValue) && $this->fieldValue !== '')
 		{
 			if (isset($this->settings['max'])
