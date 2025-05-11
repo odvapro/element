@@ -81,8 +81,9 @@ class EmNodeField extends FieldBase
 	 */
 	public function saveValue()
 	{
+		/*
 		if (isset($this->settings['disabled']) && $this->settings['disabled'])
-			return;
+			return; */
 
 		if(empty($this->fieldValue))
 			return null;
