@@ -8,6 +8,14 @@
 				></Checkbox>
 			</div>
 		</div>
+		<div class="popup__field">
+			<div class="popup__field-name">Disabled <span class="em_field--beta">(beta)</span></div>
+			<div class="popup__field-input">
+				<Checkbox
+					:checked.sync="localSettings.disabled"
+				></Checkbox>
+			</div>
+		</div>
 		<div class="popup__field" v-if="localSettings.useMask">
 			<div class="popup__field-name">Mask (use #)</div>
 			<div class="popup__field-input">
@@ -39,6 +47,7 @@
 				localSettings :
 				{
 					useMask  : false,
+					disabled  : false,
 					mask  : '',
 				},
 				errors: {}

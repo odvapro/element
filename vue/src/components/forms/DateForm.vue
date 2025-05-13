@@ -119,27 +119,31 @@
 			 */
 			changeInputTime(event)
 			{
+				if (event.keyCode == 8)
+					return;
+
 				let newTimeString = event.target.value;
 
-				if(
-					!newTimeString ||
-					newTimeString.length < 2 ||
-					event.keyCode == 8
-				)
-					return false;
+				if (newTimeString.length == 1 && newTimeString > 1)
+					event.target.value = '0' + newTimeString + ':';
 
-				let timeArray = newTimeString.match(/.{1,2}/g) || [];
+				if (newTimeString.length == 2 && newTimeString <= 23)
+					event.target.value = newTimeString + ':';
+
+				let timeArray = newTimeString.split(':');
+
+				if (timeArray.length == 1 || timeArray[1] == "")
+					return;
+
+				if (timeArray[1].length == 1 && parseInt(timeArray[1]) > 5)
+					event.target.value = timeArray[0] + ':0' + timeArray[1];
+				
 
 				if(timeArray.length != 2 || timeArray[0].length < 2 || timeArray[1].length < 2)
 					return false;
-				let huors = ('0'+timeArray[0]).slice(-2);
-				if(huors > 23) huors = 23;
-				let minutes = ('0'+timeArray[1]).slice(-2);
-				if(minutes > 59) minutes = 59;
 
-				this.inputTime = `${huors}:${minutes}`;
-				this.localDate.setHours(huors);
-				this.localDate.setMinutes(minutes);
+				this.localDate.setHours(timeArray[0]);
+				this.localDate.setMinutes(timeArray[1]);
 				this.selectDate(this.localDate);
 			},
 

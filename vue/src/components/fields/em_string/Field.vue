@@ -1,5 +1,5 @@
 <template>
-	<div class="em-string__wrapper">
+	<div class="em-string__wrapper" :class="fieldSettings.disabled == 'true' ? 'disabled' : ''">
 		<input
 			class="em-string__edit"
 			v-model="localValue"
@@ -90,5 +90,11 @@
 			padding-bottom:10px;
 			padding-top:10px;
 		}
+	}
+
+	.em-string__wrapper.disabled
+	{
+		pointer-events: none;
+  		opacity: 0.5;
 	}
 </style>
