@@ -16,6 +16,17 @@ class IndexFController extends ControllerBase
 		$nodeTable  = $this->request->getPost('nodeTableCode');
 		$nodeSearch = $this->request->getPost('nodeSearchCode');
 		$q          = $this->request->getPost('q');
+		$filterString     = $this->request->getPost('filters');
+		$filterMap = !$filterString ? [] : json_decode($filterString, true);
+		$filter = [];
+
+		if (!empty($filterMap))
+			$filter = [
+				'code' => $filterMap['field'],
+				'operation' => 'IS',
+				'value' => $filterMap['value']['value'],
+			];
+
 
 		if(empty($nodeField) || empty($nodeTable))
 			return $this->jsonResult(['success' => false, 'message' => 'некорректные настройки']);
@@ -39,7 +50,7 @@ class IndexFController extends ControllerBase
 					'code'      => $nodeSearch,
 					'operation' => 'CONTAINS',
 					'value'     => $q
-				]]
+				], $filter]
 			]
 		];
 
@@ -58,5 +69,33 @@ class IndexFController extends ControllerBase
 				];
 
 		return $this->jsonResult(['success' => true, 'result' => $result]);
+	}
+
+	public function getFieldValuesAction()
+	{
+		$nodeField  = $this->request->get('column');
+		$nodeTable  = $this->request->get('table');
+
+		$select  = [
+			'from'  => $nodeTable,
+			'limit' => 10000,
+			'fields' => [$nodeField],
+		];
+
+		$selectResult = $this->element->select($select)['result']['items'];
+
+		$dataMap  = array_column($selectResult, $nodeField);
+		$result = [];
+
+		foreach ($dataMap as $item)
+		{
+			if (!array_key_exists($item[0]['value'], $result))
+				$result[$item[0]['value']] = $item[0];
+		}
+
+		return $this->jsonResult([
+			'success' => true,
+			'result' =>  array_values($result),
+		]);
 	}
 }

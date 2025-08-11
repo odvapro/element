@@ -12,6 +12,19 @@ class EmNodeField extends FieldBase
 		$nodeTableCode  = $this->settings['nodeTableCode'];
 		$nodeFieldCode  = $this->settings['nodeFieldCode'];
 		$nodeSearchCode = $this->settings['nodeSearchCode'];
+		$filtersData = $this->settings['filters'] ?? [];
+		$filters = [];
+
+		if (isset($this->settings['useFilter']) && $this->settings['useFilter'] != 'false' && !empty($filtersData))
+			$filters = [
+				'operation' => 'AND',
+				'fields' => [[
+					'code' => $filtersData['field'],
+					'operation' => 'IS',
+					'value' => $filtersData['value']['value'],
+				]],
+			];
+
 		$fieldValueArray = explode(',', $this->fieldValue ?? '');
 		$node = [];
 		$primaryKeyCode = 'id';
@@ -32,7 +45,8 @@ class EmNodeField extends FieldBase
 						$nodeFieldCode,
 						$nodeSearchCode,
 						$primaryKeyCode
-					]
+					],
+					'where' => $filters,
 				]);
 
 				$this->cache->set($nodeTableCode, json_encode($selectResult));
@@ -46,7 +60,8 @@ class EmNodeField extends FieldBase
 						$nodeFieldCode,
 						$nodeSearchCode,
 						$primaryKeyCode
-					]
+					],
+					'where' => $filters,
 				]);
 			}
 

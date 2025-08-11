@@ -135,6 +135,9 @@
 					data.append('nodeSearchCode', this.fieldSettings.nodeSearchCode);
 					data.append('q', this.query);
 
+					if (this.fieldSettings.useFilter != 'false' && this.fieldSettings.filters != undefined)
+						data.append('filters', JSON.stringify(this.fieldSettings.filters));
+
 					let result = await this.$axios({
 						method : 'POST',
 						data   : data,

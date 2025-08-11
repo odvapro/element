@@ -17,6 +17,38 @@
 			</div>
 		</div>
 		<div class="popup__field">
+			<div class="popup__field-name">Filter <span class="em_field--beta">(beta)</span></div>
+			<div class="popup__field-input popup__field-input--filter">
+				<Checkbox
+					@change="updateFilter()"
+					:checked="localSettings.useFilter"
+				></Checkbox>
+				<Select
+					v-if="localSettings.useFilter"
+					:defaultText="localSettings.filters.field !== 'false' ? localSettings.filters.field : 'Field'"
+				>
+					<SelectOption
+						v-if="localSettings.useFilter && filterFields"
+						v-for="field,fieldIndex in filterFields"
+						:key="fieldIndex"
+						@click.native="selectFilterField(field)"
+					>{{ field[1].field }}</SelectOption>
+				</Select>
+				<Select
+					v-if="localSettings.useFilter"
+					:defaultText="localSettings.filters.value !== 'false' ? localSettings.filters.value.name : 'Value'"
+					:disabled="!filterValues"
+				>
+					<SelectOption
+						v-if="fields"
+						v-for="value,valueIndex in filterValues"
+						:key="valueIndex"
+						@click.native="selectFilterValue(value)"
+					>{{ value.name }}</SelectOption>
+				</Select>
+			</div>
+		</div>
+		<div class="popup__field">
 			<div class="popup__field-name">
 				{{$t('table')}}
 				<small v-if="errors.nodeTableCode" class="popup__field-error">{{ errors.nodeTableCode.message }}</small>
@@ -83,10 +115,16 @@
 				{
 					multiple  : false,
 					disabled  : false,
+					useFilter: false,
 					nodeTableCode  : false,
 					nodeFieldCode  : false,
 					nodeSearchCode : false,
+					filters: {
+						field: false,
+						value: false,
+					},
 				},
+				filterValues: false,
 				errors: {}
 			}
 		},
@@ -105,6 +143,21 @@
 			fields()
 			{
 				return this.$store.getters.getColumns(this.localSettings.nodeTableCode);
+			},
+			filterFields()
+			{
+				const columns = this.$store.getters.getColumns(this.localSettings.nodeTableCode);
+				const fields = [];
+
+				for (let item of Object.entries(columns))
+				{
+					if (item[1].em.type != 'em_node')
+						continue;
+
+					fields.push(item);
+				}
+
+				return fields;
 			},
 			/**
 			 * Default text on select table
@@ -170,7 +223,7 @@
 				var error = false;
 				for(var index in this.localSettings)
 				{
-					if(this.localSettings[index] != false || index == 'multiple' || index == 'disabled')
+					if(this.localSettings[index] != false || index == 'multiple' || index == 'disabled' || index == 'useFilter' || index == 'filters')
 						continue;
 
 					this.$set(this.errors, index, {message: 'Field is required'})
@@ -214,6 +267,43 @@
 				this.localSettings.nodeSearchCode = field.field;
 				this.$delete(this.errors, 'nodeSearchCode');
 			},
+			async loadFilterValues()
+			{
+				if (!this.localSettings.filters)
+					return;
+
+				let result = await this.$axios({
+					method : 'GET',
+					headers: { 'Content-Type': 'multipart/form-data' },
+					url    : `/field/em_node/index/getFieldValues/?table=${this.localSettings.nodeTableCode}&column=${this.localSettings.filters.field}`,
+				});
+
+				if (!result.data.success)
+					return false;
+
+				this.filterValues = result.data.result;
+			},
+			selectFilterField(field)
+			{
+				this.localSettings.filters.field = field[1].field;
+				this.loadFilterValues();
+			},
+			selectFilterValue(value)
+			{
+				this.localSettings.filters.value = value;
+			},
+			updateFilter()
+			{
+				this.localSettings.useFilter = !this.localSettings.useFilter;
+
+				if (!this.localSettings.useFilter)
+					this.localSettings.filters = {
+						field: false,
+						value: false,
+					};
+
+				return true;
+			}
 		},
 		/**
 		 * Хук при загрузке страницы
@@ -230,6 +320,17 @@
 				else
 					this.$set(this.localSettings, index, this.settings[index])
 			}
+
+			this.loadFilterValues();
 		}
 	}
 </script>
+
+<style lang="scss">
+	.popup__field-input--filter
+	{
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+</style>
