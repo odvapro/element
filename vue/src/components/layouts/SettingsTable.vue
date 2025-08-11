@@ -191,6 +191,7 @@
 			 */
 			openSettingsPopup(table, column)
 			{
+				column.em.settings.field_code = column.field;
 				this.$set(this, 'settingsTable', table);
 				this.$set(this, 'settingsColumn', column);
 				this.$set(this, 'settingsFielType', column.em.type_info.code);

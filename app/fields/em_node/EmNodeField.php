@@ -15,8 +15,21 @@ class EmNodeField extends FieldBase
 		$filtersData = $this->settings['filters'] ?? [];
 		$filters = [];
 
+		$fieldValueArray = explode(',', $this->fieldValue ?? '');
+		$node = [];
+		$primaryKeyCode = 'id';
+
+		$selectCondition = [
+			'from' => $nodeTableCode,
+			'fields' => [
+				$nodeFieldCode,
+				$nodeSearchCode,
+				$primaryKeyCode
+			],
+		];
+
 		if (isset($this->settings['useFilter']) && $this->settings['useFilter'] != 'false' && !empty($filtersData))
-			$filters = [
+			$selectCondition['where'] = [
 				'operation' => 'AND',
 				'fields' => [[
 					'code' => $filtersData['field'],
@@ -25,53 +38,36 @@ class EmNodeField extends FieldBase
 				]],
 			];
 
-		$fieldValueArray = explode(',', $this->fieldValue ?? '');
-		$node = [];
-		$primaryKeyCode = 'id';
+		$fieldKey = isset($this->settings['field_code']) ? $this->settings['field_code'] . '_' . $nodeTableCode : $nodeTableCode;
 
-		if (empty(self::$nodeTable) || empty(self::$nodeTable[$nodeTableCode]))
+		if (empty(self::$nodeTable) || empty(self::$nodeTable[$fieldKey]))
 		{
 			$nodesCount = $this->eldb->count(['from' => $nodeTableCode]);
-			$cached = $this->cache->has($nodeTableCode);
+			$cached = $this->cache->has($fieldKey);
 
 			if ($cached)
-				$selectResult = json_decode($this->cache->get($nodeTableCode), true);
+				$selectResult = json_decode($this->cache->get($fieldKey), true);
 
 			if (!$cached && $nodesCount >= 500)
 			{
-				$selectResult = $this->element->select([
-					'from' => $nodeTableCode,
-					'fields' => [
-						$nodeFieldCode,
-						$nodeSearchCode,
-						$primaryKeyCode
-					],
-					'where' => $filters,
-				]);
+				$selectResult = $this->element->select($selectCondition);
 
-				$this->cache->set($nodeTableCode, json_encode($selectResult));
+				$this->cache->set($fieldKey, json_encode($selectResult));
 			}
 
 			if (!$cached && $nodesCount < 500)
 			{
-				$selectResult = $this->element->select([
-					'from' => $nodeTableCode,
-					'fields' => [
-						$nodeFieldCode,
-						$nodeSearchCode,
-						$primaryKeyCode
-					],
-					'where' => $filters,
-				]);
+				$selectResult = $this->element->select($selectCondition);
 			}
 
-			self::$nodeTable[$nodeTableCode] = $selectResult['success'] ? $selectResult['result'] : [];
+			self::$nodeTable[$fieldKey] = $selectResult['success'] ? $selectResult['result'] : [];
 		}
 
-		if (empty(self::$nodeTable[$nodeTableCode]) || empty(self::$nodeTable[$nodeTableCode]['items']))
+		if (empty(self::$nodeTable[$fieldKey]) || empty(self::$nodeTable[$fieldKey]['items']))
 			return [];
 
-		foreach (self::$nodeTable[$nodeTableCode]['items'] as $nodeItem)
+		foreach (self::$nodeTable[$fieldKey]['items'] as $nodeItem)
+		{
 			if (in_array($nodeItem[$nodeFieldCode], $fieldValueArray))
 			{
 				$node[] = [
@@ -82,6 +78,7 @@ class EmNodeField extends FieldBase
 					'primaryKeyCode' => $primaryKeyCode
 				];
 			}
+		}
 
 		return $node;
 	}

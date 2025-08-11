@@ -119,6 +119,7 @@
 					nodeTableCode  : false,
 					nodeFieldCode  : false,
 					nodeSearchCode : false,
+					field_code: false,
 					filters: {
 						field: false,
 						value: false,
